@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>广告收益</title>
+	{include file="./static/html/header_common.html" /}
+	<link href="/static/css/adgain.css?t=122" rel="stylesheet" type="text/css">
+    <link href="/static/css/checkbox.css" rel="stylesheet" type="text/css">
+	 <link rel="stylesheet" type="text/css" media="all" href="/static/plugin/jquery-time/daterangepicker-bs3.css" />
+	<style>
+	 .fa,.allow_click{cursor:pointer}
+	 th,td{text-align:center;vertical-align:middle}
+	 
+	</style>
+</head>
+<body>
+    <div id="wrapper" >
+        
+		{include file="./static/html/header.html" /} 
+	
+		<div class="hw_page_content">
+		    <div class="bar_allow_roe" title="选择应用"><i class="fa fa-angle-double-right fa-2x"></i></div>
+		    <div class="hw_app_navlist" style="display:none;">
+			     
+			      <div style="text-align:left;height:50px;line-height:59px;font-size:18px;padding-left:10px;"><i class="fa fa-pencil fa-fw"></i>选择应用APP <!-- <span style="text-align:right"><input style="height:20px;padding:15px;width:120px;border: 1px solid #ccc;
+border-radius: 4px;" type="text" value="heh "/></span> --></div>
+				  <ul class="nav">
+				      {if condition="empty($apps)"}
+					    <div style="margin-top:50%;margin-left:38%;"><i class="fa fa-bank"></i>您还没有应用!</div>						
+					  {/if}
+                     {volist name="apps" id="vv"}				  
+					<li>
+						<a href="javascript:;" title="{$vv.app_name}">
+							<div class="el-checkbox el-checkbox-sm el-checkbox-red">
+								<input type="checkbox" name="app_id"  attr_name="{$vv.app_name}" value="{$vv.id}" id="app_{$key}">
+								<label class="el-checkbox-style" for="app_{$key}"></label>
+								<span class="margin-r" style="font-size:14px;margin-left:10px;">
+								  {$vv.app_name} &nbsp;
+								 {if condition="$vv['platform'] eq 'android'" }
+									 <i title="android" style="color:#f0ad4e;" class="fa fa-android"></i>
+									 {elseif condition="$vv['platform'] eq 'ios'" /}
+									 <i  class="fa fa-apple"></i>
+									 {/if}
+								</span>								
+							</div>					
+						</a>
+					</li>
+					{/volist}		
+				 </ul>
+				 <div></div>
+				 <div style="text-align:right;margin-top:20px;margin-right:30px;"><a style="color:#333;font-size:12px;text-decoration:underline;" href="/admin_consu/s_list"><em>应用设置?</em></a></div>
+			</div>
+		    <div class="hw_menu_left">
+         {include file="./static/html/side.html" /}  
+			</div>
+		    <div class="hw_content_right">	
+			  <ul class="search_tab clearfix" >
+			      <li class="active"><a  href="javascript:;">广告成效</a></li>
+				  <li style="margin-left:30%;position:relative;"><a ><i style="position:absolute;top:22px;left:10px;color:#ccc;" class="fa fa-calendar"></i><input type="text" value="<?php echo date("Y-m-d",strtotime("-2 day"))."-".date("Y-m-d",strtotime("-2 day")); ?>"id="start_date"  style="width:220px;margin-top:12px;padding-left:35px;" class="form-control"  /></a><li>               
+		          <li><div style="position:relative;margin-left:120%;"><button id="hw_add"  style="margin-left:20px;" type="button" class="btn btn-success">
+								  搜索
+								</button></div></li>
+			   </ul>
+			     <div class="hw_content">
+				   
+				    <div style="margin-top:10px;">
+					  					
+						<div class="col-md-12">
+							<ul class="hw_has_search">
+								 <li style="float:left;margin-right:15px;" id="hw_one" >
+								  <div  data_name="广告类型"  data="adtype" data_value="all" class="btn btn-default">广告类型:全部<span class="caret"></span></div>									  
+							    </li>
+								
+								<li style="float:left;margin-right:15px;" id="hw_two" >
+								  <div data_name="渠道"  data="channel" data_value="all" class="btn btn-default">渠道:全部 <span class="caret"></span></div>									
+							    </li> 
+							    
+								<li style="float:left;margin-right:15px;" id="hw_three" >
+								  <div data_name="国家"  data="scountry" data_value="all" class="btn btn-default">国家:全部 <span class="caret"></span></div>									
+							    </li>
+								
+							 </ul>
+							  
+								
+                               							
+						</div>
+						 
+					</div>
+			        <div class="hw-ad_row" style="margin-top:50px;">
+					   
+						<div class="hw_c_cc" ></div> 						  
+					</div>					
+			    </div>
+           	</div>
+         </div>
+       {include file="./static/html/footer.html" /}		 
+	</div>
+   {include file="./static/html/footer_common.html" /}
+   
+   <!-- Modal -->
+<div class="modal fade" id="myModal" style="top:30%;" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">类型选择</h4>
+      </div>
+      <div class="modal-body">
+	     <ul>
+	         <li style="clear:both;position:relative;width:150px;">
+				<div id="drop8" style="width:150px;" data="" class="btn btn-default dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true">选择筛选类型<span class="caret"></span></div>       
+				<ul id="search_type" class="dropdown-menu" aria-labelledby="drop8">
+					<li><a href="javascript:;" data="adtype">广告类型</a></li>
+					<li><a href="javascript:;" data="channel">渠道</a></li>
+					<li><a href="javascript:;" data="scountry">国家</a></li>
+					<li><a href="javascript:;"></a></li>
+				</ul>
+			</li>      	
+			<li style="position:absolute;left:180px;top:16px;">
+			    <div style="width:200px"><input type="text" id="hw_ss" readonly style="cursor:pointer;" class="form-control"  placeholder="搜索"></div>
+			    <ul class="dropdown-menu" id="hw_select_c" style="height:200px;overflow-y:scroll;">
+					<li style="padding:5px 10px;"><div><input  style="height:30px;" class="form-control" type="text"/></div></li>
+					<li style="padding:5px 10px;">
+					<ul id="adtype">
+					    <li>
+							<div class="el-checkbox el-checkbox-red">											
+								<input name="check26" id="adtype_all" attr_name="全部" value="all" type="checkbox">
+								<label class="el-checkbox-style" for="adtype_all"></label>
+								<span class="margin-r">全部</span>
+							</div>
+						</li>
+					    <li>
+							<div class="el-checkbox el-checkbox-red">											
+								<input name="check26" id="adtype_nat" attr_name="原生" value="nat" type="checkbox">
+								<label class="el-checkbox-style" for="adtype_nat"></label>
+								<span class="margin-r">原生广告</span>
+							</div>
+						</li>
+						<li>
+							<div class="el-checkbox el-checkbox-red">											
+								<input name="check26" id="adtype_rew" attr_name="激励" value="rew"  type="checkbox">
+								<label class="el-checkbox-style" for="adtype_rew"></label>
+								<span class="margin-r">激励视频</span>
+							</div>
+						</li>
+						<li>
+							<div class="el-checkbox el-checkbox-red">											
+								<input name="check26" id="adtype_int"  attr_name="插屏" value="int" type="checkbox">
+								<label class="el-checkbox-style" for="adtype_int"></label>
+								<span class="margin-r">插屏广告</span>
+							</div>
+						</li>
+						<li>
+							<div class="el-checkbox el-checkbox-red">											
+								<input name="check26" id="adtype_ban" attr_name="Banner"  value="ban" type="checkbox">
+								<label class="el-checkbox-style" for="adtype_ban"></label>
+								<span class="margin-r">banner广告</span>
+							</div>
+						</li>
+					</ul>
+					<ul id="channel" style="display:none;">
+					     <li>
+							<div class="el-checkbox el-checkbox-red">											
+								<input name="check26" id="channel_all" attr_name="全部" value="all" type="checkbox">
+								<label class="el-checkbox-style" for="channel_all"></label>
+								<span class="margin-r">全部</span>
+							</div>
+						</li>
+					    <li>
+							<div class="el-checkbox el-checkbox-red">											
+								<input name="check26" id="channel_1" attr_name="Mobvista" value="1" type="checkbox">
+								<label class="el-checkbox-style" for="channel_1"></label>
+								<span class="margin-r">Mobvista</span>
+							</div>
+						</li>
+						<li>
+							<div class="el-checkbox el-checkbox-red">											
+								<input name="check26" id="channel_2" attr_name="Unity" value="2"  type="checkbox">
+								<label class="el-checkbox-style" for="channel_2"></label>
+								<span class="margin-r">Unity</span>
+							</div>
+						</li>
+						<li>
+							<div class="el-checkbox el-checkbox-red">											
+								<input name="check26" id="channel_3" attr_name="Applovin" value="3"  type="checkbox">
+								<label class="el-checkbox-style" for="channel_3"></label>
+								<span class="margin-r">Applovin</span>
+							</div>
+						</li>
+						<li>
+							<div class="el-checkbox el-checkbox-red">											
+								<input name="check26" id="channel_4" attr_name="Vungle" value="4"  type="checkbox">
+								<label class="el-checkbox-style" for="channel_4"></label>
+								<span class="margin-r">Vungle</span>
+							</div>
+						</li>
+						<li>
+							<div class="el-checkbox el-checkbox-red">											
+								<input name="check26" id="channel_5" attr_name="AdMob" value="5" type="checkbox">
+								<label class="el-checkbox-style" for="channel_5"></label>
+								<span class="margin-r">AdMob</span>
+							</div>
+						</li>
+						<li>
+							<div class="el-checkbox el-checkbox-red">											
+								<input name="check26" id="channel_6" attr_name="Facebook" value="6" type="checkbox">
+								<label class="el-checkbox-style" for="channel_6"></label>
+								<span class="margin-r">Facebook</span>
+							</div>
+						</li>
+						<li>
+							<div class="el-checkbox el-checkbox-red">											
+								<input name="check26" id="channel_7" attr_name="ironSource" value="7" type="checkbox">
+								<label class="el-checkbox-style" for="channel_7"></label>
+								<span class="margin-r">ironSource</span>
+							</div>
+						</li>
+					</ul>
+				       					   
+				    <ul id="app" style="display:none;">
+					<li>
+							<div class="el-checkbox el-checkbox-red">											
+								<input name="check26" id="app_all" attr_name="全部" value="all" type="checkbox">
+								<label class="el-checkbox-style" for="app_all"></label>
+								<span class="margin-r">全部</span>
+							</div>
+						</li>
+					  {volist name="apps" id="vv"}				  
+					<li>						
+						<div class="el-checkbox el-checkbox-red">											
+								<input name="check26" id="app_{$vv.id}" attr_name="{$vv.app_name}" value="{$vv.id}" type="checkbox">
+								<label class="el-checkbox-style" for="app_{$vv.id}"></label>
+								<span class="margin-r">{$vv.app_name}</span>
+						</div>
+					</li>
+					{/volist}		
+					</ul>
+					 <ul id="scountry" style="display:none;">
+						  {volist name="country" id="vvv"}				  
+						<li>						
+							<div class="el-checkbox el-checkbox-red">											
+									<input name="check26" id="country_{$key}" attr_name="{$vvv}" value="{$key}" type="checkbox">
+									<label class="el-checkbox-style" for="country_{$key}"></label>
+									<span class="margin-r">{$vvv}</span>
+							</div>
+						</li>
+						{/volist}		
+					</ul>
+				</ul>
+			</li>
+		
+      </ul>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">关 闭</button>
+        <button type="button" id="hw_save_search"  class="btn btn-primary">保 存</button>
+      </div>
+    </div>
+  </div>
+</div>
+   
+   
+    <script type="text/javascript" src="/static/plugin/jquery-time/moment.js"></script>
+   <script type="text/javascript" src="/static/plugin/jquery-time/daterangepicker.js"></script>
+   
+</body>
+  <script>
+     var start_date="<?php echo date("Y-m-d",strtotime("-2 day")); ?>";
+	 var end_date = "<?php echo date("Y-m-d",strtotime("-2 day")); ?>";
+    $(function(){
+	 
+	  $('#start_date').daterangepicker({ minDate:'2018-07-08' },function(start, end, label) {
+	 
+		 start_date = start.format('YYYY-MM-DD');end_date=end.format('YYYY-MM-DD');
+		
+	  });
+	    $("#search_type a").click( function(){
+		   var index_tyoe = $(this).attr("data");
+		   var index_title = $(this).text();
+		    $("#drop8").text(index_title);
+			 $("#drop8").attr("data",index_tyoe);
+		    $("#hw_select_c ul").hide();
+		    $("#"+index_tyoe).show();
+		} )
+	    $("#hw_ss").focus( function(){
+		   $("#hw_select_c").show();
+		})
+		$("#hw_save_search").click( function(){
+		
+			   var x_in = $("#drop8").attr("data");
+			   var x_text = $("#drop8").text();
+			   var x_index = $("#drop8").attr("index");
+			   var s_app="";
+			   var s_name="";
+			   var check_obj = $("#"+x_in+" input[type='checkbox']:checked");
+			   if( check_obj.length<1 )
+			     {
+				    layer.msg("请至少勾选一个");return false;
+				 }
+			   check_obj.each( function(index){
+				  s_app+="'"+$(this).val()+"'"+",";
+				  s_name+=$(this).attr("attr_name")+"+";
+			  });
+		      s_name = s_name.slice(0,s_name.length-1);
+			  $("#"+x_index).find("div").attr("data_name",x_text);
+			  $("#"+x_index).find("div").attr("data",x_in);
+			  $("#"+x_index).find("div").attr("data_value",s_app);
+			  $("#"+x_index).find("div").html(x_text+':'+s_name+' <span class="caret"></span>'); 
+			  		 			 
+             $('#myModal').modal('hide');			 
+		})
+		
+		$("#hw_add").click( function(){
+		     reloaddata();
+		})
+		
+		$(document).on( 'click',".hw_has_search li",function(){
+		   
+	      $('#myModal').modal('show');
+		  $("#hw_select_c ul").hide();
+		  var c_index = $(this).find("div").attr("data");
+		 
+		  var c_value = $(this).find("div").attr("data_value");
+		  $("#drop8").text( $(this).find("div").attr("data_name") );
+		  $("#drop8").attr("data",c_index);
+		  $("#drop8").attr("index",$(this).attr("id") );
+		  var c_arr = c_value.split(",");
+		  $("#hw_select_c").show();
+		  $("#"+c_index).show();
+		  c_arr.forEach(function(v,i){
+             $("#"+c_index+"_"+v).attr("checked",'true');
+			
+            })
+	   })
+	   
+	   $(".bar_allow_roe").click( function(){
+	       
+		   if( $(this).find("i").hasClass("fa-angle-double-right") )
+		      {
+			     $(this).find("i").removeClass("fa-angle-double-right");
+				 $(this).find("i").addClass("fa-angle-double-left");
+				 $(this).animate({'left':'21%'},1000);
+				 $(".hw_app_navlist").show(1000);
+			  }else{
+			     $(this).find("i").removeClass("fa-angle-double-left");
+				 $(this).find("i").addClass("fa-angle-double-right");
+				 $(this).animate({'left':'0%'},1000);
+				 $(".hw_app_navlist").hide(1000);
+			  }
+	   })
+	    
+	   
+	   
+	   $("input[name='app_id'],input[name='type']").click( function(){
+	        reloaddata();
+			
+	   })	   
+	   
+	    $('#keywords').bind('input propertychange', function()
+		   {
+			   var input_text = $(this).val();
+               $("#ads_content .body").each(  function(i){
+			        var text = $(this).find(".first").text();
+					if( text.indexOf(input_text)!=-1 )
+					  {
+					     $(this).show();
+					  }else{
+					     $(this).hide();
+					  }
+			   })			   
+		   });
+		  
+	}); 
+	
+	var reloaddata = function()
+	   {
+	      var app="";
+		  var all =[];
+		  $(".hw_has_search div").each( function(index){
+		      all[index]={ type:$(this).attr("data"),value:$(this).attr("data_value")  };
+		  });
+		  $("input[name='app_id']:checked").each( function(index){
+		      app+=$(this).val()+",";
+		  });
+		  var index = layer.load();
+		  $.post("/admin_adgain/getaveragedata",{appids:app,all:all,start_date:start_date,end_date:end_date},function(e){
+		      layer.closeAll();
+			 $(".hw_c_cc").html(e);
+		  })
+	   }
+	   
+  </script>
+</html>

@@ -1,0 +1,446 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GAME BRAIN</title>
+    {include file="./static/html/header_common.html" /}
+	  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+   <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <!-- import JavaScript -->
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <script src="/static/js/axios.min.js"></script>	 
+	<style>
+	.cell{font-size:12px;}
+	  .el-table td, .el-table th {
+    padding:8px 0;}
+	  .item {
+		  margin-top: 10px;
+		  margin-right: 40px;
+		}
+		.el-tag + .el-tag {
+    margin-left: 10px;
+  }
+label{
+ font-weight:400;
+}
+.video-lib{width:100%;margin:20px auto;}
+.video-lib .el-collapse-item__header{padding-left:10px;}
+.tag-filter__title {
+    background:#c8cfdb;
+	display: inline-block;
+	min-width: 40px;
+	height: 21px;
+	border-radius: 16px;
+	color:#fff;
+    line-height: 14px;
+    padding: 4px 6px;
+}
+.container .el-main {
+    color: #333;
+    text-align: left;
+	padding:0px;
+	background-color: #fafbfc;
+	overflow:hidden;
+}
+.filter-container .filter {
+    font-size: 14px;
+    color:#333;
+    position: relative;
+    line-height: 45px;
+    margin-bottom: 6px;
+}
+.filter-container .filter .filter-label {
+    font-weight: 600;
+    color: #333;
+    display: inline-block;
+    width:56px;
+}
+.filter-container .filter .filter-options {
+    display: inline-block;
+    vertical-align: top;
+    width: calc(100% - 100px);
+    min-width: 700px;
+}
+.filter .filter-options .filter-option {
+    line-height: 22px;
+    display: inline-block;
+    padding: 2px 8px;
+    margin-right: 24px;
+    cursor: pointer;
+	font-size:12px;
+}
+.filter .filter-options .filter-option.active,.filter .filter-options .filter-option:hover{
+	color:red;
+	font-weight:700;
+}
+.images{cursor:pointer;width:35px;height:35px;font-size:10px;border-radius:8px;color:#ffda77;text-align:center;background-color:#30475e;line-height:35px;overflow:hidden;}
+	</style>
+</head>
+<body style="background: #fff !important;">
+    <div id="wrapper" >
+        {include file="./static/html/header.html" /}	
+		<div class="hw_page_content">
+		    <div class="hw_menu_left">
+         {include file="./static/html/side.html" /}  
+			</div>
+		    <div class="hw_content_right" style="padding:10px 10px;">
+			   <h3 style="color:#222;margin-bottom: 20px;float:left;">
+			    	题材测试列表
+			   </h3>
+			    <div style="clear:both;"></div>
+			   <div class="main" style="margin-top:20px;">                  
+							<div class="video-lib">
+				<div style="margin-bottom:20px;">
+					 <el-select v-model="status" size="small" @change="filterStatus" style="width:120px;" placeholder="请选择状态">
+					    <el-option  label="全部" value="all"></el-option>
+						<el-option  label="创建中" value="0"></el-option>
+						<el-option  label="测试中" value="1"></el-option>
+						<el-option  label="测试结束" value="2"></el-option>
+					</el-select>
+					<el-date-picker v-model="date"
+                                      size="small"
+									  style="width:240px"
+									  @change="updateDate"
+									  type="daterange"
+									  value-format="yyyy-MM-dd">
+					</el-date-picker>
+					<el-input placeholder="请输入关键字" style="width:240px;" v-model="keyword" size="small" clearable>
+						<el-button type="primary" slot="append" @click="search" icon="el-icon-search">搜索</el-button>
+					</el-input>
+					{if condition="permission(52)"}
+					  <el-button type="danger" size="small" @click="openAdd" style=float:right;"">+创建测试</el-button>
+					{/if}
+				</div>
+				<el-form :inline="true" :model="filter_vue" class="demo-form-inline">
+					<el-row>
+												
+						<el-col :span="3">
+							<el-form-item label="展示">
+								<el-input v-model="filter_vue.impressions" size="mini" style="width: 50px"></el-input>
+							</el-form-item>
+						</el-col>
+						<el-col :span="3">
+							<el-form-item label="点击">
+								<el-input v-model="filter_vue.spend" size="mini" style="width: 50px"></el-input>
+							</el-form-item>
+						</el-col>
+						<el-col :span="3">
+							<el-form-item label="安装">
+								<el-input v-model="filter_vue.clicks" size="mini" style="width: 50px"></el-input>
+							</el-form-item>
+						</el-col>
+						<el-col :span="3">
+							<el-form-item label="CTR">
+								<el-input v-model="filter_vue.ctr" size="mini" style="width: 50px"></el-input>
+							</el-form-item>
+						</el-col>
+						<el-col :span="3">
+							<el-form-item label="CVR">
+								<el-input v-model="filter_vue.cvr" size="mini" style="width: 50px"></el-input>
+							</el-form-item>
+						</el-col>
+						<el-col :span="3">
+							<el-form-item >
+								<el-button type="primary" size="mini" @click="onSubmitFilterVue">检索</el-button>
+							</el-form-item>
+						</el-col>
+						<el-col :span="3">
+							总计花费:${{total_spend}}
+						</el-col>
+					</el-row>
+				</el-form>
+				<el-row>
+					<template>
+						<el-table
+							:data="table_list"
+							max-height="700"
+							:fit="true"
+							row-key="id"
+							v-loading="loading"
+							:expand-row-keys="expands"
+							@expand-change="expandChange"
+							:default-sort = "{prop: 'create_time', order: 'descending'}"
+							width="100%;">
+							<el-table-column type="expand" fixed >
+								<template slot-scope="props">
+									<el-table										
+										:data="props.row.videoList"
+										max-height="500"
+										:fit="true"
+										style="width: 100%">
+										<el-table-column label="广告">
+											<template slot-scope="scope">
+												<a target="__blank" :href="scope.row.path" style="float:left;">
+													<img style="vertical-align:middle;border-radius:10px;" width="40px" height="40px" :src="scope.row.thumb" />
+												</a>
+											</template>
+										</el-table-column>
+										<el-table-column label="广告名称" width="200" prop="filename">
+										  <template slot-scope="scope">
+												<div>{{scope.row.filename}} <span v-if="scope.row.status==2" style="color:red;margin-left:5px;">已拒审</span></div>
+											</template>
+										</el-table-column>
+										<el-table-column
+											sortable
+											prop="report.impressions"
+											label="展示">
+										</el-table-column>
+										<el-table-column
+											sortable
+											prop="report.clicks"
+											label="点击">
+										</el-table-column>
+										<el-table-column
+											sortable
+											prop="report.installs"
+											label="安装">
+										</el-table-column>
+										<el-table-column
+											sortable
+											prop="report.ctr"
+											label="CTR">
+										</el-table-column>
+										<el-table-column
+											sortable
+											prop="report.cvr"
+											label="CVR">
+										</el-table-column>
+										<el-table-column
+											sortable
+											prop="report.cpm"
+											label="CPM">
+										</el-table-column>
+										<el-table-column
+											sortable
+											prop="report.spend"
+											label="花费">
+										</el-table-column>
+									</el-table>
+								</template>
+							</el-table-column>
+							<el-table-column label="名称" width="200" fixed>
+								<template slot-scope="scope">
+									<a target="__blank" :href="scope.row.url" >
+										<img v-if="scope.row.icon" style="height:35px;width:35px;vertical-align:middle;border-radius:10px;" :src="scope.row.icon" />
+										<div class="images" v-else>{{scope.row.title}}</div>
+										<el-tooltip v-if="scope.row.desc" class="item" effect="dark" :content="scope.row.desc" placement="bottom">
+										 <p>{{scope.row.title}}</p>
+										</el-tooltip>
+										<p v-else>{{scope.row.title}}</p>
+										
+									</a>
+								</template>
+							</el-table-column>							
+							<el-table-column
+								fixed
+								sortable
+								prop="create_time"
+								width="150"
+								label="测试时间">
+							</el-table-column>
+							<el-table-column
+								fixed
+								prop="country"
+								label="地区">
+							</el-table-column>
+							<el-table-column label="状态">
+								<template slot-scope="scope">
+									<span v-if="scope.row.status==0" style="color:#FF1493;">创建中</span>
+									<span v-else-if="scope.row.status==1" style="color:#4169E1;">测试中</span>
+									<span v-else-if="scope.row.status==2" style="color:#BA55D3;">测试结束</span>
+									<span v-else-if="scope.row.status==3" style="color:#127681;">计划中</span>
+								</template>
+							</el-table-column>
+							<el-table-column
+								sortable
+								prop="report.impressions"								
+								label="展示">
+							</el-table-column>
+							<el-table-column
+								sortable
+								prop="report.clicks"
+								label="点击">
+							</el-table-column>
+							<el-table-column
+								sortable
+								prop="report.installs"
+								label="安装">
+							</el-table-column>
+							<el-table-column
+								sortable
+								prop="report.ctr"
+								label="CTR">
+							</el-table-column>
+							<el-table-column
+								sortable
+								prop="report.cvr"
+								label="CVR">
+							</el-table-column>
+							<el-table-column
+								sortable
+								prop="report.cpm"
+								label="CPM">
+							</el-table-column>
+							<el-table-column
+								prop="report.spend"
+								sortable
+								label="花费">
+							</el-table-column>
+                            <el-table-column							
+								label="操作">
+								<template slot-scope="scope">
+									<el-button  v-if="scope.row.status!=2" @click="handleClick(scope.row)" type="text" size="small">暂停</el-button>
+									<span v-else>---</span>
+								</template>
+							</el-table-column>							
+						</el-table>
+					</template>
+				</el-row>
+			</div>      
+				</div>
+				<div class="clear"></div>
+
+			</div>
+		</div>
+	</div>	
+</body>
+ {include file="./static/html/footer_common.html" /}
+  <script>
+     
+	 new Vue({
+        el: '#wrapper',
+        data: {
+            list:[],
+			status:'all',
+			date:[],
+			table_list:[],
+			table_list1:[],
+			expands:[],
+			loading:false,
+			keyword:'',
+			total_spend:'0.00',
+			filter:{},
+			filter_vue:{
+				spend:0,
+				impressions:0,
+				installs:0,
+				clicks:0,
+				ctr:0,
+				cvr:0,
+				cpi:0,
+			},
+			gameTagsList:[],
+			subjectTagsList:[],
+			testTypeList:[],
+			countryList:[]
+        },
+		created(){
+		  this.getlist()
+		},
+        mounted(){
+		   
+		   let _that =this 		   
+		  //setInterval(function () {
+				//_that.getlist()
+			//},5000)	
+		  
+		},		
+        methods: {			
+			openAdd(){
+			  window.location.href='/testmaterial/add';
+			},
+			expandChange(row, expandedRows) {
+			  //this.expands =[]
+			  this.expands.push =row;
+		   },
+           updateDate(){
+		     this.getlist()
+		   },		   
+			handleClick(row){
+			  let id  =row.id
+				this.$confirm('确认暂停该测试题材吗？', '提示', {
+					type: 'warning'
+				}).then(() => {
+					axios({
+						method: 'post',
+						url:'/testmaterial/delete',
+						data:{id:id,title:row.title}
+					}).then(res=>{			
+                    this.$message.success('已暂停');
+					this.getlist()
+				 })
+				}).catch(() => {
+
+				});
+			},
+			search(){
+			  let keyword = this.keyword
+			  this.table_list = this.table_list1
+			  this.table_list = this.table_list.filter(data => !keyword || data.title.toLowerCase().includes(keyword.toLowerCase()))
+			},
+			filterStatus(){
+			  let status = this.status
+			  this.table_list = this.table_list1
+			  if(status!='all')
+			  {
+			    this.table_list = this.table_list.filter(data => !status || data.status==status)
+			  }
+			},
+			onSubmitFilterVue(){
+			var that = this
+			this.table_list = this.table_list1
+			this.table_list = this.table_list.filter(function (element, index, array) {
+				
+				if (element.report.impressions<that.filter_vue.impressions){
+					return false
+				}
+				if (element.report.installs<that.filter_vue.installs){
+					return false
+				}
+				if (element.report.clicks<that.filter_vue.clicks){
+					return false
+				}
+				if (element.report.ctr<that.filter_vue.ctr){
+					return false
+				}
+				if (element.report.cvr<that.filter_vue.cvr){
+					return false
+				}
+				return true
+		 	  })
+		    },
+			getlist(){
+			   this.loading = true
+			   let _that = this
+			   let param ={
+			     date:this.date
+			   }
+				   axios({
+						method: 'post',
+						url:'/testmaterial/json_data',
+						data:param
+					}).then(res=>{			
+					 _that.loading = false
+					 this.table_list = res.data.res
+					 this.table_list1 = res.data.res
+					 this.total_spend = res.data.total_spend
+					 let status = this.status
+					 let keyword = this.keyword
+					 if(status!='all')
+					  {
+						this.table_list = this.table_list.filter(data => !status || data.status==status)
+					  }
+					 if(keyword!='')
+					  {
+						this.table_list = this.table_list.filter(data => !keyword || data.title.toLowerCase().includes(keyword.toLowerCase()))
+					  }
+					 
+					 
+				 })
+			}
+        }
+    })
+  </script>	
+</html>

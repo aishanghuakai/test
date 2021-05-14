@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<title>🎈哈乐沃德五周年🎈</title>
+{include file="../application/index/view/common/header.html" /}
+<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+<style>
+  .el-upload-list--picture-card .el-upload-list__item,.el-upload--picture-card{}
+  .imagelook .el-dialog{background-color:rgba(0,0,0,1)}
+</style>
+<!--[if IE]>
+  <script>window.location.href = '/compatibility';</script>
+  <![endif]-->
+</head>
+<body class="mdui-loaded">
+<div id="app" style="width:95%;margin:0 auto;">
+ 
+ 
+    <el-form v-loading="editload">
+    <el-form-item label="昵称" >
+      <el-input  v-model="actor" placeholder="请输入2-10个字符" clearable autocomplete="off"></el-input>
+    </el-form-item>
+    <el-form-item label="内容" >
+      <el-input type="textarea" :rows="6" v-model="content" clearable placeholder="内容字数在10-300之间" autocomplete="off"></el-input>
+    </el-form-item>
+   <el-form-item>
+     <p><i class="el-icon-warning-outline"></i> 发布之前，请确认内容无误，一经发布，不可修改!</p>
+   </el-form-item>
+  </el-form>
+  <div style="text-align:center;margin-bottom:20px;" class="dialog-footer">
+    <el-button  @click="back">返 回</el-button>
+    <el-button  type="danger" @click="addSubmit" >确认发布</el-button>
+  </div>
+</div>
+</body>
+  <!-- import Vue before Element -->
+  <script src="/static/js/vue.min.js"></script>
+  <!-- import JavaScript -->
+  <script src="/static/index/index.js"></script>
+  <script src="/static/js/axios.min.js"></script>
+  <script>
+     let t = new Vue({
+      el: '#app',
+      data: function() {
+        return { actor:'',content:'',loading:false,editload:false }
+      },
+	  methods:{
+	   
+	  back(){
+	    window.location.href ='/say.html';
+	  },
+	  addSubmit(){
+		 if( this.actor.length<2 || this.actor.length>10 )
+		   {
+			this.$message.warning('昵称长度为2-10个字符');
+			return false
+		   }
+		   
+		    if( this.content.length<10 || this.content.length>300 )
+		   {
+			this.$message.warning('内容字数在10-300之间');
+			return false
+		   }
+		   
+		   let params ={
+		     actor:this.actor,
+			 content:this.content
+		   }
+		   this.editload = true
+		   let _that =this
+		   axios.post('/postcomment',params)
+		  .then(function (response) {
+			 _that.editload = false
+			 if( response.data=="ok" )
+			 {
+			    _that.$message.success('发布成功')
+				window.location.href ='/say.html';
+			 }else{
+			    _that.$message.warning('发布失败');
+			 }
+		  })
+		  .catch(function (error) {
+			console.log(error);
+		  });
+	   }
+	 }
+    })
+  </script>
+</html>

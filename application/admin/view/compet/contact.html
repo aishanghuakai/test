@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GAME BRAIN</title>
+    {include file="./static/html/header_common.html" /}
+  <link href="/static/css/checkbox.css" rel="stylesheet" type="text/css">	
+	 <link rel="stylesheet" type="text/css" media="all" href="/static/plugin/jquery-time/daterangepicker-bs3.css" />
+<link href="/static/css/show.css?t=<?php echo time(); ?>" rel="stylesheet">
+ <link href="/static/css/adid.css?t=1539348927" rel="stylesheet">	
+	 <style>
+	    th,td{text-align:center;vertical-align:middle;}
+
+
+.cursor,#download,.country label,.fa-pencil-square-o,.fa-line-chart{
+cursor:pointer;
+}
+
+.aactive{
+ color: #ff8282  !important;
+}
+.title_active {
+    font-weight:400;
+    font-size:30px !important;  
+	color: #ff8282 !important;
+	margin-right:20px;
+}
+.title {
+   
+    font-size:20px;  
+	color:#333;
+	margin-right:20px;
+}
+.splitter {
+   
+    border-bottom: 1px solid #e9eef4;
+    margin-top: 11px;
+}
+
+.hw_reven table {
+    border-collapse: collapse;
+    font-size: 12px !important;
+    color: #222 !important;
+    text-align: left !important;
+    line-height: 40px;
+}
+.hw_reven .table > thead > tr > th{
+  border-bottom:1px solid #e8e8e8 !important;
+  border-top:1px solid #e8e8e8 !important;
+   color: #222 !important;
+    background: #f0f1f2;
+}
+</style>
+</head>
+<body>
+    <div id="wrapper" style="background-color:#fff;">
+        {include file="./static/html/header.html" /}	
+		<div class="hw_page_content">
+		    
+		    <div class="hw_menu_left">
+         {include file="./static/html/side.html" /}  
+			</div>
+		    <div class="hw_content_right" style="padding-left:30px;padding-right:30px;padding-bottom:30px;width:80%;" >
+			
+				<div style="padding-top:30px;">				  
+				  	
+                   <a class="title title_active" href="/admin_compet/contact">合作联系</a>				   
+				</div>
+				
+				<!-- <div class="splitter"></div> -->
+				
+               <div class="hw_reven clearfix" style="padding:20px 0px;">
+			      <table class="table table-hover" >
+							  <thead style="font-size:13px;">
+								<tr>
+								   <th style="text-align:left;">姓名</th>
+								   <th style="text-align:left;">邮箱</th>
+								   <th style="text-align:left;">公司名称</th>
+								   <th style="text-align:left;">游戏地址</th>
+								   <th style="text-align:left;">额外信息</th>
+								  <th>创建时间</th>
+								 
+								</tr>
+							  </thead>
+							  <tbody>
+							    {volist name="data" id="vv"}
+								<tr>
+								  <td style="text-align:left;">{$vv.name}</td>
+								  <td style="text-align:left;">{$vv.email}</td>
+								  <td style="text-align:left;">{$vv.company}</td>
+								  <td style="text-align:left;">{$vv.gameurl}</td>
+								  <td style="text-align:left;">{$vv.message}</td>
+                                  <td>{$vv.addtime}</td>								  
+								</tr>
+								{/volist}								
+							  </tbody>
+				  </table>
+				  <div style="text-align:center;">{$data->render()}</div>
+				</div>
+			  </div>
+			   
+					   
+			
+		</div>
+		     
+		 {include file="./static/html/footer.html" /}
+	</div>
+</body>
+ {include file="./static/html/footer_common.html" /}
+</html>

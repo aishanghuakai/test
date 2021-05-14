@@ -1,0 +1,246 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+	<meta charset="utf-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<title>GAME BRAIN</title>
+	{include file="./static/html/header_common.html" /}
+	<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+	<script src="https://unpkg.com/vue/dist/vue.js"></script>
+	<!-- import JavaScript -->
+	<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+	<script src="/static/js/axios.min.js"></script>
+	<style>
+		.cell {
+			font-size: 12px;
+			color: #222;
+		}
+
+		.el-table td, .el-table th {
+			padding: 9px 0;
+		}
+
+		.item {
+			margin-top: 10px;
+			margin-right: 40px;
+		}
+
+		.grid-content {
+			background: #fff;
+			padding: 15px !important;
+			border-radius: 10px;
+			border: 0;
+			color: #222;
+			text-align: center;
+		}
+
+		.card-category {
+			font-size: 13px;
+			color: #444;
+			margin-bottom: 0;
+		}
+
+		.card-title {
+			color: #575962;
+			font-size: 18px;
+			font-weight: 400;
+		}
+
+	</style>
+</head>
+<body style="background:#fff;">
+<div id="wrapper" style="background-color:#fff;">
+	{include file="./static/html/header.html" /}
+		<div class="hw_page_content" style="background-color:#fff;">
+			<div class="hw_menu_left">
+				{include file="./static/html/side.html" /}
+			</div>
+			<div class="hw_content_right" style="padding:0px 5px;background: #fff;">
+				<div class="header">
+					<span><a style="font-size: 24px;font-weight: bolder;margin-right: 5px;color: #838383" href="/admin_purchase/index">销售概览</a></span>
+					<span><a style="font-size: 24px;font-weight: bolder;margin-right: 5px;" :style="is_times===1?'color:#333':'color:#838383'" href="/admin_purchase/times?is_times=1">内购次数</a></span>
+					<span><a style="font-size: 24px;font-weight: bolder;margin-right: 5px;" :style="is_times===1?'color:#838383':'color:#333'" href="/admin_purchase/times?is_times=0">内购金额</a></span>
+					<br>
+					<span style="color: red">本数据当前为 ADJUST 回传数据 ,看美国数据注意夏令时的问题, 时区为
+						<span v-if="time_zone===''" style="color: #0BB20C">北京时间</span>
+						<span v-if="time_zone==='utc'" style="color: #0f88eb">UTC时区</span>
+						<span v-if="time_zone==='pdt'" style="color: #00b8d4">PDT时区(太平洋夏令时)</span>
+						<span v-if="time_zone==='pst'" style="color: #1de9b6">PST时区(太平洋标准时)</span>
+					</span>
+				</div>
+
+				<div style="padding:10px 20px;">
+					<div class="main" style="margin-bottom:10px;">
+						<h4 style="float:left;font-size:16px;">时间明细</h4>
+						<div style="float:right;margin-right:10px;">
+							<el-button size="small" @click="download" type="primary" icon="el-icon-download"></el-button>
+						</div>
+						<div style="float:right;margin-right:10px;">
+							<el-select v-model="time_zone" placeholder="请选择" @change="handleCountry">
+								<el-option label="东八区" value="">东八区</el-option>
+								<el-option label="UTC" value="utc">UTC</el-option>
+								<el-option label="PDT(太平洋夏令时)" value="pdt">PDT(太平洋夏令时)</el-option>
+								<el-option label="PST(太平洋标准时)" value="pst">PST(太平洋标准时)</el-option>
+							</el-select>
+						</div>
+						<div style="float:right;margin-right:10px;">
+							<el-select v-model="country" @change="handleCountry" placeholder="请选择国家">
+								{volist name="countryList" id="item"}
+								<el-option key="{$key}" label="{$item}" value="{$key}"></el-option>
+								{/volist}
+							</el-select>
+						</div>
+						<div style="float:right;margin-right:10px;">
+							<el-date-picker
+								v-model="date"
+								type="daterange"
+								@change="handleCountry"
+								value-format="yyyy-MM-dd"
+								style="width:300px;"
+								start-placeholder="开始"
+								end-placeholder="结束">
+							</el-date-picker>
+						</div>
+					</div>
+					<el-table
+						:data="tableData"
+						show-summary
+						:summary-method="getSummaries"
+						v-loading="loading"
+						style="width:100%;">
+						<el-table-column prop="date" align="center" label="安装日期"></el-table-column>
+						<el-table-column align="center" label="安装0天">
+							<template slot-scope="scope">
+								<el-popover trigger="hover" placement="top"  v-if="is_times===1">
+									<p>收益: {{scope.row['money_0']?Number(scope.row['money_0']).toFixed(2)+'$':0}}</p>
+									<div slot="reference" class="name-wrapper">
+										{{scope.row['count_0']?scope.row['count_0']:0}}
+									</div>
+								</el-popover>
+								<el-popover trigger="hover" placement="top" v-else>
+									<p>次数: {{scope.row['count_0']?scope.row['count_0']:0}} </p>
+									<div slot="reference" class="name-wrapper">
+										{{scope.row['money_0']?Number(scope.row['money_0']).toFixed(2)+'$':0}}
+									</div>
+								</el-popover>
+							</template>
+						</el-table-column>
+						<el-table-column v-for="index of maxDay" align="center" :label="'安装'+index+'天'">
+							<template slot-scope="scope"  >
+								<el-popover trigger="hover" placement="top" v-if="is_times===1">
+									<p>收益: {{scope.row['money_'+index]?Number(scope.row['money_'+index]).toFixed(2)+'$':0}}</p>
+									<div slot="reference" class="name-wrapper">
+										{{scope.row['count_'+index]?scope.row['count_'+index]:0}}
+									</div>
+								</el-popover>
+								<el-popover trigger="hover" placement="top" v-else>
+									<p>次数: {{scope.row['count_'+index]?scope.row['count_'+index]:0}} </p>
+									<div slot="reference" class="name-wrapper">
+										{{scope.row['money_'+index]?Number(scope.row['money_'+index]).toFixed(2)+'$':0}}
+									</div>
+								</el-popover>
+							</template>
+						</el-table-column>
+					</el-table>
+				</div>
+			</div>
+		</div>
+	<div style="clear: both"></div>
+</div>
+{include file="./static/html/footer.html" /}
+</body>
+{include file="./static/html/footer_common.html" /}
+<script>
+
+	let t = new Vue({
+		el: '#wrapper',
+		data: {
+			loading: false,
+			date: ['{$start}', '{$end}'],
+			tableData: [],
+			maxDay: 0,
+			time_zone:"pst",
+			country:"all",
+			is_times:1,
+		},
+		created() {
+			this.getlist()
+			this.is_times = this.getQueryString('is_times')==null?1:Number(this.getQueryString('is_times'))
+		},
+		methods: {
+			getQueryString(name) {
+				var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+				var r = window.location.search.substr(1).match(reg);
+				if (r != null) return unescape(r[2]); return null;
+			},
+			goTO(url){
+				window.location.href = url
+			},
+			handleCountry() {
+				this.getlist()
+			},
+			getSummaries(param) {
+				const sums = []
+				sums[0]='总计'
+				let _max_day = this.maxDay+1
+				while (_max_day){
+					_max_day--
+					sums.push(0)
+				}
+				let that = this
+				this.tableData.forEach(function (item) {
+					let _max_day = that.maxDay+1
+					while (_max_day){
+						if (that.is_times){
+							sums[_max_day] += item['count_'+(_max_day-1)]!==undefined?item['count_'+(_max_day-1)]:0
+						}else{
+							sums[_max_day] += item['money_'+(_max_day-1)]!==undefined?item['money_'+(_max_day-1)]:0
+						}
+						sums[_max_day] = Math.floor(sums[_max_day]*100)/100
+						_max_day--
+					}
+				});
+				return sums;
+			},
+			getlist() {
+				this.loading = true
+				let params = {
+					date: this.date,
+					appid: '{$appid}',
+					time_zone:this.time_zone,
+					country:this.country
+				}
+				let _that = this
+				axios({
+					method: 'post',
+					url: '/admin_purchase/times_json_data',
+					data: params
+				}).then(res => {
+					_that.loading = false
+					if (Object.keys(res.data).length){
+						this.maxDay = res.data.max_day
+						this.tableData = Object.values(res.data.out_data)
+					}
+				})
+			},
+			toQueryString(obj) {
+				var qstring = "&"
+				for (var k in obj) {
+					qstring += k + "=" + obj[k] + "&"
+				}
+				return qstring
+			},
+			download(){
+				let params = {
+					date: this.date,
+					appid: '{$appid}',
+					time_zone:this.time_zone,
+					country:this.country
+				}
+				window.location.href='/admin_purchase/times_json_data?is_times='+this.is_times+'&is_download=true'+this.toQueryString(params)
+			},
+		}
+	})
+</script>
+</html>

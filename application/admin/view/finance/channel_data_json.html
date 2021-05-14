@@ -1,0 +1,22 @@
+
+					    {volist name="data" id="vo"}
+                        <tr>
+                          <td style="color:#e83e8c">
+						    {if condition="isset($vo['icon_url'])"}
+                              <img src="{$vo.icon_url}" class="mr-2" alt="image">
+							{/if}
+                            {$vo.appcation}
+                          </td>
+                          <td>
+                            ${$vo.spend}
+                          </td>
+                         
+                          <td>
+                            {$vo.installs}
+                          </td>
+                          <td>
+                            ${$vo.cpi}
+                          </td>
+                        </tr>
+                      {/volist}                      
+                     

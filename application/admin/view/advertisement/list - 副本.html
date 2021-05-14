@@ -1,0 +1,319 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title></title> 
+	{include file="./static/html/header_common.html" /}
+    <style>
+	li{
+	   padding: 5px 0;
+list-style: none;
+ 
+font-size: 12px;
+	}
+	li.alone{
+	  padding-top:20px;	
+	}
+	 li .avatar {
+    height: 50px;
+    width: 50px;
+    float: left;
+    margin: 3px 15px 0px 10px;
+    border: none;
+    border-radius: 50%;
+}
+img {
+    vertical-align: middle;
+}
+.date-picker {
+    cursor: pointer;
+	float:right;
+	padding-right:20px;
+	color: #999;
+}
+.edit,.delete,.look{
+   cursor: pointer;
+}
+form .row{
+  margin-left:30px;
+  margin-bottom:0px;
+  margin-right:30px;
+  margin-top:5px;
+}
+.row .col.s6 {
+    width: 100%;
+    margin-left: auto;
+    left: auto;
+    right: auto;
+}
+.row input{
+  margin:0 0;
+  padding:0 0;
+}
+.dt:hover{
+  color:#FF9966;
+  
+}
+
+td{
+  font-size:16px;
+  color:#222;
+}
+	</style>	
+</head>
+<body>
+    <div id="wrapper">
+        {include file="./static/html/header.html" /} 
+		
+	 
+         {include file="./static/html/side.html" /} 
+        <!-- /. NAV SIDE  -->
+        <div id="page-wrapper">
+		  <div class="header"> 
+			<h1 class="page-header">
+				广告应用中心
+			</h1>
+			<h1  style="float:right;margin-right:15px;color:#ccc;">
+				#{$list->total()}
+			</h1>
+			<ol class="breadcrumb">
+			  <li><a href="#">主页</a></li>
+			  <li><a href="#">广告管理</a></li>
+			  <li class="active">应用列表</li>
+			</ol> 									
+		</div>
+            <div id="page-inner"> 
+			     <div class="row">
+                <div class="col-md-12">
+                     <!--    Hover Rows  -->
+                    <div class="card">
+                        <div class="card-action">
+                       <div style="float:left;margin-right:20px;"><a style="<?php if($type==1){ echo "color: #2ec376;"; }else{ echo "color: #999;"; } ?>font-weight: normal;" href="/admin_advertisement/lists">adc工程</a></div>
+                       <div style="float:left;"><a style="<?php if($type==2){ echo "color: #2ec376;"; }else{ echo "color: #999;"; } ?>font-weight: normal;" href="/admin_advertisement/lists?type=2">tangram工程</a></div>
+					  <!--  <div style="float:right;margin-top:-18px;margin-right:-10px;">#{$list->total()}</div> -->
+                       <div style="float:right;" id="add"><a class="btn-floating"><i class="material-icons">add</i></a></div>				   
+                        </div>
+						<div>					
+				     </div>
+                        <div class="card-content" style="padding: 5px 20px 20px 20px;clear:both;">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                             <th style="vertical-align:middle; text-align:center;">序号</th>
+                                             <th style="vertical-align:middle; text-align:center;">应用名称</th>
+                                             <th style="vertical-align:middle; text-align:center;">包名</th>
+											 <th style="vertical-align:middle; text-align:center;">说明</th>
+                                             <th style="vertical-align:middle; text-align:center;">接口URL</th>
+											 <th style="vertical-align:middle; text-align:center;">修改人</th>
+									         <th style="vertical-align:middle; text-align:center;">修改时间</th>
+											 <th style="vertical-align:middle; text-align:center;">操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+									    {volist name="list" id="item"}
+                                        <tr class="dt" onclick="he_location({$item.id});">
+                                            <td class="dd" style="vertical-align:middle; text-align:center;"><?php $p=isset($_GET["page"])?$_GET["page"]:1; echo ($p-1)*20+$key+1; ?></td>
+                                           
+                                             <td class="dd" style="vertical-align:middle; text-align:center;">{$item.app_name}</td>
+                                             <td class="dd" style="vertical-align:middle; text-align:center;">{$item.package_name}</td>
+											 <td class="dd" style="vertical-align:middle; text-align:center;">{$item.remark}</td>
+                                             <td style="vertical-align:middle; text-align:center;"><i class="badge look" data="{$item.id|getapiurl}">查看</i></td>
+											 <td class="dd" style="vertical-align:middle; text-align:center;">{$item.updateuser}</td>
+											 <td class="dd" style="vertical-align:middle; text-align:center;font-style:italic;">{$item.updatetime|getadvertime}</td>
+											 <td style="vertical-align:middle; text-align:center;"  ><i data-id="{$item.id}" data-appname="{$item.app_name}" data-packagename="{$item.package_name}" data-remark="{$item.remark}" class="material-icons dp48 edit">mode_edit</i>&nbsp;&nbsp;<i class="fa fa-close fa-lg delete" data-id="{$item.id}" style="vertical-align:25%;color:red;"></i></td>                                           
+                                        </tr>
+                                        {/volist}
+                                    </tbody>
+                                </table>
+                                 <div>{$list->render()}</div>								
+                            </div>
+														
+                        </div>
+                    </div>
+                    <!-- End  Hover Rows  -->
+                </div>
+         
+            </div>		
+         <!-- /. PAGE WRAPPER  -->
+        </div>
+     <!-- /. WRAPPER  -->
+	 
+   {include file="./static/html/footer_common.html" /}
+  <!-- Morris Chart Js -->
+   <script src="/static/assets/js/jquery-1.10.2.js"></script>
+	
+	<!-- Bootstrap Js -->
+    
+	
+    <script>
+	   $(function(){
+			$("tbody tr:even").css("background","#dff0d8");
+			$("tbody tr:odd").css("background","#fff");
+			})
+	  $(function () {
+	    
+	       $(".dd").not(".edit").mouseenter( function(){
+		      layer.tips('点击进入应用广告设置', '.dd', {
+				  tips: [1, '#0FA6D8'] //还可配置颜色
+				});
+		   })
+		   $(".dd").mouseleave( function(){
+		      layer.closeAll();
+		   })
+		   $(".look").click( function(){
+		      var url = $(this).attr("data");
+			 
+		      layer.alert('<a target="__blank" href="'+url+'" >'+url+'</a>', {
+				  skin: 'layui-layer-molv' //样式类名
+				  ,closeBtn: 0
+				});
+			   return false;
+		   });
+		   $(".delete").click( function(event){
+		        var id = $(this).attr("data-id");
+				var _$ = $(this);
+		        layer.confirm('确认删除后数据将不会保存?', {
+					  btn: ['确认','取消'] //按钮
+					}, function(){
+					  var index = layer.load(1, {
+								  shade: [0.1,'#fff'] //0.1透明度的白色背景
+								});
+					   $.post("/admin_advertisement/delete",{id:id},function(e){
+					       layer.closeAll();
+					         if("ok"==e)
+							 {
+							    _$.parents("tr").remove();
+								layer.msg('删除成功');								
+							 }else{
+							   layer.msg('网络异常,删除失败', {icon: 1});
+							 }
+					   })
+					 
+					}, function(){
+					  
+					});
+			   return false;
+		   });
+		   
+		});
+        var he_location = function(id)
+				{
+				   window.location.href="/admin_advertisement/adlist?type={$type}&id="+id;
+				}					
+	   var  searchs = function(){
+		  
+			var reportType = $('#selectType').val();
+            var url = '/admin_user/list';
+			var input = $("#text").val();
+            var params = '';
+            if(reportType!=''){
+            	params+='?'+reportType+'='+input;
+            }
+            window.location.href = url + params;  
+    }
+	$("#add").bind('click',function(event){
+	    var html='<form  style="text-align:center;">';
+		    html+=' <div class="row"><p style="font-weight:bold;color:#333;">应用名称</p><div class="input-field col s6"><input  id="app_name" name="username" value="" type="text" class="validate"></div></div>';
+			html+='<div class="row"><p style="font-weight:bold;color:#333;">包名</p><div class="input-field col s6"><input id="package_name" name="describe" type="text" value="" class="validate"></div></div>';
+			html+='<div class="row"><p style="font-weight:bold;color:#333;">说明</p><div class="input-field col s6"><input name="describe" type="text" value="" id="remark" class="validate"></div></div>';	
+			{if condition="$type eq '1'"}
+			html+='<div class="row"><p style="font-weight:bold;color:#333;">广告设置</p><p><input name="tag" type="radio"  id="test6" value="1" /><label for="test6">手动配置</label><input name="tag" checked type="radio" id="test7" value="2" /> <label for="test7">预生成</label></p></div>';
+			{/if}
+			html+='<input class="waves-effect waves-light btn add" type="submit" style="background-color: #ed4040;margin-top:20px;width:140px;" value="增加"></input></form>';
+			 //自定页
+			layer.open({
+			  type: 1,
+			  skin: 'layui-layer-rim', //加上边框
+			  area: ['500px', '450px'], //宽高
+			  content: html
+			});
+			$(".add").click( function(){
+			  
+			       var app_name = $("#app_name").val();
+				   var package_name = $("#package_name").val();
+				   var remark = $("#remark").val();
+				   var type ='<?php echo $type; ?>';
+				   if( type=='1' )
+				   {
+				      var tag = $("input[name='tag']:checked").val();
+				   }else{
+				      var tag = 1;
+				   }
+				  
+				   if( app_name=="" ||  package_name=="" )
+				   {
+				      layer.msg('应用名称,包名不能为空');
+					  return false;
+				   }
+				   layer.load(0, {shade: false});
+				   $(this).attr("disabled",true);
+			   $.post("/admin_advertisement/add",{app_class:type,tag:tag,app_name:app_name,package_name:package_name,remark:remark},function(e){
+			       $(".add").attr("disabled",false);
+			      if("ok"==e)
+				     {					    
+						
+						window.location.reload();
+						layer.closeAll();
+					 }else{
+					   layer.msg('添加失败');
+					 }
+			   })
+			  
+			   return false;
+			})
+	    event.stopPropagation();
+	});
+	$(".edit").click( function(event){
+	    var _$ = $(this);
+		var id = _$.attr("data-id");
+		var app_name = _$.attr("data-appname");
+		var package_name = _$.attr("data-packagename");
+		var remark = _$.attr("data-remark");
+	    var html='<form  style="text-align:center;">';
+		    html+=' <div class="row"><p style="font-weight:bold;color:#333;">应用名称</p><div class="input-field col s6"><input  id="app_name" name="username" value="'+app_name+'" type="text" class="validate"></div></div>';
+			html+='<div class="row"><p style="font-weight:bold;color:#333;">包名</p><div class="input-field col s6"><input id="package_name" name="describe" type="text" value="'+package_name+'" class="validate"></div></div>';
+			html+='<div class="row"><p style="font-weight:bold;color:#333;">说明</p><div class="input-field col s6"><input name="describe" type="text" value="'+remark+'" id="remark" class="validate"></div></div>';
+			html+='<input class="waves-effect waves-light btn save" type="submit" style="background-color: #2ec376;margin-top:20px;width:140px;" value="修改"></input> </form>';
+	   
+		    //自定页
+			layer.open({
+			  type: 1,
+			  skin: 'layui-layer-rim', //加上边框
+			  area: ['450px', '370px'], //宽高
+			  content: html
+			});
+			$(".save").click( function(){
+			  
+			       app_name = $("#app_name").val();
+				   package_name = $("#package_name").val();
+				   remark = $("#remark").val();
+				    if( app_name=="" ||  package_name=="" )
+				   {
+				      layer.msg('应用名称,包名不能为空');
+					  return false;
+				   }
+				   layer.load(0, {shade: false});
+				   $(this).attr("disabled",true);
+			   $.post("/admin_advertisement/edit",{id:id,app_name:app_name,package_name:package_name,remark:remark},function(e){
+			       $(".save").attr("disabled",false);
+			      if("ok"==e)
+				     {					    
+						
+						window.location.reload();
+						layer.closeAll();
+					 }else{
+					   layer.msg('修改失败');
+					 }
+			   })
+			  
+			   return false;
+			})
+	    event.stopPropagation();
+	});	
+	</script>
+</body>
+ 
+</html>

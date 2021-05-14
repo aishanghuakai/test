@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GAME BRAIN</title>
+    {include file="./static/html/header_common.html" /}
+   <link href="/static/css/checkbox.css" rel="stylesheet" type="text/css">
+   <link rel="stylesheet" type="text/css" media="all" href="/static/plugin/jquery-time/daterangepicker.css" />
+    <link href="/static/css/dialog.css?t=<?php echo time(); ?>" rel="stylesheet" type="text/css" />	
+	<link href="/static/css/admin_index.css?t=<?php echo time(); ?>" rel="stylesheet">
+	 <style>
+	     th,td{text-align:center;vertical-align:middle;}
+	 .hw_reven thead tr {
+    background-color: #fff;
+}
+.hw_reven table {
+    border-collapse: collapse;
+    font-size: 12px !important;
+    color: #222 !important;
+    text-align: left !important;
+    line-height: 40px;
+}
+.hw_reven .table > thead > tr > th{
+  border-bottom:1px solid #ebedf2 !important;
+   border-left:1px solid #ebedf2 !important;
+   padding: 10px !important;
+   color: #222 !important;
+}
+.hw_reven .table>tbody > tr > td{
+ padding:10px !important;
+  border-bottom:1px solid #ebedf2 !important;
+ font-size:13px;
+}
+form .row{
+  margin-left:30px;
+  margin-bottom:0px;
+  margin-right:30px;
+  margin-top:5px;
+}
+.row .col.s6 {
+    width: 100%;
+    margin-left: auto;
+    left: auto;
+    right: auto;
+}
+.row input{
+  margin:0 0;
+  padding:0 0;
+}
+.form-control{
+   text-indent:10px;
+}
+table{
+    min-width: 100%;
+}
+td{
+    min-width: 130px;
+}
+.table-container{
+    overflow:auto;
+    display: block;
+}
+
+.c-dropdown__item:hover {
+    background: #eaeefb;
+    color: #606266 !important;
+}
+.c-dropdown__item{font-size:13px;}
+
+.country .c-dropdown__item {
+    display: block;
+    padding:1px 16px;
+    color:#768093;
+    font-size:13px !important;
+    font-weight: 400;
+    padding-left: 8px;
+    padding-right: 24px;
+    cursor: pointer;
+    transition: background .4s ease-in-out;
+	border:none;
+}
+.channel .c-dropdown__item{
+    border-bottom: none;
+}
+.fa-tag,.fa-pencil-square-o,.purchase_edit{
+  cursor:pointer;
+}
+.info_hd {  
+    background-color: #fff !important; 
+}
+.rate_set{
+ float:right;
+ background-color: #007fff;
+ border-color: #007fff;
+ color:#fff;
+ padding: 0 22px;
+height: 30px;
+line-height: 30px;
+border-radius:6px;
+font-size:14px;
+}
+a.rate_set:hover{color:#fff;}
+
+	 </style>
+</head>
+<body>
+    <div id="wrapper">
+        {include file="./static/html/header.html" /}	
+		<div class="hw_page_content">
+		   
+		    <div class="hw_menu_left">
+         {include file="./static/html/side.html" /}  
+			</div>
+		    <div class="hw_content_right" style="margin-left:16% !important;overflow: hidden;" >
+			  <div class="newsbar-title" style="margin-left:2%;margin-top:10px;">人均广告展示趋势图</div>	
+			  <div id="chats" style="height:300px;padding:0px 20px;"></div>
+			  			  
+			   <div class="index_main" style="padding: 10px;border-radius: 10px;">
+			      <div style="padding:0px 20px;height:50px;line-height:40px;">
+				    <div class="hw_dropdown_menu" style="float:left;" id="data_start_date" style="margin-top:-5px;">
+					    {$start} 到 {$end}
+					</div>
+					<div class="hw_dropdown_menu channel" data="all" style="position:relative;float:left;height:38px;margin-left:30px;">
+					  <a href="javascript:;" class="dropdown_switch dropdown-toggle"  id="dropdownMenuAvatar1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" role="button">
+					    <label  style="font-weight:400;cursor:pointer;">全部渠道</label><i class="fa fa-caret-down" style="margin-left:5px;"></i>
+					  </a>
+					  <div class="c-dropdown__menu has-arrow dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuAvatar" x-placement="top-end" style="position: absolute; top:48px; left: 0px; will-change: transform;height:200px;overflow-y: scroll;">
+					    <a class="c-dropdown__item dropdown-item" data="all" href="javascript:;">全部</a>
+						<a class="c-dropdown__item dropdown-item" data="1" href="javascript:;">Mobvista</a>
+					    <a class="c-dropdown__item dropdown-item" data="2" href="javascript:;">Unity</a>
+					    <a class="c-dropdown__item dropdown-item" data="3" href="javascript:;">Applovin</a>	
+                        <a class="c-dropdown__item dropdown-item" data="4" href="javascript:;">Vungle</a>	
+                        <a class="c-dropdown__item dropdown-item" data="5" href="javascript:;">Google Adwords/AdMob</a>	
+                        <a class="c-dropdown__item dropdown-item" data="6" href="javascript:;">Facebook</a>	
+                        <a class="c-dropdown__item dropdown-item" data="7" href="javascript:;">ironSource</a>
+                        <a class="c-dropdown__item dropdown-item" data="9" href="javascript:;">Tapjoy</a>
+                        <a class="c-dropdown__item dropdown-item" data="30" href="javascript:;">Upltv</a>
+						<a class="c-dropdown__item dropdown-item" data="34" href="javascript:;">Sigmob</a>
+						<a class="c-dropdown__item dropdown-item" data="35" href="javascript:;">Gdt</a>
+						<a class="c-dropdown__item dropdown-item" data="32" href="javascript:;">CSJ(toutiao)</a>
+						<a class="c-dropdown__item dropdown-item" data="37" href="javascript:;">Mopub(market)</a>
+						<a class="c-dropdown__item dropdown-item" data="40" href="javascript:;">Inmobi</a>
+						<a class="c-dropdown__item dropdown-item" data="31" href="javascript:;">Adcolony</a>
+						<a class="c-dropdown__item dropdown-item" data="41" href="javascript:;">Fyber</a>
+						<a class="c-dropdown__item dropdown-item" data="42" href="javascript:;">KuaiShou</a>
+					 </div>
+					</div>
+                    <div class="hw_dropdown_menu country"  data="all" style="position:relative;float:left;height:38px;margin-left:30px;">
+					  <a href="javascript:;" class="dropdown_switch dropdown-toggle dropdownMenuAvatar2"  id="dropdownMenuAvatar1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" role="button">
+					    <label  style="font-weight:400;">全部国家</label><i class="fa fa-caret-down" style="margin-left:5px;"></i>
+					  </a>
+					  <div class="has-arrow dropdown-menu1 dropdown-menu-right"  style="position: absolute; top:48px; left: 0px; will-change: transform;height:200px;overflow-y: scroll;">
+						  <div class="country_search">
+								<input class="c_sear" placeholder="搜索"/>
+						  </div>
+						  <div>
+							 {volist name="country" id="c"}
+							  <a class="c-dropdown__item dropdown-item" data="{$key}" href="javascript:;">{$c}</a>
+							 {/volist}						
+						 </div>
+					 </div>
+					  
+					</div>
+                    	<a class="btn btn-sm rate_set" href="/admin_rate/index"><i class="fa fa-pencil-square-o"></i> 汇率设置</a>			
+				  </div>
+				  <div class="hw_reven  table-container" id="tablehw" style="overflow:scroll;width:100%;height:450px;">
+					     <table class="table" id="revenue_content" >
+						  <thead >
+						    <tr style="border-top:1px solid #e7e7eb;">
+							  <th colspan="5"></th>
+							  <th colspan="6" style="border-right:1px solid #ccc;border-left:1px solid #ccc">收益/占比</th>
+							  <th colspan="6" style="border-right:1px solid #ccc;border-left:1px solid #ccc">展示</th>
+							  <th colspan="6" style="border-right:1px solid #ccc;border-left:1px solid #ccc">人均展示</th>
+							  <th colspan="6" style="border-right:1px solid #ccc;border-left:1px solid #ccc">人均eCPM</th>							  
+							</tr>
+							<tr>
+							  <th style="background-color: #eef1f6;border-bottom:1px solid #ccc;">日期</th>
+							  <th>ARPDAU</th>
+							  <th>收益</th>
+							  <th>内购</th>
+							  <th style="border-right:1px solid #ccc">活跃</th>
+							  
+							  <th>插屏收益</th>							
+							  <th>激励收益</th>
+							  <th>Banner收益</th>
+							  <th>原生收益</th>
+							  <th>开屏收益</th>
+							  <th style="border-right:1px solid #ccc">总收益</th>
+							 
+							  <th>插屏展示</th>							
+							  <th>激励展示</th>
+							  <th>Banner展示</th>
+							  <th>原生展示</th>
+							  <th>开屏展示</th>
+							  <th style="border-right:1px solid #ccc">总展示</th>
+							  
+							  <th>人均插屏/新增人均</th>							
+							  <th>人均激励/新增人均</th>
+							  <th>人均Banner</th>
+							  <th>人均原生</th>
+							  <th>人均开屏</th>
+							  <th style="border-right:1px solid #ccc">人均汇总</th>
+							  
+							  <th>插屏eCPM</th>							
+							  <th>激励eCPM</th>
+							  <th>BannereCPM</th>
+							  <th>原生eCPM</th>
+							  <th>开屏eCPM</th>
+							  <th>总eCPM</th>							  
+							 
+							</tr>
+						  </thead>
+						  <tbody >
+						     {volist name="list" id="vv"}
+							<tr>
+							  <td style="background-color: #eef1f6;border-bottom:1px solid #ccc;">({$vv.date|getweekday}){$vv.date} <i date="{$vv.date}" class="fa fa-tag" style="font-size:10px;color:#ccc;"></i></td>
+							  <td>${$vv["result"]["total"]["dauarpu"]}</td>
+							  <td>${$vv["result"]["total"]["revenue"]+$vv['result']['total']['purchase']} {if condition="$vv['publisher_showtips'] neq '0'"}<sup data-mtpis="{$vv['publisher_showtips']}" ><i style="color:red;font-size:10px;" class="fa fa-commenting-o"></i></sup>  {/if}</td>
+							  <td>${$vv["result"]["total"]["purchase"]}&nbsp;<i date="{$vv.date}" v="{$vv['result']['total']['purchase']}" class="fa fa-edit purchase_edit"></i></td>
+							  <td style="border-right:1px solid #ccc">{$vv["result"]["total"]["active_users"]}</td>
+							  <td>${$vv["result"]["int"]["revenue"]}<span style="color:#777">/<?php if( $vv["result"]["total"]["revenue"]<=0 ){ echo "0";}else{ echo round($vv["result"]["int"]["revenue"]*100/$vv["result"]["total"]["revenue"],2); } ?>%</span></td>
+							  <td>${$vv["result"]["rew"]["revenue"]}<span style="color:#777">/<?php if( $vv["result"]["total"]["revenue"]<=0 ){ echo "0";}else{ echo round($vv["result"]["rew"]["revenue"]*100/$vv["result"]["total"]["revenue"],2); } ?>%</span></td>
+							  <td>${$vv["result"]["ban"]["revenue"]}<span style="color:#777">/<?php if( $vv["result"]["total"]["revenue"]<=0 ){ echo "0";}else{ echo round($vv["result"]["ban"]["revenue"]*100/$vv["result"]["total"]["revenue"],2); } ?>%</span></td>
+							  <td>${$vv["result"]["nat"]["revenue"]}<span style="color:#777">/<?php if( $vv["result"]["total"]["revenue"]<=0 ){ echo "0";}else{ echo round($vv["result"]["nat"]["revenue"]*100/$vv["result"]["total"]["revenue"],2); } ?>%</span></td>
+							   <td>${$vv["result"]["sp"]["revenue"]}<span style="color:#777">/<?php if( $vv["result"]["total"]["revenue"]<=0 ){ echo "0";}else{ echo round($vv["result"]["sp"]["revenue"]*100/$vv["result"]["total"]["revenue"],2); } ?>%</span></td>
+                              <td style="border-right:1px solid #ccc">${$vv["result"]["total"]["revenue"]}</td>
+							  <td>{$vv["result"]["int"]["impressions"]}</td>
+                              <td>{$vv["result"]["rew"]["impressions"]}</td>
+							  <td>{$vv["result"]["ban"]["impressions"]}</td>
+							  <td>{$vv["result"]["nat"]["impressions"]}</td>
+							  <td>{$vv["result"]["sp"]["impressions"]}</td>
+							  <td style="border-right:1px solid #ccc">{$vv["result"]["total"]["impressions"]}</td>
+                               <td>{$vv["result"]["int"]["avgshow"]}/{$vv.new_users_avg_int_show}</td>
+							  <td>{$vv["result"]["rew"]["avgshow"]}/{$vv.new_users_avg_rew_show}</td>
+							  <td>{$vv["result"]["ban"]["avgshow"]}</td>
+							  <td>{$vv["result"]["nat"]["avgshow"]}</td>
+							  <td>{$vv["result"]["sp"]["avgshow"]}</td>
+                              <td style="border-right:1px solid #ccc">{$vv["result"]["total"]["avgshow"]}</td>
+							  <td>${$vv["result"]["int"]["ecpm"]}</td>
+                              <td>${$vv["result"]["rew"]["ecpm"]}</td>
+							  <td>${$vv["result"]["ban"]["ecpm"]}</td>
+							  <td>${$vv["result"]["nat"]["ecpm"]}</td>
+							  <td>${$vv["result"]["sp"]["ecpm"]}</td>
+							  <td>${$vv["result"]["total"]["ecpm"]}</td>                        						  
+							</tr>
+							{/volist}
+						  </tbody>
+						  <tfoot>
+						    <tr style="border-top:2px solid #337ab7;">
+							  <td style="background-color: #eef1f6;border-bottom:1px solid #ccc;color:#f27056;font-weight:700">总计</td>
+							  <td>${$total_data["total"]["dauarpu"]}</td>
+							  <td>${$total_data["total"]["revenue"]+$total_data['total']['purchase']}</td>
+							  <td>${$total_data["total"]["purchase"]}</td>
+							  <td style="border-right:1px solid #ccc">{$total_data["total"]["active_users"]}</td>
+							  <td>${$total_data["int"]["revenue"]}<span style="color:#777">/<?php if( $total_data["total"]["revenue"]<=0 ){ echo "0";}else{ echo round($total_data["int"]["revenue"]*100/$total_data["total"]["revenue"],2); } ?>%</span></td>
+							  <td>${$total_data["rew"]["revenue"]}<span style="color:#777">/<?php if( $total_data["total"]["revenue"]<=0 ){ echo "0";}else{ echo round($total_data["rew"]["revenue"]*100/$total_data["total"]["revenue"],2); } ?>%</span></td>
+							  <td>${$total_data["ban"]["revenue"]}<span style="color:#777">/<?php if( $total_data["total"]["revenue"]<=0 ){ echo "0";}else{ echo round($total_data["ban"]["revenue"]*100/$total_data["total"]["revenue"],2); } ?>%</span></td>
+							  <td>${$total_data["nat"]["revenue"]}<span style="color:#777">/<?php if( $total_data["total"]["revenue"]<=0 ){ echo "0";}else{ echo round($total_data["nat"]["revenue"]*100/$total_data["total"]["revenue"],2); } ?>%</span></td>
+							  <td>${$total_data["sp"]["revenue"]}<span style="color:#777">/<?php if( $total_data["total"]["revenue"]<=0 ){ echo "0";}else{ echo round($total_data["sp"]["revenue"]*100/$total_data["total"]["revenue"],2); } ?>%</span></td>
+                              <td style="border-right:1px solid #ccc">${$total_data["total"]["revenue"]}</td>
+							  <td>{$total_data["int"]["impressions"]}</td>
+                              <td>{$total_data["rew"]["impressions"]}</td>
+							  <td>{$total_data["ban"]["impressions"]}</td>
+                              <td>{$total_data["nat"]["impressions"]}</td>
+							  <td>{$total_data["sp"]["impressions"]}</td>
+							  <td style="border-right:1px solid #ccc">{$total_data["total"]["impressions"]}</td>
+                              <td>{$total_data["int"]["avgshow"]}/{$total_data['new_users_avg_int_show']}</td>
+							  <td>{$total_data["rew"]["avgshow"]}/{$total_data['new_users_avg_rew_show']}</td>
+							  <td>{$total_data["ban"]["avgshow"]}</td>
+							  <td>{$total_data["nat"]["avgshow"]}</td>
+							  <td>{$total_data["sp"]["avgshow"]}</td>
+                              <td style="border-right:1px solid #ccc">{$total_data["total"]["avgshow"]}</td>
+							  <td>${$total_data["int"]["ecpm"]}</td>
+                              <td>${$total_data["rew"]["ecpm"]}</td>
+							  <td>${$total_data["ban"]["ecpm"]}</td>
+                              <td>${$total_data["nat"]["ecpm"]}</td>
+							  <td>${$total_data["sp"]["ecpm"]}</td>
+							  <td>${$total_data["total"]["ecpm"]}</td>                        						  
+							</tr>
+						  </tfoot>
+						</table>
+					 </div>
+			   </div>
+			   	<div id="show_content"></div>		   
+			</div>
+		</div>
+		 {include file="./static/html/footer.html" /}
+	</div>	
+</body>
+ {include file="./static/html/footer_common.html" /}
+  <script type="text/javascript" src="/static/plugin/jquery-time/moment.min.js"></script>
+<script type="text/javascript" src="/static/plugin/jquery-time/daterangepicker_v1.js"></script>
+   <script src="/static/js/mTips.js?t=123"></script>
+   <script src="/static/js/echarts.min.js"></script>
+ <script>
+ 
+     var start_date="{$start}";
+	 var end_date = "{$end}";
+	 var current_country = '{$current_country}';
+    $(function(){
+	   	$(".dropdownMenuAvatar2 label").text(current_country)
+		$("#tablehw").scroll(function(){
+	     var scrollTop = this.scrollTop;
+              this.querySelector('thead').style.transform = 'translateY(' + scrollTop +'px)';
+		var left=$("#tablehw").scrollLeft();
+		var trs=$("#tablehw table tr");
+		   trs.each(function(i){
+		  
+		    $(this).children().eq(0).css({"position":"relative","top":"0px","left":left});
+		});
+    });
+		
+	  $('#data_start_date').daterangepicker({opens:'right',ranges: {'今天': [moment(),moment()],
+'昨天': [moment().subtract(1, 'days'),moment().subtract(1, 'days')],
+'近7天': [moment().subtract(7, 'days'), moment()],
+'这个月': [moment().startOf('month'), moment()],
+'上个月': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]} },function(start, end, label) {
+	 
+		    start_date = start.format('YYYY-MM-DD');end_date=end.format('YYYY-MM-DD');
+			$('#data_start_date').text(start_date+" 到 "+end_date);
+			loaddata();
+		 });
+		 
+		$(".country .c-dropdown__item").click( function(){
+		    var _p = $(this).parent().parent().parent();
+			    _p.attr("data",$(this).attr("data") );
+				_p.find("label").text($(this).text() );
+		    loaddata();	
+		})
+		
+		$(".channel .c-dropdown__item").click( function(){
+		    var _p = $(this).parent().parent();
+			    _p.attr("data",$(this).attr("data") );
+				_p.find("label").text($(this).text() );
+		    loaddata();	
+		})
+		
+		$(".dropdownMenuAvatar2").click(function(){
+	     $(".dropdown-menu1").show()
+		 return false;
+	   })
+	   
+	    $("body").not(".dropdown-menu1").click( function(e){
+		  
+		  if(e.target.className!="c_sear")
+		  {
+		    $(".dropdown-menu1").hide()
+		  }
+		})
+		
+		$('.c_sear').bind('input propertychange', function()
+		   {
+			   var input_text = $(this).val();
+               $(".dropdown-menu1 .c-dropdown__item").not("#aa").each(  function(i){
+			        var text = $(this).text();
+					var ismatch = text.match(new RegExp(input_text, 'i'));
+					if( ismatch )
+					  {
+					     $(this).show();
+					  }else{
+					     $(this).hide();
+					  }
+			   })			   
+		   });
+        
+		$(document).on("click",".hw_close",function(){
+	       $(".hw-dialog").hide();
+		  })
+		    $(document).on("click",".fa-tag",function(){
+		   
+		       var day_date = $(this).attr("date");
+			   var html ='<div class="hw-dialog "><div class="hw_modal"></div><div class="hw_game-dialog"><div class="dialog-header">';
+				html+='<div class="title">请填写备注信息 '+day_date+'</div></div><div class="dialog-body">';
+                html+='<input class="hw_game-input" id="title" style="text-indent: 0px;" placeholder="简短描述字数50字以内" type="text" value="">';
+				html+='<input  id="date" type="hidden" value="'+day_date+'">';
+				html+='<textarea  class="hw_game-input" style="height:120px;margin-top:10px;" placeholder="详细备注" id="content"  rows="4"></textarea>';
+				html+='</div><div class="dialog-footer">';
+                html+='<button type="button" id="confirm" style="background-color: #f85959;color: #fff;border-color: #f85959;" class="hw_game-btn hw_game-btn-negative" onclick="add_remark(this)">确 认</button>';				
+				html+='<button type="button"  class="hw_game-btn hw_game-btn-default hw_close">关 闭</button></div></div></div>';
+	         $("#show_content").html(html);   
+			    			  
+		  })
+		  
+		 
+		  
+		  $(document).on("click",".purchase_edit",function(event){
+			   var _$ = $(this);
+			   var appid ="{$appid}";
+			   var date = _$.attr("date");
+               var country = $(".country").attr("data");			   
+			   var v = $(this).attr("v");
+			   var html='<form  style="text-align:center;">';
+				html+=' <div class="row" style="margin-top:20px;"><div class="input-field col s6"><input  id="v"  value="'+v+'" type="text" class="form-control validate"></div><p style="font-size:10px;color:red">填写时请注意先换算成美元,分成比例为安卓*0.0875 苹果*0.68</p></div>';			
+				html+='<input class="waves-effect waves-light btn save" type="submit" style="background-color: #2ec376;color:#fff;margin-top:20px;width:140px;" value="确认"></input> </form>';
+		   
+				//自定页
+				layer.open({
+				  type: 1,
+				  skin: 'layui-layer-rim', //加上边框
+				  area: ['400px', '250px'], //宽高
+				  content: html
+				});
+				$(".save").click( function(){
+				   v = $("#v").val();
+				   layer.load();
+				   	$.post("/admin_control/add_purchase",{date:date,appid:appid,v:v,country:country},function(e){
+					 layer.closeAll();
+					 if( "ok"==e )
+					 {
+					    return loaddata();
+					 }else{
+					   layer.msg("提交失败，请重新提交");
+					 }					 
+			      })  
+				   return false;
+				})
+	        event.stopPropagation();
+	    });	
+        		
+	   });
+	var loaddata = function()
+	{
+	   var platform = $(".channel").attr("data");
+	   var country = $(".country").attr("data");
+	   var index = layer.load();
+			   $.post("/admin_index/revenue_json",{start:start_date,end:end_date,platform:platform,country:country},function(e){
+					 layer.closeAll();
+					$("#revenue_content tbody,#revenue_content tfoot").remove();
+                    $("#revenue_content").append(e); 				 
+			   })
+	  getUpltvSwitch('{$appid}',country)		   
+	}
+	
+   var add_remark = function(obj)
+     {
+	       var $parent  =$(obj).parents(".hw-dialog");
+		   var title =$parent.find("#title").val();
+		   var date = $parent.find("#date").val();
+		   var content = $parent.find('#content').val();
+		   
+		   var appid ="{$appid}";
+		   
+		   if( title=="" || title.length>50 )
+			{
+				layer.msg('简短描述不符合规范!');return false;
+			}
+			if(   content==""  )
+			{
+				layer.msg('内容详细至少在一个字符以上!');
+			}
+							
+			$(this).attr("disabled",true);
+			var obj = $(this);
+			var index = layer.load(0, {shade: false}); //0代表加载的风格，支持0-2
+			$.post("/admin_remark/add_data",{title:title,content:content,appid:appid,date:date},function(e){
+				layer.close(index);					
+				$(obj).attr("disabled",false);
+				if( "ok"==e )
+				  {
+					layer.msg('提交成功');
+					$parent.hide();
+					loaddata();
+				  }else{
+					layer.msg('由于异常，提交失败');return false;
+				  }			
+			})
+			
+	 }
+    var getUpltvSwitch = function(appid,country)
+   {
+       $.post("/admin_advertisement/getupltv_switch",{appid:appid,country:country},function(e){
+				$(".current_switch").text(e);
+			})
+   }	
+ </script>
+<script>
+var myChart = echarts.init(document.getElementById("chats"));
+var option ={
+	color: ['#73A0FA', '#73DEB3', '#FFB761'],
+    tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+            type: 'cross',
+            crossStyle: {
+                color: '#999'
+            },
+            lineStyle: {
+                type: 'dashed'
+            }
+        }
+    },
+    grid: {
+        left: '25',
+        right: '25',
+        bottom: '24',
+        top: '75',
+        containLabel: true
+    },
+    legend: {
+        orient: 'horizontal',
+        icon: "rect",
+        show: true,
+        left: 20,
+        top: 25,
+        data: ['人均插屏','人均激励']
+    },
+    xAxis: {
+        type: 'category',
+        data: [{$chats_data.date}],
+        boundaryGap: false,
+        splitLine: {
+            show: false
+        },
+        axisTick: {
+            show: false
+        },
+        axisLine: {
+            show: false
+        },
+    },
+    yAxis: {
+        type: 'value',
+       axisLabel: {
+            color: '#999',
+            textStyle: {
+                fontSize: 12
+            },
+        },
+        splitLine: {
+            show: true,
+            lineStyle: {
+                color: '#F3F4F4'
+            }
+        },
+        axisTick: {
+            show: false
+        },
+        axisLine: {
+            show: false
+        },
+    },
+    series: [{
+        name: '人均插屏',
+        type: 'line',
+        smooth: true,
+        markPoint: {
+			data: [
+				{ type: 'max', name: '最大值' },
+				{ type: 'min', name: '最小值' }
+			],
+		  },
+        animationDuration: 2800,
+		animationEasing: 'cubicInOut',	  
+        data: [{$chats_data.avg_int}],
+    }, {
+        name: '人均激励',
+        type: 'line',
+        smooth: true,
+        markPoint: {
+			data: [
+				{ type: 'max', name: '最大值' },
+				{ type: 'min', name: '最小值' }
+			],
+		  },
+        animationDuration: 2800,
+		animationEasing: 'cubicInOut',	  
+        data: [{$chats_data.avg_rew}],
+    }]
+};
+myChart.setOption(option); 
+</script>
+</html>

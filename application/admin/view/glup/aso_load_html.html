@@ -1,0 +1,24 @@
+﻿           <thead style="font-size:13px;">
+				<tr>
+				  <th>关键词</th>
+				  <th>排名</th>
+				  <th>变动</th>
+				  <th>热度</th>
+				  <th>结果数</th>
+				  <th>更新</th>				 
+				</tr>
+			</thead>
+			 <tbody>
+		   {volist name="res" id="vv"}
+              	   
+			   <tr>										 
+				 <td>{$vv[0]}</td>
+				 <td>{$vv[1][0]}</td>										 
+				 <td>{$vv[1][1]}</td>
+				 <td>{$vv[2]}</td>										 
+				 <td>{$vv[3]}</td>
+				 <td>{$vv[6]}</td>		 
+				</tr>	
+			{/volist}
+             </tbody>			
+							  

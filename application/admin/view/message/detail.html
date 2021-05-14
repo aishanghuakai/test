@@ -1,0 +1,58 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GAME BRAIN</title>
+    {include file="./static/html/header_common.html" /}   
+    <style>
+      #time,select,.fa{
+	   cursor:pointer;
+	 }
+	 .content p{
+	     line-height:3.1rem;
+		 letter-spacing:1px;
+		 font-size: 15px;
+		 color: #333;
+	 }
+	 .content img{
+	    max-width:640px;
+	 }
+	</style>	
+</head>
+<body>
+    <div id="wrapper">
+        {include file="./static/html/header.html" /}	
+		<div class="hw_page_content">
+		    <div class="hw_menu_left">
+         {include file="./static/html/side.html" /}  
+			</div>
+			<div class="hw_content_right" style="padding:20px 3%">
+            <div id="page-inner" style="background-color:#fff;"> 
+	          
+              <div class="row">
+                
+                <div class="col-md-12">
+				     <header>
+					   
+						<div style="margin-left:5%;margin-top:10px;border-bottom:1px solid #ccc;">
+						  <p>from {$res.from_userid|getusername}&nbsp;&nbsp;&nbsp;<i style="color:#ccc;"> {$res.send_addtime}</i><a style="float:right;" href="/message/index">返回消息列表</a><p>
+						</div>
+						 <h3 style="text-align:center;margin-top:25px;">{$res.send_title}</h3>
+					 </header>
+					 <div class="content"style="margin-left:8%;margin-top:50px;margin-right:8%;">
+					    {$res.send_content}
+					 </div>
+                </div>
+             </div>
+			 
+			  
+           </div>
+		  </div>	
+     </div>
+		 {include file="./static/html/footer.html" /}
+	</div>	
+</body>
+ {include file="./static/html/footer_common.html" /}
+</html>

@@ -1,0 +1,287 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GAME BRAIN</title>
+    {include file="./static/html/header_common.html" /}
+ <link href="/static/css/checkbox.css" rel="stylesheet" type="text/css">	
+    <link href="/static/css/adid.css?t=<?php echo time(); ?>" rel="stylesheet">	
+	<style>
+	th,td{text-align:center;vertical-align:middle}
+	  .hw_reven thead tr {
+    background-color: #f9f9f9;
+}
+.hw_reven table {
+    border-collapse: collapse;
+    font-size: 12px !important;
+    color: #222 !important;
+    text-align: left !important;
+    line-height: 40px;
+}
+.hw_reven .table > thead > tr > th{
+  border-bottom:1px solid #e8e8e8 !important;
+  border-top:1px solid #e8e8e8 !important;
+   color: #222 !important;
+}
+.edit,.delete{
+  cursor:pointer;
+}
+ pagination > .active > a, .pagination > .active > a:focus, .pagination > .active > a:hover, .pagination > .active > span, .pagination > .active > span:focus, .pagination > .active > span:hover {
+   
+    background-color: #f66e62;
+    border-color: #f66e62;
+}
+	</style>
+</head>
+<body>
+    <div id="wrapper" style="background-color:#fff;">
+        {include file="./static/html/header.html" /}	
+		<div class="hw_page_content">
+		    <div class="hw_menu_left">
+         {include file="./static/html/side.html" /}  
+			</div>
+		    <div class="hw_content_right" style="padding:10px 10px">
+			    <ul class="search_tab clearfix" >
+			      <li class="active"><a  href="javascript:;">广告管理</a></li>
+                   <div class="search-wrap" style="line-height:29px;margin-top:15px;">
+				     <input placeholder="请输入广告ID" class="search-input" value="{$id}">
+					 <span class="search"><i class="fa fa-search"></i></span>
+				   </div>				  
+		        </ul>
+	          
+			    <div class="hw_reven clearfix" style="padding:20px 30px;">
+				  <div class="hw_adid">
+				    <div class="tab">
+					  <a style="font-size:14px;color: #999;margin-right:20px;">渠道类型</a>
+					  <div class="hw_dropdown_menu country"  data="all" style="position:relative;">
+							  <a href="javascript:;" class="dropdown_switch dropdown-toggle sub-title"  id="dropdownMenuAvatar1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" role="button">
+								<label  style="font-weight:400;">{$platform|getplatform}</label><i class="fa fa-caret-down" style="margin-left:5px;"></i>
+							  </a>
+							  <div class="c-dropdown__menu has-arrow dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuAvatar1" x-placement="top-end" style="position: absolute; top:38px; left: 0px;height:200px;
+overflow-y: scroll;">
+							  {volist name="allplatforms" id="item"}
+							  <a href="/admin_adsid/index?platform={$key}&adtype={$adtype}&country={$country}" class="dropdown-item  {if condition="$platform eq $key"}selected{/if}">{$item}</a>		
+							  {/volist}
+							 </div>
+					  </div>
+					 
+					</div>
+					<div class="tab">
+					  <a style="font-size:14px;color: #999;margin-right:20px;">广告类型</a>
+					  <a href="/admin_adsid/index?platform={$platform}&adtype=all&country={$country}" class="hw_sub_adtype {if condition="$adtype eq 'all'"}adtype_selected{/if} ">全部</a>
+					  <a href="/admin_adsid/index?platform={$platform}&adtype=nat&country={$country}" class="hw_sub_adtype {if condition="$adtype eq 'nat'"}adtype_selected{/if}">原生</a>
+					  <a href="/admin_adsid/index?platform={$platform}&adtype=int&country={$country}" class="hw_sub_adtype {if condition="$adtype eq 'int'"}adtype_selected{/if}">插屏</a>
+					  <a href="/admin_adsid/index?platform={$platform}&adtype=rew&country={$country}" class="hw_sub_adtype {if condition="$adtype eq 'rew'"}adtype_selected{/if}">激励</a>					  
+					  <a href="/admin_adsid/index?platform={$platform}&adtype=ban&country={$country}" class="hw_sub_adtype {if condition="$adtype eq 'ban'"}adtype_selected{/if}">Banner</a>
+					</div>
+					<div class="tab">
+					  <a style="font-size:14px;color: #999;margin-right:20px;">全部国家</a>
+					  <div class="hw_dropdown_menu country"  data="all" style="position:relative;">
+								  <a href="javascript:;" style="background-color:#099;border:1px solid #099;" class="dropdown_switch dropdown-toggle sub-title"  id="dropdownMenuAvatar2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" role="button">
+									<label  style="font-weight:400;">{$country_name}</label><i class="fa fa-caret-down" style="margin-left:5px;"></i>
+								  </a>
+								  <div class="c-dropdown__menu has-arrow dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuAvatar2" x-placement="top-end" style="height:200px;overflow-y:scroll;position: absolute; top:35px; left: 0px; will-change: transform;">
+									 {volist name="countrys" id="c"}
+									  <a class="dropdown-item"  href="/admin_adsid/index?platform={$platform}&adtype={$adtype}&country={$key}">{$c}</a>
+									 {/volist}						
+								 </div>
+					   </div>
+					</div>
+					<a class="tab gb_b-btn" href="/admin_adsid/add" style="float:right;margin-top:-60px;border:1px solid #f85959;color:#f85959;background-color:#fff">
+					  + 添加
+					</a>
+				  </div>
+			     <table class="table">
+						  <thead style="font-size:13px;">
+							<tr>
+							  <th style="text-align:left;width:320px">ID</th>
+							 
+							  <th>类型</th>
+							  <th>名称</th>
+							  <th>底价</th>
+							  <th>排序</th>
+							  <th>操作</th>
+							</tr>
+						  </thead>
+						  <tbody>
+						    {volist name="res" id="item"}
+							<tr>
+							     <td style="text-align:left;width:300px">{$item.unit_id}</td>
+								
+								 <td>
+								   {if condition="$item['adtype'] eq 'rew'"}
+								     <span style="font-size:10px;color:red">激励</span>
+									{elseif condition="$item['adtype'] eq 'int'" /}
+									 <span style="font-size:10px;color:#780000 ">插屏</span>
+									{elseif condition="$item['adtype'] eq 'nat'" /}
+									 <span style="font-size:10px;color:#663399">原生</span>									
+									{elseif condition="$item['adtype'] eq 'sp'" /}
+									 <span style="font-size:10px;color:#663399">开屏</span>
+									{else /}
+									 <span style="font-size:10px;color:#FF3366">Banner</span>
+								  {/if}
+								 </td>
+								 <td>{$item.remark}</td>
+								 <td><input type="text" class="form-control ajax_data" data-org="{$item.ecpm}" data-index="ecpm" data-id="{$item.id}" style="width:80px;height:24px;display:inherit;text-align:center;"  value="{$item.ecpm}"/></td>
+								  <td><input type="text" class="form-control ajax_data" data-org="{$item.ordernum}" data-index="ordernum" data-id="{$item.id}" style="width:50px;height:24px;display:inherit;text-align:center;" value="{$item.ordernum}"/></td>
+								 <td><i class="fa fa-pencil edit" data-id="{$item.id}" data-ordernum="{$item.ordernum}" data-remark="{$item.remark}" data-unit_id="{$item.unit_id}" data-adtype="{$item.adtype}" style="margin-right:8px;"></i> <i data-id="{$item.id}" class="fa fa-trash-o delete"></i></td>
+							</tr>
+							{/volist}
+						  </tbody>
+						</table>
+						<div style="text-align:center;">{$list->render()}</div>
+					 </div>
+			</div>
+			
+			<div class="hw_adid_dialog">
+			    <div class="modal1"></div>
+				<div class="dialog">
+				  <div class="dialog-header">
+				     <div class="title">修改广告</div>
+					 <div class="close1">
+					   <i class="fa fa-close"></i>
+					 </div>
+				  </div>
+				  <div class="dialog-body">
+				    <div>
+					  <div class="gb-input-hint ">
+					    <span class="gb_b-input-wrapper"><input id="unit_id" class="gb_b-input" value="" type="text"></span>
+                        				
+					  </div>
+					  <div class="gb-input-hint" style="margin-top:10px;">
+					    <span class="gb_b-input-wrapper"><input id="remark" class="gb_b-input" placeholder="名称" type="text"></span>
+					  </div>
+					  
+						<div class="gb_b-radio-group" style="margin-top:10px;">
+						   <div class="el-radio el-radio-green" style="float:left;margin-right:5px;">								
+								<input name="adtype" id="adtype_nat" value="nat"  type="radio">
+								<label class="el-radio-style" for="adtype_nat"></label>
+								<span class="margin-r">原生</span>
+							</div>
+							<div class="el-radio el-radio-green" style="float:left;margin-right:5px;">									
+								<input name="adtype" id="adtype_int" value="int"  type="radio">
+								<label class="el-radio-style" for="adtype_int"></label>
+								<span class="margin-r">插屏</span>
+							</div>
+							<div class="el-radio el-radio-green" style="float:left;margin-right:5px;">
+                                <input name="adtype" id="adtype_rew" value="rew"  type="radio">
+								<label class="el-radio-style" for="adtype_rew"></label>
+								<span class="margin-r">激励</span>
+							</div>
+							<div class="el-radio el-radio-green" style="float:left">								
+								<input name="adtype" id="adtype_ban" value="ban"  type="radio">
+								<label class="el-radio-style" for="adtype_ban"></label>
+								<span class="margin-r">Banner</span>
+							</div>
+						</div>
+						<input id="id"  value="0" type="hidden">
+					</div>
+				   </div>
+				   <div class="dialog-footer"><button onclick="edit_data()" style="background-color:#34A123;color:#fff" type="button" class="gb_b-btn gb_b-btn-primary">确 认</button></div>
+			   </div>
+			</div>
+			
+		</div>
+		 {include file="./static/html/footer.html" /}
+	</div>	
+</body>
+ {include file="./static/html/footer_common.html" /}
+  <script src='/static/js/jquery.eventFlow.js'></script>
+  <script>
+    $( function(){
+	   $(".fa-search").click( function(){
+	      var id = $(".search-input").val();
+		    if( id )
+			 {
+			    window.location.href="/admin_adsid/index?id="+id;
+			 }
+	   })
+	   $(document).on( 'click','.delete',function(event){
+			var id = $(this).attr("data-id");
+			var _$ = $(this);
+			layer.confirm('确认删除后数据将不会保存?', {
+				  btn: ['确认','取消'] //按钮
+				}, function(){
+				  var index = layer.load(1, {
+							  shade: [0.1,'#fff'] //0.1透明度的白色背景
+							});
+				   $.post("/admin_adsid/delete",{id:id},function(e){
+					   layer.closeAll();
+						 if("ok"==e)
+						 {
+							_$.parents("tr").remove();
+							layer.alert('删除成功');								
+						 }else{
+						   layer.msg('网络异常,删除失败', {icon: 1});
+						 }
+				   })
+				 
+				}, function(){
+				  
+				});
+		 
+		   return false;
+	   });
+	   
+	  $(".edit").click( function(){
+	     $("#id").val( $(this).attr("data-id") );
+         $("#unit_id").val($(this).attr("data-unit_id"));
+		 $("#remark").val($(this).attr("data-remark"));		 
+         var adtype = $(this).attr("data-adtype");
+		 $("#adtype_"+adtype).attr("checked",true);
+		 $(".hw_adid_dialog").show();
+	  });
+	  $(".close1").click( function(){
+	    $(".hw_adid_dialog").hide();
+		$(".hw_adid_dialog input").not(".gb_b-btn-primary").val("");
+	  });
+	    
+	  $(".ajax_data").blur( function(){
+	  
+	    var update_v = $(this).val();
+		var before_v = $(this).attr("data-org");
+		var fieldindex = $(this).attr("data-index");
+		var id = $(this).attr("data-id");
+		var country = "{$country}";
+		if( update_v!="" && (before_v!=update_v) )
+		    {
+			   var index = layer.load(1, {
+					  shade: [0.1,'#fff'] //0.1透明度的白色背景
+					});
+				  $.post("/admin_adsid/input_data",{fieldindex:fieldindex,id:id,country:country,update_v:update_v},function(e){
+					 layer.close(index);
+					 if( "ok"==e )
+					  {						
+						window.location.reload();return;
+					  }else{
+						layer.msg("修改失败");return false;
+					  }
+				  })
+			}
+	  })
+	})
+	var edit_data = function()
+	{
+	    var id =$("#id").val();
+        var unit_id = $("#unit_id").val();
+		var remark = $("#remark").val();
+        var adtype = $("input[name='adtype']:checked").val();
+        var index = layer.load(0, {shade: false}); //0代表加载的风格，支持0-2
+		$.post("/admin_adsid/edit_data",{unit_id:unit_id,id:id,adtype:adtype,remark:remark},function(e){
+			layer.close(index);					
+			
+			if( "ok"==e )
+			  {
+				layer.msg("修改成功");
+				$(".hw_adid_dialog").hide();
+		        $(".hw_adid_dialog input").not(".gb_b-btn-primary").val("");
+				window.location.reload();
+			  }else{
+				$.Pop('由于异常，提交失败',{Title:'提示',Animation:'slideFromTop'});return false;
+			  }			
+		})		
+	}
+  </script>
+</html>

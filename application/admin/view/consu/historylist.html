@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Roi Model--GAME BRAIN</title>
+	{include file="./static/html/header_common.html" /}	
+	<style>
+	  form .row{
+  margin-left:30px;
+  margin-bottom:0px;
+  margin-right:30px;
+  margin-top:5px;
+}
+.row .col.s6 {
+    width: 100%;
+    margin-left: auto;
+    left: auto;
+    right: auto;
+}
+.row input{
+  margin:0 0;
+  padding:0 0;
+}
+.form-control{
+   text-indent:10px;
+}
+	</style>
+<body>
+    <div id="wrapper" style="background-color:#fff;">
+	   {include file="./static/html/header.html" /} 
+	
+		<div class="hw_page_content">
+		    <div class="hw_menu_left">
+         {include file="./static/html/side.html" /}  
+			</div>
+		    <div class="hw_content_right">	
+			  	<div class="song_list">
+			   <ul class="search_tab clearfix">
+			        <li class="active" ><a  href="/admin_consu/historylist?appid={$app_id}">列表</a></li>
+			        <li><a  href="/admin_consu/index1?appid={$app_id}">ROI</a></li>
+				   <li><a  href="/admin_consu/ltv?appid={$app_id}">LTV</a></li>
+				   <li><a  href="/admin_consu/tenjin?appid={$app_id}">Tenjin</a></li>
+		      </ul>		
+                <ul class="list_header clearfix" style="margin-bottom: 0px;">
+                    <li class="width_f_li song_name_li">
+                       <span class="search_icon checkall"></span>保存名称
+                    </li>
+                    <li class="width_s_li">
+                        修改时间
+                    </li>
+                    <li class="width_t_li" style="margin-left:10px">
+                       修改人
+                    </li>
+                </ul>
+                <ul class="list_content clearfix">
+				 {volist name="saves" id="item"}
+				  <li class="clearfix">
+					   <div class="width_f_li clearfix">
+						 <p class="search_icon checkbox"></p>
+						 {if condition="$item.type eq '2'"}
+						  <a class="song_name" href="/admin_consu/ltvhistory?id={$item.id}&appid={$app_id}" title="{$item.save_name}" href="javascript:;"><?php echo substr_text($item["save_name"],0,30); ?></a>
+						  {else /}
+						  <a class="song_name" href="/admin_consu/history1?id={$item.id}&appid={$app_id}" title="{$item.save_name}" href="javascript:;"><?php echo substr_text($item["save_name"],0,30); ?></a>
+						  {/if}
+						 </div>
+					   <div class="width_s_li">
+					   <a class="album_name" title="" href="">{$item.save_date}&nbsp;
+					   {if condition="$item.type eq '2'"}
+					   <em style="color:red;font-size:10px;font-style:normal;">ltv</em>
+					   {/if}
+					   </a>
+					   &nbsp;
+					   </div>
+					   <div class="width_t_li">{$item.save_user}</div>
+					   <div class="play-item">
+						<span class="common_icon icon_play" title="计算" style="margin-right:10px;color:#ccc;" onclick="window.location.href='/admin_consu/history1?id={$item.id}&appid={$app_id}' "><i class="fa fa-tag"></i></span>
+					
+						<span class="common_icon icon_share" onclick="del({$item.id})">删除</span>
+						<span class="common_icon edit" data-title="{$item.save_name}" data-id="{$item.id}" style="margin-left:5px;color:#222" title="修改"><i class="fa fa-edit"></i></span>
+					   </div>
+				   </li>
+				    {/volist}
+				</ul>           
+            </div>
+			</div> 
+        </div>
+       {include file="./static/html/footer.html" /}		
+    </div>
+	{include file="./static/html/footer_common.html" /}
+</body>
+
+  <script>
+              $( function(){
+			      var userid ="{$userid}";
+				  if( userid==50 )
+				  {
+					alert("您暂无该权限查看");
+					window.location.href="/admin_index/main";	
+				  }  
+				 $(".list_content li").on({  
+                    mouseover : function(){  
+					
+                       $(this).find(".play-item").css("visibility","visible");					 
+                    } ,  
+                    mouseout : function(){  
+					
+                        $(this).find(".play-item").css("visibility","hidden");  
+                    }   
+                }) ; 
+
+                 $(document).on("click",".edit",function(event){
+			   var _$ = $(this);
+			  
+			   var name = _$.attr("data-title");
+           		   
+			   var id = $(this).attr("data-id");
+			   var html='<form  style="text-align:center;">';
+				html+=' <div class="row" style="margin-top:20px;"><div class="input-field col s6"><input  id="name"  value="'+name+'" type="text" class="form-control validate"></div></div>';			
+				html+='<input class="waves-effect waves-light btn save" type="submit" style="background-color: #2ec376;color:#fff;margin-top:20px;width:140px;" value="确认"></input> </form>';
+		   
+				//自定页
+				layer.open({
+				  type: 1,
+				  skin: 'layui-layer-rim', //加上边框
+				  area: ['350px', '200px'], //宽高
+				  content: html
+				});
+				$(".save").click( function(){
+				   name = $("#name").val();
+				   layer.load();
+				   	$.post("/admin_consu/save_name",{name:name,id:id},function(e){
+					 layer.closeAll();
+					 if( "ok"==e )
+					 {
+					    window.location.href=window.location.href;
+					 }else{
+					   layer.msg("提交失败，请重新提交");
+					 }					 
+			      })  
+				   return false;
+				})
+	        event.stopPropagation();
+	    });					
+			  
+			  } )
+               				
+				var del = function(id)
+				{
+				   layer.confirm('亲，删除后数据就没有了哦？', {
+					  btn: ['一意孤行','后悔了'] //按钮
+					}, function(){
+					   					   
+						 layer.closeAll();	
+					     var index = layer.load(1, {
+							  shade: [0.1,'#fff'] //0.1透明度的白色背景
+							});
+						$.post("/admin_consu/del",{id:id},function(e){
+						     layer.closeAll();
+						    if(e=="ok")
+							  {
+							    window.location.reload();
+							  }else{
+							    layer.msg("删除失败");
+							  }
+						});	
+					}, function(){
+					  
+					});
+				}
+              
+  </script>
+</html>

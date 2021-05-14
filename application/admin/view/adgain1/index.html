@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>广告收益</title>
+	{include file="./static/html/header_common.html" /}
+	<link href="/static/css/adgain.css?t=122" rel="stylesheet" type="text/css">
+    <link href="/static/css/checkbox.css" rel="stylesheet" type="text/css">
+	 <link rel="stylesheet" type="text/css" media="all" href="/static/plugin/jquery-time/daterangepicker-bs3.css" />
+	<style>
+	 .fa,.allow_click{cursor:pointer}
+	 th,td{text-align:center;vertical-align:middle}
+	</style>
+</head>
+<body>
+    <div id="wrapper" >
+        
+		{include file="./static/html/header.html" /} 
+	
+		<div class="hw_page_content">
+		    <div class="bar_allow_roe" title="选择应用"><i class="fa fa-angle-double-right fa-2x"></i></div>
+		    <div class="hw_app_navlist" style="display:none;">
+			     
+			      <div style="text-align:left;height:50px;line-height:59px;font-size:18px;padding-left:10px;"><i class="fa fa-pencil fa-fw"></i>选择应用APP <!-- <span style="text-align:right"><input style="height:20px;padding:15px;width:120px;border: 1px solid #ccc;
+border-radius: 4px;" type="text" value="heh "/></span> --></div>
+				  <ul class="nav">
+				      {if condition="empty($apps)"}
+					    <div style="margin-top:50%;margin-left:38%;"><i class="fa fa-bank"></i>您还没有应用!</div>						
+					  {/if}
+                     {volist name="apps" id="vv"}				  
+					<li>
+						<a href="javascript:;" title="{$vv.app_name}">
+							<div class="el-checkbox el-checkbox-sm el-checkbox-red">
+								<input type="checkbox" name="app_id"  attr_name="{$vv.app_name}" value="{$vv.id}" id="app_{$key}">
+								<label class="el-checkbox-style" for="app_{$key}"></label>
+								<span class="margin-r" style="font-size:14px;margin-left:10px;">
+								  {$vv.app_name} &nbsp;
+								 {if condition="$vv['platform'] eq 'android'" }
+									 <i title="android" style="color:#f0ad4e;" class="fa fa-android"></i>
+									 {elseif condition="$vv['platform'] eq 'ios'" /}
+									 <i  class="fa fa-apple"></i>
+									 {/if}
+								</span>								
+							</div>					
+						</a>
+					</li>
+					{/volist}		
+				 </ul>
+				 <div></div>
+				 <div style="text-align:right;margin-top:20px;margin-right:30px;"><a style="color:#333;font-size:12px;text-decoration:underline;" href="/admin_consu/s_list"><em>应用设置?</em></a></div>
+			</div>
+		    <div class="hw_menu_left">
+         {include file="./static/html/side.html" /}  
+			</div>
+		    <div class="hw_content_right">	
+			  <ul class="search_tab clearfix" >
+			      <li class="active"><a  href="javascript:;">广告成效</a></li>
+				  <li style="margin-left:30%;position:relative;"><a ><i style="position:absolute;top:22px;left:10px;color:#ccc;" class="fa fa-calendar"></i><input type="text" value="<?php echo date("Y-m-d",strtotime("-2 day"))."-".date("Y-m-d",strtotime("-2 day")); ?>"id="start_date"  style="width:220px;margin-top:12px;padding-left:35px;" class="form-control"  /></a><li>               
+		          <li><div style="position:relative;margin-left:120%;"><input style="width:200px;padding-left:30px;margin-top:12px;" id="keywords" class="form-control" placeholder="Filter visible rows" /><i style="position:absolute;top:10px;left:10px;color:#ccc;" class="fa fa-search"></i></div></li>
+			   </ul>
+			     <div class="hw_content">
+				    <span class="visible-lg-block" style="color:#468847;background-color:#dff0d8;padding: 12px 10px;font-size:14px;border-radius: 4px;"><i class="fa fa-hand-o-right"></i> 为保证数据的准确性，请务必进行产品的关联&nbsp;&nbsp;<a style="text-decoration:underline" href="/admin_adgain/relateapp">&nbsp;关联产品</a></span>
+				    <div class="hw_spend_search" style="margin-top:10px;">
+					  					
+						<div class="col-md-6">
+							<h4>Group by</h4>
+							<div class="el-radio ">
+								<span class="margin-r">Adtype</span>
+								<input type="radio" name="type" value="adtype" id="1_4" checked>
+								<label class="el-radio-style" for="1_4"></label>
+							</div>
+							<div class="el-radio ">
+								<span class="margin-r">Country</span>
+								<input type="radio" name="type" value="country" id="1_5">
+								<label class="el-radio-style" for="1_5"></label>
+							</div>
+                           	<div class="el-radio ">
+								<span class="margin-r">Date</span>
+								<input type="radio" name="type" value="date" id="1_6">
+								<label class="el-radio-style" for="1_6"></label>
+							</div>
+                             
+						</div>
+						 <div class="col-md-6" id="customize">
+						   <h4>自定义维度&nbsp;<i class="fa fa-plus-circle" style="position:relative;"></i></h4>
+						    <ul class="hw_dropdown-menu">
+							<li><a data="adtype">Adtype</a></li>
+							<li><a data="country">Country</a></li>
+							<li><a data="app">App</a></li>
+							<li><a data="channel">Channel</a></li>
+							<li><a data="time">Date</a></li>
+						  </ul>
+						   <!-- <div class="el-radio">
+						     <div style="background-color:#ccc;font-size:12px;padding:2px;float:left">渠道</div>
+							 <div style="float:left;color:red;">&nbsp;<i class="fa fa-minus-circle"></i></div>
+						   </div>
+						   <div class="el-radio">
+						     <div style="background-color:#ccc;font-size:12px;padding:2px;float:left">产品</div>
+							 <div style="float:left;color:red;">&nbsp;<i class="fa fa-minus-circle"></i></div>
+						   </div>
+						   <div class="el-radio">
+						    <div style="background-color:#ccc;font-size:12px;padding:2px;float:left">国家</div>
+							 <div style="float:left;color:red;">&nbsp;<i class="fa fa-minus-circle"></i></div>
+						   </div> -->						   
+						</div>
+					</div>
+			        <div class="hw-ad_row">
+					   搜索条件:&nbsp;<div class="search_list"></div>
+						  <div id="css_table" >
+								  <div class="css_tr header">
+									  <div class="css_td first">&nbsp;&nbsp;名称</div>									  	
+									  <div class="css_td">Revenue</div>
+									  <div class="css_td">Request</div>
+									  <div class="css_td">Impressions</div>
+									  <div class="css_td">Clicks</div>									 								
+									  <div class="css_td">CTR</div>
+									  <div class="css_td">eCPC</div>
+									  <div class="css_td">eCPM</div>
+								  </div>
+								  <div id="ads_content" style="height:400px;overflow-y:scroll;"></div>
+                            								  
+						   </div>
+						  
+					</div>
+                    
+                    <div class="hw-ad_row">
+					   <div class="hw_ad_title">
+					      <div class="sub-title">趋势分析</div>
+						  <div class="hw_range_date">
+						     <ul>
+							    <a class="active" date="three">3天</a>
+								<a date="oneweek">7天</a>
+								<a date="twoweek">14天</a>
+							 </ul>
+						  </div> 
+					   </div>
+					   <div class="hw_ex_content">
+					       <div class="hw_ex_spend_chat" id="date">
+						   </div>						   
+					   </div>
+					</div>					
+                   	
+                    <div class="hw-ad_row">
+					   <div class="hw_ad_title">
+					      <div class="sub-title">数据列表</div>
+						 
+					   </div>
+					   <div class="hw_ex_content">
+					       <table class="table">
+						       <thead style="font-weight:700;">
+								<tr>
+								  <th>日期</th>
+								  <th>Revenue</th>
+								  <th>Request</th>
+								  <th>Impressions</th>
+								   <th>Clicks</th>
+								   <th>CTR</th>
+								   <th>eCPC</th>
+								   <th>eCPM</th>
+								</tr>
+							  </thead>
+							  <tbody id="data_list">
+								
+							  </tbody>
+							</table>					   
+					   </div>
+					</div>
+					
+			    </div>
+           	</div>
+         </div>
+       {include file="./static/html/footer.html" /}		 
+	</div>
+   {include file="./static/html/footer_common.html" /}
+   
+   
+   
+    <script type="text/javascript" src="/static/plugin/jquery-time/moment.js"></script>
+   <script type="text/javascript" src="/static/plugin/jquery-time/daterangepicker.js"></script>
+    <script src="/static/js/echarts.min.js"></script>
+   <script type="text/javascript" src="/static/js/adgain/adwork.js"></script>
+</body>
+  <script>
+     var start_date="<?php echo date("Y-m-d",strtotime("-2 day")); ?>";
+	 var end_date = "<?php echo date("Y-m-d",strtotime("-2 day")); ?>";
+    $(function(){
+	  reloaddata();
+	  byclickreload();
+	  $('#start_date').daterangepicker({ minDate:'2018-07-08' },function(start, end, label) {
+	 
+		 start_date = start.format('YYYY-MM-DD');end_date=end.format('YYYY-MM-DD');
+		 reloaddata();
+	  });
+	   
+	   $(".bar_allow_roe").click( function(){
+	       
+		   if( $(this).find("i").hasClass("fa-angle-double-right") )
+		      {
+			     $(this).find("i").removeClass("fa-angle-double-right");
+				 $(this).find("i").addClass("fa-angle-double-left");
+				 $(this).animate({'left':'21%'},1000);
+				 $(".hw_app_navlist").show(1000);
+			  }else{
+			     $(this).find("i").removeClass("fa-angle-double-left");
+				 $(this).find("i").addClass("fa-angle-double-right");
+				 $(this).animate({'left':'0%'},1000);
+				 $(".hw_app_navlist").hide(1000);
+			  }
+	   })
+	    $(document).on( 'click',".allow_click",function(){
+	       var _$tbody = $(this).parents(".pp").find(".hw_child");
+		   if( _$tbody.hasClass("has") )
+		   {
+		       $(this).find(".fa").removeClass("fa-angle-down");
+			   $(this).find(".fa").addClass("fa-angle-right");
+			  _$tbody.removeClass("has").hide();
+		   }else{
+		       $(this).find(".fa").removeClass("fa-angle-right");
+			   $(this).find(".fa").addClass("fa-angle-down");
+		       _$tbody.addClass("has").show();
+		   }
+	   })
+	   $(document).on( 'click',".allow_child_click",function(){
+	      var _$tbody = $(this).parents(".child").next(".hw_childs");
+		   if( _$tbody.hasClass("has") )
+		   {
+		       $(this).find(".fa").removeClass("fa-angle-down");
+			   $(this).find(".fa").addClass("fa-angle-right");
+			  _$tbody.removeClass("has").hide();
+		   }else{
+		       _$tbody.addClass("has").show();
+			   $(this).find(".fa").removeClass("fa-angle-right");
+			   $(this).find(".fa").addClass("fa-angle-down");
+		   }
+	   })
+	   
+	   $(document).on( 'click',"#reten_sub",function(){
+	     
+	      var reten_appid = $("#reten_appid").val();
+		  var reten_date = $("#reten_date").val();
+		  var reten_val = $("#reten_val").val();
+            if( reten_val=="" )
+                {
+				  layer.msg("请输入完整");return false;
+				}			
+		  var index = layer.load(2);
+		  
+		   $.post("/admin_adgain/reten_save",{app_id:reten_appid,date:reten_date,val:reten_val},function(e){
+		        if( e=="ok" )
+				{
+				   layer.closeAll();
+				   reloaddata();
+				}else{
+				   layer.close(index);
+				   layer.msg("提交失败，请检查是否重复设置");return false;
+				}		        
+		  })
+		  
+	   })
+	   
+	   $("input[name='app_id'],input[name='type']").click( function(){
+	        reloaddata();
+			byclickreload();
+	   })	   
+	   
+	    $('#keywords').bind('input propertychange', function()
+		   {
+			   var input_text = $(this).val();
+               $("#ads_content .body").each(  function(i){
+			        var text = $(this).find(".first").text();
+					if( text.indexOf(input_text)!=-1 )
+					  {
+					     $(this).show();
+					  }else{
+					     $(this).hide();
+					  }
+			   })			   
+		   });
+		  $(document).on( 'click',".reten",function(event){
+		          var app_id =$(this).attr("app_id");
+                  var date =$(this).attr("date");				  
+				  layer.load(0, {shade: false});
+				  $.get("/admin_adgain/reten?app_id="+app_id+"&date="+date,'',function(e){
+					layer.closeAll();
+					  html = e;
+					 //自定页
+						layer.open({
+						  type: 1,
+						  skin: 'layui-layer-rim', //加上边框
+						  area: ['550px', '400px'], //宽高
+						  content: html
+						});
+				  });			
+	       event.stopPropagation();
+	    });	   
+	}); 
+	
+	var reloaddata = function()
+	   {
+	      var app="";
+		  var html ="";
+		  var type = $("input[name='type']:checked").val();
+		  $("input[name='app_id']:checked").each( function(index){
+		      app+=$(this).val()+",";
+			  html+="<a class=\"a2\">"+$(this).attr("attr_name")+"</a>";
+		  });
+		  html+="<a class=\"a1\">"+type+"</a>";
+		  $(".search_list").html(html);
+		  var index = layer.load();
+		  $.post("/admin_adgain/getsearchdata",{appids:app,type:type,start_date:start_date,end_date:end_date},function(e){
+		      layer.closeAll();
+			 $("#ads_content").html(e);
+		  })
+	   }
+  </script>
+</html>

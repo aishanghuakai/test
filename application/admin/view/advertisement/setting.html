@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GAME BRAI</title>
+    {include file="./static/html/header_common.html" /}
+	<link href="/static/css/userinfo.css" rel="stylesheet" type="text/css" />
+	<link href="/static/css/checkbox.css" rel="stylesheet" type="text/css" />
+    <style>
+	  input[type="file"] {
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    left: 0;
+    width: 150px;
+    height: 105px;
+    cursor: pointer;
+    line-height: 34px;
+}
+
+	</style>	
+</head>
+ 
+<body>
+    <div id="wrapper" style="background-color:#fff;">
+        {include file="./static/html/header.html" /}	
+		<div class="hw_page_content">
+		    <div class="hw_menu_left">
+         {include file="./static/html/side.html" /}  
+			</div>
+		    <div class="hw_content_right">
+			    <ul class="search_tab clearfix" >
+			      <li class="active"><a  href="javascript:;">应用设置</a></li>				  
+		        </ul>
+			  	
+                			  <div style="padding:30px 30px;clear:both;">
+			     <form class="form-horizontal">
+					  <div class="form-group">
+						<label for="package_name" class="col-sm-2 control-label">应用名称</label>
+						<div class="col-sm-4">
+						  <input type="text" disabled value="{$res.app_name}"  class="form-control" id="package_name" >					 
+						</div>						  
+					  </div>
+					  
+					  <div class="form-group">
+					    <label for="inputEmail3" class="col-sm-2 control-label">图标</label>
+						<div class="col-sm-10">
+						  <div class="article-cover-add thumb">
+						    {if condition="$res['icon_url'] neq ''"}
+						     <img class="upload_img" src="{$res.icon_url}" />
+							{else /}
+							 <i class="fa fa-plus"></i><input name="upload_img"  id="uploads"  accept="image/*" type="file">
+							{/if}
+						  </div>						  
+						</div>
+					  </div>
+					  
+					  <div class="form-group">
+						<label for="package_name" class="col-sm-2 control-label">APP KEY</label>
+						<div class="col-sm-4">
+						  <input type="text" id="unique_hash"  value="{$res.unique_hash}"  class="form-control" id="package_name" >					 
+						</div>
+						  <a class="btn btn-warning"  data-clipboard-target="#unique_hash"><span>点击复制</span></a>
+					  </div>
+					    <div class="form-group">
+					     <label class="col-sm-2 control-label"></label>
+						 <div class="col-sm-6">
+						     KEY是每个应用在进行请求时的权限验证，不得篡改，盗用！
+						 </div>
+					    </div>
+					</form>
+			  </div>				
+			</div>
+		</div>
+		 {include file="./static/html/footer.html" /}
+	</div>	
+</body>
+ {include file="./static/html/footer_common.html" /}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+ <script>
+    var clipboard =  new ClipboardJS('.btn');
+	clipboard.on('success', function(e) {
+    layer.msg("已复制到您的剪贴板");
+    e.clearSelection();
+});
+
+clipboard.on('error', function(e) {
+    console.error('Action:', e.action);
+    layer.msg("亲,出错了呦")
+});
+ </script>
+</html>

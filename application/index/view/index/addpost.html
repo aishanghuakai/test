@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<title>🎈哈乐沃德五周年🎈</title>
+{include file="../application/index/view/common/header.html" /}
+<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+<style>
+  .el-upload-list--picture-card .el-upload-list__item,.el-upload--picture-card{}
+  .imagelook .el-dialog{background-color:rgba(0,0,0,1)}
+</style>
+<!--[if IE]>
+  <script>window.location.href = '/compatibility';</script>
+  <![endif]-->
+</head>
+<body class="mdui-loaded">
+<div id="app" style="width:95%;margin:0 auto;">
+ 
+ 
+    <el-form v-loading="editload">
+    <el-form-item label="一句话描述" >
+      <el-input type="textarea" v-model="descript" clearable placeholder="请输入5-30个字符" autocomplete="off"></el-input>
+    </el-form-item>
+    <el-upload
+	  class="avatar-uploader"
+	  action="/upload"
+	  v-loading = "loading"
+	  name="image"
+	  list-type="picture-card"
+	  :on-preview="handlePictureCardPreview"
+	  :on-success="handleAvatarSuccess"
+	  :on-remove="handleRemove"
+	  multiple
+	  :before-upload="beforeAvatarUpload">
+	  <i class="el-icon-plus"></i>
+	</el-upload>
+	<el-dialog :visible.sync="dialogImageVisible" :append-to-body="isbody" width="100%">
+    <img width="100%;" :src="dialogImageUrl" alt="">
+   </el-dialog>
+   <el-form-item>
+     <p><i class="el-icon-warning-outline"></i> 发布之前，请确认内容无误，一经发布，不可修改!</p>
+   </el-form-item>
+  </el-form>
+  <div style="text-align:center;margin-bottom:20px;" class="dialog-footer">
+    <el-button  @click="back">返 回</el-button>
+    <el-button  type="danger" @click="addSubmit" >确认发布</el-button>
+  </div>
+</div>
+</body>
+  <!-- import Vue before Element -->
+  <script src="/static/js/vue.min.js"></script>
+  <!-- import JavaScript -->
+  <script src="/static/index/index.js"></script>
+  <script src="/static/js/axios.min.js"></script>
+  <script>
+     let t = new Vue({
+      el: '#app',
+      data: function() {
+        return { imageList:[],title:'',dataloading:false,visible: false,dialogImageShowVisible:false,autoplay:false,dialogVisible:false,dialogImageVisible:false,isbody:true,dialogImageUrl:'',descript:'',image:[],loading:false,editload:false }
+      },
+	  methods:{
+	   
+	  handleAvatarSuccess(res, file) {
+        this.loading = false
+		if( res.code==200 )
+		{
+		  this.image.push(res.data.saveurl)
+		}else{
+		  this.$message.warning('上传失败,请检查上传图片是否符合规范');
+		  return false
+		}		
+      },
+	  handleRemove(file, fileList){
+		const index = this.image.findIndex(c => c=== file.response.data.saveurl)
+           this.image.splice(index,1)
+	  },
+      beforeAvatarUpload(file) {
+        const isJPG = file.type === 'image/jpeg';
+		const isPNG = file.type === 'image/png';
+		const isGIF = file.type === 'image/gif';
+        if (!isJPG && !isPNG && !isGIF) {
+           this.$message.error('图片格式暂不支持');
+		   return false
+        }
+		this.loading = true
+      },
+	  handlePictureCardPreview(file) {
+        this.dialogImageUrl = file.url;
+        this.dialogImageVisible = true;
+      },
+	  back(){
+	    window.location.href ='/backhistory.html';
+	  },
+	  addSubmit(){
+		 if( this.descript.length<5 || this.descript.length>30 )
+		   {
+			this.$message.warning('图片描述内容为5-30个字符');
+			return false
+		   }
+		   if( this.image.length<1 )
+		   {
+		     this.$message.warning('请上传图片');
+			 return false
+		   }
+		   let params ={
+		     image:this.image,
+			 descript:this.descript
+		   }
+		   this.editload = true
+		   let _that =this
+		   axios.post('/addPicture',params)
+		  .then(function (response) {
+			 _that.editload = false
+			 if( response.data=="ok" )
+			 {
+			    _that.$message.success('发布成功')
+				window.location.href ='/backhistory.html';
+			 }else{
+			    _that.$message.warning('发布失败');
+			 }
+		  })
+		  .catch(function (error) {
+			console.log(error);
+		  });
+	   }
+	 }
+    })
+  </script>
+</html>

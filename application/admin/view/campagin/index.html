@@ -1,0 +1,136 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+	<meta charset="utf-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<title>GAME BRAIN</title>
+	{include file="./static/html/header_common.html" /}
+	<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+	<script src="https://unpkg.com/vue/dist/vue.js"></script>
+	<!-- import JavaScript -->
+	<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+	<script src="/static/js/axios.min.js"></script>
+	<style>
+		.cell {
+			font-size: 12px;
+		}
+
+		.el-table td, .el-table th {
+			padding: 9px 0;
+		}
+
+		.item {
+			margin-top: 10px;
+			margin-right: 40px;
+		}
+	</style>
+</head>
+<body>
+<div id="wrapper" style="background-color: #fff;">
+	{include file="./static/html/header.html" /}
+	<div class="hw_page_content">
+		<div class="hw_menu_left">
+			{include file="./static/html/side.html" /}
+		</div>
+		<div class="hw_content_right" style="padding:10px 10px;">
+			<div class="main" style="margin-bottom:0px;">
+
+				<el-form :inline="true" class="demo-form-inline">
+					<el-form-item label="日期筛选">
+						<el-date-picker
+							v-model="date"
+							type="daterange"
+							value-format="yyyy-MM-dd"
+							style="width:300px;"
+							start-placeholder="开始"
+							end-placeholder="结束">
+						</el-date-picker>
+					</el-form-item>
+					<el-form-item label="渠道选择">
+						<el-select v-model="platform" placeholder="请选择">
+							<el-option label="Facebook" value="6"></el-option>
+							<el-option label="Adwords" value="5"></el-option>
+							<el-option label="Unity" value="2"></el-option>
+							<el-option label="Vungle" value="4"></el-option>
+							<el-option label="Applovin" value="3"></el-option>
+							<el-option label="Chartboost" value="8"></el-option>
+							<el-option label="Adcolony" value="31"></el-option>
+							<el-option label="TouTiao" value="32"></el-option>
+						</el-select>
+					</el-form-item>
+					<el-form-item>
+						<el-input v-model="keyword" clearable placeholder="搜索关键词"></el-input>
+					</el-form-item>
+					<el-button class="btn badge-gradient-info btn-sm" @click="goTO('/admin_campagin/purchase_adjust')">内购
+					</el-button>
+				</el-form>
+			</div>
+			<div class="clear"></div>
+			<div class="hw_reven clearfix" style="">
+				<el-table :data="tableData" v-loading="loading" height="550" style="width: 100%;">
+					<el-table-column prop="campaign_name" width="300px;" label="名称"></el-table-column>
+					<el-table-column prop="spend" sortable align="center" label="花费"></el-table-column>
+					<el-table-column prop="impression" sortable align="center" label="展示"></el-table-column>
+					<el-table-column prop="clicks" sortable align="center" label="点击"></el-table-column>
+					<el-table-column prop="installs" sortable align="center" label="安装"></el-table-column>
+					<el-table-column prop="cpi" sortable align="center" label="CPI"></el-table-column>
+					<el-table-column prop="ctr" sortable align="center" label="CTR"></el-table-column>
+					<el-table-column prop="cvr" sortable align="center" label="CVR"></el-table-column>
+				</el-table>
+			</div>
+		</div>
+	</div>
+</div>
+{include file="./static/html/footer.html" /}
+</body>
+{include file="./static/html/footer_common.html" /}
+<script>
+	new Vue({
+		el: '#wrapper',
+		data: {
+			loading: false,
+			date: ['{$start_date}', '{$end_date}'],
+			formInline: {},
+			platform: '6',
+			keyword: '',
+			tableData: []
+		},
+		computed: {
+			param() {
+				return {
+					app_id: '{$appid}',
+					date: this.date,
+					platform: this.platform,
+					keyword: this.keyword
+				}
+			}
+		},
+		watch: {
+			param(val) {
+				this.getlist(val)
+			}
+		},
+		created() {
+			this.getlist(this.param)
+		},
+		methods: {
+			goTO(url){
+				window.location.href = url
+			},
+			getlist(value) {
+				this.loading = true
+				let _that = this
+				axios({
+					method: 'post',
+					url: '/admin_campagin/campaign_json',
+					data: value
+				}).then(res => {
+					_that.loading = false
+					this.tableData = res.data
+				})
+			}
+		}
+	})
+</script>
+</html>

@@ -1,0 +1,193 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GAME BRAIN</title>
+    {include file="./static/html/header_common.html" /}  
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+   <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <!-- import JavaScript -->
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <script src="/static/js/axios.min.js"></script>	 
+	<style>
+	  .el-table th > .cell{color:#333;font-size:12px;}
+	  .el-table .cell{font-size:12px;}
+	  .el-table td, .el-table th {
+    padding:9px 0;}
+	  .item {
+		  margin-top: 10px;
+		  margin-right: 40px;
+		}
+	  .el-badge__content.is-fixed{position:relative !important;}
+	  .h3::before {
+    content: "";
+    position: absolute;
+    left: -10px;
+    width: 3px;
+	margin-right:10px;
+    height: 100%;
+    background-color: #007fff;
+}
+	</style>
+</head>
+<body>
+    <div id="wrapper">
+        {include file="./static/html/header.html" /}	
+		<div class="hw_page_content" style="background:#f1f3f8;">
+		    <div class="hw_menu_left">
+             {include file="./static/html/side.html" /}  
+			</div>
+		    <div class="hw_content_right" style="padding:20px 5px;background:#f1f3f8;">
+			            <div class="main" style="margin-bottom:10px;">					
+							<h4 style="float:left;font-size:18px;color:#14274e;"><i class="fa fa-assistive-listening-systems"></i> 产品模型</h4>
+							<div style="float:right;">						  	
+								  <el-select v-model="country" filterable placeholder="请选择国家">
+									{volist name="country" id="item"}
+									 <el-option key="{$key}" label="{$item}" value="{$key}"></el-option>
+									{/volist}
+								  </el-select>
+							 </div>
+
+							<div  style="float:right;margin-right:10px;">
+							   <el-date-picker
+								  v-model="date"					 
+								  type="daterange"
+								  value-format="yyyy-MM-dd"
+                                  style="width:300px;"								  
+								  start-placeholder="开始"
+								  end-placeholder="结束">
+								</el-date-picker>	
+							</div>
+						</div>
+						<div class="clear"></div>
+						<div class="m-list hw_reven" style="width:85%;margin:0px auto;padding-top:3%;">
+							 <div>
+							   <h2 style="font-weight:700;font-size:18px;color:#2d3748;position:relative;" class="h3">产品</h2>
+							 </div>
+							 <el-table
+								:data="producter"
+								v-loading="loading"
+								style="width: 100%;"
+								row-key="id"
+								tree-props="{children: 'children', hasChildren: 'hasChildren'}">
+                                <el-table-column prop="name" width="150"  align="center" label="名称">
+								 <template slot-scope="scope">
+									 <span>{{scope.row.name}}
+										 <el-popover
+										  placement="right"
+										  width="400"
+										  trigger="hover">
+										  <div v-html="scope.row.producter_showtips"></div>
+										  <i v-if="scope.row.producter_showtips!=0"  slot="reference" style="color:red;font-size:10px;" class="fa fa-commenting-o"></i>
+										</el-popover>
+									</span>
+								</template>
+								</el-table-column>								
+								<el-table-column prop="new_users"  align="center" label="新增"></el-table-column>
+								<el-table-column prop="retention_1"  align="center" label="次留"></el-table-column>
+								<el-table-column prop="retention_3"  align="center" label="3留"></el-table-column>
+								<el-table-column prop="retention_7" align="center" label="7留"></el-table-column>
+								<el-table-column prop="retention_14"  align="center" label="14留"></el-table-column>
+								<el-table-column prop="retention_28" align="center" label="28留"></el-table-column>
+								<el-table-column prop="avg_session_num" align="center" label="人均会话"></el-table-column>
+								<el-table-column prop="avg_session_length" align="center" label="单次时长(s)"></el-table-column>
+							</el-table>
+							 <div>
+							   <h2 style="font-weight:700;font-size:18px;color:#2d3748;position:relative;" class="h3">变现</h2>
+							 </div>
+							 <el-table
+								:data="monetizater"
+								v-loading="loading"
+								row-key="id"
+								tree-props="{children: 'children', hasChildren: 'hasChildren'}"
+								style="width: 100%;">
+								<el-table-column prop="name" width="150"  align="center" label="名称">
+								 <template slot-scope="scope">
+									 <span>{{scope.row.name}}
+										 <el-popover
+										  placement="right"
+										  width="400"
+										  trigger="hover">
+										  <div v-html="scope.row.publisher_showtips"></div>
+										  <i v-if="scope.row.publisher_showtips!=0"  slot="reference" style="color:red;font-size:10px;" class="fa fa-commenting-o"></i>
+										</el-popover>
+									</span>
+								</template>
+								</el-table-column>
+								<el-table-column prop="avg_adv_show" align="center" label="人均展示"></el-table-column>
+								<el-table-column prop="ecpm" align="center" label="eCPM"></el-table-column>
+							</el-table>
+							<div>
+							   <h2 style="font-weight:700;font-size:18px;color:#2d3748;position:relative;" class="h3">推广</h2>
+							 </div>
+							 <el-table
+								:data="advertiser"
+								v-loading="loading"
+								style="width:100%;">								
+								<el-table-column prop="cpi" sortable  align="center" label="CPI"></el-table-column>
+								<el-table-column prop="ctr" sortable  align="center" label="CTR"></el-table-column>
+								<el-table-column prop="cvr" sortable align="center" label="CVR"></el-table-column>
+								<el-table-column prop="cpm"  sortable align="center" label="CPM"></el-table-column>
+                                <el-table-column prop="name"  align="center" label="渠道"></el-table-column>
+							</el-table>
+						</div>
+			  </div>
+			</div>
+		</div>
+		 {include file="./static/html/footer.html" /}
+	</div>
+</body>
+ {include file="./static/html/footer_common.html" /}
+  <script>
+    new Vue({
+        el: '#wrapper',
+        data: {
+            loading: false,
+			date:['{$start}','{$end}'],
+			groupField: 'groupdate',
+			country: 'all',
+			tableData: [],
+			producter:[],
+			advertiser:[],
+			monetizater:[],
+        },
+		computed:{
+		    param(){
+			   return {
+			      app_id:'{$app_id}',
+				  date:this.date,
+				  country:this.country
+			   }
+			}
+		},
+		watch: {
+		  param(val) {
+			this.getlist(val)
+		  }
+		},
+		created(){
+		  this.getlist(this.param)
+		},
+        methods: {
+           
+			getlist(value){
+			    this.loading = true
+			   let _that = this
+			   axios({
+					method: 'post',
+					url:'/survey/json_model_data',
+					data:value
+				}).then(res=>{			
+				 _that.loading = false
+				 this.tableData = res.data.total_data
+				 this.producter  =res.data.producter
+				 this.monetizater = res.data.monetizater
+				 this.advertiser = res.data.advertiser
+			 })
+			}			
+        }
+    })
+  </script>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>GAME BRAIN</title>
+<!-- Custom Theme files -->
+<link href="/static/css/style.css?t=12" rel="stylesheet" type="text/css" media="all"/>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style>
+ canvas{
+   position: fixed; top: 0; left: 0; z-index: -1;
+   height:800px;
+   width:100%;
+ }
+</style> 
+</head>
+<body>
+<div class="login">
+	
+	<div class="login-top" id="accountlogin" >
+	 
+		<!-- <h1>请画出登录手势</h1> -->
+		<!-- <h1>TenJs</h1> -->
+        <h1><span >Adgame</span></h1>
+		<!-- <div id="gesturepwd" style="text-align:center;margin-left: auto;margin-right: auto;"></div> -->
+		<div class="bg-warning" style="padding:4px 0px 10px 0px;text-align:center;color:#222;display:none;"><strong style="font-weight:bold;">提示!</strong> 账号密码错误</div>
+		 <form action="/admin_cate/accountlogin" method="post">
+			<input type="text" name="username" placeholder="输入账号">
+			<input type="password" name="passwd" placeholder="输入密码">
+	    
+	    <div class="forgot">
+	    	<a href="javascript:;" >忘记密码?</a>
+	    	<input type="submit" id="login" value="Login" >
+	    </div>
+		</form>
+		<!-- <div id="error_mesg" style="text-align:center;color:red;font-weight:bold;font-size:14px;margin-top:10px;display:none;">密码错误</div> -->
+	</div>
+	
+	<!--  <div class="login-bottom" style="text-align:center;">
+		<h3><a href="###">登录</a></h3>
+	</div> -->
+</div>
+</body>
+<script src="/static/js/jquery-2.1.4.min.js"></script>
+<script src="/static/js/layer/layer.js"></script>
+<script src="/static/js/plug-in.min.js"></script>
+<script type="text/javascript" src="/static/js/canvas-particle.js"></script>
+<script type="text/javascript">
+		window.onload = function() {
+		    //配置
+		    var config = {
+		        vx: 4,	//小球x轴速度,正为右，负为左
+		        vy: 4,	//小球y轴速度
+		        height: 2,	//小球高宽，其实为正方形，所以不宜太大
+		        width: 2,
+		        count: 200,		//点个数
+		        color: "121, 162, 185", 	//点颜色
+		        stroke: "130,255,255", 		//线条颜色
+		        dist: 6000, 	//点吸附距离
+		        e_dist: 20000, 	//鼠标吸附加速距离
+		        max_conn: 10 	//点到点最大连接数
+		    }
+
+		    //调用
+		    CanvasParticle(config);
+		}
+	</script>
+<script>
+  var isnewhost ="{$isnewhost}";
+  $( function(){
+     
+	 if( !isnewhost )
+	 {
+		$.Pop('请注意，您使用的域名已更换,点击 “我知道了” 将会跳转到最新的域名!','alert',function(){ window.location.href='http://console.gamebrain.io/admin_cate/login' });return;
+	 }
+	 
+     $("#login").click( function(){
+	 var url = $("form").attr("action");
+	 var username = $("input[name='username']").val();
+     var passwd = $("input[name='passwd']").val();
+	    $(this).attr("disabled",true);
+		var index = layer.load();
+        $.post(url,{passwd:passwd,username:username},function(result){
+		   $("#login").attr("disabled",false);
+		   layer.close(index);
+			if(result =="ok"){		    
+			   window.location.href="/admin_index/main"; 		 
+		       }
+			else{
+			   $(".bg-warning").show();
+			 }
+		  });	 
+		 return false;
+	 })
+  })
+</script>
+</html>

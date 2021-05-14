@@ -1,0 +1,58 @@
+   	    <table class="table table-hover">
+							 
+							  <thead style="font-weight:700;">
+								<tr>								  
+								  <th>名称</th>
+								  <th>展示</th>
+								  <th>点击</th>
+								  <th>日活</th>
+								  <th>人均展示</th>
+								  <th>人均点击</th>
+								  <th>eCPM</th>								 
+								</tr>
+						  </thead>
+							 
+							  <tbody >
+															
+		{volist name="data" id="s"}
+		<tr>								 
+		  <td>{$s.name}</td>
+		  <td>{$s.impressions}</td>
+		  <td>{$s.clicks}</td>
+		  <td>3322</td>
+		  <td>Ot534</td>
+		  <td>553</td>
+		  <td>$122</td>
+		  
+		  <tbody style="font-size:12px;">
+		    {volist name="s.child" id="item"}
+			<tr>									 
+			  <td style="text-indent:20px;">{$item.name}</td>
+			  <td>{$item.impressions}</td>
+			  <td>{$item.clicks}</td>
+			  <td>3322</td>
+			  <td>Ot534</td>
+			  <td>553</td>
+			  <td>$122</td>
+			 
+				 <tbody style="font-size:11px;">
+				    {volist name="item.twochild" id="vv"}
+					<tr>									 
+					  <td style="text-indent:40px;">{$vv.name}</td>
+					  <td>{$vv.impressions}</td>
+					  <td>{$vv.clicks}</td>
+					  <td>3322</td>
+					  <td>Ot534</td>
+					  <td>553</td>
+					  <td>$122</td>
+					 
+					</tr>
+                   {/volist}					
+		         </tbody>
+			</tr>
+            {/volist}				
+		  </tbody>
+		</tr>
+	   	{/volist}
+		 </tbody>
+		 </table>

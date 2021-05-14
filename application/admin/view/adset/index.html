@@ -1,0 +1,459 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+	<meta charset="utf-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<title>GAME BRAIN</title>
+	{include file="./static/html/header_common.html" /}
+	<link rel="stylesheet" type="text/css" media="all" href="/static/plugin/jquery-time/daterangepicker-bs3.css"/>
+	<link href="/static/css/checkbox.css" rel="stylesheet" type="text/css">
+	<link href="/static/css/campagin.css?t=<?php echo time(); ?>" rel="stylesheet">
+	<link href="/static/css/show.css?t=<?php echo time(); ?>" rel="stylesheet">
+	<link href="/static/css/blue/style.css?t=<?php echo time(); ?>" rel="stylesheet">
+	<style>
+		th, td {
+			text-align: center;
+			vertical-align: middle
+		}
+
+		.hw_reven thead tr {
+			background-color: #f9f9f9 !important;
+		}
+
+		table.tablesorter thead tr th, table.tablesorter tfoot tr th {
+			background-color: #f9f9f9 !important;
+			border-bottom: 0px solid #e8e8e8 !important;
+			border-top: 1px solid #e8e8e8 !important;
+			color: #222 !important;
+			padding: 8px !important;
+		}
+
+		table.tablesorter {
+			background-color: #fff !important;
+		}
+
+		table.tablesorter tbody td {
+			padding: 8px !important;
+			background-color: #FFF;
+			vertical-align: middle;
+		}
+
+		.hw_reven table {
+			border-collapse: collapse;
+			font-size: 12px !important;
+			color: #222 !important;
+			text-align: left !important;
+			line-height: 40px;
+		}
+
+		.hw_reven .table > thead > tr > th {
+			border-bottom: 0px solid #e8e8e8 !important;
+			border-top: 1px solid #e8e8e8 !important;
+			color: #222 !important;
+		}
+
+		.view {
+			cursor: pointer;
+			color: red;
+		}
+
+		.time_scoll {
+			position: fixed;
+			z-index: 444;
+		}
+
+		.pbtn {
+			margin-left: 8px;
+			margin-right: 8px;
+			padding: 0 8px;
+			display: inline-block;
+			font-size: 14px;
+			border-radius: 4px;
+			text-align: center;
+			border: none;
+			background-color: transparent;
+			height: 34px;
+			line-height: 32px;
+			min-width: 72px;
+			cursor: pointer;
+		}
+
+		.btn-red-hollow {
+			color: #ca0c16 !important;
+			border: 1px solid #ca0c16 !important;
+			background-color: #fff !important;
+			-webkit-transition: background-color .1s ease-in-out;
+			transition: background-color .1s ease-in-out;
+		}
+
+		.platform a {
+			color: #838383;
+		}
+
+		.platform a:hover {
+			border: 1px solid #ca0c16 !important;
+		}
+	</style>
+</head>
+<body>
+<div id="wrapper" style="background-color: #fff;">
+	{include file="./static/html/header.html" /}
+	<div class="hw_page_content">
+		<div class="hw_menu_left">
+			{include file="./static/html/side.html" /}
+		</div>
+		<div class="hw_content_right" style="padding:10px 10px;">
+
+			<div class="hw_reven clearfix" style="padding:20px 30px;">
+				<div class="platform" style="padding:10px 0px;margin-bottom:20px;">
+					<a class="pbtn btn-red-hollow" data="all">全部</a>
+					<a class="pbtn" data="6">Facebook</a>
+					<a class="pbtn" data="3">Applovin</a>
+					<a class="pbtn" data="32">TouTiao</a>
+					<div class="el-checkbox el-checkbox-green" style="float:right;">
+						<input name="select" id="select" type="checkbox">
+						<label class="el-checkbox-style" for="select"></label>
+						<span class="margin-r">全部产品</span>
+					</div>
+				</div>
+				<div style="">
+
+					<div style="float:left;position:relative;width:200px;line-height: 29px;margin-bottom:15px;margin-right:5px;">
+						<input class="search-input" id="keyword" style="width:200px;" placeholder="搜索关键字">
+					</div>
+
+					<div class="sdaa" id="top_start" style="float:right;line-height: 29px;margin-bottom:15px;">
+						<input class="search-input" id="start_date" value="{$start} 到 {$end}">
+					</div>
+					<div class="table-head" style="">
+						<table class="table tablesorter" id="body"  style="margin-bottom:0px;">
+
+							<thead style="font-size:12px;">
+							<tr>
+								<th>名称</th>
+								<th>安装<br><span id="total_installs"></span></th>
+								<th>花费<br><span id="total_spend"></span>$</th>
+								<th>展示<br><span id="total_impressions"></span></th>
+								<th>点击<br><span id="total_clicks"></span></th>
+								<th>CTR<br><span id="total_ctr"></span>%</th>
+								<th>CVR<br><span id="total_cvr"></span>%</th>
+								<th {if condition="getuserrole() eq 'material'"}hidden{/if}>CPI<br><span id="total_cpi"></span>$</th>
+								<th {if condition="getuserrole() eq 'material'"}hidden{/if}>CPM<br><span id="total_ecpm"></span>$</th>
+							</tr>
+							</thead>
+							<tbody id="tablehw">
+							{volist name="res" id="vv"}
+							<tr>
+								{if condition="$vv['platform_type'] eq '32'"}
+								<td class="view"
+										onclick="window.open('/adspend/previewvideo?advertiser_id={$vv['target_id']}&ad_id={$vv['ad_id']}')"
+										style="width:30%;text-align:left;color:#004e31">{$vv.ad_name}
+									<div style="font-size:10px;color:#222">【{$vv.adset_name}】&nbsp;<span
+										style="border: 1px solid #87a5b5;color:#87a5b5;padding:0px 5px;">{$vv.platform_type|getplatform}</span>
+									</div>
+								</td>
+								{else /}
+								<td class="view" onclick="iframeopen(this)" ad_id="{$vv.ad_id}"
+										style="width:30%;text-align:left;color:#004e31">{$vv.ad_name}
+									<div style="font-size:10px;color:#222">【{$vv.campaign_name}】&nbsp;<span
+										style="border: 1px solid #87a5b5;color:#87a5b5;padding:0px 5px;">{$vv.platform_type|getplatform}</span>
+									</div>
+								</td>
+								{/if}
+								<td onclick="openPlat(this)" ad_id="{$vv.ad_id}" ad_name="{$vv.ad_name}" style="cursor:pointer;">{$vv.installs}</td>
+								<td onclick="openPlat(this)" ad_id="{$vv.ad_id}" ad_name="{$vv.ad_name}" style="cursor:pointer;">${$vv.spend}</td>
+								<td>{$vv.impressions}</td>
+								<td>{$vv.clicks}</td>
+								<td style="color:red;font-weight:700">{$vv.ctr}%</td>
+								<td style="color:green;font-weight:700">{$vv.cvr}%</td>
+								<td {if condition="getuserrole() eq 'material'"}hidden{/if} style="color:#ec971f;font-weight:700">${$vv.cpi}</td>
+								<td {if condition="getuserrole() eq 'material'"}hidden{/if} style="color:#ec971f;font-weight:700">${$vv.ecpm}</td>
+							</tr>
+							{/volist}
+							</tbody>
+						</table>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+	{include file="./static/html/footer.html" /}
+</div>
+
+</body>
+{include file="./static/html/footer_common.html" /}
+
+<script type="text/javascript" src="/static/plugin/jquery-time/moment.js"></script>
+<script type="text/javascript" src="/static/plugin/jquery-time/daterangepicker.js"></script>
+<script src="/static/js/jquery.tablesorter.min.js"></script>
+<script src="/static/js/jquery.freezeheader.js"></script>
+<script>
+
+	var start_date = "{$start}";
+	var end_date = "{$end}";
+	var platform_type = "all";
+	var app = "one";
+	$(function () {
+		init_total()
+		$(".pbtn").click(function () {
+			platform_type = $(this).attr("data");
+			$(".pbtn").removeClass("btn-red-hollow");
+			$(this).addClass("btn-red-hollow");
+			loadadata();
+		});
+		$("#select").click(function () {
+			if ($(this).is(":checked")) {
+				app = "all";
+			} else {
+				app = "one";
+			}
+			loadadata();
+		})
+		$('#keyword').bind('input propertychange', function () {
+			var input_text = $(this).val();
+			let total_spend = 0
+			let total_impressions = 0
+			let total_clicks = 0
+			let total_installs = 0
+			let total_ctr = 0
+			let total_cvr = 0
+			let total_cpi = 0
+			let total_ecpm = 0
+			$("#body tbody tr").each(function (i) {
+				var text = $(this).find("td").eq(0).text();
+				var aa = text.match(new RegExp(input_text, 'i'));
+				if (aa) {
+					var bb = aa[0];
+					text = text.replace(bb, "<span style='color:red'>" + bb + "</span>");
+					$(this).find("td").eq(0).html(text);
+					$(this).show();
+					total_installs += Number($(this).find("td").eq(1).text())
+					total_spend += Number($(this).find("td").eq(2).text().replace(/\$/g, ""))
+					total_impressions += Number($(this).find("td").eq(3).text())
+					total_clicks += Number($(this).find("td").eq(4).text())
+				} else {
+					$(this).hide();
+				}
+			})
+			if (total_impressions>0){
+				total_ctr = total_clicks*100/total_impressions
+				total_ecpm = total_spend*1000/total_impressions
+			}
+			if (total_clicks>0){
+				total_cvr = total_installs*100/total_clicks
+			}
+			if (total_installs>0){
+				total_cpi = total_spend/total_installs
+			}
+			$("#total_spend").html(total_spend.toFixed(2))
+			$("#total_impressions").html(total_impressions.toFixed(2))
+			$("#total_clicks").html(total_clicks.toFixed(2))
+			$("#total_installs").html(total_installs.toFixed(2))
+			$("#total_ctr").html(total_ctr.toFixed(2))
+			$("#total_cvr").html(total_cvr.toFixed(2))
+			$("#total_cpi").html(total_cpi.toFixed(2))
+			$("#total_ecpm").html(total_ecpm.toFixed(2))
+		});
+		var elm = $('.sdaa');
+		var startPos = $(elm).offset().top;
+		$.event.add(window, "scroll", function () {
+			var p = $(window).scrollTop();
+			if ((p) > startPos) {
+				$(elm).addClass("time_scoll");
+				$(elm).animate({right: "20%", top: "13px"});
+
+			} else {
+
+				$(elm).removeClass("time_scoll");
+
+			}
+		});
+
+		$.tablesorter.addParser({
+			id: "num", //指定一个唯一的ID
+			is: function (s) {
+				return false;
+			},
+			format: function (s) {
+				return s.substring(0, s.length - 2);//去除后面的汉字
+			},
+			type: "numeric"
+		});
+
+		$("#body").freezeHeader({'offset': '50px'});
+		$('#start_date').daterangepicker({
+			minDate: '2018-09-25',
+			opens: 'left',
+			ranges: {
+				'今天': [moment(), moment()],
+				'昨天': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+				'近7天': [moment().subtract(7, 'days'), moment()]
+			}
+		}, function (start, end, label) {
+			start_date = start.format('YYYY-MM-DD');
+			end_date = end.format('YYYY-MM-DD');
+			$('#start_date').val(start_date + " 到 " + end_date);
+			loadadata();
+		});
+	});
+	var sort_status = false
+	var init_total = function (){
+		let total_spend = 0
+		let total_impressions = 0
+		let total_clicks = 0
+		let total_installs = 0
+		let total_ctr = 0
+		let total_cvr = 0
+		let total_cpi = 0
+		let total_ecpm = 0
+		$("#body tbody tr").each(function (i) {
+			total_installs += Number($(this).find("td").eq(1).text())
+			total_spend += Number($(this).find("td").eq(2).text().replace(/\$/g, ""))
+			total_impressions += Number($(this).find("td").eq(3).text())
+			total_clicks += Number($(this).find("td").eq(4).text())
+			sort_status = true
+		})
+		if (sort_status){
+			$(".table").tablesorter({
+				headers: {
+					0: {sorter: false},
+				},
+				sortList:[[1,1]]
+			});
+		}
+		if (total_impressions>0){
+			total_ctr = total_clicks*100/total_impressions
+			total_ecpm = total_spend*1000/total_impressions
+		}
+		if (total_clicks>0){
+			total_cvr = total_installs*100/total_clicks
+		}
+		if (total_installs>0){
+			total_cpi = total_spend/total_installs
+		}
+		$("#total_spend").html(total_spend.toFixed(2))
+		$("#total_impressions").html(total_impressions.toFixed(2))
+		$("#total_clicks").html(total_clicks.toFixed(2))
+		$("#total_installs").html(total_installs.toFixed(2))
+		$("#total_ctr").html(total_ctr.toFixed(2))
+		$("#total_cvr").html(total_cvr.toFixed(2))
+		$("#total_cpi").html(total_cpi.toFixed(2))
+		$("#total_ecpm").html(total_ecpm.toFixed(2))
+	}
+	var loadadata = function () {
+		layer.load();
+		$.post("/admin_adset/data_json", {
+			start: start_date,
+			end: end_date,
+			platform_type: platform_type,
+			app: app
+		}, function (e) {
+			layer.closeAll();
+			$("tbody").trigger("update");
+			$("#tablehw").html(e);
+			var input_text = $('#keyword').val();
+			let total_spend = 0
+			let total_impressions = 0
+			let total_clicks = 0
+			let total_installs = 0
+			let total_ctr = 0
+			let total_cvr = 0
+			let total_cpi = 0
+			let total_ecpm = 0
+			let need_sort = false
+			$("#body tbody tr").each(function (i) {
+				if (input_text !== "") {
+					var text = $(this).find("td").eq(0).text();
+					var aa = text.match(new RegExp(input_text, 'i'));
+					if (aa) {
+						var bb = aa[0];
+						text = text.replace(bb, "<span style='color:red'>" + bb + "</span>");
+						$(this).find("td").eq(0).html(text);
+						$(this).show();
+						total_installs += Number($(this).find("td").eq(1).text())
+						total_spend += Number($(this).find("td").eq(2).text().replace(/\$/g, ""))
+						total_impressions += Number($(this).find("td").eq(3).text())
+						total_clicks += Number($(this).find("td").eq(4).text())
+					} else {
+						$(this).hide();
+					}
+				}else{
+					total_installs += Number($(this).find("td").eq(1).text())
+					total_spend += Number($(this).find("td").eq(2).text().replace(/\$/g, ""))
+					total_impressions += Number($(this).find("td").eq(3).text())
+					total_clicks += Number($(this).find("td").eq(4).text())
+				}
+				need_sort = true
+			})
+			if (need_sort&&!sort_status){
+				sort_status = true
+				$(".table").tablesorter({
+					headers: {
+						0: {sorter: false},
+					},
+					sortList:[[1,1]]
+				});
+			}
+			if (total_impressions>0){
+				total_ctr = total_clicks*100/total_impressions
+				total_ecpm = total_spend*1000/total_impressions
+			}
+			if (total_clicks>0){
+				total_cvr = total_installs*100/total_clicks
+			}
+			if (total_installs>0){
+				total_cpi = total_spend/total_installs
+			}
+			$("#total_spend").html(total_spend.toFixed(2))
+			$("#total_impressions").html(total_impressions.toFixed(2))
+			$("#total_clicks").html(total_clicks.toFixed(2))
+			$("#total_installs").html(total_installs.toFixed(2))
+			$("#total_ctr").html(total_ctr.toFixed(2))
+			$("#total_cvr").html(total_cvr.toFixed(2))
+			$("#total_cpi").html(total_cpi.toFixed(2))
+			$("#total_ecpm").html(total_ecpm.toFixed(2))
+		});
+	}
+	
+	function openPlat(obj)
+	{
+	   var name = $(obj).attr("ad_name")
+	   $.post("/admin_adset/plat_json", {
+			start: start_date,
+			end: end_date,
+			ad_id: $(obj).attr("ad_id")
+		}, function (e) {
+		   layer.open({
+			  type: 1,
+			  title: name+'版位详情',
+			  skin: 'layui-layer-rim', //加上边框
+			  area: ['80%', '90%'], //宽高
+			  content:e
+			});
+			$(".table12").tablesorter({
+					headers: {
+						0: {sorter: false},
+					},
+					sortList:[[1,1]]
+			});
+		})
+	   
+	}
+
+	function iframeopen(obj) {
+		var ad_id = $(obj).attr("ad_id");
+		var url = "http://console.gamebrain.io/adgastatic/previews?ad_id=" + ad_id;
+		layer.open({
+			type: 2,
+			title: '素材展示',
+			shadeClose: true,
+			shade: 0.8,
+			area: ['50%', '90%'],
+			content: url
+		});
+
+	}
+</script>
+</html>

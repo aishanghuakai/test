@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{$app_name}--Roi Model--GAME BRAIN</title>
+	{include file="./static/html/header_common.html" /}
+	
+	 <style>
+	   
+	    td{
+		  height:30px;
+		  padding: 0px !important;
+		}
+		input[type="text"]{
+		  padding: 0px;
+		  margin:0px;
+		}
+		th, td {
+         vertical-align: middle !important;
+          text-align: center !important;
+      }
+	  .tarbk{
+	    margin:20px auto;
+	  }
+	  .form-group
+	  {
+	    float:left;
+		margin-left:100px;
+	  }
+	  .form-group .form-control{
+	     text-indent:10px;
+	  }
+
+	</style>	
+</head>
+<body>
+    <div id="wrapper" style="background-color:#fff;">
+        {include file="./static/html/header.html" /} 
+	
+		<div class="hw_page_content">
+		    <div class="hw_menu_left">
+         {include file="./static/html/side.html" /}  
+			</div>
+		    <div class="hw_content_right">
+			  <ul class="search_tab clearfix">
+			        <li ><a  href="/admin_consu/historylist?appid={$app_id}">列表</a></li>
+			       <li class="active"><a  href="javascript:;">ROI</a></li>
+				   <li ><a  href="/admin_consu/ltv?appid={$app_id}">LTV</a></li>
+				   <li><a  href="/admin_consu/tenjin?appid={$app_id}">Tenjin</a></li>	
+		      </ul>
+			  <div class="tarbk">
+		                 <div class="form-group">
+						    <label for="arpdau">ARPDAU</label>
+						    <input type="text" class="form-control" style="width:150px" id="arpdau" value="0.09">
+					     </div>
+					     <div class="form-group">
+						     <label for="cpi">CPI</label>
+						     <input type="text" class="form-control" style="width:150px" id="cpi" value="0.28">
+					     </div>
+						
+						<div class="form-group" style="margin-top:23px;">
+						    <a class="btn btn-primary" href="javascript:;" id="js" style="float:right;width:150px;">应用</a>
+					     </div>					 
+				</div>
+				 <div style="width:80%;margin:0 auto;">
+					 <table class="table table-bordered table-hover">
+						
+					   <thead>
+						  <tr>
+							 <th>时间</th>
+							 <th>留存</th>
+							 <th>收入</th>
+							 <th>ROI</th>
+						  </tr>
+					   </thead>
+					   <tbody id="r_model">
+						 {$html}					 
+					   </tbody>
+					</table> 
+				   <div style="text-align:center;"><button type="button" data-toggle="modal" data-target="#myModal" style="width:200px;margin-bottom:40px;" class="btn btn-success">保存数据</button></div>
+			    </div>
+			</div>
+		</div>
+    {include file="./static/html/footer.html" /}		 
+	</div>
+   {include file="./static/html/footer_common.html" /}
+   
+   <div class="modal fade" id="myModal" style="top:10%;" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+       <!--  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button> -->
+        <h4 class="modal-title" id="myModalLabel">设置名称</h4>
+      </div>
+      <div class="modal-body">
+         <input type="text" class="form-control" id="save_name" value="{$app_name}">
+      </div>
+      <div class="modal-footer">       
+		 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		 <button type="button" class="btn btn-primary" id="save">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>	
+</body>
+ 
+  <script>
+    $( function(){
+	   	   
+	   $(".arpdau").bind( "click",function(e){
+	      
+	        $("#arpdau").val( $(this).text() );
+			Roi.allwork();
+	   })
+	   
+	   $("#js").bind( "click",function(e){
+	      
+			Roi.allwork();
+	   })
+	   
+	   $("#save").bind("click",function(){
+	        Roi.save();
+	   });
+	   $(window).scroll(function(){
+		        var scroll =$(window).scrollTop();
+				if(scroll > 100){
+					$("#topp").show('slow');
+				}else{
+					$("#topp").hide('slow');
+				}
+			})
+	})
+    //初始化 数据模型  by lxf
+    var Roi = window.Roi || {};
+	
+	  ( function(){
+	     
+		 var arpdau ="";
+		 var cpi ="";
+		 var a_index = false;
+		 
+		 var update = function()
+		 {
+		    arpdau = $("#arpdau").val();
+			cpi = $("#cpi").val();
+		 }
+		 
+	     this.check = function()
+		 {
+		     update();
+			 if(!/^[0-9]+(.[0-9]{1,3})?$/.test(cpi) || !/^[0-9]+(.[0-9]{1,3})?$/.test(arpdau) )
+			 {
+				layer.msg("ARPDAU,CPI必须为合法的数字");return false;
+			 }
+			 return true;
+		 }
+		//单个数据核心处理计算
+		Roi.init = function()
+		{
+	    		
+			var _that = this;
+			$('.lc').bind('input propertychange', function()
+		   {
+			   if(_that.check())
+			   {				  
+                  //_that.allwork();				  
+			   }				  
+		   });
+		}
+		
+		//计算核心
+		Roi.work = function(t,sum_roi)
+		{
+			t.parents("tr").prevAll().each(function(i)
+				{
+					 var _m_sum = $(this).find(".lc").val();
+					 sum_roi+=parseFloat(_m_sum);
+				});
+			 this.show( t,sum_roi);
+		}
+		//重新整个计算
+		Roi.allwork = function()
+		{
+		  
+		   var _that = this;
+		   if(_that.check())
+			   {					
+					$("#r_model tr").each(function(i)
+					{
+						 var _$lc = $(this).find(".lc");
+						 var _m_sum = _$lc.val();
+						 var sum_roi =parseFloat(_m_sum);
+						 _that.work(_$lc,sum_roi);						
+					});
+		       }	
+		}
+	 	 // 数据渲染 
+		 Roi.show = function( t,sum_roi )
+		 {
+		    if( t.val()=="0" )sum_roi=0;
+			var show_revenu_num = parseFloat( (parseFloat(sum_roi/100)*arpdau)).toFixed(3);
+			var show_roi_num =Math.round ((show_revenu_num/cpi)*100);
+			t.parents("tr").find(".revenu").text(show_revenu_num);
+			t.parents("tr").find(".roi").text(show_roi_num);
+			if( show_roi_num<100 )
+			{
+			   t.parents("tr").css({"background-color":"#fff","font-weight":"normal"});
+			   a_index=false;
+			}
+			if( show_roi_num>=100 && !a_index )
+			{
+			    a_index=true;  //重置当前
+				t.parents("tr").css( {
+				   "background-color":"#ee6e73",
+				   "font-weight":"bold"
+				});
+			}
+			
+		 }
+		 
+		 //数据保存
+		 Roi.save = function()
+		 {
+		    update();
+			var data = [];
+			$("#r_model tr").each(function(i)
+			{
+				 var lc = $(this).find(".lc").val();
+				 var date = $(this).find("td").eq(0).text();
+				 var revenu = $(this).find(".revenu").text();
+                 var roi_rate = $(this).find(".roi").text();	
+                 data[i] = { lc:lc,date:date,revenu:revenu,roi_rate:roi_rate };				 
+			});
+			var save_name = $("#save_name").val();
+			if( save_name=="" )
+			{
+			  layer.msg("保存名称不能为空");return false;
+			}
+			$("#save").attr("disabled",true);
+			var index = layer.load(0, {shade: false});
+			$('#myModal').modal('hide');
+			$.post("/admin_consu/save",{ arpdau:arpdau,cpi:cpi,data:data,save_name:save_name,appid:'<?php echo $app_id; ?>' },function(e){
+			
+			        $("#save").attr("disabled",false);
+			        layer.close(index);					
+			        layer.alert('数据已保存');
+					window.location.href="/admin_consu/historylist?app_id={$app_id}";
+			})
+		 }
+		 
+	  }.call(Roi) );
+	  
+	 Roi.init();
+	 
+</script>
+</html>

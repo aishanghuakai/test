@@ -1,0 +1,148 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GAME BRAIN</title>
+    {include file="./static/html/header_common.html" /}
+	<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+   <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <!-- import JavaScript -->
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <script src="/static/js/axios.min.js"></script>
+	<style>
+	 .cell{font-size:12px;}
+	  .el-table td, .el-table th {
+    padding:9px 0;}
+	  .item {
+		  margin-top: 10px;
+		  margin-right: 40px;
+	}
+	</style>
+</head>
+<body style="background-color:#fff;">
+    <div id="wrapper" style="background-color:#fff;">
+        {include file="./static/html/header.html" /}	
+		<div class="hw_page_content">
+		    <div class="hw_menu_left">
+         {include file="./static/html/side.html" /}  
+			</div>
+		    <div class="hw_content_right" style="padding:10px 10px;">
+			    <ul class="search_tab clearfix" >
+				 <li><a  href="/admin_adstatis/average">统计</a></li>
+			      <li class="active"><a  href="javascript:;">广告类型分析</a></li>				  
+		        </ul>
+	  
+			    <div class="hw_reven clearfix" style="padding:10px 30px;">
+				     <el-row :gutter="2" style="margin-top:30px;">
+						<el-form :inline="true" label-width="120px">
+							   <el-form-item label="选择广告类型">								   
+								 <el-select size="small" @change="handleChanage" style="width:100px;" v-model="adtype"  placeholder="请选择">
+								    <el-option label="全部" value="all"></el-option>
+								    <el-option label="激励" value="rew"></el-option>
+								    <el-option label="插屏" value="int"></el-option>
+									<el-option label="Banner" value="ban"></el-option>
+								  </el-select>
+							  </el-form-item>
+								<el-form-item label="选择地区">
+									<el-select size="small" @change="handleChanage" filterable style="width:100px;" v-model="country"  placeholder="请选择国家">
+									{volist name="country" id="item"}
+									 <el-option key="{$key}" label="{$item}" value="{$key}"></el-option>
+									{/volist}
+								  </el-select>
+								 </el-form-item>
+                              <el-form-item label="筛选日期">								   
+								    <el-date-picker
+									  v-model="date"
+									  @change="handleChanage"
+                                      size="small"								  
+									  type="daterange"
+									  style="width:250px;"
+									  value-format="yyyy-MM-dd">
+									</el-date-picker>
+								  </el-form-item>
+                                <el-form-item label="">
+								  <el-button size="small" @click="download" type="primary" icon="el-icon-download"></el-button>
+                                </el-form-item>								
+							</el-form>								
+					</el-row>
+                    <el-table
+								:data="tableData"
+								v-loading="loading"
+								height="400"
+								style="width: 100%;">
+                                <el-table-column prop="date" fixed  width="100" align="center" label="日期"></el-table-column>								
+								<el-table-column prop="remark" fixed  width="150" align="center" label="名称"></el-table-column>
+								<el-table-column prop="request" sortable  align="center" label="请求"></el-table-column>
+								<el-table-column prop="filled"  sortable  align="center" width="150" label="广告填充请求"></el-table-column>
+								<el-table-column prop="filled_rate" sortable width="120" align="center" label="填充率(%)"></el-table-column>
+								<el-table-column prop="impressions" sortable width="150"  align="center" label="展示次数"></el-table-column>
+								<el-table-column  sortable prop="impressions_rate"  width="120" align="center" label="展示率(%)"></el-table-column>
+								<el-table-column prop="clicks" sortable align="center"  label="点击量"></el-table-column>
+								<el-table-column prop="ctr" sortable align="center" width="120"  label="点击率(%)"></el-table-column>
+								<el-table-column prop="ecpm" sortable align="center"  width="150"  label="千次展示平均费用"></el-table-column>
+								<el-table-column prop="revenue" sortable align="center" width="120" label="收入($)"></el-table-column>
+							</el-table>					
+			    </div>
+			</div>
+		</div>
+		 {include file="./static/html/footer.html" /}
+	</div>	
+</body>
+ {include file="./static/html/footer_common.html" /}
+  <script>
+     let t = new Vue({
+        el: '#wrapper',
+        data: {
+			loading: false,
+			date:['{$start_date}','{$end_date}'],
+			adtype:'all',
+			appid:'{$appid}',
+			country:'all',
+			tableData: []	
+        },
+		mounted(){
+		  this.getlist()
+		},
+        methods: {           
+		    handleChanage(){
+			  this.getlist()
+			},
+			toQueryString(obj) {
+			  var qstring = "&"
+			  for (var k in obj) {
+				qstring += k + "=" + obj[k] + "&"
+			  }
+			  return qstring
+		   },
+		   download(){
+		     let params ={
+			    date:this.date,
+				adtype:this.adtype,
+				appid:this.appid,
+				country:this.country
+			  }
+			 window.location.href='/admin_adstatis/adtype_json_data?is_download=true'+this.toQueryString(params)
+		   },
+			getlist(){
+			  let params ={
+			    date:this.date,
+				adtype:this.adtype,
+				appid:this.appid,
+				country:this.country
+			  }
+			  this.loading = true
+			   axios({
+					method: 'post',
+					url:'/admin_adstatis/adtype_json_data',
+					data:params
+				}).then(res=>{			
+				 this.loading = false
+				 this.tableData = res.data
+			 })
+			}
+        }
+    })
+  </script>	   
+</html>

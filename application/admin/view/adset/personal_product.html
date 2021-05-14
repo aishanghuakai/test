@@ -1,0 +1,179 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+	<meta charset="utf-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<title>GAME BRAIN</title>
+	{include file="./static/html/header_common.html" /}
+	<link rel="stylesheet" type="text/css" media="all" href="/static/plugin/jquery-time/daterangepicker-bs3.css"/>
+	<link href="/static/css/checkbox.css" rel="stylesheet" type="text/css">
+	<link href="/static/css/campagin.css?t=<?php echo time(); ?>" rel="stylesheet">
+	<link href="/static/css/show.css?t=<?php echo time(); ?>" rel="stylesheet">
+	<link href="/static/css/blue/style.css?t=<?php echo time(); ?>" rel="stylesheet">
+	<style>
+		th, td {
+			text-align: center;
+			vertical-align: middle
+		}
+
+		.hw_reven thead tr {
+			background-color: #f9f9f9 !important;
+		}
+
+		table.tablesorter thead tr th, table.tablesorter tfoot tr th {
+			background-color: #f9f9f9 !important;
+			border-bottom: 0px solid #e8e8e8 !important;
+			border-top: 1px solid #e8e8e8 !important;
+			color: #222 !important;
+			padding: 8px !important;
+		}
+
+		table.tablesorter {
+			background-color: #fff !important;
+		}
+
+		table.tablesorter tbody td {
+			padding: 8px !important;
+			background-color: #FFF;
+			vertical-align: middle;
+		}
+
+		.hw_reven table {
+			border-collapse: collapse;
+			font-size: 12px !important;
+			color: #222 !important;
+			text-align: left !important;
+			line-height: 40px;
+		}
+
+		.hw_reven .table > thead > tr > th {
+			border-bottom: 0px solid #e8e8e8 !important;
+			border-top: 1px solid #e8e8e8 !important;
+			color: #222 !important;
+		}
+
+		.view {
+			cursor: pointer;
+			color: red;
+		}
+
+		.time_scoll {
+			position: fixed;
+			z-index: 444;
+		}
+
+		.pbtn {
+			margin-left: 8px;
+			margin-right: 8px;
+			padding: 0 8px;
+			display: inline-block;
+			font-size: 14px;
+			border-radius: 4px;
+			text-align: center;
+			border: none;
+			background-color: transparent;
+			height: 34px;
+			line-height: 32px;
+			min-width: 72px;
+			cursor: pointer;
+		}
+
+		.btn-red-hollow {
+			color: #ca0c16 !important;
+			border: 1px solid #ca0c16 !important;
+			background-color: #fff !important;
+			-webkit-transition: background-color .1s ease-in-out;
+			transition: background-color .1s ease-in-out;
+		}
+
+		.platform a {
+			color: #838383;
+		}
+
+		.platform a:hover {
+			border: 1px solid #ca0c16 !important;
+		}
+	</style>
+</head>
+<body>
+<div id="wrapper" style="background-color: #fff;">
+	{include file="./static/html/header.html" /}
+	<div class="hw_page_content">
+		<div class="hw_menu_left">
+			{include file="./static/html/side.html" /}
+		</div>
+		<div class="hw_content_right" style="padding:10px 10px;">
+            <ul class="search_tab clearfix" >
+				 <li class="active"><a  href="/admin_adset/personal_product">产品消耗</a></li>
+			      <li ><a  href="/admin_adset/producer_product">制作人消耗</a></li>			  
+		      </ul>
+			<div class="hw_reven clearfix" style="padding:20px 30px;">
+				<div style="">
+
+					<div class="sdaa" id="top_start" style="float:right;line-height: 29px;margin-bottom:15px;">
+						<input class="search-input" id="start_date" value="{$start} 到 {$end}">
+					</div>
+					<div class="table-head" style="">
+						<table class="table tablesorter" id="body"  style="margin-bottom:0px;">
+
+							<thead style="font-size:12px;">
+							<tr>
+								<th>应用名称</th>
+								<th>花费</th>
+								<th>ios</th>
+								<th>android</th>
+							</tr>
+							</thead>
+							<tbody id="tablehw">
+							{volist name="list" id="vv"}
+							<tr>
+								<td>{$vv.app_name}</td>
+								<td>{$vv.spend|round=###,2}</td>
+								<td>{$vv['ios']|round=###,2}</td>
+								<td>{$vv['android']|round=###,2}</td>
+							</tr>
+							{/volist}
+							</tbody>
+						</table>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+	{include file="./static/html/footer.html" /}
+</div>
+
+</body>
+{include file="./static/html/footer_common.html" /}
+
+<script type="text/javascript" src="/static/plugin/jquery-time/moment.js"></script>
+<script type="text/javascript" src="/static/plugin/jquery-time/daterangepicker.js"></script>
+<script src="/static/js/jquery.tablesorter.min.js"></script>
+<script src="/static/js/jquery.freezeheader.js"></script>
+<script>
+
+	var start_date = "{$start}";
+	var end_date = "{$end}";
+	$(function () {
+
+		$("#body").freezeHeader({'offset': '50px'});
+		$('#start_date').daterangepicker({
+			minDate: '2018-09-25',
+			opens: 'left',
+			ranges: {
+				'今天': [moment(), moment()],
+				'昨天': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+				'近7天': [moment().subtract(7, 'days'), moment()]
+			}
+		}, function (start, end, label) {
+			start_date = start.format('YYYY-MM-DD');
+			end_date = end.format('YYYY-MM-DD');
+			$('#start_date').val(start_date + " 到 " + end_date);
+			window.location.href="/admin_adset/personal_product?start="+start_date+"&end="+end_date
+		});
+	});
+
+</script>
+</html>

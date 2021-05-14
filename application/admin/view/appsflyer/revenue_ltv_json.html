@@ -1,0 +1,48 @@
+﻿<thead>								
+	<tr>
+	  {volist name="columns" id="c"}
+	  <th style="color:#333;">{$c}</th>
+      {/volist}	  
+	</tr>
+  </thead>
+  <tbody>
+	{if condition="$group eq 'roi'"}
+	  <tr>
+	    <td>{$data['roi0']}</td>
+		<td>{$data['roi1']}</td>
+		<td>{$data['roi2']}</td>
+		<td>{$data['roi3']}</td>
+		<td>{$data['roi4']}</td>
+		<td>{$data['roi5']}</td>
+		<td>{$data['roi6']}</td>
+		<td>{$data['roi7']}</td>
+		<td>{$data['roi14']}</td>
+		<td>{$data['roi30']}</td>
+	  </tr>
+	{else /}
+	<tr>
+		{if condition="$group eq 'day'"}
+		<td>汇总</td>
+		{/if}
+		<td>汇总</td>
+		<td>{$all_revenue}</td>
+		{if condition="$group eq 'day'"}
+		<td>{$total_show} =({$rew_show}+{$int_show})</td>
+		{/if}
+		<td>100</td>
+	</tr>
+	 {volist name="data" id="v"}
+		 <tr>
+		   {if condition="$group eq 'day'"}
+		    <td>{$v['day']}</td>
+		   {/if}
+		   <td>{$v['name']}</td>
+		   <td>{$v['revenue']}</td>
+		   {if condition="$group eq 'day'"}
+		    <td>{$v['total_show']} =({$v['rew_show']}+{$v['int_show']})</td>
+		   {/if}
+		   <td>{$v['rate']}</td>
+		 </tr>
+	 {/volist}
+	 {/if}
+</tbody>

@@ -1,0 +1,355 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GAME BRAIN</title>
+    {include file="./static/html/header_common.html" /}
+	<link rel="stylesheet" type="text/css" href="http://unpkg.com/iview/dist/styles/iview.css">
+		<link rel="stylesheet" type="text/css" href="/static/css/goalset.css">
+    <script type="text/javascript" src="http://vuejs.org/js/vue.min.js"></script>
+    <script type="text/javascript" src="http://unpkg.com/iview/dist/iview.min.js"></script>
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+	<script src="/static/js/html2canvas.min.js"></script>
+	<style>
+	 body,.hw_content_right{font-size:14px;}
+	 .demo-drawer-footer{
+        width: 100%;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        border-top: 1px solid #e8e8e8;
+        padding: 10px 16px;
+        text-align: right;
+        background: #fff;
+    }
+	.table input{text-align:center;}
+	#capture input{border:none;width:100%;background-color:#fff;}
+	#capture th,#capture input{font-weight:400;color:#222;}
+	.ivu-drawer-body{padding:2px 16px !important;}
+	</style>
+</head>
+<body>
+    <div id="wrapper">
+        {include file="./static/html/header.html" /}	
+		<div class="hw_page_content">
+		    <div class="hw_menu_left">
+         {include file="./static/html/side.html" /}  
+			</div>
+		    <div class="hw_content_right"  style="position:relative;">
+			    <div style="padding:10px 0px;">
+				<Breadcrumb separator=">">
+			      <breadcrumb-item to="/admin_index/main">主页</breadcrumb-item>
+			      <breadcrumb-item to="/testplan/index">发行测试</breadcrumb-item>
+			      <breadcrumb-item>{$list[0]["name"]}</breadcrumb-item>
+		        </Breadcrumb>
+				</div>
+			     {volist name="list" id="vo"}
+				  <div class="box" style="margin-top:10px;">
+						<div class="box-header with-border">
+						  <span class="box-title"><img style="width:40px;height:40px;border-radius:10px;margin-right:5px;" src="{$vo.icon_url}" />{$vo.name}测试计划</span>
+						</div>
+						<div class="box-body">
+							<div class="table-responsive">
+							  <table class="table">
+								<tbody>
+								    
+									<tr class="tr_header">									 
+									  <th style="text-align:left;">计划名称</th>
+									  <th>测试时间</th>								
+									  <th>负责人</th>
+									  <th>测试状态</th>
+									  <th>地区</th>
+									  <th>渠道</th>
+									  <th>预算</th>
+									  								 
+									</tr>
+									{volist name="vo.list" id="vv"}
+									<tr>
+									 
+									  <td style="text-align:left;">{$vv.title}</td>
+									  <td>{$vv.start_date}~{$vv.end_date}</td>						
+									  <td>{$vv.username}</td>
+									   <td>
+									   {if condition="$vv['status'] eq 1"}
+										 <span class="badge bg-success" style="background-color:#2d8cf0 !important;">测试中</span>
+										{elseif condition="$vv['status'] eq 3" /}
+										  <span class="badge bg-danger" style="background-color:#ed4014 !important;">测试结束</span>
+                                        {elseif condition="$vv['status'] eq 2" /}
+                                         <span class="badge bg-info" style="background-color:#19be6b !important;">待测试</span>
+										 {else /}
+                                        {/if}
+									   </td>
+									   <td>{$vv.country}</td>
+									   <td>{$vv.channel}</td>
+									   <td>{$vv.budget}</td>
+									   
+									</tr>
+									{/volist}
+								  </tbody>
+								</table>
+							</div>
+						</div>
+				  </div>
+				  {/volist}
+				  <h5 style="color:#866ec7;margin-top:-10px;">【测试目的】<span style="color:#02576c;font-size:12px;">{$list[0]['list'][0]['intent']}</span></h5>
+				  
+				 <div id="capture" style="padding:10px;margin:0 auto;margin-bottom:40px;">
+					 <div class="box-header with-border">
+					  <h5 class="box-title"><Icon type="md-document"></Icon> {$list[0]["name"]}测试报告 
+					   {if condition="$list[0]['list'][0]['status'] eq 3"}
+					    <span style="float:right;"><Rate disabled  show-text v-model="rate" /></span>
+						{else /}
+						 <i-button type="primary" style="float:right;margin-bottom:10px;" @click="openmodal2">添加广告</i-button>
+					   {/if}
+					 </h5>			  
+					</div>
+					 <table class="table">
+					         {if condition="$list[0]['list'][0]['status'] eq 3"}
+								<tbody>								    
+									<tr class="tr_header">									 
+									  <th style="width:30%;;">广告名称</th>									 
+                                      <th>展示</th>
+                                      <th>点击</th>
+                                      <th>CTR(%)</th>	
+                                      <th>CPM($)</th>
+                                      <th>观看次数</th>
+                                      <th>观看百分比(%)</th>
+                                      <th>花费($)</th>									  
+									</tr>
+									<tr v-for="item in formData">									
+									 <th style="width:30%;">{{item.ad_name}}</th>
+									 
+									 <th>{{item.impressions}}</th>
+									 <th>{{item.clicks}}</th>
+									 <th>{{item.ctr}}</th>
+									 <th>{{item.cpm}}</th>									
+									 <th>{{item.video_view}}</th>
+									 <th>{{item.video_percent}}</th>
+									 <th>{{item.spend}}</th>
+									</tr>
+									
+								</tbody>
+								{else /}
+								<tbody>								    
+									<tr class="tr_header">									 
+									  <th style="width:30%;;">广告名称</th>
+									  <th>展示</th>
+                                      <th>点击</th>
+                                      <th>CTR(%)</th>	
+                                      <th>CPM($)</th>
+                                      <th>观看次数</th>
+                                      <th>观看百分比(%)</th>
+                                      <th>花费($)</th>									  
+									</tr>
+									<tr v-for="item in formData">									
+									 <th style="width:30%;"><i-input :disabled="editShow" v-model="item.ad_name"></i-input></th>									 
+									 <th><i-input :disabled="editShow" v-model="item.impressions"></i-input></th>
+									 <th><i-input :disabled="editShow" v-model="item.clicks"></i-input></th>
+									 <th><i-input :disabled="editShow" v-model="item.ctr" ></i-input></th>
+									 <th><i-input :disabled="editShow" v-model="item.cpm" ></i-input></th>
+									 <th><i-input :disabled="editShow" v-model="item.video_view" ></i-input></th>									
+									 <th><i-input :disabled="editShow" v-model="item.video_percent" ></i-input></th>
+									 <th><i-input :disabled="editShow" v-model="item.spend"></i-input></th>
+									</tr>
+									
+								</tbody>
+								{/if}
+					  </table>			
+				</div> 
+				<div class="demo-drawer-footer">
+				 {if condition="$list[0]['list'][0]['status'] eq 3"}
+				  <div style="text-align:left;">				  
+				    <div><a href="###">【分析总结】</a>{$list[0]['list'][0]['summary']}</div>
+				  </div>
+				 {else /}
+				  <div style="float:left;">
+					   <Tooltip content="抄送开启后,即可发送邮箱给该抄送人." placement="top-start">
+					     <span><Icon type="ios-information-circle"></Icon> 抄送</span>
+					   </Tooltip>
+					   <i-switch size="large" v-model="switch1" @on-change="change" >
+						<span slot="open">ON</span>
+						<span slot="close">OFF</span>
+					  </i-switch>
+                  </div>
+                   <Tooltip content="数据仅为参考,若数据存在异常,请手动校对" placement="top-end">				  
+					<i-button style="margin-right: 8px" @click="edit">编辑</i-button>
+				  </Tooltip>
+					<i-button type="error" @click="openModal">发布</i-button>
+				{/if}
+				</div>
+			</div>			
+		</div>
+		
+		<Modal v-model="modal2" title="选择广告">
+			
+			
+			<i-select v-model="ad_id" multiple filterable>
+				<i-option v-for="item in m" :value="item.ad_id" :key="item.ad_id">{{ item.ad_name }}({{item.campaign_name}})({{item.target_id}})</i-option>
+			</i-select>
+			<div slot="footer">		
+				<i-button type="text" size="large" @click="modal2=false">取消</i-button> 
+				<i-button type="primary" size="large" @click="addMaterial">确定</i-button> 
+			</div>		
+       </Modal>
+		
+		<Modal v-model="modal1" title="{$list[0]["name"]}报告中心">
+			<FormItem label="Radio">
+				<h5 style="padding:5px 15px 15px 5px;font-weight:700">对此次测试结果评分</h5>
+				<Rate show-text v-model="finish_status" />				
+			</FormItem>
+			<FormItem label="Text">
+				<h5 style="padding:5px 15px 15px 5px;font-weight:700">测试总结</h5>
+                <i-input v-model="summary" type="textarea" :autosize="{minRows: 4,maxRows: 8}" placeholder="对此次测试结果做个小结呗!"></i-input>
+            </FormItem>
+			<FormItem label="Text" v-show="selectPerson">
+			  <h5 style="padding:5px 15px 5px 5px;font-weight:700">选择抄送人</h5>
+				<i-select v-model="manager" multiple >
+					<i-option v-for="item in users" :value="item.value" :key="item.value">{{ item.label }}</i-option>
+				</i-select>
+			</FormItem>
+			<div slot="footer">
+				<i-button type="text" size="large" @click="modal1=false">取消</i-button> 
+				<i-button type="primary" size="large" @click="addPost">确定</i-button> 
+			</div>		
+       </Modal>
+		
+	</div>	
+</body>
+ {include file="./static/html/footer_common.html" /}
+ <script>
+    var url="";
+	function capture()
+	{
+	  html2canvas(document.querySelector("#capture"),{
+      useCORS:true,
+	  height:document.body.scrollHeight,
+	  }).then(canvas => {
+           url = canvas.toDataURL("image/png",1);//图片地址
+      });
+	}
+ </script>
+  <script>
+     new Vue({
+        el: '#wrapper',
+        data: {
+            modal1: false,
+			modal2: false,
+			editShow:true,
+			switch1:'open',
+			ad_id:"",
+			m:[],
+			manager:"",
+			rate:"{$list[0]['list'][0]['finish_status']}",
+			selectPerson:false,
+			finish_status:3,
+			formData:[],
+			id:"{$id}",
+			summary:"",
+			users: []
+        },
+		mounted(){		 
+		  this. getdata()
+          this.getreport()
+          this.getM()		  
+		},
+        methods: {
+            
+		   openModal(){
+			 capture();
+			 this.modal1 = true
+			 this.finish_status =3
+			 this.summary=""
+		   },
+		   openmodal2(){
+		    this.modal2 = true
+			this.ad_id = "";
+		   },
+		   edit(){
+		    this.editShow  =false
+		   },
+		   getdata()
+		   {
+		     let _that = this
+			 axios.get('/goalset/getData')
+			  .then(function (response) {
+				 _that.users = response.data.users
+			  })
+			  .catch(function (error) {
+				console.log(error);
+			  });
+		   },
+		   getreport()
+		   {
+		     let _that = this
+			 axios.get("/testplan/getMaterialData?id={$id}")
+			  .then(function (response) {
+				 _that.formData = response.data
+			  })
+			  .catch(function (error) {
+				console.log(error);
+			  });
+		   },
+		   getM()
+		   {
+		     let _that = this
+			 axios.get("/testplan/getMData?id={$id}")
+			  .then(function (response) {
+				 _that.m = response.data
+			  })
+			  .catch(function (error) {
+				console.log(error);
+			  });
+		   },
+			addPost(){
+			   if( this.summary=="")
+			   {
+			     this.$Message.warning('需填写测试总结!');
+				 return false;
+			   }
+			  
+			   this.$Spin.show();
+			   axios({
+						method: 'post',
+						url:'/testplan/postReport',
+						data:{id:this.id,url:url,manager:this.manager,summary:this.summary,finish_status:this.finish_status,list:this.formData}
+					}).then(res=>{
+					  this.$Spin.hide();
+					  if( res.data=="ok" )
+					  {
+						  this.modal1 = false
+						  this.$Message.success('操作成功');
+						  window.location.href = window.location.href
+					  }else{
+					      this.$Message.warning('操作失败');
+					  }					  
+				 })
+			},
+			addMaterial(){
+			  if( this.ad_id=="")
+			   {
+			     this.$Message.warning('需选择广告!');
+				 return false;
+			   }		   
+			   axios({
+						method: 'post',
+						url:'/testplan/savematerial',
+						data:{id:this.id,ad_id:this.ad_id}
+					}).then(res=>{					 
+					  if( res.data=="ok" )
+					  {
+						  this.modal2 = false
+						  window.location.href = window.location.href
+					  }else{
+					      this.$Message.warning('操作失败');
+					  }					  
+				 })
+			},
+			change (status) {
+                this.selectPerson = status
+            }
+        }
+    })
+  </script>
+</html>

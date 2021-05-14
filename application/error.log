@@ -1,0 +1,513 @@
+[Sun Mar 29 06:25:06.393528 2020] [ssl:warn] [pid 2012] AH02292: Init: Name-based SSL virtual hosts only work for clients with TLS server name indication support (RFC 4366)
+[Sun Mar 29 06:25:06.393632 2020] [mpm_prefork:notice] [pid 2012] AH00163: Apache/2.4.7 (Ubuntu) PHP/5.5.9-1ubuntu4.29 OpenSSL/1.0.1f configured -- resuming normal operations
+[Sun Mar 29 06:25:06.393639 2020] [core:notice] [pid 2012] AH00094: Command line: '/usr/sbin/apache2'
+[Sun Mar 29 06:25:06.393683 2020] [mpm_prefork:warn] [pid 2012] AH00167: long lost child came home! (pid 2015)
+[Sun Mar 29 06:25:06.393710 2020] [mpm_prefork:warn] [pid 2012] AH00167: long lost child came home! (pid 2016)
+[Sun Mar 29 06:25:06.393739 2020] [mpm_prefork:warn] [pid 2012] AH00167: long lost child came home! (pid 2017)
+[Sun Mar 29 06:25:06.393763 2020] [mpm_prefork:warn] [pid 2012] AH00167: long lost child came home! (pid 2018)
+[Sun Mar 29 06:25:06.393788 2020] [mpm_prefork:warn] [pid 2012] AH00167: long lost child came home! (pid 2019)
+[Sun Mar 29 06:25:06.393813 2020] [mpm_prefork:warn] [pid 2012] AH00167: long lost child came home! (pid 2020)
+[Sun Mar 29 06:25:06.393841 2020] [mpm_prefork:warn] [pid 2012] AH00167: long lost child came home! (pid 2021)
+[Sun Mar 29 06:25:06.393867 2020] [mpm_prefork:warn] [pid 2012] AH00167: long lost child came home! (pid 2022)
+[Sun Mar 29 06:25:06.393894 2020] [mpm_prefork:warn] [pid 2012] AH00167: long lost child came home! (pid 2023)
+[Sun Mar 29 06:25:06.393917 2020] [mpm_prefork:warn] [pid 2012] AH00167: long lost child came home! (pid 2024)
+[Sun Mar 29 06:25:06.393947 2020] [mpm_prefork:warn] [pid 2012] AH00167: long lost child came home! (pid 2025)
+[Sun Mar 29 06:25:06.393971 2020] [mpm_prefork:warn] [pid 2012] AH00167: long lost child came home! (pid 2026)
+[Sun Mar 29 06:25:06.393999 2020] [mpm_prefork:warn] [pid 2012] AH00167: long lost child came home! (pid 2027)
+[Sun Mar 29 06:25:06.394023 2020] [mpm_prefork:warn] [pid 2012] AH00167: long lost child came home! (pid 2028)
+[2020-03-29 08:57:16] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=933-595-4031 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 08:57:21] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=697-149-9446 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 08:57:25] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=560-554-6660 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 08:57:28] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=557-425-1539 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 08:57:32] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=747-717-6847 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 08:57:36] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=188-172-5156 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 08:57:39] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=832-000-1213 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 08:57:44] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=465-629-8842 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 08:58:18] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=933-595-4031 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 08:58:22] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=697-149-9446 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 08:58:26] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=560-554-6660 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 08:58:31] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=557-425-1539 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 08:58:35] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=747-717-6847 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 08:58:39] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=188-172-5156 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 08:58:42] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=832-000-1213 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 08:58:47] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=465-629-8842 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 09:07:25] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=813-308-3523 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 09:07:29] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=995-841-4111 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 09:07:33] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=175-924-8429 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 09:07:37] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=678-950-7903 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 09:07:40] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=810-259-0356 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 09:07:44] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=307-233-0882 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 09:07:48] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=783-783-4880 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 09:07:52] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=522-893-2791 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 09:08:32] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=813-308-3523 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 09:08:35] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=995-841-4111 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 09:08:40] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=175-924-8429 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 09:08:44] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=678-950-7903 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 09:08:48] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=810-259-0356 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 09:08:52] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=307-233-0882 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 09:08:55] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=783-783-4880 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 09:08:59] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=522-893-2791 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 09:09:13] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=933-595-4031 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 09:09:16] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=697-149-9446 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 09:09:20] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=560-554-6660 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 09:09:24] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=557-425-1539 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 09:09:28] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=747-717-6847 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 09:09:31] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=188-172-5156 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 09:09:35] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=832-000-1213 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 09:09:39] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=465-629-8842 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 10:00:03] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=450-292-5137 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 10:00:08] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=360-266-2723 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 10:00:13] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=724-990-7090 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 10:00:18] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=497-019-7693 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 10:00:22] AW_REPORT_DOWNLOADER.WARNING: clientCustomerId=876-719-6564 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 400   
+[2020-03-29 10:00:22] AW_REPORT_DOWNLOADER.NOTICE: Request:
+POST /api/adwords/reportdownload/v201809 HTTP/1.1
+Content-Type: application/x-www-form-urlencoded
+Host: adwords.google.com
+Authorization: REDACTED
+developerToken: REDACTED
+clientCustomerId: 876-719-6564
+User-Agent: beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file)
+skipReportHeader: false
+skipColumnHeader: false
+skipReportSummary: false
+useRawEnumValues: false
+includeZeroImpressions: false
+
+__rdxml=<?xml version="1.0"?>
+<reportDefinition><selector><fields>CampaignId</fields><fields>CampaignName</fields><fields>Impressions</fields><fields>Cost</fields><fields>Clicks</fields><fields>Conversions</fields><fields>Ctr</fields><fields>Date</fields><fields>Id</fields><predicates><field>CampaignStatus</field><operator>IN</operator><values>PAUSED</values><values>ENABLED</values></predicates><dateRange><min>2020-03-22</min><max>2020-03-22</max></dateRange></selector><reportName>Criteria performance report #5e800134f04c5</reportName><reportType>CAMPAIGN_LOCATION_TARGET_REPORT</reportType><dateRangeType>CUSTOM_DATE</dateRangeType><downloadFormat>XML</downloadFormat></reportDefinition>
+
+
+Response:
+REDACTED REPORT DATA
+--------
+Error:
+Client error: `POST https://adwords.google.com/api/adwords/reportdownload/v201809` resulted in a `400 Bad Request` response
+  
+[2020-03-29 10:40:02] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=909-855-5799 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 10:40:06] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=544-156-7903 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 10:40:09] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=946-908-6947 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 10:40:13] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=390-153-4339 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 10:40:17] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=281-441-4737 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 10:40:21] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=203-622-9949 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 10:40:25] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=383-121-9603 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 12:00:03] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=918-824-9831 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 12:00:09] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=904-907-2009 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 12:00:12] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=181-848-7109 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 12:00:16] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=130-623-8974 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 12:00:20] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=490-098-4662 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 12:00:26] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=831-709-7948 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 12:00:29] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=771-025-0445 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 12:00:33] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=452-040-6427 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 12:00:38] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=710-208-1796 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 17:00:02] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=450-292-5137 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 17:00:07] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=360-266-2723 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 17:00:11] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=724-990-7090 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 17:00:15] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=497-019-7693 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 17:00:18] AW_REPORT_DOWNLOADER.WARNING: clientCustomerId=876-719-6564 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 400   
+[2020-03-29 17:00:18] AW_REPORT_DOWNLOADER.NOTICE: Request:
+POST /api/adwords/reportdownload/v201809 HTTP/1.1
+Content-Type: application/x-www-form-urlencoded
+Host: adwords.google.com
+Authorization: REDACTED
+developerToken: REDACTED
+clientCustomerId: 876-719-6564
+User-Agent: beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file)
+skipReportHeader: false
+skipColumnHeader: false
+skipReportSummary: false
+useRawEnumValues: false
+includeZeroImpressions: false
+
+__rdxml=<?xml version="1.0"?>
+<reportDefinition><selector><fields>CampaignId</fields><fields>CampaignName</fields><fields>Impressions</fields><fields>Cost</fields><fields>Clicks</fields><fields>Conversions</fields><fields>Ctr</fields><fields>Date</fields><fields>Id</fields><predicates><field>CampaignStatus</field><operator>IN</operator><values>PAUSED</values><values>ENABLED</values></predicates><dateRange><min>2020-03-22</min><max>2020-03-22</max></dateRange></selector><reportName>Criteria performance report #5e8063a1c4d52</reportName><reportType>CAMPAIGN_LOCATION_TARGET_REPORT</reportType><dateRangeType>CUSTOM_DATE</dateRangeType><downloadFormat>XML</downloadFormat></reportDefinition>
+
+
+Response:
+REDACTED REPORT DATA
+--------
+Error:
+Client error: `POST https://adwords.google.com/api/adwords/reportdownload/v201809` resulted in a `400 Bad Request` response
+  
+[2020-03-29 17:02:37] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=933-595-4031 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 17:02:42] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=697-149-9446 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 17:02:47] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=560-554-6660 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 17:02:51] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=557-425-1539 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 17:02:55] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=747-717-6847 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 17:03:00] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=188-172-5156 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 17:03:04] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=832-000-1213 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 17:03:09] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=465-629-8842 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 17:05:05] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=813-308-3523 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 17:05:10] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=995-841-4111 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 17:05:14] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=175-924-8429 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 17:05:18] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=678-950-7903 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 17:05:22] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=810-259-0356 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 17:05:26] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=307-233-0882 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 17:05:29] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=783-783-4880 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 17:05:33] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=522-893-2791 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 17:20:02] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=450-292-5137 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 17:20:07] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=360-266-2723 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 17:20:11] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=724-990-7090 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 17:20:15] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=497-019-7693 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 17:20:20] AW_REPORT_DOWNLOADER.WARNING: clientCustomerId=876-719-6564 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 400   
+[2020-03-29 17:20:20] AW_REPORT_DOWNLOADER.NOTICE: Request:
+POST /api/adwords/reportdownload/v201809 HTTP/1.1
+Content-Type: application/x-www-form-urlencoded
+Host: adwords.google.com
+Authorization: REDACTED
+developerToken: REDACTED
+clientCustomerId: 876-719-6564
+User-Agent: beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file)
+skipReportHeader: false
+skipColumnHeader: false
+skipReportSummary: false
+useRawEnumValues: false
+includeZeroImpressions: false
+
+__rdxml=<?xml version="1.0"?>
+<reportDefinition><selector><fields>CampaignId</fields><fields>CampaignName</fields><fields>Impressions</fields><fields>Cost</fields><fields>Clicks</fields><fields>Conversions</fields><fields>Ctr</fields><fields>Date</fields><fields>Id</fields><predicates><field>CampaignStatus</field><operator>IN</operator><values>PAUSED</values><values>ENABLED</values></predicates><dateRange><min>2020-03-28</min><max>2020-03-28</max></dateRange></selector><reportName>Criteria performance report #5e80685276441</reportName><reportType>CAMPAIGN_LOCATION_TARGET_REPORT</reportType><dateRangeType>CUSTOM_DATE</dateRangeType><downloadFormat>XML</downloadFormat></reportDefinition>
+
+
+Response:
+REDACTED REPORT DATA
+--------
+Error:
+Client error: `POST https://adwords.google.com/api/adwords/reportdownload/v201809` resulted in a `400 Bad Request` response
+  
+[2020-03-29 17:20:27] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=450-292-5137 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 17:20:31] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=360-266-2723 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 17:20:36] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=724-990-7090 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 17:20:40] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=497-019-7693 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 17:20:44] AW_REPORT_DOWNLOADER.WARNING: clientCustomerId=876-719-6564 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 400   
+[2020-03-29 17:20:44] AW_REPORT_DOWNLOADER.NOTICE: Request:
+POST /api/adwords/reportdownload/v201809 HTTP/1.1
+Content-Type: application/x-www-form-urlencoded
+Host: adwords.google.com
+Authorization: REDACTED
+developerToken: REDACTED
+clientCustomerId: 876-719-6564
+User-Agent: beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file)
+skipReportHeader: false
+skipColumnHeader: false
+skipReportSummary: false
+useRawEnumValues: false
+includeZeroImpressions: false
+
+__rdxml=<?xml version="1.0"?>
+<reportDefinition><selector><fields>CampaignId</fields><fields>CampaignName</fields><fields>Impressions</fields><fields>Cost</fields><fields>Clicks</fields><fields>Conversions</fields><fields>Ctr</fields><fields>Date</fields><fields>Id</fields><predicates><field>CampaignStatus</field><operator>IN</operator><values>PAUSED</values><values>ENABLED</values></predicates><dateRange><min>2020-03-28</min><max>2020-03-28</max></dateRange></selector><reportName>Criteria performance report #5e80686b91f85</reportName><reportType>CAMPAIGN_LOCATION_TARGET_REPORT</reportType><dateRangeType>CUSTOM_DATE</dateRangeType><downloadFormat>XML</downloadFormat></reportDefinition>
+
+
+Response:
+REDACTED REPORT DATA
+--------
+Error:
+Client error: `POST https://adwords.google.com/api/adwords/reportdownload/v201809` resulted in a `400 Bad Request` response
+  
+[2020-03-29 17:25:03] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=909-855-5799 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 17:25:07] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=544-156-7903 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 17:25:12] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=946-908-6947 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 17:25:16] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=390-153-4339 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 17:25:20] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=281-441-4737 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 17:25:24] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=203-622-9949 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 17:25:28] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=383-121-9603 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 17:40:04] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=909-855-5799 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 17:40:08] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=544-156-7903 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 17:40:13] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=946-908-6947 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 17:40:18] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=390-153-4339 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 17:40:21] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=281-441-4737 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 17:40:25] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=203-622-9949 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 17:40:28] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=383-121-9603 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 19:00:04] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=918-824-9831 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 19:00:08] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=904-907-2009 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 19:00:11] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=181-848-7109 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 19:00:16] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=130-623-8974 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 19:00:21] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=490-098-4662 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 19:00:26] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=831-709-7948 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 19:00:30] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=771-025-0445 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 19:00:35] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=452-040-6427 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 19:00:39] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=710-208-1796 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 20:20:02] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=450-292-5137 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 20:20:06] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=360-266-2723 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 20:20:11] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=724-990-7090 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 20:20:15] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=497-019-7693 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 20:20:18] AW_REPORT_DOWNLOADER.WARNING: clientCustomerId=876-719-6564 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 400   
+[2020-03-29 20:20:18] AW_REPORT_DOWNLOADER.NOTICE: Request:
+POST /api/adwords/reportdownload/v201809 HTTP/1.1
+Content-Type: application/x-www-form-urlencoded
+Host: adwords.google.com
+Authorization: REDACTED
+developerToken: REDACTED
+clientCustomerId: 876-719-6564
+User-Agent: beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file)
+skipReportHeader: false
+skipColumnHeader: false
+skipReportSummary: false
+useRawEnumValues: false
+includeZeroImpressions: false
+
+__rdxml=<?xml version="1.0"?>
+<reportDefinition><selector><fields>CampaignId</fields><fields>CampaignName</fields><fields>Impressions</fields><fields>Cost</fields><fields>Clicks</fields><fields>Conversions</fields><fields>Ctr</fields><fields>Date</fields><fields>Id</fields><predicates><field>CampaignStatus</field><operator>IN</operator><values>PAUSED</values><values>ENABLED</values></predicates><dateRange><min>2020-03-28</min><max>2020-03-28</max></dateRange></selector><reportName>Criteria performance report #5e809281c0592</reportName><reportType>CAMPAIGN_LOCATION_TARGET_REPORT</reportType><dateRangeType>CUSTOM_DATE</dateRangeType><downloadFormat>XML</downloadFormat></reportDefinition>
+
+
+Response:
+REDACTED REPORT DATA
+--------
+Error:
+Client error: `POST https://adwords.google.com/api/adwords/reportdownload/v201809` resulted in a `400 Bad Request` response
+  
+[2020-03-29 20:20:25] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=450-292-5137 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 20:20:29] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=360-266-2723 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 20:20:34] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=724-990-7090 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 20:20:37] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=497-019-7693 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 20:20:40] AW_REPORT_DOWNLOADER.WARNING: clientCustomerId=876-719-6564 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 400   
+[2020-03-29 20:20:40] AW_REPORT_DOWNLOADER.NOTICE: Request:
+POST /api/adwords/reportdownload/v201809 HTTP/1.1
+Content-Type: application/x-www-form-urlencoded
+Host: adwords.google.com
+Authorization: REDACTED
+developerToken: REDACTED
+clientCustomerId: 876-719-6564
+User-Agent: beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file)
+skipReportHeader: false
+skipColumnHeader: false
+skipReportSummary: false
+useRawEnumValues: false
+includeZeroImpressions: false
+
+__rdxml=<?xml version="1.0"?>
+<reportDefinition><selector><fields>CampaignId</fields><fields>CampaignName</fields><fields>Impressions</fields><fields>Cost</fields><fields>Clicks</fields><fields>Conversions</fields><fields>Ctr</fields><fields>Date</fields><fields>Id</fields><predicates><field>CampaignStatus</field><operator>IN</operator><values>PAUSED</values><values>ENABLED</values></predicates><dateRange><min>2020-03-28</min><max>2020-03-28</max></dateRange></selector><reportName>Criteria performance report #5e8092985c823</reportName><reportType>CAMPAIGN_LOCATION_TARGET_REPORT</reportType><dateRangeType>CUSTOM_DATE</dateRangeType><downloadFormat>XML</downloadFormat></reportDefinition>
+
+
+Response:
+REDACTED REPORT DATA
+--------
+Error:
+Client error: `POST https://adwords.google.com/api/adwords/reportdownload/v201809` resulted in a `400 Bad Request` response
+  
+[2020-03-29 20:25:04] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=909-855-5799 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 20:25:08] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=544-156-7903 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 20:25:12] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=946-908-6947 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 20:25:17] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=390-153-4339 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 20:25:20] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=281-441-4737 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 20:25:25] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=203-622-9949 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 20:25:28] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=383-121-9603 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 23:20:03] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=450-292-5137 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 23:20:08] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=360-266-2723 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 23:20:12] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=724-990-7090 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 23:20:16] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=497-019-7693 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 23:20:20] AW_REPORT_DOWNLOADER.WARNING: clientCustomerId=876-719-6564 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 400   
+[2020-03-29 23:20:20] AW_REPORT_DOWNLOADER.NOTICE: Request:
+POST /api/adwords/reportdownload/v201809 HTTP/1.1
+Content-Type: application/x-www-form-urlencoded
+Host: adwords.google.com
+Authorization: REDACTED
+developerToken: REDACTED
+clientCustomerId: 876-719-6564
+User-Agent: beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file)
+skipReportHeader: false
+skipColumnHeader: false
+skipReportSummary: false
+useRawEnumValues: false
+includeZeroImpressions: false
+
+__rdxml=<?xml version="1.0"?>
+<reportDefinition><selector><fields>CampaignId</fields><fields>CampaignName</fields><fields>Impressions</fields><fields>Cost</fields><fields>Clicks</fields><fields>Conversions</fields><fields>Ctr</fields><fields>Date</fields><fields>Id</fields><predicates><field>CampaignStatus</field><operator>IN</operator><values>PAUSED</values><values>ENABLED</values></predicates><dateRange><min>2020-03-28</min><max>2020-03-28</max></dateRange></selector><reportName>Criteria performance report #5e80bcb31391f</reportName><reportType>CAMPAIGN_LOCATION_TARGET_REPORT</reportType><dateRangeType>CUSTOM_DATE</dateRangeType><downloadFormat>XML</downloadFormat></reportDefinition>
+
+
+Response:
+REDACTED REPORT DATA
+--------
+Error:
+Client error: `POST https://adwords.google.com/api/adwords/reportdownload/v201809` resulted in a `400 Bad Request` response
+  
+[2020-03-29 23:20:26] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=450-292-5137 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 23:20:30] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=360-266-2723 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 23:20:33] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=724-990-7090 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 23:20:37] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=497-019-7693 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 23:20:40] AW_REPORT_DOWNLOADER.WARNING: clientCustomerId=876-719-6564 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 400   
+[2020-03-29 23:20:40] AW_REPORT_DOWNLOADER.NOTICE: Request:
+POST /api/adwords/reportdownload/v201809 HTTP/1.1
+Content-Type: application/x-www-form-urlencoded
+Host: adwords.google.com
+Authorization: REDACTED
+developerToken: REDACTED
+clientCustomerId: 876-719-6564
+User-Agent: beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file)
+skipReportHeader: false
+skipColumnHeader: false
+skipReportSummary: false
+useRawEnumValues: false
+includeZeroImpressions: false
+
+__rdxml=<?xml version="1.0"?>
+<reportDefinition><selector><fields>CampaignId</fields><fields>CampaignName</fields><fields>Impressions</fields><fields>Cost</fields><fields>Clicks</fields><fields>Conversions</fields><fields>Ctr</fields><fields>Date</fields><fields>Id</fields><predicates><field>CampaignStatus</field><operator>IN</operator><values>PAUSED</values><values>ENABLED</values></predicates><dateRange><min>2020-03-28</min><max>2020-03-28</max></dateRange></selector><reportName>Criteria performance report #5e80bcc78d5b5</reportName><reportType>CAMPAIGN_LOCATION_TARGET_REPORT</reportType><dateRangeType>CUSTOM_DATE</dateRangeType><downloadFormat>XML</downloadFormat></reportDefinition>
+
+
+Response:
+REDACTED REPORT DATA
+--------
+Error:
+Client error: `POST https://adwords.google.com/api/adwords/reportdownload/v201809` resulted in a `400 Bad Request` response
+  
+[2020-03-29 23:25:02] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=909-855-5799 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 23:25:06] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=544-156-7903 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 23:25:10] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=946-908-6947 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 23:25:14] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=390-153-4339 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 23:25:18] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=281-441-4737 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 23:25:23] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=203-622-9949 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-29 23:25:26] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=383-121-9603 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-30 00:00:04] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=450-292-5137 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-30 00:00:07] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=360-266-2723 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-30 00:00:11] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=724-990-7090 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-30 00:00:15] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=497-019-7693 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-30 00:00:19] AW_REPORT_DOWNLOADER.WARNING: clientCustomerId=876-719-6564 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 400   
+[2020-03-30 00:00:19] AW_REPORT_DOWNLOADER.NOTICE: Request:
+POST /api/adwords/reportdownload/v201809 HTTP/1.1
+Content-Type: application/x-www-form-urlencoded
+Host: adwords.google.com
+Authorization: REDACTED
+developerToken: REDACTED
+clientCustomerId: 876-719-6564
+User-Agent: beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file)
+skipReportHeader: false
+skipColumnHeader: false
+skipReportSummary: false
+useRawEnumValues: false
+includeZeroImpressions: false
+
+__rdxml=<?xml version="1.0"?>
+<reportDefinition><selector><fields>CampaignId</fields><fields>CampaignName</fields><fields>Impressions</fields><fields>Cost</fields><fields>Clicks</fields><fields>Conversions</fields><fields>Ctr</fields><fields>Date</fields><fields>Id</fields><predicates><field>CampaignStatus</field><operator>IN</operator><values>PAUSED</values><values>ENABLED</values></predicates><dateRange><min>2020-03-23</min><max>2020-03-23</max></dateRange></selector><reportName>Criteria performance report #5e80c61258e73</reportName><reportType>CAMPAIGN_LOCATION_TARGET_REPORT</reportType><dateRangeType>CUSTOM_DATE</dateRangeType><downloadFormat>XML</downloadFormat></reportDefinition>
+
+
+Response:
+REDACTED REPORT DATA
+--------
+Error:
+Client error: `POST https://adwords.google.com/api/adwords/reportdownload/v201809` resulted in a `400 Bad Request` response
+  
+[2020-03-30 00:40:03] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=909-855-5799 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-30 00:40:07] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=544-156-7903 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-30 00:40:12] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=946-908-6947 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-30 00:40:16] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=390-153-4339 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-30 00:40:20] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=281-441-4737 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-30 00:40:25] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=203-622-9949 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-30 00:40:29] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=383-121-9603 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-30 02:00:03] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=918-824-9831 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-30 02:00:07] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=904-907-2009 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-30 02:00:12] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=181-848-7109 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-30 02:00:16] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=130-623-8974 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-30 02:00:20] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=490-098-4662 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-30 02:00:24] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=831-709-7948 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-30 02:00:27] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=771-025-0445 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-30 02:00:31] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=452-040-6427 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-30 02:00:35] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=710-208-1796 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-30 02:50:02] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=450-292-5137 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-30 02:50:06] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=360-266-2723 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-30 02:50:09] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=724-990-7090 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-30 02:50:13] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=497-019-7693 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-30 02:50:16] AW_REPORT_DOWNLOADER.WARNING: clientCustomerId=876-719-6564 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 400   
+[2020-03-30 02:50:16] AW_REPORT_DOWNLOADER.NOTICE: Request:
+POST /api/adwords/reportdownload/v201809 HTTP/1.1
+Content-Type: application/x-www-form-urlencoded
+Host: adwords.google.com
+Authorization: REDACTED
+developerToken: REDACTED
+clientCustomerId: 876-719-6564
+User-Agent: beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file)
+skipReportHeader: false
+skipColumnHeader: false
+skipReportSummary: false
+useRawEnumValues: false
+includeZeroImpressions: false
+
+__rdxml=<?xml version="1.0"?>
+<reportDefinition><selector><fields>CampaignId</fields><fields>CampaignName</fields><fields>Impressions</fields><fields>Cost</fields><fields>Clicks</fields><fields>Conversions</fields><fields>Ctr</fields><fields>Date</fields><fields>Id</fields><predicates><field>CampaignStatus</field><operator>IN</operator><values>PAUSED</values><values>ENABLED</values></predicates><dateRange><min>2020-03-27</min><max>2020-03-27</max></dateRange></selector><reportName>Criteria performance report #5e80ede7e8872</reportName><reportType>CAMPAIGN_LOCATION_TARGET_REPORT</reportType><dateRangeType>CUSTOM_DATE</dateRangeType><downloadFormat>XML</downloadFormat></reportDefinition>
+
+
+Response:
+REDACTED REPORT DATA
+--------
+Error:
+Client error: `POST https://adwords.google.com/api/adwords/reportdownload/v201809` resulted in a `400 Bad Request` response
+  
+[2020-03-30 03:00:02] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=909-855-5799 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-30 03:00:06] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=544-156-7903 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-30 03:00:09] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=946-908-6947 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-30 03:00:13] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=390-153-4339 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-30 03:00:17] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=281-441-4737 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-30 03:00:20] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=203-622-9949 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-30 03:00:24] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=383-121-9603 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-30 06:20:02] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=450-292-5137 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-30 06:20:06] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=360-266-2723 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-30 06:20:10] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=724-990-7090 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-30 06:20:15] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=497-019-7693 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-30 06:20:18] AW_REPORT_DOWNLOADER.WARNING: clientCustomerId=876-719-6564 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 400   
+[2020-03-30 06:20:18] AW_REPORT_DOWNLOADER.NOTICE: Request:
+POST /api/adwords/reportdownload/v201809 HTTP/1.1
+Content-Type: application/x-www-form-urlencoded
+Host: adwords.google.com
+Authorization: REDACTED
+developerToken: REDACTED
+clientCustomerId: 876-719-6564
+User-Agent: beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file)
+skipReportHeader: false
+skipColumnHeader: false
+skipReportSummary: false
+useRawEnumValues: false
+includeZeroImpressions: false
+
+__rdxml=<?xml version="1.0"?>
+<reportDefinition><selector><fields>CampaignId</fields><fields>CampaignName</fields><fields>Impressions</fields><fields>Cost</fields><fields>Clicks</fields><fields>Conversions</fields><fields>Ctr</fields><fields>Date</fields><fields>Id</fields><predicates><field>CampaignStatus</field><operator>IN</operator><values>PAUSED</values><values>ENABLED</values></predicates><dateRange><min>2020-03-29</min><max>2020-03-29</max></dateRange></selector><reportName>Criteria performance report #5e811f2217af6</reportName><reportType>CAMPAIGN_LOCATION_TARGET_REPORT</reportType><dateRangeType>CUSTOM_DATE</dateRangeType><downloadFormat>XML</downloadFormat></reportDefinition>
+
+
+Response:
+REDACTED REPORT DATA
+--------
+Error:
+Client error: `POST https://adwords.google.com/api/adwords/reportdownload/v201809` resulted in a `400 Bad Request` response
+  
+[2020-03-30 06:20:24] AW_REPORT_DOWNLOADER.INFO: c[2020-03-30 10:00:02] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=450-292-5137 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-30 10:00:06] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=360-266-2723 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-30 10:00:10] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=724-990-7090 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-30 10:00:13] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=497-019-7693 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-30 10:00:16] AW_REPORT_DOWNLOADER.WARNING: clientCustomerId=876-719-6564 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 400   
+[2020-03-30 10:00:16] AW_REPORT_DOWNLOADER.NOTICE: Request:
+POST /api/adwords/reportdownload/v201809 HTTP/1.1
+Content-Type: application/x-www-form-urlencoded
+Host: adwords.google.com
+Authorization: REDACTED
+developerToken: REDACTED
+clientCustomerId: 876-719-6564
+User-Agent: beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file)
+skipReportHeader: false
+skipColumnHeader: false
+skipReportSummary: false
+useRawEnumValues: false
+includeZeroImpressions: false
+
+__rdxml=<?xml version="1.0"?>
+<reportDefinition><selector><fields>CampaignId</fields><fields>CampaignName</fields><fields>Impressions</fields><fields>Cost</fields><fields>Clicks</fields><fields>Conversions</fields><fields>Ctr</fields><fields>Date</fields><fields>Id</fields><predicates><field>CampaignStatus</field><operator>IN</operator><values>PAUSED</values><values>ENABLED</values></predicates><dateRange><min>2020-03-23</min><max>2020-03-23</max></dateRange></selector><reportName>Criteria performance report #5e8152b04ff2f</reportName><reportType>CAMPAIGN_LOCATION_TARGET_REPORT</reportType><dateRangeType>CUSTOM_DATE</dateRangeType><downloadFormat>XML</downloadFormat></reportDefinition>
+
+
+Response:
+REDACTED REPORT DATA
+--------
+Error:
+Client error: `POST https://adwords.google.com/api/adwords/reportdownload/v201809` resulted in a `400 Bad Request` response
+  
+[2020-03-30 10:40:03] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=909-855-5799 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-30 10:40:06] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=544-156-7903 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-30 10:40:10] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=946-908-6947 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-30 10:40:15] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=390-153-4339 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-30 10:40:19] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=281-441-4737 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-30 10:40:23] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=203-622-9949 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-30 10:40:27] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=383-121-9603 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-30 12:00:02] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=918-824-9831 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-30 12:00:07] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=904-907-2009 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-30 12:00:10] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=181-848-7109 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-30 12:00:14] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=130-623-8974 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-30 12:00:18] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=490-098-4662 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-30 12:00:22] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=831-709-7948 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-30 12:00:27] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=771-025-0445 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-30 12:00:30] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=452-040-6427 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   
+[2020-03-30 12:00:34] AW_REPORT_DOWNLOADER.INFO: clientCustomerId=710-208-1796 beta:reportDownload (AwApi-PHP, googleads-php-lib/38.0.0, PHP/5.5.9-1ubuntu4.29, GuzzleHttp/6.3.3, curl/7.35.0, ReportDownloader/file) "POST /api/adwords/reportdownload/v201809 HTTP/1.1" Status: 200   

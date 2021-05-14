@@ -1,0 +1,107 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GAME BRAIN</title>
+	{include file="./static/html/header_common.html" /}
+	<link href="/static/css/adshow.css?t=<?php echo time(); ?>" rel="stylesheet">
+    <style>
+
+	</style>	
+</head>
+<body>
+    <div id="wrapper" style="background-color:#fff;">
+        {include file="./static/html/header.html" /} 
+	
+		<div class="hw_page_content">
+		    <div class="hw_menu_left">
+         {include file="./static/html/side.html" /}  
+			</div>
+		    <div class="hw_content_right">	
+			  <ul class="search_tab clearfix" >
+			      <li><a  href="/admin_advertisement/adlist?type=1&id={$appid}">广告ID</a></li>
+				  <li><a  href="/admin_advertisement/adlist?type=2&id={$appid}">广告参数</a></li>
+                  <li class="active"><a  href="/admin_advertisement/adshow?appid={$appid}">内推展示</a></li>
+                  <li style="float:right;margin-right:60px;" >				 
+				    <div class="btn" onclick="window.location.href='/admin_advertisement/adshow_add?appid={$appid}'" id="add" style="background-color:#fe6d6d;width:100px;height:35px;color:#fff;line-height:20px;"><i class="fa fa-plus-circle"></i> 添加产品</div>				  
+				  </li>					  
+		       </ul>
+			      <div class="row" style="padding:20px;">
+				    {volist name="res" id="vv"}
+				    <div class="col-md-4 card-1">
+						<div class="card card-inverse card-info">
+							<video class="card-img-top" height="100" src="{$vv.video_url}" controls="controls"></video>
+							<div class="dropdown"> 
+								<a class="nav-link" href="javascript:;">
+									<i class="fa fa-ellipsis-v men"></i> 
+								</a>
+								<ul class="dropdown-menu" style="display:none; position: absolute; transform: translate3d(-97px, 40px, 0px); top: 0px; left: 0px;z-index:22;">
+									<li>
+										<a rel="nofollow" href="/admin_advertisement/adshow_edit?id={$vv.id}" class="dropdown-item nav-link">修改</a>
+									</li>
+									<li>
+										<a rel="nofollow" data-id="{$vv.id}" href="javascript:;" class="dropdown-item nav-link delete">删除</a>
+									</li>									
+								</ul>
+                           </div>
+							<div class="card-block"> 
+								<h4 class="card-title">{$vv.name} </h4>
+								<div class="card-text">
+									{$vv.desc}
+								</div>
+							</div>
+							<div class="card-footer">
+								<small>{$vv.add_time}</small>
+								<a href="{$vv.shop_url}" target="__blank" class="btn btn-info float-right btn-sm">Follow</a>
+							</div>
+						</div>
+                    </div>
+					{/volist}
+				  </div>
+			      <div class="table-responsive" style="padding:0 30px;clear:both;">                               
+                    <div style="text-align:center;"></div>								
+                  </div>
+			</div>
+        </div>
+       {include file="./static/html/footer.html" /}		
+    </div>
+     <!-- /. WRAPPER  -->
+   {include file="./static/html/footer_common.html" /}
+    <script>
+	  $(function(){
+	    $(".nav-link").click( function(){
+		   $(this).next(".dropdown-menu").toggle();
+		});
+		
+		$(".delete").click( function(event){
+		        var id = $(this).attr("data-id");
+				var _$ = $(this);
+		        layer.confirm('确认删除后数据将不会保存?', {
+					  btn: ['确认','取消'] //按钮
+					}, function(){
+					  var index = layer.load(1, {
+								  shade: [0.1,'#fff'] //0.1透明度的白色背景
+								});
+					   $.post("/admin_advertisement/adshow_delete",{id:id},function(e){
+					       layer.closeAll();
+					         if("ok"==e)
+							 {
+								layer.msg('删除成功');
+                                window.location.href=window.location.href;						
+							 }else{
+							   layer.msg('网络异常,删除失败', {icon: 1});
+							 }
+					   })
+					 
+					}, function(){
+					  
+					});
+			   return false;
+		   });
+	  })
+	</script>
+</body>
+
+</html>

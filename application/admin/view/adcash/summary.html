@@ -1,0 +1,330 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title></title>
+	
+	
+	{include file="./static/html/header_common.html" /}
+	<link href="/static/css/special.css" rel="stylesheet">
+	<link href="/static/css/app.css" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" media="all" href="/static/plugin/daterangepicker/daterangepicker.css" />
+	
+    <style>
+      #time,select,.fa{
+	   cursor:pointer;
+	 }
+	input#time:focus{
+	   border:none;
+	   outline:none;
+	}
+	</style>	
+</head>
+<body>
+    <div id="wrapper">
+	    {include file="./static/html/header.html" /} 
+	   <div class="hw_page_content">
+		    <div class="hw_menu_left">
+         {include file="./static/html/side.html" /}  
+			</div>
+		    <div class="hw_content_right">	
+			  <ul class="search_tab clearfix" >
+			      <li><a onclick="window.history.go(-1);" href="javascript:;">返回</a></li>
+			      <li class="active"><a style="color:red;font-weight:bold;" href="javascript:;">{$app_name}</a></li>                  			  
+		       </ul>
+			    
+                 <div style="float:left;position:relative;box-sizing: inherit;margin-top:-45px;margin-left:32%;clear:both;"><input style="border:none;font-size:16px;" id="time" value="" type="text" /></div>	
+			    <div class="card card-body p-2" style="padding:0 30px;">
+							<div class="row row-projects">
+								<div class="col1">
+									<i class="material-icons text-link-color md-36">monetization_on</i>
+									<div class="mb-1">AD REVENUE</div>
+									<h4 class="mb-0 ">${$total.revenue|number_format=###,2}</h4>
+								</div>
+								<div class="col1">
+									<i class="material-icons text-success md-36">tap_and_play</i>
+									<div class="mb-1">IMPRESSIONS</div>
+									<h4 class="mb-0">{$total.impression|number_format}</h4>
+								</div>
+								<div class="col1">
+									<i class="material-icons text-warning md-36">visibility</i>
+									<div class="mb-1">CLICKS</div>
+									<h4 class="mb-0">{$total.click|number_format}</h4>
+								</div>
+								<div class="col1">
+									<i class="material-icons text-primary md-36">dvr</i>
+									<div class="mb-1">eCPM</div>
+									<h4 class="mb-0"><?php if(isset( $total["impression"]) && $total["impression"]>0 ){ echo round( $total["revenue"]*1000/$total["impression"],2); }else{ echo "0.00";} ?></h4>
+								</div>
+								
+							</div>
+                 </div>
+			      <div style="padding:0 30px;">
+					     <div id="hew_index">
+						    <a  href="javascript:;"  id="dropdownMenu3" class="nav-link  he_aa">{$index_name}</a>
+						     <div class="show2">
+								<ul class="list-unstyled">
+									<li>
+										<a href="/admin_adcash/summary?ap_code={$ap_code}&index=revenue&start={$time.start}&end={$time.end}" class="dropdown-item">
+										<span class="align-middle">AD REVENUE</span>
+										</a>
+									</li>
+									<li>
+										<a href="/admin_adcash/summary?ap_code={$ap_code}&index=impression&start={$time.start}&end={$time.end}" class="dropdown-item">
+										  <span class="align-middle">IMPRESSIONS</span>
+										</a>
+									</li>
+									<li>
+										<a href="/admin_adcash/summary?ap_code={$ap_code}&index=click&start={$time.start}&end={$time.end}" class="dropdown-item">
+										  <span class="align-middle">CLICKS</span>
+										</a>
+									</li>
+									<li>
+										<a href="/admin_adcash/summary?ap_code={$ap_code}&index=ecpm&start={$time.start}&end={$time.end}" class="dropdown-item">
+										  <span class="align-middle">eCPM</span>
+										</a>
+									</li>
+								 </ul>
+                            </div>
+						 </div>
+						 <div id="main" style="width: 100%px;height:400px;"></div>
+						<div  id="main1" style="width: 100%px;height:270px;"></div>
+					   </div>
+					<div class="row align-items-center mb-2" style="margin-top:30px;padding:0 30px;">
+							
+								 <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+									<div class="dropdown mr-1">
+										<a id="sortDropdown" class="he_btn he_btn-white dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+										  Platform
+										 </a>
+										<div class="dropdown-menu dropdown-menu-right" aria-labelledby="sortDropdown" x-placement="bottom-end" style="position: absolute; transform: translate3d(68px, 28px, 0px); top: 0px; right: 0px; will-change: transform;">
+											<a class="dropdown-item select_platform" data="total" href="javascript:;">total</a>
+											<a class="dropdown-item select_platform" data="android" href="javascript:;">android</a>
+											<a class="dropdown-item select_platform" data="ios" href="javascript:;">ios</a>
+										</div>
+									</div>
+                                </div>
+							
+                        </div>
+                     <div class="card-content" style="margin-top:10px;margin-bottom:40px;padding:0 30px;">
+                            <div class="table-responsive table-bordered">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            
+                                            <th>Platform</th>
+                                            <th style="vertical-align:middle; text-align:center;">Revenue</th>
+                                            <th style="vertical-align:middle; text-align:center;">Impressions</th>
+											<th style="vertical-align:middle; text-align:center;">Clicks</th>
+											<th style="vertical-align:middle; text-align:center;">eCPM</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+									     {if condition="empty($data)"}
+										   <tr style="color:#ccc;"><td colspan="2"><td><i class="material-icons" style="vertical-align:middle;">mood_bad</i> no data</td></tr> 
+										 {else /}
+                                         {volist name="data" id="item"}
+										 <tr>
+                                            <td>
+											  <img src="{$item.platform|getplatformimg}"  class="mr-2" width="40" height="20">												 
+											  <a class="plat_title" href="#">{$item.platform|getplatform}</a>
+											</td>
+                                            <td style="vertical-align:middle; text-align:center;">${$item.revenue}</td>
+                                            <td style="vertical-align:middle; text-align:center;">{$item.impression}</td>
+                                            <td style="vertical-align:middle; text-align:center;">{$item.click}</td>
+											<td style="vertical-align:middle; text-align:center;"><?php if(isset( $item["impression"]) && $item["impression"]>0 ){ echo round( $item["revenue"]*1000/$item["impression"],2); }else{ echo "0.00";} ?></td>
+                                        </tr>
+										{/volist}
+										<tr style="color:red;">
+										  <td style="vertical-align:middle; text-align:center;font-weight:bold;">总计</td>
+										  <td style="vertical-align:middle; text-align:center;">$<?php echo $total_revenue = array_sum(array_column($data,'revenue')); ?></td>
+										  <td style="vertical-align:middle; text-align:center;"><?php echo $total_impression = array_sum(array_column($data,'impression')); ?></td>
+										  <td style="vertical-align:middle; text-align:center;"><?php echo  array_sum(array_column($data,'click')); ?></td>
+										  <td style="vertical-align:middle; text-align:center;"><?php if( $total_impression>0 ){ echo round( $total_revenue*1000/$total_impression,2); }else{ echo "0.00";} ?></td>
+										</tr>
+										 {/if}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>						
+			
+			</div>
+		</div>
+		
+			
+			   <div id="qrcode" style="position:fixed;top:15%;right:1.5%;">
+			   <i id="close_qcode"  class="fa fa-times-circle" style="position:absolute;left:-10px;top:-3px;"></i>
+			   <img width="100" height="100" src="/uploads/category/summary.png"/>
+			   <p style="font-size:10px;text-align:center;">手机查看更方便</p>
+			   </div>
+		{include file="./static/html/footer.html" /}	
+    </div> 
+{include file="./static/html/footer_common.html" /}	
+   	<script src="/static/js/echarts.min.js"></script>
+    <script type="text/javascript" src="/static/plugin/daterangepicker/moment.js"></script>
+    <script type="text/javascript" src="/static/plugin/daterangepicker/daterangepicker.js"></script>	
+</body>
+<script>
+    $(".select_platform").click( function(){
+	    
+	    var platform = $(this).attr("data");
+	    var ap_code = '{$ap_code}';
+		var start ="{$time.start}";
+		var end = "{$time.end}";
+		$("#sortDropdown").text(platform);
+		var index = layer.load(0, {shade: false});
+	   $.post("/admin_adcash/platformdata",{platform:platform,ap_code:ap_code,start:start,end:end},function(e){
+		   layer.closeAll();
+			 if(e)
+			 {
+				 $(".table").remove();
+				 $(".table-bordered").html(e);								
+			 }else{
+			   layer.msg('网络异常,查询失败', {icon: 1});
+			 }
+	   });
+	})
+    hover_content("当前显示日期总收益, 系统默认为平台最新获取数据时间","#");
+	$("#dropdownMenu2").click( function(e){
+	   $(".show1").toggle();
+	   return false;
+	})
+	$("#dropdownMenu3").click( function(e){
+	   $(".show2").toggle();
+	   return false;
+	})
+	$("body").click( function(){
+	   $(".show1,.show2").hide();
+	});
+	$("#uptop").click( function(){
+	   $("html,body").animate({scrollTop:0}, 500);
+	})
+	$("#close_qcode").click( function(){
+	    $("#qrcode").hide();
+	})
+	
+</script>
+<script> 
+	var myChart = echarts.init(document.getElementById('main'));
+	var myChart1 = echarts.init(document.getElementById('main1'));
+	var options1 = {
+    title : {
+        text: '',
+        subtext: 'platform comparison',
+        x:'center'
+    },
+    tooltip : {
+        trigger: 'item',
+        formatter: "{a} <br/>{b} : {c} ({d}%)"
+    },
+    
+    series : [
+        {
+            name: '{$index_name}',
+            type: 'pie',
+            radius : '55%',
+            center: ['50%', '60%'],
+            data:[
+                {value:{$result[1]["sum"]}, name:'Mobvista'},
+                {value:{$result[2]["sum"]}, name:'Unity'},
+                {value:{$result[3]["sum"]}, name:'Applovin'},
+                {value:{$result[4]["sum"]}, name:'Vungle'},
+				{value:{$result[5]["sum"]}, name:'Admob'},
+                {value:{$result[6]["sum"]}, name:'Facebook'}
+            ],
+            itemStyle: {
+                emphasis: {
+                    shadowBlur: 10,
+                    shadowOffsetX: 0,
+                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                }
+            }
+        }
+    ]
+};
+
+	var options = {
+    
+    tooltip: {
+        trigger: 'axis'
+    },
+    legend: {
+        data:['Mobvista','Unity','Applovin','Vungle','Admob','Facebook']
+    },
+    grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '3%',
+        containLabel: true
+    },
+    toolbox: {
+        feature: {
+            saveAsImage: {}
+        }
+    },
+    xAxis: {
+        type: 'category',
+        boundaryGap: false,
+        data: [{$tt}]
+    },
+    yAxis: {
+        type: 'value'
+    },
+    series: [
+        {
+            name:'Mobvista',
+            type:'line',
+            stack: '总量',
+            data:[{$result[1]["column"]??0}]
+        },
+        {
+            name:'Unity',
+            type:'line',
+            stack: '总量',
+            data:[{$result[2]["column"]??0}]
+        },
+        {
+            name:'Applovin',
+            type:'line',
+            stack: '总量',
+            data:[{$result[3]["column"]??0}]
+        },
+        {
+            name:'Vungle',
+            type:'line',
+            stack: '总量',
+            data:[{$result[4]["column"]??0}]
+        },
+		{
+            name:'Admob',
+            type:'line',
+            stack: '总量',
+            data:[{$result[5]["column"]??0}]
+        },
+        {
+            name:'Facebook',
+            type:'line',
+            stack: '总量',
+            data:[{$result[6]["column"]??0}]
+        }
+    ]
+};
+	myChart.setOption(options);
+	myChart1.setOption(options1);
+</script>
+<script>
+    $('#time').daterangepicker({
+    "startDate": "{$time.f_start}",
+    "endDate": "{$time.f_end}",
+	 "dateLimit": {
+        "days": 15
+    }
+}, function(start, end, label) {
+  var start = start.format('YYYY-MM-DD');
+  var end = end.format('YYYY-MM-DD');
+  window.location.href="/admin_adcash/summary?ap_code={$ap_code}&index={$index}&start="+start+"&end="+end;
+});
+ </script>
+</html>

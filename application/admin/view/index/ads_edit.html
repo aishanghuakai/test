@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>广告聚合平台</title>
+    {include file="./static/html/header_common.html" /}
+	<link href="/static/css/userinfo.css" rel="stylesheet" type="text/css" />
+	<link href="/static/css/checkbox.css" rel="stylesheet" type="text/css" />
+    <style>
+	  input[type="file"] {
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    left: 0;
+    width: 150px;
+    height: 105px;
+    cursor: pointer;
+    line-height: 34px;
+}
+	</style>	
+</head>
+ 
+<body>
+    <div id="wrapper">
+        {include file="./static/html/header.html" /}	
+		<div class="hw_page_content">
+		    <div class="hw_menu_left">
+         {include file="./static/html/side.html" /}  
+			</div>
+		    <div class="hw_content_right">
+			    <ul class="search_tab clearfix" >
+			      <li class="active"><a  href="javascript:;">应用创建</a></li>				  
+		        </ul>
+			  	
+                			  <div style="padding:30px 30px;clear:both;">
+			     <form class="form-horizontal">
+					  <div class="form-group">
+						<label for="app_name" class="col-sm-1 control-label">名称</label>
+						<div class="col-sm-10">
+						  <input type="text" class="form-control"  value="{$res.app_name}" id="app_name" placeholder="名称">
+						</div>
+					  </div>
+					  <div class="form-group">
+						<label for="package_name" class="col-sm-1 control-label">包名</label>
+						<div class="col-sm-4">
+						  <input type="text" placeholder="com.xx" value="{$res.package_name}"  class="form-control" id="package_name" >					 
+						</div>
+						  <i style="font-size:12px;float:left;margin-top:10px;font-style:normal;">IOS版本，请输入Bundle ID</i>
+					  </div>
+					  
+					  <div class="form-group">
+					    <label for="inputEmail3" class="col-sm-1 control-label">图标</label>
+						<div class="col-sm-10">
+						  <div class="article-cover-add thumb">
+						    {if condition="$res['icon_url'] neq ''"}
+						     <img class="upload_img" src="{$res.icon_url}" /><input name="upload_img"  id="uploads"  accept="image/*" type="file">
+							{else /}
+							 <i class="fa fa-plus"></i><input name="upload_img"  id="uploads"  accept="image/*" type="file">
+							{/if}
+						  </div>						  
+						</div>
+					  </div>
+					  
+					  <div class="form-group">
+					    <label for="inputEmail3" class="col-sm-1 control-label">平台</label>
+						<div class="col-sm-4">
+						    <div class="el-radio el-radio-red">
+								
+								<input name="platform" id="android" value="android" {if condition="$res['platform'] eq 'android'"} checked {/if} type="radio">
+								<label class="el-radio-style" for="android"></label>
+								<span class="margin-r">安卓</span>
+					        </div>
+                            <div class="el-radio el-radio-red">								
+								<input name="platform" id="ios" value="ios" {if condition="$res['platform'] eq 'ios'"} checked {/if}  type="radio">
+								<label class="el-radio-style" for="ios"></label>
+								<span class="margin-r">苹果</span>
+					        </div>							
+						</div>
+					  </div>
+					  
+					  <div class="form-group">
+					 <div class="form-group">
+						<label for="remark" class="col-sm-1 control-label">描述</label>
+						<div class="col-sm-10">
+						  <textarea  class="form-control" id="remark"  rows="4">{$res.remark}</textarea>				 
+						</div>
+					  </div>
+					  <div class="form-group">
+						<div class="col-sm-offset-1 col-sm-10">
+						 <div class="el-checkbox el-checkbox-yellow" style="margin-top:5px;">							
+							<input name="status" id="status" {if condition="$res['status'] eq 0"} checked {/if} type="checkbox">
+							<label class="el-checkbox-style" for="status"></label>
+							<span class="margin-r">是否禁用</span>
+					      </div>
+						</div>
+						
+					  </div>
+						<div class="col-sm-offset-4 col-sm-6" style="margin-top:10px;">
+						  <button type="button" onclick="window.location.href='/admin_advertisement/lists'" style="width:20%;float:left;margin-right:10px;padding-right:10px;" class="btn btn-default">取消</button>
+						  <button type="button" style="width:50%;" id="save" class="btn btn-danger">确认修改</button>
+						</div>
+					  </div>
+					</form>
+			  </div>				
+			</div>
+		</div>
+		 {include file="./static/html/footer.html" /}
+	</div>	
+</body>
+ {include file="./static/html/footer_common.html" /}
+  
+ <script>
+    $(function(){
+        
+		  $("#save").click( function(){
+		     //alert( $('div.froala-element').html());
+			   var id="<?php echo $res["id"]; ?>";
+			   var app_name = $("#app_name").val();
+			   var package_name =$("#package_name").val();
+			   var remark = $('#remark').val();
+			   var icon_url =$(".thumb img").attr("src");
+			   var status = 1;
+			   var platform=$("input[name='platform']:checked").val();
+			   if( $("#status").is(":checked") )
+			     {
+				    status=0;
+				 }
+			   if( app_name=="" )
+				{
+					$.Pop('应用名称不能为空!',{Title:'提示',Animation:'slideFromTop'});return false;
+				}
+				if(   package_name.length<1  )
+				{
+					$.Pop('包名至少在一个字符以上!',{Title:'提示',Animation:'slideFromTop'});return false;
+				}
+				if(   icon_url=="" || typeof(icon_url)=="undefined"  )
+				{
+					$.Pop('请上传一张图标!',{Title:'提示',Animation:'slideFromTop'});return false;
+				}
+				
+				
+				$(this).attr("disabled",true);
+				var obj = $(this);
+				var index = layer.load(0, {shade: false}); //0代表加载的风格，支持0-2
+				$.post("/admin_advertisement/add_ads_data",{id:id,app_name:app_name,app_class:1,package_name:package_name,remark:remark,icon_url:icon_url,status:status,platform:platform},function(e){
+					layer.close(index);
+					
+					$(obj).attr("disabled",false);
+					if( "ok"==e )
+					  {
+						$.Pop('修改成功','confirm',function(){ window.location.href='/admin_advertisement/lists' })
+					  }else{
+						$.Pop('由于异常，提交失败',{Title:'提示',Animation:'slideFromTop'});return false;
+					  }			
+				})
+			 
+		  })
+		  
+         uploads("uploads","app",callback);
+      });
+    var callback = function(data)
+	{
+	   if(200 != data.status)
+	   {
+	      layer.msg("上传失败,请重新上传");return false;
+	   }
+	   var url = data.url;
+	   $(".thumb").html('<img class="upload_img" src="'+url+'" /><input name="upload_img"  id="uploads"  accept="image/*" type="file">');
+	}
+ </script>
+</html>

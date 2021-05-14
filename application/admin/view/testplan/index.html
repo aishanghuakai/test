@@ -1,0 +1,559 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GAME BRAIN</title>
+    {include file="./static/html/header_common.html" /}
+	<link rel="stylesheet" type="text/css" href="http://unpkg.com/iview/dist/styles/iview.css">
+		<link rel="stylesheet" type="text/css" href="/static/css/goalset.css">
+    <script type="text/javascript" src="http://vuejs.org/js/vue.min.js"></script>
+    <script type="text/javascript" src="http://unpkg.com/iview/dist/iview.min.js"></script>
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+	
+	<style>
+	 body,.hw_content_right{font-size:14px;}
+	 .demo-drawer-footer{
+        width: 100%;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        border-top: 1px solid #e8e8e8;
+        padding: 10px 16px;
+        text-align: right;
+        background: #fff;
+    }
+	.markdown-body table {
+		border-collapse: collapse;
+		border-spacing: 0;
+		display: block;
+		width: 100%;
+		overflow: auto;
+		word-break: normal;
+		word-break: keep-all;
+    }
+	.markdown-body table thead tr {
+     background-color: #F8F8F8;
+    }
+	.markdown-body table tr {
+      background-color: #fff;
+      border-top: 1px solid #ccc;
+   }
+   .markdown-body table td,.markdown-body table th {
+    padding: 6px 13px;
+    border: 1px solid #ddd;
+}
+.markdown-body table th {
+    font-weight: 700;
+}
+.markdown-body{font-size:12px;}
+.ms p{font-size:15px !important;}
+.markdown-body p{padding:10px;}
+	.ivu-drawer-body{padding:2px 16px !important;}
+	</style>
+</head>
+<body>
+    <div id="wrapper" style="background-color:#fff;">
+        {include file="./static/html/header.html" /}	
+		<div class="hw_page_content">
+		    <div class="hw_menu_left">
+         {include file="./static/html/side.html" /}  
+			</div>
+		    <div class="hw_content_right">
+			   <div style="padding:20px 0px;">
+			    <div style="float:left;">
+				  <Tag type="dot" @click.native="location(2)" {if condition="$currentStatus eq 2"} style="border:1px solid #a64942 !important;" {/if} color="success">待测试({$status['2']})</Tag>
+                  <Tag type="dot"  @click.native="location(1)" {if condition="$currentStatus eq 1"} style="border:1px solid #a64942 !important;" {/if} color="primary">测试中({$status['1']})</Tag>
+                  <Tag type="dot" @click.native="location(3)" {if condition="$currentStatus eq 3"} style="border:1px solid #a64942 !important;" {/if} checkable color="error">测试结束({$status['3']})</Tag>			 
+				</div>				
+			    <div style="float:right;"><i-button type="primary"  ghost icon="ios-add" @click="openModal">新建测试计划</i-button></div>
+			   <div style="clear:both;"></div>
+			    <div style="float:left;margin:10px 0px;">
+			     <Tag  @click.native="openDesc(1)" color="blue">美术风格测试流程<Icon type="ios-help-circle-outline" /></Icon></Tag>
+                 <Tag  @click.native="openDesc(2)" color="blue">发行测试流程<Icon type="ios-help-circle-outline" /></Icon></Tag>
+				</div>
+				<Modal v-model="meishu" fullscreen footer-hide :title="descTitle">
+                  <!-- <textarea id="content" onkeyup="convert()" style="height:400px;width:600px;"></textarea> -->
+				  <div class="markdown-body ms" v-show="descStatus==1">
+				    <p>1,梦菲提前一周将要测试的产品邮件发出来，最迟<strong style="color:red;">每周三</strong>，有助于素材组每周进行工作安排。</p>
+					<p>2,测试邮件里包含产品链接，测试目的，以及想要重点测试的点。。</p>
+					<p>3,小贤优先尝试搜索竞品产品是否有现成的美术素材，若有，可直接用。但需美玲+梦菲过目审核。</p>
+					<p>4,提前沟通：</p>
+					<p>&nbsp;&nbsp;&nbsp;小贤+美玲根据自身时间安排，找梦菲再当面沟通制作素材要重点表达的点，避免重复返工。每次沟通尽量不超过20分钟，传达清楚想重点表达的点即可。（前提要求：每人均需提前体验产品，尤其梦菲，因美术风格测试主要由策划主导）。</p>
+					<p>6,素材制作完毕后，小贤+美玲+梦菲均需过目审核，一致通过后方可开启测试。</p>
+					<p>7,素材过审后，后续由美玲完成美术风格测试。</p>
+					<p> 测试平台：Facebook </p>
+					<p> 测试国家：US</p>
+					<p> 测试预算：总预算不超过$60。能出结论即可</p>
+				  </div>
+				  <div class="markdown-body" v-show="descStatus==2" style="margin-bottom:20px;">
+				    <table>
+						<thead>
+						<tr>
+						<th style="text-align:center">序号</th>
+						<th style="text-align:center">流程</th>
+						<th style="text-align:center;width:5%;">工作目的</th>
+						<th rowspan=3 style="text-align:center;width:50%;">工作内容</th>
+						<th style="text-align:center">责任人</th>
+						<th style="text-align:center">审查人</th>
+						</tr>
+						</thead>
+						<tbody>
+						<tr>
+						  <td style="text-align:center" >1</td>
+						  <td style="text-align:center">产品对接</td>
+						  <td style="text-align:center"></td>
+						  <td style="text-align:center">确认10天内产品发版计划，告知推广团队。</td>
+						  <td style="text-align:center">张方宇</td>
+						  <td style="text-align:center">汤文娟</td>
+						</tr>
+						<tr>
+						  <td rowspan="6" style="text-align:center">2</td>
+						  <td rowspan="6" style="text-align:center">V1推广准备</td>
+						  <td rowspan="6" style="text-align:center">V1 测试目的:主要测试V1 版本产品的CPI以及产品留存。</td>
+						  <td style="text-align:center">提供产品商店链接、Facebook App ID、Facebook 粉丝页链接</td>
+						  <td style="text-align:center">张方宇</td>
+						  <td style="text-align:center">万美玲</td>
+						</tr>
+						<tr>						  
+						  <td style="text-align:center">gameplay系素材准备>=10个，展示游戏玩法</td>
+						  <td style="text-align:center">曹靖贤</td>
+						  <td style="text-align:center">万美玲</td>
+						</tr>
+						<tr>						  
+						  <td style="text-align:center">提交Facebook 开户，2-3天下户</td>
+						  <td style="text-align:center">万美玲</td>
+						  <td style="text-align:center">汤文娟</td>
+						</tr>
+						<tr>						  
+						  <td style="text-align:center">
+						    Facebook开发者后台完成：</br>
+							1）产品Settings信息填写；</br>
+							2）广告投放账户绑定；</br>
+							3）确保Facebook Analysis有追踪数据。
+						  </td>
+						  <td style="text-align:center">张方宇</td>
+						  <td style="text-align:center">万美玲</td>
+						</tr>
+						<tr>						  
+						  <td style="text-align:center">检查Facebook推广后台广告是否跳转正常</td>
+						  <td style="text-align:center">万美玲</td>
+						  <td style="text-align:center"></td>
+						</tr>
+						<tr>						  
+						  <td style="text-align:center">检查Tenjin后台数据追踪是否正常</td>
+						  <td style="text-align:center">熊奥迪</td>
+						  <td style="text-align:center"></td>
+						</tr>
+						<tr>
+						  <td rowspan="5" style="text-align:center">3</td>
+						  <td rowspan="5" style="text-align:center">V1测试推广</td>
+						  <td rowspan="5" style="text-align:center"></td>
+						  <td style="text-align:center">V1测试邮件发出，标注测试产品，推广渠道，测试预算（$80/天/地区）</br>测试时间(一般3天)，测试目的及要求。</td>
+						  <td style="text-align:center">
+						  US: 万美玲</br>
+						  CN: 熊奥迪
+						  </td>
+						  <td style="text-align:center">汤文娟</td>
+						</tr>
+						<tr>						  
+						  <td style="text-align:center">按计划开启V1推广，关注推广数据。</td>
+						  <td style="text-align:center">
+						  US: 万美玲</br>
+						  CN: 熊奥迪
+						  </td>
+						  <td style="text-align:center">汤文娟</td>
+						</tr>
+						<tr>						  
+						  <td style="text-align:center">测试完毕，V1推广总结邮件发出，包含推广数据，测试素材，以及后续推广优化方向</td>
+						  <td style="text-align:center">
+						  US: 万美玲</br>
+						  CN: 熊奥迪
+						  </td>
+						  <td style="text-align:center">汤文娟</td>
+						</tr>
+						<tr>						  
+						  <td style="text-align:center">产品总结邮件发出，包含产品留存，时长等。</td>
+						  <td style="text-align:center">
+						  张方宇
+						  </td>
+						  <td style="text-align:center"></td>
+						</tr>
+						<tr>						  
+						  <td style="text-align:center">判断测试产品是否有优化空间及V2 测试</td>
+						  <td style="text-align:center">
+						  汤文娟
+						  </td>
+						  <td style="text-align:center"></td>
+						</tr>
+						<tr>
+						  <td rowspan="7" style="text-align:center">4</td>
+						  <td rowspan="7" style="text-align:center">V2测试推广</td>
+						  <td rowspan="7" style="text-align:center">V2测试目的:主要测试V2 版本产品的CPI优化成本，长线留存，以及变现数据。</td>
+						  <td style="text-align:center">ASO 调优，提升商店CVR</td>
+						  <td style="text-align:center">US: 万美玲</br>CN: 熊奥迪</td>
+						  <td style="text-align:center"></td>
+						</tr>
+						<tr>						 
+						  <td style="text-align:center">新一轮推广素材准备，补充商店视频（若需要）</td>
+						  <td style="text-align:center">曹靖贤</td>
+						  <td style="text-align:center">US:万美玲</br>CN: 熊奥迪</td>
+						</tr>
+						<tr>						 
+						  <td style="text-align:center">设置产品变现点，添加Upltv变现</td>
+						  <td style="text-align:center">张方宇</td>
+						  <td style="text-align:center">喻久港</td>
+						</tr>
+						<tr>						 
+						  <td style="text-align:center">V2测试邮件发出，标注测试产品，推广渠道，测试预算，测试时间，测试目的及要求。</td>
+						  <td style="text-align:center">US: 万美玲</br>CN: 熊奥迪</td>
+						  <td style="text-align:center">汤文娟</td>
+						</tr>
+						<tr>						 
+						  <td style="text-align:center">按计划开启V2 推广，关注推广数据。</td>
+						  <td style="text-align:center">US: 万美玲</br>CN: 熊奥迪</td>
+						  <td style="text-align:center">汤文娟</td>
+						</tr>
+						<tr>						 
+						  <td style="text-align:center">测试完毕，V2推广总结邮件发出，包含推广数据，测试素材，以及后续优化方向</td>
+						  <td style="text-align:center">US: 万美玲</br>CN: 熊奥迪</td>
+						  <td style="text-align:center">汤文娟</td>
+						</tr>
+						<tr>						 
+						  <td style="text-align:center">产品总结邮件发出，包含产品长留，时长，变现等数据。</td>
+						  <td style="text-align:center">张方宇</td>
+						  <td style="text-align:center"></td>
+						</tr>
+						<tr>
+						  <td rowspan="4" style="text-align:center">5</td>
+						  <td rowspan="4" style="text-align:center">正式推广</td>
+						  <td rowspan="4" style="text-align:center"></td>
+						  <td style="text-align:center">ASO调优，产品调优，变现调优，推广素材调优</td>
+						  <td style="text-align:center">相关人员</td>
+						  <td style="text-align:center"></td>
+						</tr>
+						<tr>						  
+						  <td style="text-align:center">设定重点国家的推广目标和实现策略</td>
+						  <td style="text-align:center">投放负责人</td>
+						  <td style="text-align:center">汤文娟</td>
+						</tr>
+						<tr>						  
+						  <td style="text-align:center">按照计划开启正式推广，同步通知张方宇，喻久港。</td>
+						  <td style="text-align:center">投放负责人</td>
+						  <td style="text-align:center">汤文娟</td>
+						</tr>
+						<tr>						  
+						  <td style="text-align:center">实时监控发行数据，判断问题并分析解决</td>
+						  <td style="text-align:center">推广:投放负责人</br>产品:张方宇</br>变现:喻久港</td>
+						  <td style="text-align:center"></td>
+						</tr>
+						</tbody>
+					 </table>
+				  </div>
+               </Modal>
+			   <div style="float:right;margin:10px 0px;">
+			    <Checkbox-group v-model="types"  @on-change="checkAllGroupChange" >
+					<Checkbox label="3"><span>自研</span></Checkbox>
+					<Checkbox label="1"><span>发行</span></Checkbox>
+					<Checkbox label="2"><span>素材</span></Checkbox>
+				</Checkbox-group>
+			   </div>
+			   </div>
+			   {if condition="empty($list)"}
+			    <Divider>暂无测试计划</Divider>
+			   {/if}
+			     {volist name="list" id="vo"}
+				  <div class="box" style="margin-top:10px;">
+						<div class="box-header with-border">
+						  <h4 class="box-title"><img style="width:40px;height:40px;border-radius:10px;margin-right:5px;" src="{$vo.icon_url}" />{$vo.name}测试计划</h4>
+						</div>
+						<div class="box-body">
+							<div class="table-responsive">
+							  <table class="table">
+								<tbody>
+								    
+									<tr class="tr_header">									 
+									  <th style="text-align:left;">计划名称</th>
+									  <th>测试时间</th>								
+									  <th>负责人</th>
+									  <th>测试状态</th>
+									  <th>地区</th>
+									  <th>渠道</th>
+									  <th>预算</th>
+									  <th>类型</th>
+									  <th>详情报告</th>
+									</tr>
+									{volist name="vo.list" id="vv"}
+									<tr>
+									 
+									  <td style="text-align:left;">
+									  {if condition="$vv['new']"}
+									    <Badge status="error" text="{$vv.title}"></Badge>
+									  {else /}
+									   {$vv.title}
+                                      {/if}									  
+									  </td>
+									  <td>{$vv.start_date}~{$vv.end_date} 
+									    {if condition="$vv['day'] neq ''"}
+										  <Icon style="color:red" type="md-stopwatch" /></Icon><span style="color:red;">{$vv.day}</span>
+										 {/if}
+									  </td>						
+									  <td>{$vv.username}</td>
+									   <td>
+									   {if condition="$vv['status'] eq 1"}
+										 <span class="badge bg-success" style="background-color:#2d8cf0 !important;">测试中</span>
+										{elseif condition="$vv['status'] eq 3" /}
+										  <span class="badge bg-danger" style="background-color:#ed4014 !important;">测试结束</span>
+                                        {elseif condition="$vv['status'] eq 2" /}
+                                         <span class="badge bg-info" style="background-color:#19be6b !important;">待测试</span>
+										 {else /}
+                                        {/if}
+									   </td>
+									   <td>{$vv.country}</td>
+									   <td>{$vv.channel}</td>
+									   <td>{$vv.budget}</td>
+									   <td>{if condition="$vv['type'] eq 1"}
+										 <span class="badge bg-success" style="background-color:#FFA2D3 !important;">发行</span>
+										{elseif condition="$vv['type'] eq 2" /}
+										  <span class="badge bg-danger" style="background-color:#4be3ac !important;">素材</span>
+										{elseif condition="$vv['type'] eq 3" /}
+										  <span class="badge bg-danger" style="background-color:#b0deff !important;">自研</span>
+										 {else /}
+                                        {/if}</td>
+									   <td><a target="_blank" href="/testplan/report?id={$vv.id}">查看</a>&nbsp;|&nbsp;<a href="javascript:;" @click="edit({$vv.id})">修改</a></td>
+									</tr>
+									{/volist}
+								  </tbody>
+								</table>
+							</div>
+						</div>
+				  </div>
+				  {/volist}
+				  <template>
+					
+					<Drawer v-model="modal1" scrollable="true" :title="mtitle" width="600">
+						<i-form :model="formData">
+						      <Row :gutter="32">
+							  <i-col span="12">
+							    <h5 style="padding:5px 0px;">选择产品</h5>
+								<i-select v-model="formData.app_id" filterable>
+									<i-option v-for="item in apps" :value="item.value" :key="item.value">{{ item.label }}</i-option>
+								</i-select>
+							  </i-col>
+							   <i-col span="12">
+								<h5 style="padding:5px 0px;">负责人</h5>
+								<i-select v-model="formData.manager" multiple filterable>
+									<i-option v-for="item in users" :value="item.value" :key="item.value">{{ item.label }}</i-option>
+								</i-select>
+								 </i-col>
+							  </Row>
+							  <h5 style="padding:5px 0px;">计划名称</h5>
+								 <i-input v-model="formData.title" type="text" clearable  placeholder=""></i-input>
+                             <Row :gutter="32">							  
+								<i-col span="12">
+									<h5 style="padding:5px 0px;">测试地区</h5>
+									<i-select v-model="formData.country" multiple filterable>										
+										{volist name="countrys" id="c"}
+									      <i-option  value="{$key}" key="{$key}">{$c}</i-option>
+									   {/volist}
+									</i-select>
+								 </i-col>
+								 <i-col span="12">
+									<h5 style="padding:5px 0px;">测试渠道</h5>
+									 <i-select v-model="formData.channel" multiple filterable>
+										<i-option  value="1" key="1">Mobvista</i-option>
+										<i-option  value="2" key="2">Unity</i-option>
+										<i-option  value="3" key="3">Applovin</i-option>
+										<i-option  value="4" key="4">Vungle</i-option>
+										<i-option  value="5" key="5">Google Ads</i-option>
+										<i-option  value="6" key="6">Facebook</i-option>
+										<i-option  value="8" key="7">Chartboost</i-option>
+										<i-option  value="9" key="8">Tapjoy</i-option>
+										<i-option  value="31" key="9">Adcolony</i-option>
+										<i-option  value="32" key="10">Toutiao</i-option>
+										<i-option  value="7" key="11">ironSource</i-option>
+										<i-option  value="36" key="12">TikTok</i-option>
+									</i-select>
+								</i-col>
+                               </Row>							    
+							    <Row :gutter="32">
+                                   <i-col span="10">							   
+									  <h5 style="padding:5px 0px;">测试时间</h5>                                  
+								      <Date-picker type="daterange" transfer="true" style="width:200px" @on-change="handleChange" :value="formData.date" format="yyyy-MM-dd" placement="bottom-end" placeholder="选择日期"></Date-picker>
+								   </i-col>								
+								   <i-col span="7">							   
+									   <label style="padding:5px 0px;">预算</label>
+									   <i-input v-model="formData.budget"></i-input>
+								   </i-col>
+								   <i-col span="7">							   
+									   <label style="padding:5px 0px;">目标CPI</label>
+									   <i-input v-model="formData.cpi"></i-input>
+								   </i-col>
+						        </Row>
+								 <h5 style="padding:5px 0px;">测试类型</h5>
+								 <Radio-group v-model="formData.type">
+										<Radio label="1">
+											
+											<span>发行</span>
+										</Radio>
+										<Radio label="2">
+											
+											<span>素材</span>
+										</Radio>
+										<Radio label="3">
+											
+											<span>自研</span>
+										</Radio>
+							     </Radio-group >
+						       <h5 style="padding:5px 0px;">测试目的</h5>
+                               <i-input v-model="formData.intent" type="textarea" :autosize="{minRows: 3,maxRows:4}" placeholder="请输入此次测试计划的目的"></i-input>
+						       <FormItem label="Text" v-show="selectPerson">
+								   <h5 style="padding:5px 15px 5px 5px;font-weight:700">选择抄送人</h5>
+									<i-select v-model="formData.send" multiple >
+										<i-option v-for="item in users" :value="item.value" :key="item.value">{{ item.label }}</i-option>
+									</i-select>
+								</FormItem>
+						</i-form>
+						<div class="demo-drawer-footer">
+							<i-button style="margin-right: 8px" @click="modal1=false">取消</i-button>
+							<i-button type="primary" @click="addPost">确认</i-button>
+						</div>
+					</Drawer>
+				</template>
+			</div>			
+		</div>
+		 {include file="./static/html/footer.html" /}
+		 
+	</div>	
+</body>
+ {include file="./static/html/footer_common.html" /}
+ 
+  <script>
+     new Vue({
+        el: '#wrapper',
+        data: {
+            modal1: false,
+			editShow:false,
+			descTitle:"美术风格测试说明",
+			descStatus:1,
+			meishu:false,
+			selectPerson:true,
+			mtitle:"新建测试计划",
+			types:[{$type}],
+			switch1:false,
+			 formData:{
+			    id:0,
+				app_id:"{$appid}",
+				manager:"",
+				type:"1",
+				date:[],			
+				title:"",
+				send:"",
+				budget:"",
+				cpi:"",
+				intent:"",
+				country:"",
+				channel:""
+			 },
+			  apps: [],
+			  users: []
+        },
+		mounted(){		 
+		  this. getdata()		    	  
+		},
+        methods: {
+           location(status)
+		   {
+		     window.location.href="/testplan/index?status="+status;
+		   },
+		   openDesc(type)
+		   { 
+		     this.descStatus = type
+			 if( type==1 )
+			  {
+			    this.descTitle="美术风格测试说明"
+			  }else{
+			    this.descTitle="发行测试流程说明"
+			  }
+			 this.meishu =true;
+		   },
+		   checkAllGroupChange(data)
+		   {
+
+			 window.location.href="/testplan/index?type="+data;
+		   },
+		   openModal(){
+		     this.modal1 = true
+			 this.mtitle = "新建测试计划";
+			 this.selectPerson = true;
+			 this.counstr()
+		   },
+		   counstr(){
+		     this.formData = {
+			                id:0,
+							app_id:"{$appid}",
+							manager:"",
+							date:[],			
+							title:"",
+							type:"1",
+							budget:"",
+							send:"",
+							cpi:"",
+							intent:"",
+							country:"",
+							channel:""
+					  }
+		   },
+		   getdata()
+		   {
+		     let _that = this
+			 axios.get('/goalset/getData')
+			  .then(function (response) {
+				 _that.apps = response.data.apps
+				 _that.users = response.data.users
+			  })
+			  .catch(function (error) {
+				console.log(error);
+			  });
+		   },
+		   edit(id)
+		   {
+		     let _that = this
+			 axios.get('/testplan/edit?id='+id)
+			  .then(function (response) {
+				 _that.mtitle = "修改测试计划";
+				 _that.selectPerson = false;
+				 _that.modal1 = true
+				 _that.formData = response.data
+			  })
+			  .catch(function (error) {
+				console.log(error);
+			  });
+		   },
+			addPost(){
+			   if( this.formData.app_id=="" || this.formData.manager=="" || this.formData.title=="")
+			   {
+			     this.$Message.warning('项目名称,负责人,计划名称不能为空');
+				 return false;
+			   }
+			   this.$Spin.show();
+			   axios({
+						method: 'post',
+						url:'/testplan/postForm',
+						data:this.formData
+					}).then(res=>{
+					   this.$Spin.hide();
+					  this.counstr()
+					  this.modal1 = false
+					  this.$Message.success('操作成功');
+					  window.location.href = window.location.href
+				 })
+			},
+			handleChange (date) {
+                this.formData.date = date;
+           }
+        }
+    })
+  </script>
+</html>

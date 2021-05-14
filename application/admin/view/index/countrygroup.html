@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GAME BRAIN</title>
+    {include file="./static/html/header_common.html" /}
+  <link href="/static/css/checkbox.css" rel="stylesheet" type="text/css">	
+	 <link rel="stylesheet" type="text/css" media="all" href="/static/plugin/jquery-time/daterangepicker-bs3.css" />
+     <link href="/static/css/dialog.css?t=<?php echo time(); ?>" rel="stylesheet" type="text/css" />
+    <link href="/static/css/blue/style.css?t=<?php echo time(); ?>" rel="stylesheet">
+	 <style>
+	     th,td{text-align:center;vertical-align:middle}
+	 .hw_reven thead tr {
+    background-color: #fff;
+}
+
+.hw_reven .table th, .hw_reven .table td {
+    padding: 18px 30px;
+    vertical-align: top;
+    border-top: 1px solid #f2f2f2;
+
+}
+table.tablesorter{
+  background-color:#fff;
+}
+.hw_reven .table thead th {
+    border-top: 0;
+    border-bottom-width: 1px;
+    font-family: "Poppins", sans-serif;
+    font-weight:700;
+}
+table.tablesorter thead tr th{
+  background-color:#fff !important;
+}
+.hw_reven .table thead th {
+    vertical-align: bottom;
+    border-bottom: 2px solid #f2f2f2;
+        border-bottom-width: 2px;
+}
+.hw_reven{
+  display: block;
+width: 100%;
+overflow-x: auto;
+}
+.hw_reven table {
+    border-collapse: collapse;
+    font-size: 12px !important;
+    color: #222 !important;
+    text-align: left !important;
+    line-height: 40px;
+}
+.form-control {
+    border: 1px solid #f2f2f2 !important;
+    font-family: "Poppins", sans-serif;
+    font-size: 1.3rem;
+    padding: 0.56rem 0.75rem;
+    line-height: 14px;
+    font-weight: 300;
+	text-align:center;
+}
+.form-control:focus,.form-control {
+    box-shadow: none;
+}
+
+.btn-inverse-danger {
+    background: linear-gradient(89deg, #5e7188, #3e4b5b);
+	color:#fff;
+}
+
+.btn-inverse-default {
+    color:#FFF;
+ 
+   background: linear-gradient(to right, #84d9d2, #07cdae);
+}
+.badge-gradient-info {
+   background: linear-gradient(to right, #ffbf96, #fe7096);
+   color: #ffffff;
+}
+.child_nav a:hover{
+   color: #ffffff !important;
+}
+.count{
+    background: #4285f4;
+    display: inline-block;
+    padding: 5px 1px;
+    margin-right: 5px;
+}
+.child_nav a:hover{
+   color: #ffffff !important;
+}
+	 </style>
+</head>
+<body style="background-color:#f2edf3;">
+    <div id="wrapper" style="background-color:#f2edf3;">
+        {include file="./static/html/header.html" /}	
+		<div class="hw_page_content">
+		    
+		    <div class="hw_menu_left">
+         {include file="./static/html/side.html" /}  
+			</div>
+			
+		    <div class="hw_content_right" style="padding:30px 30px;width:100%;background-color:#f2edf3;" >
+			  <div style="margin-top:30px;">
+				   <ul class="child_nav">
+					<a class="btn btn-inverse-danger btn-sm" href="/admin_index/main">默认</a>
+				    <a class="btn badge-gradient-info btn-sm" href="/admin_index/countrygroup">地区</a>	
+                    {if condition="getuserrole() eq 'super'" }					
+				      <a class="btn btn-inverse-default btn-sm" target="__blank" href="/admin_index/copartner">合作组</a>	
+                    {/if}					
+					 <a style="float:right;">
+					    <div>
+                            <input type="text" style="width:190px;" id="data_start_date" value="{$start} 到 {$end}"  class="form-control">
+                          </div>
+					 </a>
+				   </ul>
+			  </div>
+			  
+			 
+			    <div class="hex_chats">
+				  <div style="height:300px;float:left;width:100%;" id="countrychats"></div>				 
+				</div>	
+			    <div style="clear:both;"></div>
+				 <div  style="float:left;margin:10px 0px 10px 0px;color:#404852;font-size:16px;">
+				    详情展示
+					<p style="height:1px;font-size:12px;padding-left:10px;"><i class="count"></i><span style="color:#7f7f7f;">共计{$roinum}个国家地区回收占比超过100%</span></p>
+				 </div>
+				 <div  style="float:right;margin:10px 0px 20px 0px">
+                            <input type="text" style="text-align:left;width:190px;" id="keyword" placeholder="搜索地区" class="form-control">
+                 </div>
+				  <div class="hw_reven" style="width:100%;border-radius:10px;background:#fff;">
+				      
+				     
+							<table class="table tablesorter" id="tablehw">
+                      <thead>
+                        <tr>
+                          <th>地区</th>
+                          <th>活跃</th>
+                          <th>新增</th>
+                          <th>留存</th>
+						  <th>ROI</th>
+						  <th>花费</th>
+						  <th>CPI</th>
+						  <th>收益</th>
+						  <th>ARPDAU</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+					   {volist name="out_data" id="vo"}
+                        <tr>
+                          <td><a href="/admin_index/productgroup?country={$vo.kk}">{$vo.name}</a></td>
+                          <td>{$vo["results"]["revenue"]["total"]["active_users"]}</td>
+                          <td>{$vo["results"]["new_users"]}</td>
+						  <td>{$vo["results"]["reten"]}%</td>
+						  <td>{$vo["results"]["roi"]}%
+						     {if condition="$vo['results']['roi'] >= 100"}
+							  <i class="fa fa-long-arrow-up" style="color:#00ce68;"></i>
+							 {/if}
+						  </td>
+						  <td>${$vo["results"]["spend"]["spend"]}</td>
+						  <td>{$vo["results"]["spend"]["cpi"]}</td>
+						  <td>${$vo["results"]["revenue"]["total"]["revenue"]}</td>
+						  <td>{$vo["results"]["revenue"]["total"]["dauarpu"]}</td>
+                        </tr>
+                        {/volist}            
+                      </tbody>
+                    </table>
+						
+					 </div>
+			         			   
+			</div>
+		</div>
+	
+		 {include file="./static/html/footer.html" /}
+	</div>
+</body>
+ {include file="./static/html/footer_common.html" /}
+  <script type="text/javascript" src="/static/plugin/jquery-time/moment.js"></script>
+  <script type="text/javascript" src="/static/plugin/jquery-time/daterangepicker.js"></script>	
+  <script src="/static/js/mTips.js"></script>
+  <script src="/static/js/jquery.tablesorter.min.js"></script>
+   <script src="/static/js/jquery.freezeheader.js"></script>
+  <script src="/static/js/echarts.min.js"></script>
+ <script>
+ 
+     var start_date="{$start}";
+	 var end_date = "{$end}";
+	 $(function(){
+	    $.tablesorter.addParser({  
+		 id: "num", //指定一个唯一的ID  
+		 is: function(s){  
+			 return false;  
+			 },  
+		 format: function(s){  
+			 return s.substring(0,s.length-2);//去除后面的汉字
+			 },  
+		 type: "numeric"  
+		 });  
+	 $(".table").tablesorter({headers:{}});
+	 
+	 $("#tablehw").freezeHeader({'offset' : '60px'});
+	    $('#data_start_date').daterangepicker({ minDate:'2018-07-08',opens:'left',ranges: {'今天': [moment(),moment()],
+'昨天': [moment().subtract(1, 'days'),moment().subtract(1, 'days')],
+'近7天': [moment().subtract(7, 'days'), moment()],
+'这个月': [moment().startOf('month'), moment()],
+'上个月': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+'LifeTime': ['2018-07-08',moment().subtract(1, 'days')]} },function(start, end, label) {	 
+		    start_date = start.format('YYYY-MM-DD');end_date=end.format('YYYY-MM-DD');
+			$('#data_start_date').val(start_date+" 到 "+end_date);
+            window.location.href="/admin_index/countrygroup?start="+start_date+"&end="+end_date;
+		 });
+		 
+		 $('#keyword').bind('input propertychange', function()
+		   {
+			   var input_text = $(this).val();
+               $("tbody tr").each( function(i){
+			      
+			        var text = $(this).find("td").eq(0).text();
+					var aa = text.match(new RegExp(input_text, 'i'));
+					if( aa )
+					  {					     
+						 $(this).show();
+					  }else{
+					     $(this).hide();
+					  }
+			   })			   
+		   }); 
+	 })
+ </script>
+<script>
+var myChart = echarts.init(document.getElementById("countrychats"));
+
+var data1=[{$rois}];
+var data2=[{$common_roi}];
+var option = {
+    //backgroundColor: '#fff',
+    color:['rgb(0,0,0)','rgb(0,0,0)'],
+
+    tooltip: {
+        
+        trigger: 'axis',
+        
+        axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+            type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+        }
+    },
+   
+    xAxis: [
+        {
+            type: 'category',
+            name: '国家',
+            data: [{$countryname}],
+            axisPointer: {
+                type: 'shadow'
+            },
+            splitLine: {show: false},
+        axisLine: {
+            lineStyle: {
+                color: '#555'
+            },
+        },
+        
+        
+        axisLabel: {
+                formatter: '{value} ',
+                color: '#333'
+            },
+        
+        }
+    ],
+    yAxis: [
+        {
+            type: 'value',
+            name: 'ROI',
+			min:0,
+			maxInterval:800,
+            axisLabel: {
+                formatter: '{value}%',
+                color: '#333'
+            },
+             splitLine: {show: false},
+        axisLine: {
+            lineStyle: {
+                color: '#555'
+            }
+        }
+        }
+    ],
+    series: [
+        {
+            name:'ROI%',
+            type:'bar',
+            barWidth:30,
+            itemStyle:{
+                normal:{
+                    color:'#ff646d'
+                }},
+            data:data1        
+        },
+        {
+            name:'标准',
+            type:'line',
+            data:data2,
+            itemStyle:{
+                normal:{
+                    color:'#ff7055'
+                }
+                
+            }
+                
+        }
+    ]
+};
+
+myChart.setOption(option); 
+</script>
+
+</html>

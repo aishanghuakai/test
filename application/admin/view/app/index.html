@@ -1,0 +1,830 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GAME BRAIN</title>
+    {include file="./static/html/header_common.html" /}  
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+   <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <!-- import JavaScript -->
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <script src="/static/js/axios.min.js"></script>	 
+	<style>
+	  .cell{font-size:12px;}
+	  .el-table td, .el-table th {
+    padding:9px 0;}
+	  .item {
+		  margin-top: 10px;
+		  margin-right: 40px;
+		}
+      .grid-content{
+	    background: #fff;
+		padding: 15px !important;
+		box-shadow: 0 1px 15px 1px rgba(69,65,78,.08);
+		border-radius:10px;
+		border: 0;
+		text-align:center;
+	  }	
+       .card-category{
+	   font-size: 13px;
+	   color:#444;
+	   margin-bottom: 0;}
+	   .card-title{
+	    color:#575962;
+		font-size: 18px;
+		font-weight: 400;
+	   }
+	   .page-title {
+		font-size:16px;
+		font-weight: 600;
+		color:#444;
+		
+		}
+		.count {
+    background:#4285f4;
+    display: inline-block;
+    padding:7px 1px;
+    margin-right: 5px;
+}
+	  .el-badge__content.is-fixed{position:relative !important;}
+      .ivu-pl, .ivu-pl-16 {
+    padding-left: 16px !important;
+}
+.ivu-pr, .ivu-pr-16 {
+    padding-right: 16px !important;
+}
+.ivu-pt, .ivu-pt-16 {
+    padding-top: 16px !important;
+}
+.ivu-avatar-image {
+    background: transparent;
+}
+.ivu-avatar {
+    display: inline-block;
+    text-align: center;
+    background: #ccc;
+    color: #fff;
+    white-space: nowrap;
+    position: relative;
+    overflow: hidden;
+    vertical-align: middle;
+    width:40px;
+    height:40px;
+    line-height:40px;
+    border-radius:8px;
+}
+.ivu-avatar > img {
+    width: 100%;
+    height: 100%;
+}
+.ivu-avatar > * {
+    line-height:40px;
+}
+img {
+    border-style: none;
+}
+.ivu-ml {
+    margin-left: 10px !important;
+	
+}
+b, strong {
+    font-weight: inherit;
+    font-weight: bolder;
+}
+.ivu-mt {
+    margin-top: 16px;
+	color:#515a6e;
+}
+.ivu-br {
+    border-right: 1px solid #dcdee2;
+}
+.ivu-top{
+overflow: hidden;
+text-overflow: ellipsis;
+white-space: nowrap;
+}
+.fa{cursor:pointer}
+.listbox li{padding:10px 10px;color:#4c6686;font-size:12px;cursor:pointer;width:90%;margin-bottom:10px;height:40px;}
+.listbox li div{
+ overflow: hidden;
+text-overflow:ellipsis;
+white-space: nowrap;
+}
+.listbox .active,.listbox li:hover{background-color:#f9fbfd;color:#222;border-radius:8px;}
+.listbox li:hover .el-icon-delete{display:block;float:right;}
+.listbox .active a{font-weight:600;}
+.el-icon-delete{color:red;font-size:12px;display:none;line-height:25px;height:40px;}
+a {
+    outline:none;
+	color:#333;
+}
+	</style>
+</head>
+<body style="background:#fff;">
+    <div id="wrapper" style="background-color:#fff;">
+        {include file="./static/html/header.html" /}	
+		<div class="hw_page_content" style="background-color:#fff;">
+		    <div class="hw_menu_left">
+             {include file="./static/html/side.html" /}  
+			</div>
+			<div class="hw_content_right" style="background: #fff;display:flex;margin-top:60px;margin-bottom:10px">
+			<div style="width:15%;border-right:2px dotted #ccc;">
+			   <h2 style="font-size:16px;color:#0a043c;">我的分组 
+			    
+				<el-popover
+				  placement="top"
+				  width="200"
+				  v-model="visible">
+				  <p><el-input v-model="name" size="small" placeholder="设置分组名称"></el-input></p>
+				  <div style="text-align: right; margin: 0">
+					<el-button size="mini" type="text" @click="visible = false">取消</el-button>
+					<el-button type="primary" size="mini" @click="SaveGroup">保存</el-button>
+				  </div>
+				  <i class="el-icon-plus" slot="reference" :title="添加分组" style="margin-left:40%;cursor:pointer;"></i>
+				</el-popover>				
+			   
+			   </h2>
+			   <ul class="listbox">
+			      <li {if condition="$groupID eq ''"} class="active" {/if}><a href="/app/index"><div><i class="fa fa-files-o"></i> 全部</div></a></li>
+				  <li {if condition="$groupID eq 'ziyan'"} class="active" {/if}><a href="/app/index?groupID=ziyan"><div><i class="fa fa-files-o"></i> 自研</div></a></li>
+				  <li {if condition="$groupID eq 'faxing'"} class="active" {/if}><a href="/app/index?groupID=faxing"><div><i class="fa fa-files-o"></i> 发行</div></a></li>
+				 {volist name="res" id="vo"}			    
+				 <li {if condition="$groupID eq $vo['id']"} class="active" {/if}>
+				 
+					  <div><a href="/app/index?groupID={$vo.id}"><i class="fa fa-files-o"></i> {$vo.name}  </a>
+					   <el-popconfirm title="确认删除该分组吗？" trigger="hover" @confirm="deleteGroup({$vo.id})">
+						 <i class="el-icon-delete" slot="reference"></i>
+						</el-popconfirm>				   
+					  </div>
+				 
+				 </li>
+				 {/volist}
+			   </ul>
+			</div>
+		    <div style="padding:20px 15px;width:85%;background: #f9fbfd;">
+			            <div class="main" style="margin-bottom:10px;">
+						
+						  <div style="margin-bottom:20px;">
+							  <el-input placeholder="请输入关键词" style="width:30%;" size="small" v-model="keyword" class="input-with-select">
+								<el-button slot="append" @click="handleChange" icon="el-icon-search"></el-button>
+							  </el-input>
+							  <!-- <a style="float:right;cursor:pointer;" href="/admin_advertisement/lists">>>旧版入口</a> -->
+							  {if condition="$groupID"}
+							  <el-button @click="updategroupDialogTableVisible=true" size="small" style="float:right;margin-left:10px;"><i class="el-icon-setting"></i>设置分组</el-button>
+							  {/if}
+							  {if condition="!$groupID"}
+							   <el-button size="small" style="float:right;" @click="openSetting" type="primary">+创建应用</el-button>
+							  {/if}
+							  
+							<div class="clear" style="clear:both;"></div>
+						  </div>
+						  <el-row :gutter="20">
+							  <el-col :span="8" v-for="item in tableData" style="margin-bottom:10px">							  
+							    <el-card shadow="hover" :body-style="{ padding: '0px'}">
+								  <div class="ivu-pt ivu-pl ivu-pr">
+									   <div class="ivu-top">
+											<span class="ivu-avatar ivu-avatar-circle ivu-avatar-image ivu-avatar-default">
+											 <img :src="item.icon">
+											</span>
+											<strong class="ivu-ml" :title="item.name">{{item.name}}</strong>
+										</div>
+										<div class="ivu-mt">
+										  <div>应用平台：
+										    <template v-for="a in item.apps">
+												<el-tag  {if condition="permission(100)"} @click="updateStatus(a)" {/if} :style="a.status==1?'margin-right:5px;cursor:pointer;':'color:#435560;margin-right:5px;cursor:pointer;'" v-if="a.platform=='android' || a.platform=='apk'" size="mini" effect="plain"><i  class="fa fa-android" style="color:#21b384;"></i> {{a.status==1?'正常':'停投'}}</el-tag>
+												<el-tag {if condition="permission(100)"} @click="updateStatus(a)" {/if} :style="a.status==1?'cursor:pointer;':'color:#435560;cursor:pointer;'" v-else-if="a.platform=='ios'" size="mini" effect="plain"><i  class="fa fa-apple" style="color:#000000;"></i> {{a.status==1?'正常':'停投'}}</el-tag>
+												
+											</template>
+										  </div>
+										  <div>最后更新时间：<span class="ivu-time">{{item.updatetime}}</span></div>
+										</div>
+										<el-row :gutter="20" style="margin:14px 0px 0px 0px;text-align: center;padding:15px 0px;">
+										  <el-col class="ivu-br" :span="6">
+										    <el-popover
+											  placement="right"
+											  width="200"
+											  trigger="click">
+											  <div style="padding:10px 15px;">
+												  <div v-for="o in item.apps" :key="o" class="demo-input-suffix" style="margin-bottom:10px;">
+												  <div v-if="o.platform=='android' || o.platform=='apk'">
+												  <span><i style="color:#f6d743;" class="fa fa-android fa-lg"></i> #{{o.id}}</span>
+												  <a :href="'/advertise/advlist?appid='+o.id" target="__blank">  <i class="el-icon-s-promotion"></i></a> <a :href="'/app/params?appid='+o.id">参数对接</a></div>
+												  <div v-else-if="o.platform=='ios'">
+												  <span><i style="color:#333;" class="fa fa-apple fa-lg"></i> #{{o.id}}</span>
+												   <a :href="'/advertise/advlist?appid='+o.id" target="__blank">  <i class="el-icon-s-promotion"></i></a> <a :href="'/app/params?appid='+o.id">参数对接</a></div>
+												  </div>
+											  </div>											 
+											  <i title="接口地址访问" slot="reference" class="fa fa-external-link"></i>
+											</el-popover>
+											
+										  </el-col>
+										  <el-col class="ivu-br" :span="6"><i title="修改" @click="edit(item)" class="fa fa-pencil"></i></el-col>
+										  <el-col class="ivu-br" :span="6"><i title="删除" @click="deleteRow(item,1)" class="fa fa-trash-o"></i></el-col>
+										  <el-col :span="6">
+										   <el-dropdown trigger="click">
+											  <span class="el-dropdown-link">
+												<i class="fa fa-link"></i>
+											  </span>
+											  <el-dropdown-menu slot="dropdown">
+												<el-dropdown-item @click.native="openPromoteModel(item)" icon="el-icon-plus">投放账号</el-dropdown-item>
+												<el-dropdown-item @click.native="openRevenueModel(item)" icon="el-icon-circle-plus">收益账号</el-dropdown-item>
+												<el-dropdown-item @click.native="openUserModel(item)" icon="el-icon-paperclip">用户属性</el-dropdown-item>
+											  </el-dropdown-menu>
+											</el-dropdown>										   
+										  </el-col>
+										</el-row>
+								  </div>
+								</el-card>
+							  </el-col>
+							  
+							</el-row>
+							<div style="text-align:center;margin-top:10px;">
+							<el-pagination
+							  background
+							  layout="prev, pager, next"
+							  @current-change="handleCurrentChange"
+							  :current-page.sync="page"
+							  :page-size="12"
+							  :total="total">
+							</el-pagination>
+							</div>
+					    </div>
+                        <!--投放账号-->
+						 <el-dialog title="投放账号管理" width="80%" :visible.sync="PromoteDialogTableVisible">
+						    <el-form :inline="true" :model="formInline" class="demo-form-inline">
+							  <el-form-item label="账号">
+								<el-input size="small" v-model="formInline.advertiser_id" placeholder="广告账户"></el-input>
+							  </el-form-item>
+							  <el-form-item label="渠道">
+								<el-select size="small" v-model="formInline.channel" placeholder="投放渠道">
+								  <el-option label="TouTiao" value="1"></el-option>
+								  <el-option label="Facebook" value="2"></el-option>
+								  <el-option label="Adwords" value="3"></el-option>
+								  <el-option label="TikTok" value="4"></el-option>
+								</el-select>
+							  </el-form-item>
+							  <el-form-item>
+								<el-button size="small" @click="handlePageChange" plain type="primary">查询</el-button>
+							  </el-form-item>
+							  <el-form-item style="float:right;">
+							     <el-button type="primary" icon="el-icon-plus" @click="addModelPromote" circle></el-button>
+								 <el-dialog title="投放账号创建/编辑" :append-to-body="true" :visible.sync="PromoteDialogFormVisible">
+								  <el-form :model="promoteform" ref="promoteform" :rules="promoterules">
+									<el-form-item label="投放渠道" :label-width="formLabelWidth" prop="channel">
+									  <el-radio-group v-model="promoteform.channel">
+										<el-radio :label="1">TouTiao</el-radio>
+										<el-radio :label="2">Facebook</el-radio>
+										<el-radio :label="3">Adwords</el-radio>
+										<el-radio :label="4">TikTok</el-radio>
+									  </el-radio-group>
+									</el-form-item>
+									<el-form-item label="主体类别" v-if="promoteform.channel==3" :label-width="formLabelWidth" prop="subject">
+									  <el-radio-group v-model="promoteform.subject">
+										<el-radio :label="1">Mobvista</el-radio>
+										<el-radio :label="2">Gatherone</el-radio>
+										<el-radio :label="3">Avazu</el-radio>
+										<el-radio :label="4">钛动</el-radio>
+									  </el-radio-group>
+									</el-form-item>
+									<el-form-item label="主体类别" v-if="promoteform.channel==4" :label-width="formLabelWidth" prop="subject">
+									  <el-radio-group v-model="promoteform.subject">
+										<el-radio :label="1">Mobvista</el-radio>
+										<el-radio :label="3">Avazu</el-radio>
+									  </el-radio-group>
+									</el-form-item>
+									<el-form-item label="广告账号"  :label-width="formLabelWidth" prop="advertiser_id">
+									  <el-input size="small" :placeholder="(promoteform.channel==2 || promoteform.channel==3)?'多个账号添加时,请用#隔开':''" v-model="promoteform.advertiser_id" autocomplete="off"></el-input>
+									</el-form-item>
+									<el-form-item label="账号名称" v-if="(promoteform.channel==1) ||  (promoteform.id>0)" :label-width="formLabelWidth" prop="name">
+									  <el-input size="small" v-model="promoteform.name" autocomplete="off"></el-input>
+									</el-form-item>
+									
+									<el-form-item label="应用平台" :label-width="formLabelWidth" prop="platform">
+									  <el-radio-group v-model="promoteform.platform">
+										<el-radio label="android"><i style="color:#21b384;" class="fa fa-android"></i></el-radio>
+										<el-radio label="ios"><i style="color:#222;" class="fa fa-apple"></i></el-radio>
+									  </el-radio-group>
+									</el-form-item>									
+								  </el-form>
+								  <div slot="footer" class="dialog-footer">
+									<el-button @click="PromoteDialogFormVisible = false">取 消</el-button>
+									<el-button type="primary" @click="OnSubmitPromote">确 定</el-button>
+								  </div>
+								</el-dialog>
+							   </el-form-item>
+							</el-form>
+						  <el-table :data="promoteList" v-loading="loading">
+							<el-table-column property="advertiser_id" label="账号" width="180"></el-table-column>
+							<el-table-column property="name" label="账号名称" width="200"></el-table-column>
+							<el-table-column property="channel" label="渠道">
+							  <template slot-scope="scope">
+								<el-tag size="mini" type="warning">{{scope.row.channel==1?'TouTiao':scope.row.channel==2?'Facebook':scope.row.channel==3?'Adwords':'TikTok'}}</el-tag>
+							  </template>
+							</el-table-column>
+
+							<el-table-column  label="平台">
+							 <template slot-scope="scope">
+								<i v-if="scope.row.platform=='android'" style="color:#21b384;" class="fa fa-android"></i>
+								<i v-else style="color:#222;" class="fa fa-apple"></i>
+							  </template>
+							</el-table-column>
+							<el-table-column property="updateuser" label="更新者"></el-table-column>
+							<el-table-column property="updatetime" label="更新时间"></el-table-column>
+							<el-table-column label="操作">
+							  <template slot-scope="scope">
+								<el-button @click="editPromote(scope.row)" type="text" size="small">编辑</el-button>
+								<el-button type="text" @click="deleteRow(scope.row,2)" size="small">删除</el-button>
+							  </template>
+							</el-table-column>
+						  </el-table>
+						  <div style="text-align:right;margin-top:10px;">
+						    <el-pagination
+								layout="prev, pager, next"
+								@current-change="handlePageChange"
+							    :current-page.sync="childpage"
+							    :page-size="8"
+								:total="childtotal">
+							</el-pagination>
+						  </div>
+						</el-dialog>
+						<!--用户属性-->
+						
+						<el-dialog title="用户属性账号关联" width="50%" :visible.sync="UserDialogVisible">
+						    <template v-for="item in row.apps" :key="item.id">
+								<el-form v-if="item.platform=='android'" :inline="true" :model="formInline" class="demo-form-inline">
+								  <el-form-item>
+									<el-button><i style="color:#21b384;" class="fa fa-android"></i> 安卓</el-button>
+								  </el-form-item>
+								  <el-form-item label="GA">
+									<el-input v-model="formInline.android_ga" placeholder="输入gameid"></el-input>
+								  </el-form-item>
+								  <el-form-item label="Adjust">
+									<el-input v-model="formInline.android_adjust" placeholder="输入应用token"></el-input>
+								  </el-form-item>					  
+								</el-form>
+								<el-form v-else :inline="true" :model="formInline" class="demo-form-inline">
+								  <el-form-item>
+									<el-button><i style="color:#222;" class="fa fa-apple"></i> IOS</el-button>
+								  </el-form-item>
+								  <el-form-item label="GA">
+									<el-input v-model="formInline.ios_ga" placeholder="输入gameid"></el-input>
+								  </el-form-item>
+								  <el-form-item label="Adjust">
+									<el-input v-model="formInline.ios_adjust" placeholder="输入应用token"></el-input>
+								  </el-form-item>							  
+								</el-form>
+							</template>
+							<div slot="footer" class="dialog-footer">
+									<el-button @click="UserDialogVisible = false">取 消</el-button>
+									<el-button type="primary" @click="OnSubmitUser">确 定</el-button>
+							</div>
+						</el-dialog>
+                        <!--收益账号-->
+						 <el-dialog title="Facebook收益关联管理" width="80%" :visible.sync="RevenueDialogTableVisible">
+						    <el-form :inline="true" :model="formInline" class="demo-form-inline">
+							  <el-form-item label="APP ID">
+								<el-input size="small" v-model="formInline.app_id" placeholder="APP ID"></el-input>
+							  </el-form-item>
+							  <el-form-item label="资产ID">
+								<el-input size="small" v-model="formInline.property_id" placeholder="资产ID"></el-input>
+							  </el-form-item>
+							  <el-form-item>
+								<el-button size="small" @click="handlePageChange1" plain type="primary">查询</el-button>
+							  </el-form-item>
+							  <el-form-item style="float:right;">
+							     <el-button type="primary" icon="el-icon-plus" @click="addModelRevenue" circle></el-button>
+								 <el-dialog title="Facebook账号创建/编辑" :append-to-body="true" :visible.sync="RevenueDialogFormVisible">
+								  <el-form :model="revenueform" ref="revenueform" :rules="revenuerules">
+									<el-form-item label="APP ID" :label-width="formLabelWidth" prop="app_id">
+									  <el-input size="small" v-model="revenueform.app_id" autocomplete="off"></el-input>
+									</el-form-item>
+									<el-form-item label="资产ID" :label-width="formLabelWidth" prop="property_id">
+									  <el-input size="small" v-model="revenueform.property_id" autocomplete="off"></el-input>
+									</el-form-item>
+									<el-form-item label="应用平台" :label-width="formLabelWidth" prop="platform">
+									  <el-radio-group v-model="revenueform.platform">
+										<el-radio label="android"><i style="color:#21b384;" class="fa fa-android"></i></el-radio>
+										<el-radio label="ios"><i style="color:#222;" class="fa fa-apple"></i></el-radio>
+									  </el-radio-group>
+									</el-form-item>
+								  </el-form>
+								  <div slot="footer" class="dialog-footer">
+									<el-button @click="RevenueDialogFormVisible = false">取 消</el-button>
+									<el-button type="primary" @click="OnSubmitRevenue">确 定</el-button>
+								  </div>
+								</el-dialog>
+							   </el-form-item>
+							</el-form>
+						  <el-table :data="revenueList" v-loading="loading">
+							<el-table-column property="app_id" label="APP ID" width="150"></el-table-column>
+							<el-table-column property="property_id" label="资产ID" width="200"></el-table-column>
+							<el-table-column  label="应用平台">
+							 <template slot-scope="scope">
+								<i v-if="scope.row.platform=='android'" style="color:#21b384;" class="fa fa-android"></i>
+								<i v-else style="color:#222;" class="fa fa-apple"></i>
+							  </template>
+							</el-table-column>
+							<el-table-column property="updateuser" label="更新者"></el-table-column>
+							<el-table-column property="updatetime" label="更新时间"></el-table-column>
+							<el-table-column label="操作">
+							  <template slot-scope="scope">
+								<el-button @click="editRevenue(scope.row)" type="text" size="small">编辑</el-button>
+								<el-button type="text" @click="deleteRow(scope.row,3)" size="small">删除</el-button>
+							  </template>
+							</el-table-column>
+						  </el-table>
+						  <div style="text-align:right;margin-top:10px;">
+						    <el-pagination
+								layout="prev, pager, next"
+								@current-change="handlePageChange1"
+							    :current-page.sync="childpage"
+							    :page-size="8"
+								:total="childtotal">
+							</el-pagination>
+						  </div>
+						</el-dialog>						
+			</div>
+		  </div>
+		  
+		  <el-dialog title="应用设置分组" width="40%" :visible.sync="updategroupDialogTableVisible">
+			   <el-form  label-width="80px">				 
+				  <el-form-item label="选择应用">
+					<el-select style="width:100%;" size="small" filterable multiple v-model="groupApp" placeholder="请选择应用">
+					  {volist name="allapps" id="vv"}
+					    <el-option label="{$vv.name}" value="{$vv.id}"></el-option>
+					  {/volist}
+					</el-select>
+				  </el-form-item>
+				  <el-form-item>
+					<el-button type="primary" size="small" @click="updateGroup">确认保存</el-button>
+					<el-button size="small" @click="updategroupDialogTableVisible=false">取消</el-button>
+				  </el-form-item>
+				</el-form>
+			</el-dialog>
+		</div>
+		 {include file="./static/html/footer.html" /}
+	</div>
+</body>
+ {include file="./static/html/footer_common.html" /}
+  <script>
+    
+    let t = new Vue({
+        el: '#wrapper',
+        data: {
+			loading: false,
+			PromoteDialogTableVisible:false,
+			PromoteDialogFormVisible:false,
+			RevenueDialogFormVisible:false,
+			RevenueDialogTableVisible:false,
+			groupDialogTableVisible:false,
+			updategroupDialogTableVisible:false,
+			UserDialogVisible:false,
+			formLabelWidth:'120px',
+			promoteList:[],
+			revenueList:[],
+			formInline:{},
+			groupform:{},
+			childpage:1,
+			childtotal:0,
+			promoteform:{},
+			revenueform:{},
+			promoterules:{
+			advertiser_id: [
+					{ required: true, message: '请输入广告账号', trigger: 'blur' },
+				  ],			
+			channel: [
+					{ required: true, message: '请选择投放渠道', trigger: 'change' }
+				  ],
+			platform:[
+				    {required: true, message: '请选择应用平台', trigger: 'change' }
+				  ]
+			},
+			revenuerules:{
+			  app_id: [
+					{ required: true, message: '请输入APP ID', trigger: 'blur' },
+				  ],
+			  property_id: [
+					{ required: true, message: '请输入资产ID', trigger: 'blur' },
+				  ],
+			  platform:[
+				    {required: true, message: '请选择应用平台', trigger: 'change' }
+				  ],
+			},
+			row:{},
+			page:1,
+			total:0,
+			keyword:'',
+			name:'',
+			groupApp:[],
+			disabled:false,
+			visible:false,
+			tableData: []	
+        },
+		computed:{
+		},
+		watch:{
+		},
+		created(){
+		 
+		},
+        methods: {           
+		   goBack() {
+		     window.location.href='/app/index';
+		   },
+		   SaveGroup(){
+		     let name = this.name
+			 if(name!="")
+			 {
+			   axios({
+					method: 'post',
+					url:'/app/addgroup',
+					data:{name:name}
+					}).then(res=>{			
+					 if(res.data.code ==200)
+					 {
+                       this.$message.success('添加成功!');
+					   window.location.href=window.location.href					   
+					 }else{
+					   this.$message.error(res.data.message);
+				 }
+			   })
+			 }
+		   },
+		   deleteGroup(id){
+		     axios({
+					method: 'post',
+					url:'/app/deletegroup',
+					data:{id:id}
+					}).then(res=>{			
+					 if(res.data.code ==200)
+					 {
+                       this.$message.success('删除成功!');
+					   window.location.href=window.location.href					   
+					 }else{
+					   this.$message.error(res.data.message);
+				 }
+			   })
+			   return false;
+		   },
+		   updateGroup(){
+		     let groupID = '{$groupID}'
+			 let app = this.groupApp
+			 axios({
+					method: 'post',
+					url:'/app/updategroup',
+					data:{groupID:groupID,app:app}
+					}).then(res=>{			
+					 if(res.data.code ==200)
+					 {
+                       this.$message.success('设置成功!');
+					   window.location.href=window.location.href					   
+					 }else{
+					   this.$message.error(res.data.message);
+				 }
+			   })
+		   },
+		   openPromoteModel(row){
+		    this.PromoteDialogTableVisible = true
+			this.row = row
+			this.formInline ={}
+			this.getPromotelist()
+		   },
+		   openUserModel(row){
+		    this.UserDialogVisible = true
+			this.row = row
+			this._get_user_attr()
+			this.formInline ={}
+		   },
+		   openRevenueModel(row){
+		    this.RevenueDialogTableVisible = true
+			this.row = row
+			this.formInline ={}
+			this.getRevenuelist()
+		   },
+		   addModelPromote(){
+		    this.PromoteDialogFormVisible = true
+			this.promoteform ={}
+		   },
+		   addModelRevenue(){
+		    this.RevenueDialogFormVisible = true
+			this.revenueform ={}
+		   },
+		   editPromote(row){
+		    this.promoteform = row
+			this.PromoteDialogFormVisible = true
+		   },
+		   editRevenue(row){
+		    this.revenueform = row
+			this.RevenueDialogFormVisible = true
+		   },
+		   openSetting(){
+		    window.location.href='/app/setting';
+		   },
+		   openModel(){
+		    this.dialogFormVisible = true
+			this.disabled = false
+			this.form ={}
+		   },
+		   edit(item){
+		    window.location.href='/app/edit_setting?id='+item.id;
+		   },
+		   handleCurrentChange(){
+		     this.getlist()
+		   },
+		   handlePageChange(){
+		   this.getPromotelist()
+		   },
+		   handlePageChange1(){
+		     this.getRevenuelist()
+		   },
+           updateStatus(a){
+		     let text = a.status==1?"正常":"停投"
+			 let text1 = a.status==0?"正常":"停投"
+			 this.$confirm("是否将该产品状态由 "+text+" 设置为 "+text1+" 吗?", '提示', {
+					type: 'warning'
+				}).then(() => {
+					let para = { id: a.id,status:a.status };
+					axios({
+							method: 'post',
+							url:'/app/updateStatus',
+							data:para
+						}).then((res) => {
+						this.$message({
+							message: '操作成功',
+							type: 'success'
+						});
+						this.getlist()
+					});
+				}).catch(() => {
+
+				});
+		   },		   
+		   deleteRow(row,type){
+			  this.$confirm('确认删除选中记录吗？', '提示', {
+					type: 'warning'
+				}).then(() => {
+					let para = { id: row.id,type:type };
+					axios({
+							method: 'post',
+							url:'/app/deleteRow',
+							data:para
+						}).then((res) => {
+						this.$message({
+							message: '删除成功',
+							type: 'success'
+						});
+						switch(type){
+						  case 1:
+						     this.getlist()
+						    break;
+						   case 2:
+						     this.getPromotelist();
+							break;
+							case 3:
+							this.getRevenuelist();
+							break;
+						}
+					});
+				}).catch(() => {
+
+				});
+			},
+		   OnSubmitUser(){
+			 var params1 = this.formInline
+			     params1.app_base_id = this.row.id
+			  let obj = {...params1}
+			 axios({
+					method: 'post',
+					url:'/app/add_user_attr',
+					data:obj
+					}).then(res=>{			
+					 if(res.data.code ==200)
+					 {
+					   this.$message.success('操作成功!');
+					   this.UserDialogVisible = false
+					 }else{
+					   this.$message.error(res.data.message);
+				 }
+			   })
+		   },
+		   OnSubmitPromote(){
+			this.$refs.promoteform.validate((valid) => {
+				  if (valid) {
+					  this.promoteform.app_base_id = this.row.id
+					  this.promoteform.app_name = this.row.name
+					  axios({
+							method: 'post',
+							url:'/app/add_advertising',
+							data:this.promoteform
+						}).then(res=>{			
+						 if(res.data.code ==200)
+						 {
+						   this.$message.success('操作成功!');
+						   this.PromoteDialogFormVisible = false
+						   this.getPromotelist()
+						 }else{
+						   this.$message.error(res.data.message);
+						 }
+					 })
+				  } else {
+				    console.log(valid)
+				  }
+				});
+		   },
+		   OnSubmitRevenue(){
+		    this.$refs.revenueform.validate((valid) => {
+				  if (valid) {
+					  this.revenueform.app_base_id = this.row.id
+					  axios({
+							method: 'post',
+							url:'/app/add_revenue',
+							data:this.revenueform
+						}).then(res=>{			
+						 if(res.data.code ==200)
+						 {
+						   this.$message.success('操作成功!');
+						   this.RevenueDialogFormVisible = false
+						   this.getRevenuelist()
+						 }else{
+						   this.$message.error(res.data.message);
+						 }
+					 })
+				  } else {
+				    console.log(valid)
+				  }
+				});
+		   },
+		   handleChange(){
+			 this.getlist()
+		   },
+		   _get_user_attr(){
+		     let params ={
+			      apps:this.row.apps
+			   }
+			   let _that = this
+			   axios({
+					method: 'post',
+					url:'/app/get_user_attr',
+					data:params
+				}).then(res=>{
+				 this.formInline = res.data || {}
+			 })
+		   },
+		   getlist(){
+			   let params ={
+			      page:this.page,
+				  keyword:this.keyword,
+				  groupID:'{$groupID}'
+			   }
+			   let _that = this
+			   this.loading = true
+			   axios({
+					method: 'post',
+					url:'/app/app_json',
+					data:params
+				}).then(res=>{			
+				 _that.loading = false
+				 this.tableData = res.data.list
+				 this.total = res.data.total
+				 this.groupApp = res.data.appList
+			 })
+			},
+			getPromotelist(){
+			   this.formInline.page = this.childpage
+			   this.formInline.app_base_id =this.row.id
+			   let _that = this
+			   this.loading = true
+			   axios({
+					method: 'post',
+					url:'/app/app_advertising_json',
+					data:this.formInline
+				}).then(res=>{			
+				 _that.loading = false
+				 this.promoteList = res.data.list
+				 this.childtotal = res.data.total
+			 })
+			},
+			getRevenuelist(){
+			   this.formInline.page = this.childpage
+			   this.formInline.app_base_id =this.row.id
+			   let _that = this
+			   this.loading = true
+			   axios({
+					method: 'post',
+					url:'/app/app_revenue_json',
+					data:this.formInline
+				}).then(res=>{			
+				 _that.loading = false
+				 this.revenueList = res.data.list
+				 this.childtotal = res.data.total
+			 })
+			},
+        },
+		mounted(){
+		 this.getlist()
+		}
+    })
+  </script>
+</html>

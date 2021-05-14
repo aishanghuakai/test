@@ -1,0 +1,414 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GAME BRAIN</title>
+    {include file="./static/html/header_common.html" /}  
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+   <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <!-- import JavaScript -->
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <script src="/static/js/axios.min.js"></script>	 
+	<style>
+	  .cell{font-size:12px;color:#222;}
+	  .el-table td, .el-table th {
+    padding:9px 0;}
+	  .item {
+		  margin-top: 10px;
+		  margin-right: 40px;
+		}
+      .grid-content{
+	    background: #fff;
+		padding: 15px !important;
+		box-shadow: 0 1px 15px 1px rgba(69,65,78,.08);
+		border-radius:10px;
+		border: 0;
+		color:#222;
+		text-align:center;
+	  }	
+       .card-category{
+	   font-size: 13px;
+	   color:#444;
+	   margin-bottom: 0;}
+	   .card-title{
+	    color:#575962;
+		font-size: 18px;
+		font-weight: 400;
+	   }
+.filter-container .filter{
+    font-size: 14px;
+    color: #333;
+    position: relative;
+    line-height:40px;
+}	
+.filter-container .filter .filter-label{
+    font-weight: 600;
+    color: #333;
+    display: inline-block;
+    width: 76px;
+}
+.filter-container .filter .filter-options{
+    display: inline-block;
+    vertical-align: top;
+    width: calc(100% - 100px);
+    min-width: 700px;
+}
+.filter .filter-options .filter-option.active{
+    border-radius: 3px;
+    color: #4c84ff;
+	background: #ecf5ff;
+	border: 1px solid #d9ecff;
+	border-radius: 4px;
+    font-size: 12px;
+}
+.filter .filter-options .filter-option{
+    line-height: 22px;
+    display: inline-block;
+    padding: 2px 18px;
+    margin-right: 24px;
+    cursor: pointer;
+    font-size: 12px;
+}
+.count {
+    background:#4285f4;
+    display: inline-block;
+    padding:7px 1px;
+    margin-right: 5px;
+}
+.search .el-select .el-input {
+    width:100px;
+  }
+.el-table .warning-row {
+    background: oldlace;
+  }
+.el-table .success-row {
+    background: #f0f9eb;
+  }  
+	</style>
+</head>
+<body style="background:#f5f6fa;">
+    <div id="wrapper" style="background-color:#f5f6fa;">
+        {include file="./static/html/header.html" /}	
+		<div class="hw_page_content" style="background-color:#f5f6fa;">
+		    <div class="hw_menu_left">
+             {include file="./static/html/side.html" /}  
+			</div>
+		    <div class="hw_content_right" style="padding:20px 5px;background: #f5f6fa;">
+			            <h4 class="page-title" style="margin-bottom:20px;">
+							<el-page-header @back="goBack" style="float:left;" content="LTV生命周期总览(MAX版)"></el-page-header></h4>
+							<div class="clear" style="clear:both;"></div>
+						<el-row :gutter="20" style="margin-top:20px;margin-left:20px;margin-right:20px;">
+							 <el-col :span="6"><a  href="/admin_max/data"><div class="grid-content bg-purple"><i class="el-icon-s-help"></i> 默认 <br/><span style="font-size:10px;color:#222;">支持分地区，渠道</span></div></a></el-col>
+							 <el-col :span="6"><a href="/admin_max/data?by=campaign" style="color:red;"><div class="grid-content bg-purple" ><i class="el-icon-date"></i> 广告系列 <br/><span style="font-size:10px;color:#222;">仅支持 Facebook,Adwords</span></div></a></el-col>
+							 <el-col :span="6"><a href="/admin_max/data?by=device"><div class="grid-content bg-purple"><i class="el-icon-rank"></i> 设备 <br/><span style="font-size:10px;color:#222;">仅支持Mintegral,Vungle</span></div></a></el-col>
+							 <el-col :span="6"><a href="/admin_max/data?by=model"><div class="grid-content bg-purple"><i class="el-icon-s-data"></i> ltv模型分析 <br/><span style="font-size:10px;color:#222;">对比，多维度分析</span></div></a></el-col>
+						</el-row>
+						<el-row :gutter="20" style="margin-top:20px;margin-left:20px;margin-right:20px;">
+							 <el-col :span="12"><a  href="/admin_max/data?by=adset"><div class="grid-content bg-purple" ><i class="el-icon-s-help"></i> 视频子渠道 <br/><span style="font-size:10px;color:#222;">支持分地区，渠道,Mintegral,Vungle,Applovin</span></div></a></el-col>
+							 <el-col :span="12"><a href="/admin_max/data?by=ad" style="color:red;"><div class="grid-content bg-purple" style="border-bottom: 1px solid;color:#4c84ff;"><i class="el-icon-magic-stick"></i> 素材 <br/><span style="font-size:10px;color:#222;">仅支持 Facebook</span></div></a></el-col>
+						</el-row>
+						<div class="main filter-container" style="margin:20px 30px;">
+						    							
+							<div  class="filter"><span  class="filter-label">地区</span>
+								<div class="filter-options">
+									<span @click="addAttr('country','all')" :class="filter.country=='all'?'filter-option active':'filter-option'">全部</span>
+									<span @click="addAttr('country','US')" :class="filter.country=='US'?'filter-option active':'filter-option'">美国</span>
+									<span @click="addAttr('country','TW')" :class="filter.country=='TW'?'filter-option active':'filter-option'">台湾</span>
+									<span @click="addAttr('country','CN')" :class="filter.country=='CN'?'filter-option active':'filter-option'">中国</span>
+									<span>
+									 <el-select ref="country" v-model="filter.country" filterable size="mini" placeholder="更多选择">
+										{volist name="country" id="item"}
+										  {if condition="$key!='all'"}
+									       <el-option key="{$key}" label="{$item}" value="{$key}"></el-option>
+										  {/if}
+									    {/volist}
+									  </el-select>
+									</span>									
+								</div>
+							</div>
+                            <div  class="filter"><span  class="filter-label">LTV</span>
+								<div class="filter-options">
+									<span @click="FilterMaterial('day','0')" :class="filter.day==0?'filter-option active':'filter-option'">LTV0</span>
+									<span @click="FilterMaterial('day','3')" :class="filter.day==3?'filter-option active':'filter-option'">LTV3</span>
+									<span @click="FilterMaterial('day','7')" :class="filter.day==7?'filter-option active':'filter-option'">LTV7</span>
+									<span @click="FilterMaterial('day','15')" :class="filter.day==15?'filter-option active':'filter-option'">LTV15</span>
+									<span @click="FilterMaterial('day','30')" :class="filter.day==30?'filter-option active':'filter-option'">LTV30</span>
+									<span>
+									 <el-select v-model="filter.day"  size="mini" placeholder="更多选择">
+										<el-option label="LTV0" value="0"></el-option>
+										<el-option label="LTV1" value="1"></el-option>
+										<el-option label="LTV2" value="2"></el-option>
+										<el-option label="LTV3" value="3"></el-option>
+										<el-option label="LTV4" value="4"></el-option>
+										<el-option label="LTV5" value="5"></el-option>
+										<el-option label="LTV7" value="7"></el-option>
+										<el-option label="LTV15" value="15"></el-option>
+										<el-option label="LTV30" value="30"></el-option>
+										<el-option label="LTV45" value="45"></el-option>
+										<el-option label="LTV60" value="60"></el-option>
+										<el-option label="LTV90" value="90"></el-option>
+									  </el-select>
+									</span>
+								</div>
+							</div>
+                            <div  class="filter"><span  class="filter-label">安装时间</span>
+								<div class="filter-options">
+									<span @click="FilterMaterial('day_num','1')" :class="filter.day_num==1?'filter-option active':'filter-option'">昨天</span>
+									<span @click="FilterMaterial('day_num','3')" :class="filter.day_num==3?'filter-option active':'filter-option'">过去三天</span>
+									<span @click="FilterMaterial('day_num','7')" :class="filter.day_num==7?'filter-option active':'filter-option'">过去七天</span>
+									<span @click="FilterMaterial('day_num','15')" :class="filter.day_num==15?'filter-option active':'filter-option'">过去15天</span>
+									<span @click="FilterMaterial('day_num','30')" :class="filter.day_num==30?'filter-option active':'filter-option'">过去30天</span>
+									<span>
+									 <el-date-picker
+									  v-model="date"
+                                      size="mini"
+									  style="width:240px"
+									  @change="updateDate"
+									  type="daterange"
+									  value-format="yyyy-MM-dd">
+									</el-date-picker>
+									</span>
+								</div>
+							</div>                           
+							<div  class="filter"><span  class="filter-label">过滤ROI</span>
+							    <div class="filter-options">
+									<span class="search">
+										<el-input placeholder="请输入值" v-model="roi" size="mini" style="width:250px">
+											<el-select v-model="condition" slot="prepend" placeholder="请选择">
+											  <el-option label="大于等于" value=">="></el-option>
+											  <el-option label="小于" value="<"></el-option>
+											</el-select>
+										  </el-input>
+								  </span>																		
+								</div>
+							</div>                           			
+						</div>
+						<div class="clear">
+						  <h4  style="font-size:15px;font-weight:700;color: #333;line-height:20px;margin-bottom:10px;margin-left:30px;"><i class="count"></i> 当前为过去<strong style="color:red"> {{filter.day_num}} </strong>天 ltv<strong style="color:red">{{filter.day}}</strong> 的用户价值展示  <el-input v-model="keyword" style="float:right;width:200px;margin-right:20px;" clearable size="small" placeholder="输入关键词"></el-input> </h4>
+						</div>
+						<div class="m-list hw_reven" style="padding:20px;">
+							 <el-table
+								:data="tableData"
+								border
+								:row-class-name="tableRowClassName"
+								row-key="id"							
+								v-loading="loading"
+								max-height="500"
+								style="width:100%;">							
+								<el-table-column width="250" prop="name" align="center" label="素材名称">
+								  <template slot-scope="scope">
+								      <a style="cursor:pointer;" @click="iframeopen(scope.row.ad_id)">{{scope.row.name}}</a>
+								  </template>
+								</el-table-column>
+								<el-table-column width="150" prop="adset_name" align="center" label="广告组名称"></el-table-column>
+								<el-table-column width="150" prop="campaign_name" align="center" label="广告系列名称"></el-table-column>
+								<el-table-column prop="tablist.spend" sortable width="100px" align="center" label="推广花费"></el-table-column>
+								<el-table-column prop="tablist.installs"  sortable width="100px" align="center" label="推广新增"></el-table-column>
+								<el-table-column prop="tablist.cpi" sortable width="100px" align="center" label="推广成本"></el-table-column>
+								<el-table-column prop="tablist.total_revenue" width="100px" sortable align="center" label="总收益"></el-table-column>
+								<el-table-column prop="tablist.ad_revenue" width="100px" sortable align="center" label="广告收益"></el-table-column>
+								<el-table-column prop="tablist.purchase" width="100px" sortable align="center" label="内购收益"></el-table-column>
+								<el-table-column  sortable prop="tablist.avg_revenue" width="100px" align="center" :label="label_day"></el-table-column>
+								<el-table-column prop="tablist.total_roi" width="100px" sortable align="center"  label="总ROI(%)"></el-table-column>
+								<el-table-column prop="impression" sortable width="100px" align="center" label="人均激励">
+								 <template slot-scope="scope">
+								      <span>{{scope.row.tablist.avgReward}}</span>
+								   </template>
+								</el-table-column>
+								<el-table-column prop="impression" sortable width="100px" align="center" label="人均插屏">
+								 <template slot-scope="scope">								     
+									  <span>{{scope.row.tablist.avgInter}}</span>
+								   </template>
+								</el-table-column>
+							</el-table>
+						</div>
+			  </div>
+			</div>
+		</div>
+		 {include file="./static/html/footer.html" /}
+	</div>
+</body>
+ {include file="./static/html/footer_common.html" /}
+  <script>
+    
+    let t = new Vue({
+        el: '#wrapper',
+        data: {
+			loading: false,
+            ishow:false,
+            keyword:'',			
+			filter:{
+			  day:"0",
+			  country:'all',		  
+			  day_num:"3",
+			  media_source:'mintegral_int',
+			  device:[]
+			},
+			date:[],
+			condition:'>=',
+			roi:'',
+			totalData:[],			
+			tableData: [],
+			pickerOptions2:{
+			    disabledDate:(time)=> {
+					
+					return time.getTime() > Date.now('2020-08-01')
+				}
+			},
+			tableData1: []
+        },
+		computed:{
+		    param(){
+			   let params = this.filter
+			   params.app_id = '{$app_id}'
+			   return params
+			},
+			label_day(){
+			  return 'LTV'+this.filter.day
+			}
+		},
+		watch: {		  
+		  param:{
+		    handler:function(val,oldval){
+			  this.getlist()
+			  
+			},
+			deep:true//对象内部的属性监听，也叫深度监听
+		  },
+		  keyword(val){
+		    if( val )
+			{
+			  this.tableData =this.tableData.filter(data => !val || data.name.toLowerCase().includes(val.toLowerCase()))
+			}else{
+			   this.tableData = this.tableData1
+			}
+		  }
+		},
+		created(){
+		  let key ='filter_json'+'{$app_id}'
+		  let save_obj = localStorage.getItem(key)
+		  if(save_obj)
+		  {
+		    let params = JSON.parse(save_obj)
+			 this.filter = params.filter
+		  }
+		  this.getlist()
+		  
+		},
+        methods: {           
+		   goBack() {
+		     window.location.href='/admin_index/main';
+		   },
+		   handleChange(val){
+		   
+		   },
+		  updateDate(){
+		     this.filter.day_num = 'custom'
+		   },
+		   openShow(){
+		    this.ishow = !this.ishow
+		   },
+		   clear(){
+		     let key ='filter_json'+'{$app_id}'
+			 localStorage.removeItem(key)
+			 this.filter={
+			  day:"0",
+			  country:[],		  
+			  day_num:'3',
+			  media_source:[],
+			  device:[],
+			  date:['{$start}','{$end}'],
+			  dimension_one:'date',
+			  dimension_two:'country',
+			  dimension_three:'channel'
+			}
+			this.condition = '>='
+			this.roi = ''
+		   },
+		   saveFilter(){		     
+			 let key ='filter_json'+'{$app_id}'
+			 let params ={}
+			 params.filter = this.filter
+			 localStorage.setItem(key,JSON.stringify(params));
+			 this.$message('保存成功！');
+		   },
+		    tableRowClassName({row, rowIndex}) {
+				let roi  = this.roi
+				if(roi){
+				  if( this.condition==">=" )
+				  {
+				    if( row.tablist.total_roi>=roi )
+					{
+					  return 'warning-row';
+					}
+				  }else{
+				     if( row.tablist.total_roi<roi )
+					{
+					  return 'warning-row';
+					}
+				  }			  
+				}
+				return '';
+			},
+		   get_total_list(){			   
+			   this.param.date =this.date
+			   axios({
+					method: 'post',
+					url:'/admin_max/get_ltv_total_data',
+					data:this.param
+				}).then(res=>{			
+				 this.totalData = res.data
+			 })
+			},
+		  
+		   isExistArray(field,val){
+		    return $.inArray(val, this.filter[field])>-1
+		   },
+		   addAttr(field,val){
+		    this.filter[field] = val		
+		   },
+		  FilterMaterial(field,val){
+		    this.filter[field] = val
+		  },
+		   handleInstallDate(){
+		    
+		   },		   
+			getlist(){
+			    this.tableData =[]
+				this.loading = true
+			   let _that = this
+			   this.param.date =this.date
+			   axios({
+					method: 'post',
+					url:'/admin_max/ad_ltv_json',
+					data:this.param
+				}).then(res=>{			
+				 _that.loading = false
+				 this.tableData = res.data.data
+				 this.date = res.data.date
+				 this.tableData1 = res.data.data
+				 if( this.keyword )
+				{
+				  let kk = this.keyword
+				  this.tableData =this.tableData.filter(data => !kk || data.name.toLowerCase().includes(kk.toLowerCase()))
+				}
+			 })
+			},
+			iframeopen(ad_id) {
+				var url = "http://console.gamebrain.io/adgastatic/previews?ad_id=" + ad_id;
+				layer.open({
+					type: 2,
+					title: '素材展示',
+					shadeClose: true,
+					shade: 0.8,
+					area: ['50%', '90%'],
+					content: url
+				});
+
+			}
+        }
+    })
+  </script>
+</html>

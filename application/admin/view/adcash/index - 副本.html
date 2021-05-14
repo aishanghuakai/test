@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title></title>
+	{include file="./static/html/header_common.html" /}
+	 <link rel="stylesheet" type="text/css" media="all" href="/static/css/roiapp.css?t=<?php echo time(); ?>" />
+	 <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/static/css/jquery.searchableSelect.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/adspend.css" rel="stylesheet" type="text/css">
+</head>
+<body style="min-height: 100%;">
+    <div id="wrapper" >
+        
+		<!-- Dropdown Structure -->
+         {include file="./static/html/header.html" /} 
+         {include file="./static/html/side.html" /} 
+        <!-- /. NAV SIDE  -->
+        <div id="page-wrapper" style="background-color:#fff;min-height: 600px;">
+		    <div class="header" style="height:1px;" >                  		  
+                    <h1 class="page-header"></h1>									   
+		    </div>				
+            <div id="page-inner" style="clear:both;padding-top:5px;min-height: 600px;"> 
+			<div class="song_list">
+			   <ul class="search_tab clearfix" style="border-bottom: 1px solid #ccc;">
+			      <li class="active"><a  href="javascript:;">广告成效</a></li>
+				  
+		      </ul>
+              <div class="content">
+			    <div>
+				 <input id="s" placeholder="Search App" class="text_input" type="text">
+				</div>
+                <div class="complete app_name">				
+				  <ul>
+				    <li>
+					  <a href="/admin_adcash/summary?ap_code=hw_hr" title="Helix Rush"><img src="/static/img/app/helix_rush.JPG" /><span>Helix Rush</span></a>
+					</li>
+					<li>
+					   <a href="/admin_adcash/summary?ap_code=hw_rb" title="RushBalls"><img src="/static/img/app/rushballs.JPG" /><span>RushBalls</span></a>
+					</li>
+					<li>
+					   <a href="/admin_adcash/summary?ap_code=hw_tk" title="Tankr.io"><img src="/static/img/app/tank.io.JPG" /><span>Tankr.io</span></a>
+					</li>
+					<li>
+					   <a href="/admin_adcash/summary?ap_code=hw_cb" title="Color Balls"><img src="/static/img/app/color_balls.JPG" /><span>Color Balls</span></a>
+					</li>
+                     <li>
+					  <a href="/admin_adcash/summary?ap_code=hw_hl" title="Hexland.io"><img src="/static/img/app/hexland.JPG" /><span>Hexland.io</span></a>
+					</li>						
+				  </ul>				 
+				</div>
+				 <div class="complete platform"  style="display:none;" >				
+				  <ul style="box-shadow:none;">
+				     <li>
+					  <a class="pp_aa"  href="/admin_adcash/moblist?spm=last"><img style="margin-top:25%;border:none;" src="/static/img/app/Mobvista.png" /></a>
+					</li>
+					<li>
+					  <a class="pp_aa"  href="/admin_adcash/admoblist?spm=last"><img style="margin-top:25%;border:none;" src="/static/img/app/admob.png" /></a>
+					</li>
+					<li>
+					  <a class="pp_aa"  href="/admin_adcash/apllist?spm=last"><img style="margin-top:25%;border:none;" src="/static/img/app/applovin.png" /></a>
+					</li>
+					<li>
+					  <a class="pp_aa"  href="/admin_adcash/facebooklist?spm=last"><img style="margin-top:25%;border:none;" src="/static/img/app/facebook.png" /></a>
+					</li>
+                     <li>
+					 <a class="pp_aa"  href="/admin_adcash/vunglelist?spm=last"><img style="margin-top:25%;border:none;" src="/static/img/app/vungle.png" /></a>
+					</li>
+					 <li>
+					 <a class="pp_aa" style="margin-top:30px;" href="/admin_adcash/unitylist?spm=last"><img style="margin-top:25%;border:none;" src="/static/img/app/unity.png" /></a>
+					</li>
+					
+				  </ul>
+				  
+				</div>
+                  <div id="switch">
+				    <div class="box">
+					   <a class="tab_active" data="app_name">应用名称</a><a data="platform">平台类型</a>
+					</div>
+				  </div>				
+			  </div>			  
+            </div>
+           			
+		   </div>
+		</div>
+	</div>	
+     <!-- /. WRAPPER  -->
+    <!-- JS Scripts-->
+  
+   {include file="./static/html/footer_common.html" /}
+     <script src="/static/css/jquery.searchableSelect.js"></script>
+</body>
+
+  <script type="text/javascript" src="/static/js/layer/layer.js"></script>
+  <script>
+    
+      $("#switch a").click( function(){
+	      
+		  if( !$(this).hasClass("tab_active") )
+		  {
+		      var gr_up = $(this).attr("data");
+		      $("#switch a").removeClass("tab_active");
+		       $(this).addClass("tab_active");
+		      $(".complete").hide(1000);
+		      $("."+gr_up).show(500);
+			  var string = "Search App";
+			  if( gr_up=="platform" ) string="Search Platform";
+			  $("#s").attr('placeholder',string);
+		  }
+		 
+	  })
+	  $('#s').bind('input propertychange', function()
+		   {
+			   var input_text = $(this).val();
+               $(".app_name li").each(  function(i){
+			        var text = $(this).find("span").text();
+					if( text.indexOf(input_text)!=-1 )
+					  {
+					     $(this).show();
+					  }else{
+					     $(this).hide();
+					  }
+			   })			   
+		   });
+  </script>
+</html>

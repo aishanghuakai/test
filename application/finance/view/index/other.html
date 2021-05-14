@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>财务管理</title>
+      <link type="favicon" rel="icon" href="/favicon.ico?t=344">
+	<link href="/static/css/bootstrap.css" rel="stylesheet">
+	<link href="/static/css/finance_index.css?t=<?php echo time();  ?>" rel="stylesheet">
+	 <link href="/static/css/font-awesome.min.css" type="text/css" rel="stylesheet">
+	  <link rel="stylesheet" type="text/css" href="/static/barrager/css/barrager.css">
+	  <!-- 引入样式 -->
+     <!-- 引入样式 -->
+     <link rel="stylesheet" href="https://unpkg.com/element-ui@2.13.0/lib/theme-chalk/index.css">
+	 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <!-- import JavaScript -->
+  <script src="https://unpkg.com/element-ui@2.13.0/lib/index.js"></script>
+  <script src="/static/js/axios.min.js"></script>
+  <style>
+     .hw_content_right .cell{font-size:12px;}
+	 //.el-input__inner{height:25px;line-height:25px;font-size:12px;}
+	 .el-icon-more-outline{cursor:pointer;}
+	.fullscreen{
+	  width:100% !important;
+	  margin-left:0px !important;
+	  height:100% !important;
+	  position:fixed !important;
+	  margin-top:0px !important;
+	  z-index:9999
+	}
+	.ivu-badge-dot{z-index:0;}
+	.red{color:#f38181;font-size:14px;}
+	.ivu-input[disabled]{background:#fff;color:#515a6e}
+	.ivu-input{height:auto;border:none;text-align:center;}
+	.ivu-table-cell{font-size:12px;}
+	.checkaftercolor{color:#515a6e;}
+	.checkbeforecolor{color:#ffaf00;}
+	.item {
+	  margin-top: 10px;
+	  margin-right: 40px;
+	}
+	.el-icon-more-outline{color:#dedede;font-size:10px;}
+	.el-dialog__body {
+    padding: 0px 20px;}
+  </style>
+</head>
+<body>
+   <div id="wrapper">
+        {include file="./static/html/fheader.html" /}	
+		<div class="hw_page_content">
+		  <div class="hw_menu_left">
+		     {include file="./static/html/fside.html" /}
+		  </div>	 
+		    <div class="hw_content_right" style="padding:10px 10px;">
+			
+			   <div style="padding:5px 0px 20px 0px;">
+				  <h5>其他成本 <i class="el-icon-warning-outline"></i> <span style="font-size:12px;"><em style="color:#ffaf00">橙色</em>:待复核,黑色:财务已复核</span></h5>
+				  <div style="">
+				     <el-select v-model="schannel_id" clearable  @change="change" filterable placeholder="请选择渠道">
+						{volist name="channel" id="c"}
+						<el-option
+						  key="{$c.id}"
+						  label="{$c.name}"
+						  value="{$c.id}">
+						</el-option>
+						{/volist}
+					  </el-select>
+					   <el-cascader v-model="sproduct_id" @change="change" filterable :filter-method="dataFilter" :options="options" :props="{ checkStrictly: true }" placeholder="请选择产品" clearable></el-cascader>
+					  <el-button type="info" @click="openModal">添加</el-button>
+					  <el-button type="primary" {if condition="!in_array(getuserrole(),['super','financer'])" } disabled {/if} @click="dialogVisible = true">复核</el-button>
+                      <el-button type="success" icon="el-icon-download" @click="download">导出</el-button>
+				  </div>
+				</div>
+				
+				<el-tabs v-model="year" type="card" @tab-click="loadData">
+					<el-tab-pane label="2021年" name="2021"></el-tab-pane>
+					<el-tab-pane label="2020年" name="2020"></el-tab-pane>
+					<el-tab-pane label="2019年" name="2019"></el-tab-pane>
+					<el-tab-pane label="2018年" name="2018"></el-tab-pane>
+					<el-tab-pane label="2017年" name="2017"></el-tab-pane>
+					
+				</el-tabs>
+				
+				<el-table :data="tableData" border style="width:100%" size="mini" v-loading="loading" @selection-change="handleSelectionChange"  max-height="500">
+				<el-table-column
+				  type="selection"
+				  :selectable="handleDisable"
+				  width="55">
+				</el-table-column>
+				<el-table-column
+				  fixed
+				  prop="channel"
+				  label="渠道名称"
+				  width="190">
+				</el-table-column>
+				<el-table-column
+				  fixed
+				  prop="product"
+				  label="产品名称"
+				  width="180">
+				</el-table-column>
+				<el-table-column
+				  fixed
+				  prop="typeName"
+				  align="center"
+				  label="类型"
+				  width="70">
+				</el-table-column>
+				<el-table-column
+				  fixed
+				  prop="currency"
+				  label="币种"
+				  width="100">
+				</el-table-column>
+				<el-table-column
+				  prop="month_01"
+				  label="1月"
+				  width="110">
+				  <template slot-scope="scope">
+					<div>
+					<el-tooltip v-if="scope.row.month_01.isedit" class="item" effect="dark" placement="top-start"><div slot="content" v-html="scope.row.month_01.editlog"></div>
+					  <el-badge  is-dot class="item"><span :class="scope.row.month_01.class">{{scope.row.month_01.val}}</span></el-badge>					  
+					</el-tooltip>
+					<span v-else :class="scope.row.month_01.class">{{scope.row.month_01.val}}</span>
+					<el-dropdown trigger="click" style="float:right;">
+					  <span class="el-dropdown-link">
+						<i  class="el-icon-more-outline" style="float:right;"></i>
+					  </span>
+					  <el-dropdown-menu slot="dropdown">						
+						<el-dropdown-item :disabled="scope.row.month_01.isinput" @click.native="opendDailog(scope.$index,scope.row.month_01.val,scope.row.channel_id,scope.row.product_id,'01')" icon="el-icon-edit">编辑修改</el-dropdown-item>						
+						<el-dropdown-item @click.native="review(scope.row.channel_id,scope.row.product_id,'01')" :disabled="scope.row.month_01.isreview" icon="el-icon-check">复核通过</el-dropdown-item>						
+					  </el-dropdown-menu>
+					</el-dropdown>					
+					</div>
+				  </template>
+				</el-table-column>
+				<el-table-column
+				  prop="month_02"
+				  label="2月"
+				  width="110">
+				  <template slot-scope="scope">
+					<div>
+					<el-tooltip v-if="scope.row.month_02.isedit" class="item" effect="dark" placement="top-start"><div slot="content" v-html="scope.row.month_02.editlog"></div>
+					  <el-badge  is-dot class="item"><span :class="scope.row.month_02.class">{{scope.row.month_02.val}}</span></el-badge>					  
+					</el-tooltip>
+					<span v-else :class="scope.row.month_02.class">{{scope.row.month_02.val}}</span>
+					<el-dropdown trigger="click" style="float:right;">
+					  <span class="el-dropdown-link">
+						<i  class="el-icon-more-outline" style="float:right;"></i>
+					  </span>
+					  <el-dropdown-menu slot="dropdown">						
+						<el-dropdown-item :disabled="scope.row.month_02.isinput" @click.native="opendDailog(scope.$index,scope.row.month_02.val,scope.row.channel_id,scope.row.product_id,'02')" icon="el-icon-edit">编辑修改</el-dropdown-item>						
+						<el-dropdown-item @click.native="review(scope.row.channel_id,scope.row.product_id,'02')" :disabled="scope.row.month_02.isreview" icon="el-icon-check">复核通过</el-dropdown-item>						
+					  </el-dropdown-menu>
+					</el-dropdown>					
+					</div>
+				  </template>
+				</el-table-column>
+				<el-table-column
+				  prop="month_03"
+				  label="3月"
+				  width="110">
+				  <template slot-scope="scope">
+					<div>
+					<el-tooltip v-if="scope.row.month_03.isedit" class="item" effect="dark" placement="top-start"><div slot="content" v-html="scope.row.month_03.editlog"></div>
+					  <el-badge  is-dot class="item"><span :class="scope.row.month_03.class">{{scope.row.month_03.val}}</span></el-badge>					  
+					</el-tooltip>
+					<span v-else :class="scope.row.month_03.class">{{scope.row.month_03.val}}</span>
+					<el-dropdown trigger="click" style="float:right;">
+					  <span class="el-dropdown-link">
+						<i  class="el-icon-more-outline" style="float:right;"></i>
+					  </span>
+					  <el-dropdown-menu slot="dropdown">						
+						<el-dropdown-item :disabled="scope.row.month_03.isinput" @click.native="opendDailog(scope.$index,scope.row.month_03.val,scope.row.channel_id,scope.row.product_id,'03')" icon="el-icon-edit">编辑修改</el-dropdown-item>						
+						<el-dropdown-item @click.native="review(scope.row.channel_id,scope.row.product_id,'03')" :disabled="scope.row.month_03.isreview" icon="el-icon-check">复核通过</el-dropdown-item>						
+					  </el-dropdown-menu>
+					</el-dropdown>					
+					</div>
+				  </template>
+				</el-table-column>
+				<el-table-column
+				  prop="month_04"
+				  label="4月"
+				  width="110">
+				  <template slot-scope="scope">
+					<div>
+					<el-tooltip v-if="scope.row.month_04.isedit" class="item" effect="dark" placement="top-start"><div slot="content" v-html="scope.row.month_04.editlog"></div>
+					  <el-badge  is-dot class="item"><span :class="scope.row.month_04.class">{{scope.row.month_04.val}}</span></el-badge>					  
+					</el-tooltip>
+					<span v-else :class="scope.row.month_04.class">{{scope.row.month_04.val}}</span>
+					<el-dropdown trigger="click" style="float:right;">
+					  <span class="el-dropdown-link">
+						<i  class="el-icon-more-outline" style="float:right;"></i>
+					  </span>
+					  <el-dropdown-menu slot="dropdown">						
+						<el-dropdown-item :disabled="scope.row.month_04.isinput" @click.native="opendDailog(scope.$index,scope.row.month_04.val,scope.row.channel_id,scope.row.product_id,'04')" icon="el-icon-edit">编辑修改</el-dropdown-item>						
+						<el-dropdown-item @click.native="review(scope.row.channel_id,scope.row.product_id,'04')" :disabled="scope.row.month_04.isreview" icon="el-icon-check">复核通过</el-dropdown-item>						
+					  </el-dropdown-menu>
+					</el-dropdown>					
+					</div>
+				  </template>
+				</el-table-column>
+				<el-table-column
+				  prop="month_05"
+				  label="5月"
+				  width="110">
+				   <template slot-scope="scope">
+					<div>
+					<el-tooltip v-if="scope.row.month_05.isedit" class="item" effect="dark" placement="top-start"><div slot="content" v-html="scope.row.month_05.editlog"></div>
+					  <el-badge  is-dot class="item"><span :class="scope.row.month_05.class">{{scope.row.month_05.val}}</span></el-badge>					  
+					</el-tooltip>
+					<span v-else :class="scope.row.month_05.class">{{scope.row.month_05.val}}</span>
+					<el-dropdown trigger="click" style="float:right;">
+					  <span class="el-dropdown-link">
+						<i  class="el-icon-more-outline" style="float:right;"></i>
+					  </span>
+					  <el-dropdown-menu slot="dropdown">						
+						<el-dropdown-item :disabled="scope.row.month_05.isinput" @click.native="opendDailog(scope.$index,scope.row.month_05.val,scope.row.channel_id,scope.row.product_id,'05')" icon="el-icon-edit">编辑修改</el-dropdown-item>						
+						<el-dropdown-item @click.native="review(scope.row.channel_id,scope.row.product_id,'05')" :disabled="scope.row.month_05.isreview" icon="el-icon-check">复核通过</el-dropdown-item>						
+					  </el-dropdown-menu>
+					</el-dropdown>					
+					</div>
+				  </template>
+				</el-table-column>
+				<el-table-column
+				  prop="month_06"
+				  label="6月"
+				  width="110">
+				   <template slot-scope="scope">
+					<div>
+					<el-tooltip v-if="scope.row.month_06.isedit" class="item" effect="dark" placement="top-start"><div slot="content" v-html="scope.row.month_06.editlog"></div>
+					  <el-badge  is-dot class="item"><span :class="scope.row.month_06.class">{{scope.row.month_06.val}}</span></el-badge>					  
+					</el-tooltip>
+					<span v-else :class="scope.row.month_06.class">{{scope.row.month_06.val}}</span>
+					<el-dropdown trigger="click" style="float:right;">
+					  <span class="el-dropdown-link">
+						<i  class="el-icon-more-outline" style="float:right;"></i>
+					  </span>
+					  <el-dropdown-menu slot="dropdown">						
+						<el-dropdown-item :disabled="scope.row.month_06.isinput" @click.native="opendDailog(scope.$index,scope.row.month_06.val,scope.row.channel_id,scope.row.product_id,'06')" icon="el-icon-edit">编辑修改</el-dropdown-item>						
+						<el-dropdown-item @click.native="review(scope.row.channel_id,scope.row.product_id,'06')" :disabled="scope.row.month_06.isreview" icon="el-icon-check">复核通过</el-dropdown-item>						
+					  </el-dropdown-menu>
+					</el-dropdown>					
+					</div>
+				  </template>
+				</el-table-column>
+				<el-table-column
+				  prop="month_07"
+				  label="7月"
+				  width="110">
+				   <template slot-scope="scope">
+					<div>
+					<el-tooltip v-if="scope.row.month_07.isedit" class="item" effect="dark" placement="top-start"><div slot="content" v-html="scope.row.month_07.editlog"></div>
+					  <el-badge  is-dot class="item"><span :class="scope.row.month_07.class">{{scope.row.month_07.val}}</span></el-badge>					  
+					</el-tooltip>
+					<span v-else :class="scope.row.month_07.class">{{scope.row.month_07.val}}</span>
+					<el-dropdown trigger="click" style="float:right;">
+					  <span class="el-dropdown-link">
+						<i  class="el-icon-more-outline" style="float:right;"></i>
+					  </span>
+					  <el-dropdown-menu slot="dropdown">						
+						<el-dropdown-item :disabled="scope.row.month_07.isinput" @click.native="opendDailog(scope.$index,scope.row.month_07.val,scope.row.channel_id,scope.row.product_id,'07')" icon="el-icon-edit">编辑修改</el-dropdown-item>						
+						<el-dropdown-item @click.native="review(scope.row.channel_id,scope.row.product_id,'07')" :disabled="scope.row.month_07.isreview" icon="el-icon-check">复核通过</el-dropdown-item>						
+					  </el-dropdown-menu>
+					</el-dropdown>					
+					</div>
+				  </template>
+				</el-table-column>
+				<el-table-column
+				  prop="month_08"
+				  label="8月"
+				  width="110">
+				   <template slot-scope="scope">
+					<div>
+					<el-tooltip v-if="scope.row.month_08.isedit" class="item" effect="dark" placement="top-start"><div slot="content" v-html="scope.row.month_08.editlog"></div>
+					  <el-badge  is-dot class="item"><span :class="scope.row.month_08.class">{{scope.row.month_08.val}}</span></el-badge>					  
+					</el-tooltip>
+					<span v-else :class="scope.row.month_08.class">{{scope.row.month_08.val}}</span>
+					<el-dropdown trigger="click" style="float:right;">
+					  <span class="el-dropdown-link">
+						<i  class="el-icon-more-outline" style="float:right;"></i>
+					  </span>
+					  <el-dropdown-menu slot="dropdown">						
+						<el-dropdown-item :disabled="scope.row.month_08.isinput" @click.native="opendDailog(scope.$index,scope.row.month_08.val,scope.row.channel_id,scope.row.product_id,'08')" icon="el-icon-edit">编辑修改</el-dropdown-item>						
+						<el-dropdown-item @click.native="review(scope.row.channel_id,scope.row.product_id,'08')" :disabled="scope.row.month_08.isreview" icon="el-icon-check">复核通过</el-dropdown-item>						
+					  </el-dropdown-menu>
+					</el-dropdown>					
+					</div>
+				  </template>
+				</el-table-column>
+				<el-table-column
+				  prop="month_09"
+				  label="9月"
+				  width="110">
+				   <template slot-scope="scope">
+					<div>
+					<el-tooltip v-if="scope.row.month_09.isedit" class="item" effect="dark" placement="top-start"><div slot="content" v-html="scope.row.month_09.editlog"></div>
+					  <el-badge  is-dot class="item"><span :class="scope.row.month_09.class">{{scope.row.month_09.val}}</span></el-badge>					  
+					</el-tooltip>
+					<span v-else :class="scope.row.month_09.class">{{scope.row.month_09.val}}</span>
+					<el-dropdown trigger="click" style="float:right;">
+					  <span class="el-dropdown-link">
+						<i  class="el-icon-more-outline" style="float:right;"></i>
+					  </span>
+					  <el-dropdown-menu slot="dropdown">						
+						<el-dropdown-item :disabled="scope.row.month_09.isinput" @click.native="opendDailog(scope.$index,scope.row.month_09.val,scope.row.channel_id,scope.row.product_id,'09')" icon="el-icon-edit">编辑修改</el-dropdown-item>						
+						<el-dropdown-item @click.native="review(scope.row.channel_id,scope.row.product_id,'09')" :disabled="scope.row.month_09.isreview" icon="el-icon-check">复核通过</el-dropdown-item>						
+					  </el-dropdown-menu>
+					</el-dropdown>					
+					</div>
+				  </template>
+				</el-table-column>
+				<el-table-column
+				  prop="month_10"
+				  label="10月"
+				  width="110">
+				   <template slot-scope="scope">
+					<div>
+					<el-tooltip v-if="scope.row.month_10.isedit" class="item" effect="dark" placement="top-start"><div slot="content" v-html="scope.row.month_10.editlog"></div>
+					  <el-badge  is-dot class="item"><span :class="scope.row.month_10.class">{{scope.row.month_10.val}}</span></el-badge>					  
+					</el-tooltip>
+					<span v-else :class="scope.row.month_10.class">{{scope.row.month_10.val}}</span>
+					<el-dropdown trigger="click" style="float:right;">
+					  <span class="el-dropdown-link">
+						<i  class="el-icon-more-outline" style="float:right;"></i>
+					  </span>
+					  <el-dropdown-menu slot="dropdown">						
+						<el-dropdown-item :disabled="scope.row.month_10.isinput" @click.native="opendDailog(scope.$index,scope.row.month_10.val,scope.row.channel_id,scope.row.product_id,'10')" icon="el-icon-edit">编辑修改</el-dropdown-item>						
+						<el-dropdown-item @click.native="review(scope.row.channel_id,scope.row.product_id,'10')" :disabled="scope.row.month_10.isreview" icon="el-icon-check">复核通过</el-dropdown-item>						
+					  </el-dropdown-menu>
+					</el-dropdown>					
+					</div>
+				  </template>
+				</el-table-column>
+				<el-table-column
+				  prop="month_11"
+				  label="11月"
+				  width="110">
+				   <template slot-scope="scope">
+					<div>
+					<el-tooltip v-if="scope.row.month_11.isedit" class="item" effect="dark" placement="top-start"><div slot="content" v-html="scope.row.month_11.editlog"></div>
+					  <el-badge  is-dot class="item"><span :class="scope.row.month_11.class">{{scope.row.month_11.val}}</span></el-badge>					  
+					</el-tooltip>
+					<span v-else :class="scope.row.month_11.class">{{scope.row.month_11.val}}</span>
+					<el-dropdown trigger="click" style="float:right;">
+					  <span class="el-dropdown-link">
+						<i  class="el-icon-more-outline" style="float:right;"></i>
+					  </span>
+					  <el-dropdown-menu slot="dropdown">						
+						<el-dropdown-item :disabled="scope.row.month_11.isinput" @click.native="opendDailog(scope.$index,scope.row.month_11.val,scope.row.channel_id,scope.row.product_id,'11')" icon="el-icon-edit">编辑修改</el-dropdown-item>						
+						<el-dropdown-item @click.native="review(scope.row.channel_id,scope.row.product_id,'11')" :disabled="scope.row.month_11.isreview" icon="el-icon-check">复核通过</el-dropdown-item>						
+					  </el-dropdown-menu>
+					</el-dropdown>					
+					</div>
+				  </template>
+				</el-table-column>
+				<el-table-column
+				  prop="month_12"
+				  label="12月"
+				  width="110">
+				   <template slot-scope="scope">
+					<div>
+					<el-tooltip v-if="scope.row.month_12.isedit" class="item" effect="dark" placement="top-start"><div slot="content" v-html="scope.row.month_12.editlog"></div>
+					  <el-badge  is-dot class="item"><span :class="scope.row.month_12.class">{{scope.row.month_12.val}}</span></el-badge>					  
+					</el-tooltip>
+					<span v-else :class="scope.row.month_12.class">{{scope.row.month_12.val}}</span>
+					<el-dropdown trigger="click" style="float:right;">
+					  <span class="el-dropdown-link">
+						<i  class="el-icon-more-outline" style="float:right;"></i>
+					  </span>
+					  <el-dropdown-menu slot="dropdown">						
+						<el-dropdown-item :disabled="scope.row.month_12.isinput" @click.native="opendDailog(scope.$index,scope.row.month_12.val,scope.row.channel_id,scope.row.product_id,'12')" icon="el-icon-edit">编辑修改</el-dropdown-item>						
+						<el-dropdown-item @click.native="review(scope.row.channel_id,scope.row.product_id,'12')" :disabled="scope.row.month_12.isreview" icon="el-icon-check">复核通过</el-dropdown-item>						
+					  </el-dropdown-menu>
+					</el-dropdown>					
+					</div>
+				  </template>
+				</el-table-column>
+				
+			  </el-table>
+			  <el-pagination
+				  background
+				  :page-size="30"
+				  :current-page ="page"
+				  @current-change="handleCurrentChange"
+				  layout="prev, pager, next"
+				  :total="totalnum">
+				</el-pagination>
+			</div>
+			
+		</div>
+		<el-dialog title="修改" v-loading.lock="fullscreenLoading" width="30%" :visible.sync="dialogFormVisible">
+			  <el-form :inline="true">
+				<el-form-item label="原始值" >
+				  <el-input disabled v-model="oldval"></el-input>
+				</el-form-item>
+				<el-form-item label="目标值" >
+				  <el-input v-model="newval"></el-input>
+				</el-form-item>
+			  </el-form>
+			  <div slot="footer" class="dialog-footer">
+				<el-button size="mini" @click="dialogFormVisible = false">取 消</el-button>
+				<!-- <el-button size="mini" type="warning"  @click="save(1)">保存并复核</el-button> -->
+				<el-button size="mini" type="primary"  @click="save(0)">确认</el-button>
+			  </div>
+        </el-dialog>
+		
+		<el-dialog
+          title="复核确认"		
+		  :visible.sync="dialogVisible"
+		  width="30%">
+		  <el-select v-model="smonth" placeholder="请选择月份">
+			<el-option key="1"  label="一月" value="01"></el-option>
+			<el-option key="2"  label="二月" value="02"></el-option>
+			<el-option key="3"  label="三月" value="03"></el-option>
+			<el-option key="4"  label="四月" value="04"></el-option>
+			<el-option key="5"  label="五月" value="05"></el-option>
+			<el-option key="6"  label="六月" value="06"></el-option>
+			<el-option key="7"  label="七月" value="07"></el-option>
+			<el-option key="8"  label="八月" value="08"></el-option>
+			<el-option key="9"  label="九月" value="09"></el-option>
+			<el-option key="10"  label="十月" value="10"></el-option>
+			<el-option key="11"  label="十一月" value="11"></el-option>
+			<el-option key="12"  label="十二月" value="12"></el-option>
+		  </el-select>
+		  <span slot="footer" class="dialog-footer">
+			<el-button @click="dialogVisible = false">取 消</el-button>
+			<el-button type="primary" @click="selectReview">确 定</el-button>
+		  </span>
+		</el-dialog>
+		
+		<el-dialog title="添加数据" v-loading.lock="fullscreenLoading" width="40%" :visible.sync="modal1">
+			  <el-form :inline="true">
+				<el-form-item label="产品列" >
+				  <el-select v-model="product" clearable filterable placeholder="请选择">
+					{volist name="product" id="p"}
+					  <el-option  value="{$p.id}" key="{$p.id}" label="{$p.name}"></el-option>	
+                    {/volist}
+				  </el-select>
+				</el-form-item>
+				<el-form-item label="渠道列" >
+				   <el-select v-model="channel" clearable filterable placeholder="请选择">
+					{volist name="channel" id="c"}
+					  <el-option  value="{$c.id}" key="{$c.id}" label="{$c.name}"></el-option>	
+                    {/volist}
+				  </el-select>
+				</el-form-item>
+			  </el-form>
+			  <div slot="footer" class="dialog-footer">
+				<el-button size="mini" @click="modal1 = false">取 消</el-button>
+				<el-button size="mini" type="primary"  @click="addRow">确认</el-button>
+			  </div>
+        </el-dialog>
+		
+    </div>		
+</body>
+{include file="./static/html/footer_common.html" /}
+</html>
+ <script>
+    
+    new Vue({
+      el: '#wrapper',
+      data: function() {
+        return {
+            year:'2021',
+            schannel_id: '',
+			sproduct_id:'',
+			oldval:"",
+			newval:"",
+			smonth:"",
+			modal1:false,
+			product:"",
+			channel:"",
+			dialogVisible: false,
+			page:1,
+			index:0,
+			multipleSelection:[],
+			channel_id:"",
+			totalnum:0,
+			product_id:"",
+			month:"",
+			options:[],
+            dialogFormVisible: false,
+			fullscreenLoading:false,
+            loading: false,
+            tableData: []
+		}
+      },
+	  mounted(){		 
+		  	
+			this.getdata(1)
+			this.getproduct()
+		},
+	  methods:{
+	    getdata(page)
+		   {
+		     let _that = this
+			 _that.loading  =true
+			 axios.get('/finance/getData?year='+this.year+"&type=3"+"&page="+page+"&channel_id="+this.schannel_id+"&product_id="+this.sproduct_id)
+			  .then(function (response) {
+				 _that.loading  =false
+				 _that.tableData = response.data.tableData
+				 _that.totalnum = response.data.totalnum
+			  })
+			  .catch(function (error) {
+				console.log(error);
+			  });
+		   },
+	   handleSelectionChange(val) {       
+		 this.multipleSelection = val;
+       },
+	   dataFilter(node, val) {
+		  if (!!~node.label.indexOf(val) || !!~node.label.toUpperCase().indexOf(val.toUpperCase())) {
+			return true
+		  }
+	   },
+	   handleDisable(row, index){
+	     if( row.channel=="总计" )
+		 {
+		    return false
+		 }
+		 return true
+	   },
+		handleCurrentChange(val){
+		  this.page = val
+		  this.getdata(val) 
+		},
+		getproduct()
+	   {
+		 let _that = this
+		 axios.get('/finance/product_json')
+		  .then(function (response) {
+			 _that.options = response.data
+		  })
+		  .catch(function (error) {
+			console.log(error);
+		  });
+	   },
+        change()
+		{
+		  this.getdata(1)
+		},
+		download()
+		{
+		  window.open("/finance/download?type=3");
+		},
+		openModal(){
+		     this.modal1 = true
+			 this.product = ""
+			 this.channel =""
+		},
+		addRow(){
+			this.fullscreenLoading = true;
+			let _that =this
+			axios({
+					method: 'post',
+					url:'/finance/addRow',
+					data:{
+					   channel:this.channel,
+					   type:3,
+					   year:this.year,
+					   product:this.product
+					}
+				}).then(res=>{
+				 _that.fullscreenLoading = false;
+				 _that.modal1 = false
+				 _that.getdata(1)
+			 })
+			},
+		opendDailog(index,oldval,channel_id,product_id,month){
+		  this.index = index
+		  this.dialogFormVisible = true
+		  this.oldval =oldval
+		  this.newval =""
+		  this.channel_id =channel_id
+		  this.product_id =product_id
+		  this.month=month
+		},
+		review(channel_id,product_id,month)
+		{
+			  axios({
+					method: 'post',
+					url:'/finance/reviewData1',
+					data:{
+					   channel_id:channel_id,
+					   product_id:product_id,
+					   month:month,
+					   year:this.year,
+					   type:3
+					}
+				}).then(res=>{			
+				 this.$message.success('复核成功');
+			 })
+		},
+		loadData(tab,event)
+		{
+
+		   this.year = tab.name
+		   this.page =1
+		   this.getdata(1)			   
+		},
+		selectReview()
+		{
+		  if( this.smonth=="" )
+		  {
+		    this.$message.error('请选择复核月份');return;
+		  }
+		  if( this.multipleSelection.length<1 )return;
+		  let _that = this
+		  axios({
+					method: 'post',
+					url:'/finance/selectReview',
+					data:{
+					   select:this.fiterMap(this.multipleSelection),
+					   month:this.smonth,
+					   year:this.year,
+					   type:3
+					}
+					}).then(res=>{				
+					  _that.dialogVisible = false
+					  _that.getdata(_that.page)
+				 })
+		},
+		fiterMap(data){
+		      return data.map(function (t) {
+					  return {
+						channel_id:t.channel_id,
+						product_id:t.product_id
+					  }
+				})
+		},
+        save(isreview)
+		{
+
+		   let _that = this
+			  axios({
+						method: 'post',
+						url:'/finance/saveData1',
+						data:{
+						   oldval:this.oldval,
+						   newval:this.newval,
+						   channel_id:this.channel_id,
+						   product_id:this.product_id,
+						   month:this.month,
+						   year:this.year,
+						   isreview:isreview,
+						   type:3
+						}
+					}).then(res=>{				
+					  _that.dialogFormVisible = false
+					   _that.getdata(_that.page)
+				 })
+		}		
+	  }
+    })
+  </script>

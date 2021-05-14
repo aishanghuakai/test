@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GameBrain</title>
+    {include file="./static/html/header_common.html" /}
+	<link href="/static/css/userinfo.css" rel="stylesheet" type="text/css" />
+	<link href="/static/css/checkbox.css" rel="stylesheet" type="text/css" />
+	<link href="/static/css/dialog.css" rel="stylesheet" type="text/css" />
+    <style>
+	  pagination > .active > a, .pagination > .active > a:focus, .pagination > .active > a:hover, .pagination > .active > span, .pagination > .active > span:focus, .pagination > .active > span:hover {
+   
+    background-color: #f66e62;
+    border-color: #f66e62;
+}
+  .pagination > li > a, .pagination > li > span {
+  
+    padding: 16px 22px !important; 
+}
+	</style>	
+</head>
+ 
+<body>
+    <div id="wrapper" style="background: #fff;">
+        {include file="./static/html/header.html" /}	
+		<div class="hw_page_content">
+		    <div class="hw_menu_left">
+         {include file="./static/html/side.html" /}  
+			</div>
+		    <div class="hw_content_right">
+			    <ul class="search_tab clearfix" >
+			      <li class="active"><a  href="javascript:;">应用备注</a></li>
+                  <li style="float:right;"><button onclick="window.location.href='/admin_remark/add'" class="hw_game-btn hw_game-btn-negative" >添加备注</button></li>				  
+		        </ul>
+			  	
+                	<div style="padding:0px 30px;">
+			           <ul>
+					     {volist name="list" id="item"}
+						  <li>
+							<div class="my_task_list">
+							   <h2><a data-title="{$item.title}" class="look" data-content="{$item.content|htmlspecialchars}" href="javascript:;"><span style="color:#ff8282">【{$item.app_id|getapp_name}】</span>{$item.title}</a></h2>
+								<p>							
+									<span style="margin-left:10px;">{$item.add_time|strtotime|date='Y.m.d H:i',###} </span>
+									<span style="margin-left:5px;"><i class="fa fa-user-o" style="color:#ccc;"></i> {$item.userid|getusername}</span>
+									<span style="margin-left:5px;color:red"> {$item.tag|getrolename}</span>
+									<span class="cate_gory"><a href="/admin_remark/edit?id={$item.id}">修改</a><a class="delete" data-id="{$item.id}">删除</a></span>
+								</p>
+								<div class="bottom_line"></div>
+							</div>
+						 </li>
+                        {/volist}					 
+				      </ul>
+					   <div style="text-align:center;">{$list->render()}</div>
+			        </div>				
+			</div>
+			<div id="show_content"></div>
+			
+		</div>
+		 {include file="./static/html/footer.html" /}
+	</div>	
+</body>
+ {include file="./static/html/footer_common.html" /}
+ <script>
+    $(function(){
+         $(document).on( 'click','.delete',function(event){
+			var id = $(this).attr("data-id");
+			var _$ = $(this);
+			layer.confirm('确认删除后数据将不会保存?', {
+				  btn: ['确认','取消'] //按钮
+				}, function(){
+				  var index = layer.load(1, {
+							  shade: [0.1,'#fff'] //0.1透明度的白色背景
+							});
+				   $.post("/admin_remark/delete",{id:id},function(e){
+					   layer.closeAll();
+						 if("ok"==e)
+						 {
+							_$.parents("li").remove();
+							layer.alert('删除成功');								
+						 }else{
+						   layer.msg('网络异常,删除失败', {icon: 1});
+						 }
+				   })
+				 
+				}, function(){
+				  
+				});
+		 
+		   return false;
+	   });
+	   $(document).on("click",".look",function(){
+	      var title = $(this).attr("data-title");
+		  var content =  $(this).attr("data-content");
+	      var html ='<div class="hw-dialog "><div class="hw_modal"></div><div class="hw_game-dialog"><div class="dialog-header">';
+				html+='<div class="title">'+title+'</div><div class="close"></div></div><div class="dialog-body">';
+                html+=content;
+				html+='</div><div class="dialog-footer">';						  
+				html+='<button type="button" style="background-color: #f85959;color: #fff;border-color: #f85959;" class="hw_game-btn hw_game-btn-default hw_close">关 闭</button></div></div></div>';
+	        $("#show_content").html(html);   
+	   })
+	   $(document).on( 'click','.hw_close',function(event){
+	       $(".hw-dialog").remove();
+	   })
+	});
+ </script>
+</html>

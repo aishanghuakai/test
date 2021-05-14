@@ -1,0 +1,14 @@
+﻿
+		   {volist name="res" id="vv"}							   
+			   <tr>										 
+				 <td class="view"  onclick="iframeopen(this)" ad_id="{$vv.ad_id}" style="width:30%;text-align:left;color:#004e31">{$vv.ad_name}<div style="font-size:10px;color:#222">【{$vv.campaign_name}】</div></td>
+				 <td>${$vv.spend}</td>										 
+				 <td>{$vv.impressions}</td>
+				 <td>{$vv.clicks}</td>										 
+				 <td>{$vv.installs}</td>
+				 <td style="color:red;font-weight:700">{$vv.ctr}%</td>
+				 <td style="color:green;font-weight:700">{$vv.cvr}%</td>
+                 <td style="color:#ec971f;font-weight:700">${$vv.cpi}</td>					 
+				</tr>
+			{/volist}									
+							  

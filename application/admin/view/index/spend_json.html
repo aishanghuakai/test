@@ -1,0 +1,153 @@
+                <tbody>
+									 
+		 {volist name="list" id="vv"}
+		<tr>
+		  <td style="background-color: #eef1f6;border-bottom:1px solid #ebedf2;"><div >({$vv.date|getweekday}) {$vv.date} {if condition="$vv['advertiser_showtips'] neq '0'"}<sup data-mtpis="{$vv['advertiser_showtips']}" ><i style="color:red;font-size:10px;" class="fa fa-commenting-o"></i></sup>  {/if} </div> </td>
+		  <td>{$vv["result"]["total"]["installs"]}</td>
+		  <td>${$vv["result"]["total"]["spend"]}</td>									 
+		  <td style="border-right:1px solid #ebedf2">${$vv["result"]["total"]["cpi"]}</td>
+		  
+		  <td>{$vv["result"]["6"]["installs"]}<span style="color:#777">/<?php if( $vv["result"]["total"]["installs"]<=0 ){ echo "0";}else{ echo round($vv["result"]["6"]["installs"]*100/$vv["result"]["total"]["installs"],2); } ?>%</span></td>
+		  <td>${$vv["result"]["6"]["spend"]}<span style="color:#777">/<?php if( $vv["result"]["total"]["spend"]<=0 ){ echo "0";}else{ echo round($vv["result"]["6"]["spend"]*100/$vv["result"]["total"]["spend"],2); } ?>%</span></td>									 
+		  <td style="border-right:1px solid #ebedf2">${$vv["result"]["6"]["cpi"]}</td>
+		  
+		  <td>{$vv["result"]["5"]["installs"]}<span style="color:#777">/<?php if( $vv["result"]["total"]["installs"]<=0 ){ echo "0";}else{ echo round($vv["result"]["5"]["installs"]*100/$vv["result"]["total"]["installs"],2); } ?>%</span></td>
+		  <td>${$vv["result"]["5"]["spend"]}<span style="color:#777">/<?php if( $vv["result"]["total"]["spend"]<=0 ){ echo "0";}else{ echo round($vv["result"]["5"]["spend"]*100/$vv["result"]["total"]["spend"],2); } ?>%</span></td>								 
+		  <td style="border-right:1px solid #ebedf2">${$vv["result"]["5"]["cpi"]}</td>
+		  
+		 <td>{$vv["result"]["3"]["installs"]}<span style="color:#777">/<?php if( $vv["result"]["total"]["installs"]<=0 ){ echo "0";}else{ echo round($vv["result"]["3"]["installs"]*100/$vv["result"]["total"]["installs"],2); } ?>%</span></td>
+		 <td>${$vv["result"]["3"]["spend"]}<span style="color:#777">/<?php if( $vv["result"]["total"]["spend"]<=0 ){ echo "0";}else{ echo round($vv["result"]["3"]["spend"]*100/$vv["result"]["total"]["spend"],2); } ?>%</span></td>							 
+		  <td style="border-right:1px solid #ebedf2">${$vv["result"]["3"]["cpi"]}</td>
+		  
+		  <td>{$vv["result"]["2"]["installs"]}<span style="color:#777">/<?php if( $vv["result"]["total"]["installs"]<=0 ){ echo "0";}else{ echo round($vv["result"]["2"]["installs"]*100/$vv["result"]["total"]["installs"],2); } ?>%</span></td>
+		  <td>${$vv["result"]["2"]["spend"]}<span style="color:#777">/<?php if( $vv["result"]["total"]["spend"]<=0 ){ echo "0";}else{ echo round($vv["result"]["2"]["spend"]*100/$vv["result"]["total"]["spend"],2); } ?>%</span></td>									 
+		  <td style="border-right:1px solid #ebedf2">${$vv["result"]["2"]["cpi"]}</td>
+		  
+		  <td>{$vv["result"]["4"]["installs"]}<span style="color:#777">/<?php if( $vv["result"]["total"]["installs"]<=0 ){ echo "0";}else{ echo round($vv["result"]["4"]["installs"]*100/$vv["result"]["total"]["installs"],2); } ?>%</span></td>
+		  <td>${$vv["result"]["4"]["spend"]}<span style="color:#777">/<?php if( $vv["result"]["total"]["spend"]<=0 ){ echo "0";}else{ echo round($vv["result"]["4"]["spend"]*100/$vv["result"]["total"]["spend"],2); } ?>%</span></td>									 
+		  <td style="border-right:1px solid #ebedf2">${$vv["result"]["4"]["cpi"]}</td>
+		  
+		 <td>{$vv["result"]["8"]["installs"]}<span style="color:#777">/<?php if( $vv["result"]["total"]["installs"]<=0 ){ echo "0";}else{ echo round($vv["result"]["8"]["installs"]*100/$vv["result"]["total"]["installs"],2); } ?>%</span></td>
+		  <td>${$vv["result"]["8"]["spend"]}<span style="color:#777">/<?php if( $vv["result"]["total"]["spend"]<=0 ){ echo "0";}else{ echo round($vv["result"]["8"]["spend"]*100/$vv["result"]["total"]["spend"],2); } ?>%</span></td>									 
+		 <td style="border-right:1px solid #ebedf2">${$vv["result"]["8"]["cpi"]}</td>
+		 
+		 <td>{$vv["result"]["31"]["installs"]}<span style="color:#777">/<?php if( $vv["result"]["total"]["installs"]<=0 ){ echo "0";}else{ echo round($vv["result"]["31"]["installs"]*100/$vv["result"]["total"]["installs"],2); } ?>%</span></td>
+		  <td>${$vv["result"]["31"]["spend"]}<span style="color:#777">/<?php if( $vv["result"]["total"]["spend"]<=0 ){ echo "0";}else{ echo round($vv["result"]["31"]["spend"]*100/$vv["result"]["total"]["spend"],2); } ?>%</span></td>									 
+		 <td style="border-right:1px solid #ebedf2">${$vv["result"]["31"]["cpi"]}</td>
+		 
+		 <td>{$vv["result"]["1"]["installs"]}<span style="color:#777">/<?php if( $vv["result"]["total"]["installs"]<=0 ){ echo "0";}else{ echo round($vv["result"]["1"]["installs"]*100/$vv["result"]["total"]["installs"],2); } ?>%</span></td>
+		  <td>${$vv["result"]["1"]["spend"]}<span style="color:#777">/<?php if( $vv["result"]["total"]["spend"]<=0 ){ echo "0";}else{ echo round($vv["result"]["1"]["spend"]*100/$vv["result"]["total"]["spend"],2); } ?>%</span></td>									 
+		 <td style="border-right:1px solid #ebedf2">${$vv["result"]["1"]["cpi"]}</td>
+		 
+		 <td>{$vv["result"]["9"]["installs"]}<span style="color:#777">/<?php if( $vv["result"]["total"]["installs"]<=0 ){ echo "0";}else{ echo round($vv["result"]["9"]["installs"]*100/$vv["result"]["total"]["installs"],2); } ?>%</span></td>
+		 <td>${$vv["result"]["9"]["spend"]}<span style="color:#777">/<?php if( $vv["result"]["total"]["spend"]<=0 ){ echo "0";}else{ echo round($vv["result"]["9"]["spend"]*100/$vv["result"]["total"]["spend"],2); } ?>%</span></td>									 
+		 <td style="border-right:1px solid #ebedf2">${$vv["result"]["9"]["cpi"]}</td>
+		 
+		 <td>{$vv["result"]["7"]["installs"]}<span style="color:#777">/<?php if( $vv["result"]["total"]["installs"]<=0 ){ echo "0";}else{ echo round($vv["result"]["7"]["installs"]*100/$vv["result"]["total"]["installs"],2); } ?>%</span></td>
+		  <td>${$vv["result"]["7"]["spend"]}<span style="color:#777">/<?php if( $vv["result"]["total"]["spend"]<=0 ){ echo "0";}else{ echo round($vv["result"]["7"]["spend"]*100/$vv["result"]["total"]["spend"],2); } ?>%</span></td>								 
+		 <td style="border-right:1px solid #ebedf2">${$vv["result"]["7"]["cpi"]}</td>
+		 
+		 <td>{$vv["result"]["32"]["installs"]}<span style="color:#777">/<?php if( $vv["result"]["total"]["installs"]<=0 ){ echo "0";}else{ echo round($vv["result"]["32"]["installs"]*100/$vv["result"]["total"]["installs"],2); } ?>%</span></td>
+		  <td>${$vv["result"]["32"]["spend"]}<span style="color:#777">/<?php if( $vv["result"]["total"]["spend"]<=0 ){ echo "0";}else{ echo round($vv["result"]["32"]["spend"]*100/$vv["result"]["total"]["spend"],2); } ?>%</span></td>									 
+		 <td style="border-right:1px solid #ebedf2">${$vv["result"]["32"]["cpi"]}</td>
+		 
+		 <td>{$vv["result"]["36"]["installs"]}<span style="color:#777">/<?php if( $vv["result"]["total"]["installs"]<=0 ){ echo "0";}else{ echo round($vv["result"]["36"]["installs"]*100/$vv["result"]["total"]["installs"],2); } ?>%</span></td>
+		  <td>${$vv["result"]["36"]["spend"]}<span style="color:#777">/<?php if( $vv["result"]["total"]["spend"]<=0 ){ echo "0";}else{ echo round($vv["result"]["36"]["spend"]*100/$vv["result"]["total"]["spend"],2); } ?>%</span></td>									 
+		 <td style="border-right:1px solid #ebedf2">${$vv["result"]["36"]["cpi"]}</td>
+		 
+		 <td>{$vv["result"]["38"]["installs"]}<span style="color:#777">/<?php if( $vv["result"]["total"]["installs"]<=0 ){ echo "0";}else{ echo round($vv["result"]["38"]["installs"]*100/$vv["result"]["total"]["installs"],2); } ?>%</span></td>
+		  <td>${$vv["result"]["38"]["spend"]}<span style="color:#777">/<?php if( $vv["result"]["total"]["spend"]<=0 ){ echo "0";}else{ echo round($vv["result"]["38"]["spend"]*100/$vv["result"]["total"]["spend"],2); } ?>%</span></td>									 
+		 <td style="border-right:1px solid #ebedf2">${$vv["result"]["38"]["cpi"]}</td>
+		 
+		 
+		 <td>{$vv["result"]["39"]["installs"]}<span style="color:#777">/<?php if( $vv["result"]["total"]["installs"]<=0 ){ echo "0";}else{ echo round($vv["result"]["39"]["installs"]*100/$vv["result"]["total"]["installs"],2); } ?>%</span></td>
+		  <td>${$vv["result"]["39"]["spend"]}<span style="color:#777">/<?php if( $vv["result"]["total"]["spend"]<=0 ){ echo "0";}else{ echo round($vv["result"]["39"]["spend"]*100/$vv["result"]["total"]["spend"],2); } ?>%</span></td>									 
+		 <td style="border-right:1px solid #ebedf2">${$vv["result"]["39"]["cpi"]}</td>
+		 
+		 
+		 <td>{$vv["result"]["42"]["installs"]}<span style="color:#777">/<?php if( $vv["result"]["total"]["installs"]<=0 ){ echo "0";}else{ echo round($vv["result"]["42"]["installs"]*100/$vv["result"]["total"]["installs"],2); } ?>%</span></td>
+		  <td>${$vv["result"]["42"]["spend"]}<span style="color:#777">/<?php if( $vv["result"]["total"]["spend"]<=0 ){ echo "0";}else{ echo round($vv["result"]["42"]["spend"]*100/$vv["result"]["total"]["spend"],2); } ?>%</span></td>									 
+		 <td style="border-right:1px solid #ebedf2">${$vv["result"]["42"]["cpi"]}</td>
+		 {volist name="names" id="n"}
+		  <td>{$vv["result"][$n['platform_id']]["installs"]}<span style="color:#777">/<?php if( $vv["result"]["total"]["installs"]<=0 ){ echo "0";}else{ echo round($vv["result"][$n['platform_id']]["installs"]*100/$vv["result"]["total"]["installs"],2); } ?>%</span> <i v="{$vv["result"][$n['platform_id']]["installs"]}" date="{$vv.date}" platform="{$n.platform_id}" index="installs" style="font-size:10px;color:#ccc;" class="fa fa-tag edit"></i></td>
+		  <td>${$vv["result"][$n['platform_id']]["spend"]}<span style="color:#777">/<?php if( $vv["result"]["total"]["spend"]<=0 ){ echo "0";}else{ echo round($vv["result"][$n['platform_id']]["spend"]*100/$vv["result"]["total"]["spend"],2); } ?>%</span> <i v="{$vv["result"][$n['platform_id']]["spend"]}" date="{$vv.date}" platform="{$n.platform_id}" index="spend" style="font-size:10px;color:#ccc;" class="fa fa-tag edit"></i></td>
+		  <td style="border-right:1px solid #ebedf2">${$vv["result"][$n['platform_id']]["cpi"]}</td>
+		 {/volist}
+		 <td><i date="{$vv.date}" class="fa fa-pencil-square-o"></i></td>									 
+		</tr>                             
+		{/volist}
+	  </tbody>
+	  <tfoot>
+			  <tr style="border-top:2px solid #49beb7;">
+			  <td style="color:#f27056;font-weight:700;background-color:#eef1f6">总计</td>
+			  <td>{$total_data["total"]["installs"]}</td>
+			  <td>${$total_data["total"]["spend"]}</td>
+			  <td style="border-right:1px solid #ebedf2;">${$total_data["total"]["cpi"]}</td>
+			  
+			  <td>{$total_data["6"]["installs"]}<span style="color:#777">/<?php if( $total_data["total"]["installs"]<=0 ){ echo "0";}else{ echo round($total_data["6"]["installs"]*100/$total_data["total"]["installs"],2); } ?>%</span></td>
+			  <td>${$total_data["6"]["spend"]}<span style="color:#777">/<?php if( $total_data["total"]["spend"]<=0 ){ echo "0";}else{ echo round($total_data["6"]["spend"]*100/$total_data["total"]["spend"],2); } ?>%</span></td>									 
+			  <td style="border-right:1px solid #ebedf2">${$total_data["6"]["cpi"]}</td>
+			  
+			  <td>{$total_data["5"]["installs"]}<span style="color:#777">/<?php if( $total_data["total"]["installs"]<=0 ){ echo "0";}else{ echo round($total_data["5"]["installs"]*100/$total_data["total"]["installs"],2); } ?>%</span></td>
+			  <td>${$total_data["5"]["spend"]}<span style="color:#777">/<?php if( $total_data["total"]["spend"]<=0 ){ echo "0";}else{ echo round($total_data["5"]["spend"]*100/$total_data["total"]["spend"],2); } ?>%</span></td>										 						 
+			  <td style="border-right:1px solid #ebedf2">${$total_data["5"]["cpi"]}</td>
+			  
+			  <td>{$total_data["3"]["installs"]}<span style="color:#777">/<?php if( $total_data["total"]["installs"]<=0 ){ echo "0";}else{ echo round($total_data["3"]["installs"]*100/$total_data["total"]["installs"],2); } ?>%</span></td>
+			  <td>${$total_data["3"]["spend"]}<span style="color:#777">/<?php if( $total_data["total"]["spend"]<=0 ){ echo "0";}else{ echo round($total_data["3"]["spend"]*100/$total_data["total"]["spend"],2); } ?>%</span></td>								 
+			  <td style="border-right:1px solid #ebedf2">${$total_data["3"]["cpi"]}</td>
+			  
+			   <td>{$total_data["2"]["installs"]}<span style="color:#777">/<?php if( $total_data["total"]["installs"]<=0 ){ echo "0";}else{ echo round($total_data["2"]["installs"]*100/$total_data["total"]["installs"],2); } ?>%</span></td>
+			  <td>${$total_data["2"]["spend"]}<span style="color:#777">/<?php if( $total_data["total"]["spend"]<=0 ){ echo "0";}else{ echo round($total_data["2"]["spend"]*100/$total_data["total"]["spend"],2); } ?>%</span></td>								 
+			  <td style="border-right:1px solid #ebedf2">${$total_data["2"]["cpi"]}</td>
+			  
+			   <td>{$total_data["4"]["installs"]}<span style="color:#777">/<?php if( $total_data["total"]["installs"]<=0 ){ echo "0";}else{ echo round($total_data["4"]["installs"]*100/$total_data["total"]["installs"],2); } ?>%</span></td>
+			  <td>${$total_data["4"]["spend"]}<span style="color:#777">/<?php if( $total_data["total"]["spend"]<=0 ){ echo "0";}else{ echo round($total_data["4"]["spend"]*100/$total_data["total"]["spend"],2); } ?>%</span></td>								 
+			  <td style="border-right:1px solid #ebedf2">${$total_data["4"]["cpi"]}</td>
+			  
+			  <td>{$total_data["8"]["installs"]}<span style="color:#777">/<?php if( $total_data["total"]["installs"]<=0 ){ echo "0";}else{ echo round($total_data["8"]["installs"]*100/$total_data["total"]["installs"],2); } ?>%</span></td>
+			  <td>${$total_data["8"]["spend"]}<span style="color:#777">/<?php if( $total_data["total"]["spend"]<=0 ){ echo "0";}else{ echo round($total_data["8"]["spend"]*100/$total_data["total"]["spend"],2); } ?>%</span></td>									 
+			 <td style="border-right:1px solid #ebedf2">${$total_data["8"]["cpi"]}</td>
+			 
+			  <td>{$total_data["31"]["installs"]}<span style="color:#777">/<?php if( $total_data["total"]["installs"]<=0 ){ echo "0";}else{ echo round($total_data["31"]["installs"]*100/$total_data["total"]["installs"],2); } ?>%</span></td>
+			  <td>${$total_data["31"]["spend"]}<span style="color:#777">/<?php if( $total_data["total"]["spend"]<=0 ){ echo "0";}else{ echo round($total_data["31"]["spend"]*100/$total_data["total"]["spend"],2); } ?>%</span></td>									 
+			 <td style="border-right:1px solid #ebedf2">${$total_data["31"]["cpi"]}</td>
+			 
+			  <td>{$total_data["1"]["installs"]}<span style="color:#777">/<?php if( $total_data["total"]["installs"]<=0 ){ echo "0";}else{ echo round($total_data["1"]["installs"]*100/$total_data["total"]["installs"],2); } ?>%</span></td>
+			  <td>${$total_data["1"]["spend"]}<span style="color:#777">/<?php if( $total_data["total"]["spend"]<=0 ){ echo "0";}else{ echo round($total_data["1"]["spend"]*100/$total_data["total"]["spend"],2); } ?>%</span></td>								 
+			 <td style="border-right:1px solid #ebedf2">${$total_data["1"]["cpi"]}</td>
+			 
+			 <td>{$total_data["9"]["installs"]}<span style="color:#777">/<?php if( $total_data["total"]["installs"]<=0 ){ echo "0";}else{ echo round($total_data["9"]["installs"]*100/$total_data["total"]["installs"],2); } ?>%</span></td>
+			  <td>${$total_data["9"]["spend"]}<span style="color:#777">/<?php if( $total_data["total"]["spend"]<=0 ){ echo "0";}else{ echo round($total_data["9"]["spend"]*100/$total_data["total"]["spend"],2); } ?>%</span></td>									 
+			 <td style="border-right:1px solid #ebedf2">${$total_data["9"]["cpi"]}</td>
+			 
+			 <td>{$total_data["7"]["installs"]}<span style="color:#777">/<?php if( $total_data["total"]["installs"]<=0 ){ echo "0";}else{ echo round($total_data["7"]["installs"]*100/$total_data["total"]["installs"],2); } ?>%</span></td>
+			  <td>${$total_data["7"]["spend"]}<span style="color:#777">/<?php if( $total_data["total"]["spend"]<=0 ){ echo "0";}else{ echo round($total_data["7"]["spend"]*100/$total_data["total"]["spend"],2); } ?>%</span></td>								 
+			 <td style="border-right:1px solid #ebedf2">${$total_data["7"]["cpi"]}</td>
+			 
+			  <td>{$total_data["32"]["installs"]}<span style="color:#777">/<?php if( $total_data["total"]["installs"]<=0 ){ echo "0";}else{ echo round($total_data["32"]["installs"]*100/$total_data["total"]["installs"],2); } ?>%</span></td>
+			  <td>${$total_data["32"]["spend"]}<span style="color:#777">/<?php if( $total_data["total"]["spend"]<=0 ){ echo "0";}else{ echo round($total_data["32"]["spend"]*100/$total_data["total"]["spend"],2); } ?>%</span></td>								 
+			 <td style="border-right:1px solid #ebedf2">${$total_data["32"]["cpi"]}</td>
+			 
+			 <td>{$total_data["36"]["installs"]}<span style="color:#777">/<?php if( $total_data["total"]["installs"]<=0 ){ echo "0";}else{ echo round($total_data["36"]["installs"]*100/$total_data["total"]["installs"],2); } ?>%</span></td>
+			  <td>${$total_data["36"]["spend"]}<span style="color:#777">/<?php if( $total_data["total"]["spend"]<=0 ){ echo "0";}else{ echo round($total_data["36"]["spend"]*100/$total_data["total"]["spend"],2); } ?>%</span></td>								 
+			 <td style="border-right:1px solid #ebedf2">${$total_data["36"]["cpi"]}</td>
+			 
+			 <td>{$total_data["38"]["installs"]}<span style="color:#777">/<?php if( $total_data["total"]["installs"]<=0 ){ echo "0";}else{ echo round($total_data["38"]["installs"]*100/$total_data["total"]["installs"],2); } ?>%</span></td>
+			  <td>${$total_data["38"]["spend"]}<span style="color:#777">/<?php if( $total_data["total"]["spend"]<=0 ){ echo "0";}else{ echo round($total_data["38"]["spend"]*100/$total_data["total"]["spend"],2); } ?>%</span></td>								 
+			 <td style="border-right:1px solid #ebedf2">${$total_data["38"]["cpi"]}</td>
+			 
+			 <td>{$total_data["39"]["installs"]}<span style="color:#777">/<?php if( $total_data["total"]["installs"]<=0 ){ echo "0";}else{ echo round($total_data["39"]["installs"]*100/$total_data["total"]["installs"],2); } ?>%</span></td>
+			  <td>${$total_data["39"]["spend"]}<span style="color:#777">/<?php if( $total_data["total"]["spend"]<=0 ){ echo "0";}else{ echo round($total_data["39"]["spend"]*100/$total_data["total"]["spend"],2); } ?>%</span></td>								 
+			 <td style="border-right:1px solid #ebedf2">${$total_data["39"]["cpi"]}</td>
+			 
+			 
+			 <td>{$total_data["42"]["installs"]}<span style="color:#777">/<?php if( $total_data["total"]["installs"]<=0 ){ echo "0";}else{ echo round($total_data["42"]["installs"]*100/$total_data["total"]["installs"],2); } ?>%</span></td>
+			  <td>${$total_data["42"]["spend"]}<span style="color:#777">/<?php if( $total_data["total"]["spend"]<=0 ){ echo "0";}else{ echo round($total_data["42"]["spend"]*100/$total_data["total"]["spend"],2); } ?>%</span></td>								 
+			 <td style="border-right:1px solid #ebedf2">${$total_data["42"]["cpi"]}</td>
+		  {volist name="names" id="n"}
+			 <td>{$total_data[$n['platform_id']]["installs"]}<span style="color:#777">/<?php if( $total_data["total"]["installs"]<=0 ){ echo "0";}else{ echo round($total_data[$n['platform_id']]["installs"]*100/$total_data["total"]["installs"],2); } ?>%</span></td>							
+			 <td>${$total_data[$n['platform_id']]["spend"]}<span style="color:#777">/<?php if( $total_data["total"]["spend"]<=0 ){ echo "0";}else{ echo round($total_data[$n['platform_id']]["spend"]*100/$total_data["total"]["spend"],2); } ?>%</span></td>
+			 <td>${$total_data[$n['platform_id']]["cpi"]}</td>
+		  {/volist}
+		   </tr>
+	  </tfoot>

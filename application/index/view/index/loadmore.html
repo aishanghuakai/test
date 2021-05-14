@@ -1,0 +1,17 @@
+			{volist name="list" id="vo"}
+				<div class="grid__item">
+					<div><a class="grid__link" href="javascript:;"><img class="grid__img" src="{$vo.thumb}" alt="{$vo.descript}" />
+					<span style="position:absolute;right:1px;top:3px;padding:2px 10px;" ><i class="fa fa-image"></i> {$vo.num}</span>
+					</a>
+						<ul class="views_show">
+						{volist name="vo['list']" id="vv"}
+						<img src="{$vv}" alt="{$vo.descript}">
+						{/volist}					
+				     </ul>
+					</div>
+					<div class="description"><div class="name">{$vo.descript}</div></div>
+					<div class="options" style="float:right;"><a href="javascript:void(0)" data-id="{$vo.id}" class="fabulous"><i class="fa fa-thumbs-o-up"></i><span class="like">{$vo.like}</span></a></div>
+				</div>
+			{/volist}
+			<script src="/static/index/js/main.js"></script>
+			

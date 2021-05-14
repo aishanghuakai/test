@@ -1,0 +1,85 @@
+﻿<form  style="text-align:center;" class="attr_form">
+ {if condition="!empty($res)"}
+{volist name="res" id="item"}
+<div class="row"><div class="input-field col s3">
+ <select class="form-control" name="prop_value_one[]">
+								  <option value="country">国家</option>
+								  <option {if condition="$item.prop_value_one eq 'US'"}selected{/if} value="US">美国</option>
+								  <option {if condition="$item.prop_value_one eq 'TW'"}selected{/if} value="TW">台湾</option>
+								  <option {if condition="$item.prop_value_one eq 'HK'"}selected{/if} value="HK">香港</option>
+								  <option {if condition="$item.prop_value_one eq 'JP'"}selected{/if} value="JP">日本</option>
+								  <option {if condition="$item.prop_value_one eq 'KR'"}selected{/if} value="KR">韩国</option>
+								  <option {if condition="$item.prop_value_one eq 'DE'"}selected{/if} value="DE">德国</option>
+								  <option {if condition="$item.prop_value_one eq 'FR'"}selected{/if} value="FR">法国</option>
+								  <option {if condition="$item.prop_value_one eq 'CN'"}selected{/if} value="CN">中国</option>
+								  <option {if condition="$item.prop_value_one eq 'RU'"}selected{/if} value="RU">俄罗斯</option>
+								  <option {if condition="$item.prop_value_one eq 'CA'"}selected{/if} value="CA">加拿大</option>
+								  <option {if condition="$item.prop_value_one eq 'GB'"}selected{/if} value="GB">英国</option>
+								  <option {if condition="$item.prop_value_one eq 'ID'"}selected{/if} value="ID">印度尼西亚</option>
+								  <option {if condition="$item.prop_value_one eq 'TH'"}selected{/if} value="TH">泰国</option>
+								  <option {if condition="$item.prop_value_one eq 'BR'"}selected{/if} value="BR">巴西</option>
+								</select>
+</div>
+	<div class="input-field col"><input  name="prop_value_two[]" type="text" value="{$item.prop_value_two}" class="form-control validate"></div>
+	<div class="input-field col s2"><input name="remark[]" type="text" value="{$item.remark}"  class="form-control validate"></div>
+	<input name="id[]" type="hidden" value="{$item.id}"  class="validate">
+	<div class="input-field col s2"><i class="fa fa-close fa-lg delete" onclick="deletemy(this);" title="删除" style="vertical-align:-10px;color:red;"></i></div>
+</div>
+ {/volist}
+ {for start="0" end="10-count($res)"}
+  <div class="row"><div class="input-field col s3">
+   <select class="form-control" name="prop_value_one[]">
+								  <option value="country">国家</option>
+								  <option  value="US">美国</option>
+								  <option  value="TW">台湾</option>
+								  <option  value="HK">香港</option>
+								  <option  value="JP">日本</option>
+								   <option value="KR">韩国</option>
+								   <option value="DE">德国</option>
+								   <option value="FR">法国</option>
+								   <option value="CN">中国</option>
+								   <option value="RU">俄罗斯</option>
+								   <option value="CA">加拿大</option>
+								   <option value="GB">英国</option>
+								   <option value="ID">印度尼西亚</option>
+								   <option value="TH">泰国</option>
+								   <option value="BR">巴西</option>
+								</select>
+  </div>
+	<div class="input-field col "><input  name="prop_value_two[]" type="text" placeholder="属性值" class="form-control validate"></div>
+	<div class="input-field col s2"><input name="remark[]" type="text" placeholder="排序"  class="form-control validate"></div>
+	<input name="id[]" type="hidden" value="0"  class="validate">
+	<div class="input-field col s2"><i class="fa fa-close fa-lg delete" onclick="deletemy(this);" title="删除" style="vertical-align:-10px;color:red;"></i></div>
+</div>
+ {/for}
+ {else /}
+ {for start="0" end="10"}
+ <div class="row"><div class="input-field col s3">
+ <select class="form-control" name="prop_value_one[]">
+								  <option value="country">国家</option>
+								  <option  value="US">美国</option>
+								  <option  value="TW">台湾</option>
+								  <option  value="HK">香港</option>
+								  <option  value="JP">日本</option>
+								   <option value="KR">韩国</option>
+								    <option  value="DE">德国</option>
+								   <option value="FR">法国</option>
+								    <option value="CN">中国</option>
+									<option value="RU">俄罗斯</option>
+									<option value="CA">加拿大</option>
+								   <option value="GB">英国</option>
+								   <option value="ID">印度尼西亚</option>
+								    <option value="TH">泰国</option>
+								   <option value="BR">巴西</option>
+								</select>
+ </div>
+	<div class="input-field col "><input  name="prop_value_two[]" type="text" placeholder="属性值" class="form-control validate"></div>
+	<div class="input-field col s2"><input name="remark[]" type="text" placeholder="排序"  class="form-control validate"></div>
+	<input name="id[]" type="hidden" value="0"  class="form-control validate">
+	<div class="input-field col s2"><i class="fa fa-close fa-lg delete" onclick="deletemy(this);" title="删除" style="vertical-align:-10px;color:red;"></i></div>
+</div>
+ {/for}
+ {/if}
+<input name="cfid" type="hidden" value="{$cfid}"  class="validate">
+<input class="waves-effect waves-light btn attr_save" onclick="return attr_save(this);" type="submit" style="background-color: #2ec376;margin-top:20px;width:140px;margin-bottom:10px;" value="保存"></input> 
+</form>

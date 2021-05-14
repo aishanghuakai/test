@@ -1,0 +1,110 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title></title>
+	{include file="./static/html/header_common.html" /}
+	 <style>
+	li{
+	   padding: 5px 0;
+list-style: none;
+ 
+font-size: 12px;
+	}
+	
+	td {
+    text-align: center;
+    color: #666666;
+}
+.card-action a {
+    font-size: 14px;
+    color: #999;
+}
+.card-action a:hover{
+  color:#222;
+}	
+	</style>	
+</head>
+<body>
+    <div id="wrapper">
+        
+		<!-- Dropdown Structure -->
+         {include file="./static/html/header.html" /} 
+         {include file="./static/html/side.html" /} 
+        <!-- /. NAV SIDE  -->
+        <div id="page-wrapper">
+		  <div class="header" style="float:left;">
+                  		  
+                    <h1 class="page-header">
+                            充值管理
+                        </h1>
+						<ol class="breadcrumb">
+					  <li><a href="#">主页</a></li>
+					  <li><a href="#">充值管理</a></li>
+					  <li class="active">按天统计</li>
+					</ol> 				   
+		    </div>
+			
+			
+			
+            <div id="page-inner" style="clear:both;padding-top:5px;"> 
+			
+			  <div class="row">
+                     <!--    Hover Rows  -->
+                    <div class="card">
+                        <div class="card-action">
+                            <div style="float:left;margin-right:20px;"><a style="color: #999;font-weight: normal;" href="/admin_order/list">购买详情</a></div>
+							<div style="float:left;"><a style="color: #222;font-weight: normal;" href="###">按天统计</a></div>
+							<div style="float:left;"><p><input id="uuid" style="height:2rem;margin:0;float:left;width:200px;color:#ccc;font-size: 12px;" placeholder="输入日期" value="" type="text" /> </p></div>			
+							<!-- <div style="float:right;">#</div> -->
+							<div id="search" style="float:right;margin-right:50px;color:#ccc;cursor:pointer;">搜索</div>
+                        </div>
+						
+                        <div class="card-content">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th style="vertical-align:middle; text-align:center;">#</th>
+                                            <th style="vertical-align:middle; text-align:center;">日期</th>
+                                            <th style="vertical-align:middle; text-align:center;">安卓购买次数</th>
+                                            <th style="vertical-align:middle; text-align:center;">iOS购买次数</th>
+											 <th style="vertical-align:middle; text-align:center;">安卓购买金额</th>
+											 <th style="vertical-align:middle; text-align:center;">iOS购买金额</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+									 {volist name="list" id="item"}
+                                        <tr>
+                                            <td style="vertical-align:middle; text-align:center;"><?php $p=isset($_GET["page"])?$_GET["page"]:1; echo ($p-1)*10+$key+1; ?></td>
+                                            <td style="vertical-align:middle; text-align:center;"><em style="color: #717171;">{$item.time}</em></td>
+                                            <td style="vertical-align:middle;text-align:center;">{$item.android_num}</td>
+                                            <td style="vertical-align:middle; text-align:center;">{$item.ios_num}</td>
+											<td style="vertical-align:middle; text-align:center;">{$item.android_money}</td>
+                                            <td style="vertical-align:middle; text-align:center;">{$item.ios_money}</td>
+                                        </tr>
+                                    {/volist}
+                                    </tbody>
+                                </table>
+								
+                            </div>
+                        </div>
+                    </div>
+         <!-- /. PAGE WRAPPER  -->
+        </div>
+     <!-- /. WRAPPER  -->
+    <!-- JS Scripts-->
+   {include file="./static/html/footer_common.html" /}
+</body>
+<script>
+   $("#search").click( function(){
+      var uuid = $("#uuid").val();
+	   if(uuid)
+	   {
+	     window.location.href='/admin_order/list?uuid='+uuid;
+	   }
+   })
+</script>
+</html>

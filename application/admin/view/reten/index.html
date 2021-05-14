@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta charset="utf-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<title>GAME BRAIN</title>
+	{include file="./static/html/header_common.html" /}
+	<link href="/static/css/adspend.css?t=122444455" rel="stylesheet" type="text/css">
+	<link href="/static/css/checkbox.css" rel="stylesheet" type="text/css">
+	<link rel="stylesheet" type="text/css" media="all" href="/static/plugin/jquery-time/daterangepicker-bs3.css"/>
+	    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+   <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <!-- import JavaScript -->
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <script src="/static/js/axios.min.js"></script>
+	<style>
+		.allow_click {
+			cursor: pointer
+		}
+
+		th, td {
+			text-align: center;
+			vertical-align: middle
+		}
+
+		.hw_reven table {
+			border-collapse: collapse;
+			font-size: 12px !important;
+			color: #222 !important;
+			text-align: left !important;
+			line-height: 40px;
+		}
+
+		.hw_reven .table > thead > tr > th, .hw_reven .table > tbody > tr > td {
+			border: 1px solid #ebedf2 !important;
+			color: #222 !important;
+			padding: 15px 0px !important;
+
+		}
+
+		.reten1 {
+			background-color: rgba(0, 160, 234, 0.95);
+		}
+
+		.reten2 {
+			background-color: rgba(0, 160, 234, 0.85);
+		}
+
+		.reten3 {
+			background-color: rgba(0, 160, 234, 0.75);
+		}
+
+		.reten4 {
+			background-color: rgba(0, 160, 234, 0.65);
+		}
+
+		.reten5 {
+			background-color: rgba(0, 160, 234, 0.55);
+		}
+
+		.reten6 {
+			background-color: rgba(0, 160, 234, 0.45);
+		}
+
+		.reten7 {
+			background-color: rgba(0, 160, 234, 0.35);
+		}
+
+		.reten8 {
+			background-color: rgba(0, 160, 234, 0.25);
+		}
+
+		.reten9 {
+			background-color: rgba(0, 160, 234, 0.15);
+		}
+
+		.reten10 {
+			background-color: rgba(0, 160, 234, 0.05);
+		}
+
+		.reten0 {
+			background-color: #fff;
+		}
+
+		.country .c-dropdown__item {
+			display: block;
+			padding: 5px 7px;
+			border-bottom: none;
+			color: #768093;
+			font-size: 10px;
+			font-weight: 400;
+			border: none !important;
+			float: left;
+			margin-top: 0px !important;
+		}
+	</style>
+</head>
+<body style="background-color:#fff;">
+<div id="wrapper" style="background-color:#fff;">
+
+	{include file="./static/html/header.html" /}
+
+	<div class="hw_page_content">
+
+		<div class="hw_menu_left">
+			{include file="./static/html/side.html" /}
+		</div>
+		<div class="hw_content_right hlwd_reten" style="border-radius:10px;width:100%;">
+
+			<div class="hw_content">
+
+				<div class="reten_title" style="float:left;margin-top:35px;font-size:18px;margin-left:10px;color:#222">留存展示
+				</div>
+				<div class="hw_ad_title">
+					<span>
+						<span class="country" id="from" data="{$from_name}" style="position:relative;">
+							<a href="javascript:;" style="margin-right:10px;background-color:#48ba9e;color:#fff;border-color:#48ba9e;"
+								 class="dropdown_switch dropdown-toggle" id="dropdownMenuAvatar3" data-toggle="dropdown"
+								 aria-haspopup="true" aria-expanded="false" role="button">
+								<label style="font-weight:400;">{$from_name}</label>
+								<i class="fa fa-caret-down" style="margin:0px 6px;"></i>
+							</a>
+							<div class="c-dropdown__menu has-arrow dropdown-menu dropdown-menu-right"
+									 aria-labelledby="dropdownMenuAvatar3" style="position:absolute;top:28px;right:20px;">
+								<a class="c-dropdown__item dropdown-item" data="GA" href="javascript:;">GA</a>
+								<a class="c-dropdown__item dropdown-item" data="Adjust" href="javascript:;">Adjust</a>
+							</div>
+						</span>
+						<span class="hw-date-wrapper">
+							<input readonly id="start_date" placeholder="开始日期  -  结束日期" class="hw-input"
+										 value="{$start} 到 {$end}" type="text">
+						</span>
+						<el-select @change="update" v-model="country" filterable style="width:150px" size="mini" placeholder="选择国家">
+										{volist name="countrys" id="item"}
+										  <el-option key="{$key}" label="{$item}" value="{$key}"></el-option>
+									    {/volist}
+						</el-select>			  
+						{if condition="$from_name eq 'Adjust'"}
+						<span class="country" id="promate_media" data="{$promate_media_value}" style="position:relative;">
+							<a href="javascript:;" style="margin-right:10px;background-color:#48ba9e;color:#fff;border-color:#48ba9e;"
+								 class="dropdown_switch dropdown-toggle" id="dropdownMenuAvatar4" data-toggle="dropdown"
+								 aria-haspopup="true" aria-expanded="false" role="button">
+								<label style="font-weight:400;">{$promate_media_name}</label>
+								<i class="fa fa-caret-down" style="margin:0px 6px;"></i>
+							</a>
+							<div class="c-dropdown__menu has-arrow dropdown-menu dropdown-menu-right"
+									 aria-labelledby="dropdownMenuAvatar4" style="position:absolute;top:28px;right:20px;">
+								{volist name="promate_media" id="promate_media_item"}
+								<a class="c-dropdown__item dropdown-item" data="{$promate_media_item['value']}" href="javascript:;">{$promate_media_item["name"]}</a>
+								{/volist}
+							</div>
+						</span>
+						{/if}
+						<span class="country" id="retention" data="{$retention}" style="position:relative;">
+							<a href="javascript:;" style="background-color:#48ba9e;color:#fff;border-color:#48ba9e;"
+								 class="dropdown_switch dropdown-toggle" id="dropdownMenuAvatar2" data-toggle="dropdown"
+								 aria-haspopup="true" aria-expanded="false" role="button">
+								<label style="font-weight:400;">{$retention_name}</label>
+								<i class="fa fa-caret-down" style="margin:0px 6px;"></i>
+							</a>
+							<div class="c-dropdown__menu has-arrow dropdown-menu dropdown-menu-right"
+									 aria-labelledby="dropdownMenuAvatar2" style="position:absolute;top:28px;right:20px;">
+								<a class="c-dropdown__item dropdown-item" data="retention_1" href="javascript:;">Day1</a>
+								<a class="c-dropdown__item dropdown-item" data="retention_2" href="javascript:;">Day2</a>
+								<a class="c-dropdown__item dropdown-item" data="retention_3" href="javascript:;">Day3</a>
+								<a class="c-dropdown__item dropdown-item" data="retention_7" href="javascript:;">Day7</a>
+								<a class="c-dropdown__item dropdown-item" data="retention_14" href="javascript:;">Day14</a>
+								<a class="c-dropdown__item dropdown-item" data="retention_28" href="javascript:;">Day28</a>
+							</div>
+						</span>
+					</span>
+				</div>
+
+				<div class="hw_chat" id="chats" style="height:300px;margin-top:7%;"></div>
+
+				<div class="hw_reven clearfix" style="background:#fff;">
+					<div><a href="/admin_reten/overview" style="float:right;padding:10px;">查看更多留存数据</a></div>
+					<table class="table">
+						<thead style="font-size:13px;font-weight:700">
+						<tr style="background-color:#eaeaea;">
+							<th>日期</th>
+							<th>新增</th>
+							<th><a href="/admin_index/chats?start={$start}&end={$end}&spm=retention_1&country={$country}">Day1</a>
+							</th>
+							<th><a href="/admin_index/chats?start={$start}&end={$end}&spm=retention_2&country={$country}">Day2</a>
+							</th>
+							<th><a href="/admin_index/chats?start={$start}&end={$end}&spm=retention_3&country={$country}">Day3</a>
+							</th>
+							<th><a href="/admin_index/chats?start={$start}&end={$end}&spm=retention_7&country={$country}">Day7</a>
+							</th>
+							<th><a href="/admin_index/chats?start={$start}&end={$end}&spm=retention_14&country={$country}">Day14</a>
+							</th>
+							<th><a href="/admin_index/chats?start={$start}&end={$end}&spm=retention_28&country={$country}">Day28</a>
+							</th>
+						</tr>
+						</thead>
+						<tbody>
+						{volist name="data" id="item"}
+						<tr>
+							<td><i style="color:#bcbcbc">({$item.date|getweekday})</i>{$item.date}{if
+								condition="$item['producter_showtips'] neq '0'"}<sup data-mtpis="{$item['producter_showtips']}"><i
+									style="color:red;font-size:10px;" class="fa fa-commenting-o"></i></sup>{/if}
+							</td>
+							<td>{$item.new_user}</td>
+							<td class="reten{$item.retention_1|retenClass1}">{$item.retention_1}%</td>
+							<td class="reten{$item.retention_2|retenClass1}">{$item.retention_2}%</td>
+							<td class="reten{$item.retention_3|retenClass1}">{$item.retention_3}%</td>
+							<td class="reten{$item.retention_7|retenClass1}">{$item.retention_7}%</td>
+							<td class="reten{$item.retention_14|retenClass1}">{$item.retention_14}%</td>
+							<td class="reten{$item.retention_28|retenClass1}">{$item.retention_28}%</td>
+						</tr>
+						{/volist}
+						<tr>
+							<td style="font-size:14px;font-weight:bold;">均值</td>
+							<td>{$total_data.new_user}</td>
+							<td>{$total_data.retention_1}%</td>
+							<td>{$total_data.retention_2}%</td>
+							<td>{$total_data.retention_3}%</td>
+							<td>{$total_data.retention_7}%</td>
+							<td>{$total_data.retention_14}%</td>
+							<td>{$total_data.retention_28}%</td>
+						</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	{include file="./static/html/footer.html" /}
+</div>
+{include file="./static/html/footer_common.html" /}
+<script type="text/javascript" src="/static/plugin/jquery-time/moment.js"></script>
+<script src="/static/js/mTips.js?t=144"></script>
+<script type="text/javascript" src="/static/plugin/jquery-time/daterangepicker.js"></script>
+<script src="/static/js/echarts.min.js"></script>
+
+</body>
+  <script>
+   
+	let t = new Vue({
+        el: '#wrapper',
+        data: {
+			country:'{$country}',
+        },
+		
+		mounted(){
+		 	
+		},
+        methods: {
+		   update(){
+		     locationhref()
+		   }
+        }
+    })
+  </script>
+<script>
+	var start_date = "{$start}";
+	var end_date = "{$end}";
+	$(function () {
+		lineechats();
+
+		$('#start_date').daterangepicker({opens: 'left', minDate: '2018-07-08'}, function (start, end, label) {
+
+			start_date = start.format('YYYY-MM-DD');
+			end_date = end.format('YYYY-MM-DD');
+			$('#start_date').val(start_date + " 到 " + end_date);
+			locationhref();
+		});
+
+		$(".c-dropdown__item").click(function () {
+			var _p = $(this).parent().parent();
+			_p.attr("data", $(this).attr("data"));
+			_p.find("label").text($(this).text());
+			locationhref();
+		})
+
+	});
+	var locationhref = function () {
+		var country = t.country
+		var retention = $("#retention").attr("data");
+		var _from = $("#from").attr("data");
+		var promate_media = $("#promate_media").attr("data")===undefined?'all':$("#promate_media").attr("data");
+		window.location.href = "/admin_reten/index?country=" + country + "&start=" + start_date + "&end=" + end_date + "&retention=" + retention+ "&from=" + _from+ "&promate_media=" + promate_media;
+	}
+
+	function lineechats() {
+		var myChart = echarts.init(document.getElementById("chats"));
+		var option = {
+			xAxis: {
+				type: 'category',
+				boundaryGap: false,
+				data: [{$viewchats.dates}]
+			},
+			tooltip: {
+				trigger: 'axis',
+				axisPointer: {
+					lineStyle: {
+						color: '#ddd'
+					}
+				},
+				backgroundColor: 'rgba(255,255,255,1)',
+				padding: [5, 10],
+				textStyle: {
+					color: '#7588E4',
+				},
+				extraCssText: 'box-shadow: 0 0 5px rgba(0,0,0,0.3)'
+			},
+
+			yAxis: {
+				type: 'value',
+				splitLine: {
+					lineStyle: {
+						type: 'dashed'
+					}
+				},
+				axisLine: {
+					show: false
+				},
+				axisTick: {
+					show: false
+				},
+				axisLabel: {
+					formatter: '{value} %'
+				}
+			},
+			series: [{
+				data: [{$viewchats.retentions}],
+				type: 'line',
+				showSymbol: false,
+				smooth: true,
+				itemStyle: {
+					normal: {
+						color: "#16D9F0"
+					},
+				},
+				areaStyle: {
+					normal: {
+						color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+							offset: 0,
+							color: '#16D9F0'
+						}, {
+							offset: 1,
+							color: '#fff'
+						}])
+					}
+				},
+			}]
+		}
+		myChart.setOption(option);
+	}
+</script>
+</html>

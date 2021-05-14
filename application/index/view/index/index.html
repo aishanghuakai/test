@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<title>🎈哈乐沃德五周年🎈</title>
+{include file="../application/index/view/common/header.html" /}
+<link rel="stylesheet" href="/static/index/css/app1.css">
+<link rel="stylesheet" href="/static/index/css/swiper.min.css">
+<style>
+  .el-upload-list--picture-card .el-upload-list__item,.el-upload--picture-card{width:30%;height:100px;line-height: 100px;}
+  .imagelook .el-dialog{background-color:rgba(0,0,0,1)}
+  .views_show{display:none;}
+</style>
+<!--[if IE]>
+  <script>window.location.href = '/compatibility';</script>
+  <![endif]-->
+</head>
+<body class="mdui-loaded">
+<div id="app">
+	<div class="header">
+		<div class="header-banner" id="slides">
+			  <div class="pike">
+				<div style="height:160px;"><img class="image" src="http://cnf.mideoshow.com/uploads/banner1.jpg" /></div>
+				<div style="height:160px;"><img class="image" src="http://cnf.mideoshow.com/uploads/banner2.jpg" /></div>
+				<div style="height:160px;"><img class="image" src="http://cnf.mideoshow.com/uploads/banner3.jpg" /></div>
+				<div style="height:160px;"><img class="image" src="http://cnf.mideoshow.com/uploads/banner4.jpg" /></div>
+				<div style="height:160px;"><img class="image" src="http://cnf.mideoshow.com/uploads/banner5.jpg" /></div>		  
+			  </div>
+		</div>
+		<div class="header-nav">
+			<div class="header-tab-menu mdui-tab mdui-tab-centered">
+				<a href="/backhistory.html" class="active mdui-ripple-white">回望五年</a>
+				<a href="/say.html" class=" mdui-ripple-white">都来说说</a>
+			</div>
+		</div>
+	</div>
+<div class="loading">
+	<div class="circle-one"></div>
+	<div class="circle-two"></div>
+</div>
+<div class="container">
+    <div class="grid grid--type-c">
+		<div class="grid__sizer"></div>
+		{volist name="list" id="vo"}
+		<div class="grid__item">
+			<div>
+			   <a class="grid__link" href="javascript:;">
+			     <img class="grid__img" src="{$vo.thumb}" alt="{$vo.descript}" />
+			     <span style="position:absolute;right:1px;top:3px;padding:2px 10px;" ><i class="fa fa-image"></i> {$vo.num}</span>
+			   </a>
+			   <ul class="views_show">
+					{volist name="vo['list']" id="vv"}
+					<img src="{$vv}" alt="{$vo.descript}">
+                    {/volist}					
+				</ul>
+			 </div>
+			<div class="description"><div class="name">{$vo.descript}</div></div>
+			<div class="options" style="float:right;"><a href="javascript:void(0)" data-id="{$vo.id}" class="fabulous"><i class="fa fa-thumbs-o-up"></i><span class="like">{$vo.like}</span></a></div>
+		</div>
+		{/volist}
+	</div>
+	<div class="big_img">
+	<div class="swiper-container2 swiper-container-horizontal">
+	<div class="swiper-wrapper">
+	</div>
+	</div>
+	<div class="swiper-pagination2 swiper-pagination-bullets"><span class="swiper-pagination-bullet swiper-pagination-bullet-active"></span></div>
+	</div>
+</div>	
+<div class="container-pages mdui-center" style="padding:10px;text-align:center;color:#ccc;"></div>
+<a href="/addpost" class="OpenInAppButton OpenInApp is-shown">记录一刻</a>
+</div>
+</div>
+</body>
+  <!-- import Vue before Element -->
+  <script src="/static/js/jquery-2.1.4.min.js"></script>
+  <script type="text/javascript" src="/static/index/swiper.min.js"></script>
+  <script src="/static/index/pike.min.js"></script>
+  <script src="/static/index/js/imagesloaded.pkgd.min.js"></script>
+	<script src="/static/index/js/masonry.pkgd.min.js"></script>
+	<script src="/static/index/js/anime.min.js"></script>
+	<script src="/static/index/js/main.js"></script>
+  <script type="text/javascript" src="https://cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+  <script>
+    $(function(){
+	  $('#app').on('click','.fabulous',function(){
+		 clickzan($(this))
+	  })
+	   	  
+	  var mySwiper = new Swiper('.swiper-container2', {
+        loop: false,
+        pagination: '.swiper-pagination2',
+        })
+		var myPi = new Pike("#slides", {
+	       	type: 1, // 轮播的类型(1渐隐)
+	       	automatic: true, //是否自动轮播 (默认false)
+	       	autoplay: 3000, //自动轮播毫秒 (默认3000)
+	       	hover: true, //鼠标悬停轮播 (默认false)
+	       	arrowColor: "yellow", //箭头颜色 (默认绿色)
+	       	arrowBackgroundType: 2, //箭头背景类型 (1: 方形, 2:圆形)
+	       	arrowBackground: 1, //箭头背景色 (1:白色,2:黑色, 默认:无颜色)
+	       	arrowTransparent: 0.2, //箭头背景透明度 (默认: 0.5)
+       		spotColor: "white",//圆点颜色 (默认: 白色)
+       		spotType: 1, //圆点的形状 (默认: 圆形, 1:圆形, 2.矩形)
+       		spotSelectColor: "red", //圆点选中颜色 (默认绿色)
+       		spotTransparent: 0.8, //圆点透明度 (默认0.8)
+       		mousewheel: true, //是否开启鼠标滚动轮播(默认false)
+       		drag: false, //是否开启鼠标拖动 (默认为: true, 如不需要拖动设置false即可)
+       		loop: true, //是否循环轮播 (默认为: false)
+       });
+		
+		$("#app").on("click", ".grid__img", function() {
+			var imgBox = $(this).parents(".grid__item").find(".views_show img");
+			var i = $(imgBox).index(this);
+			$(".big_img .swiper-wrapper").html("")
+			for(var j = 0 ,c = imgBox.length; j < c ;j++){
+			  $(".big_img .swiper-wrapper").append('<div class="swiper-slide"><div class="cell"><img src="' + imgBox.eq(j).attr("src") + '" / ></div></div>');
+			}
+			mySwiper.updateSlidesSize();
+			mySwiper.updatePagination();
+			$(".big_img").css({
+				"z-index": 1001,
+				"opacity": "1"
+			});
+			mySwiper.slideTo(i, 0, false);
+			return false;
+      });
+	  
+	  $(".big_img").on("click", 
+    function() {
+        $(this).css({
+            "z-index": "-1",
+            "opacity": "0"
+        });
+     });
+	})
+	
+	var loadState = 0, page = 2,isload =true
+	function clickzan(obj){
+	   var _that = obj
+	       id = _that.attr("data-id");
+	       num = _that.find('.like').text()
+	       newnum=parseInt(num)+1;
+	   if(!$.cookie('userid'+id)){
+            $.post("/like",{id:id},function(data){
+                if(data=='ok'){
+                    $.cookie('userid'+id,id);
+                    _that.find(".like").text(newnum);
+                }
+            }); 
+        }
+        return false;
+	}
+	$(window).scroll(function () {
+	  var scrollTop = $(window).scrollTop(),
+		windowHeight = $(window).height(),
+		scrollHeight = $('body')[0].scrollHeight;
+	  if (scrollTop + windowHeight === scrollHeight) {
+		 getMore()
+	  }
+	  //if (scrollTop > $('.header').height()) {
+		//$('.header').removeClass('header-normal-250 header-normal-50 header-normal-170').addClass('header-float mdui-shadow-10');
+	  //}
+	  //if (0 === scrollTop) {
+      // $('.header').removeClass('header-float mdui-shadow-10').addClass('header-normal-' + $('.header').height());
+      //}
+	});
+	
+	 function getMore() {
+    if (loadState==0 && isload) {
+      $.ajax({
+        url: '/loadmore',
+        data: {page: page},
+        type: 'POST',
+        dataType: 'JSON',
+        beforeSend: function () {
+          loadState = 1;
+          $(".mdui-center").text("加载数据中...")		  
+        },
+        success: function (res) {
+
+		  if (res!="empty") {
+		     page++;
+			 loadState = 0
+			 $(".mdui-center").text("")
+            $('.container .grid').append(res);
+          }else{
+		    isload = false
+			$(".mdui-center").text("已经到底啦")
+		  }
+        },
+        error: function (xhr) {
+          //
+		  $(".mdui-center").text("已经到底啦")
+        }
+      });
+    }
+  }
+  </script>
+</html>

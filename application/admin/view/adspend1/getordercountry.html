@@ -1,0 +1,57 @@
+   	 <div class="css_tr body adspend_total">
+		   <div class="css_td first">总计</div>
+		   <div class="css_td">${$total_spend.spend??"0.0"}</div>
+		   <div class="css_td">{$total_spend.impressions??0}</div>
+		   <div class="css_td">{$total_spend.clicks??0}</div>
+		   <div class="css_td">{$total_spend.installs??0}</div>
+		   <div class="css_td"><?php echo adcalculate($total_spend['spend'],$total_spend['installs'],"1"); ?></div>
+		   <div class="css_td"><?php echo adcalculate($total_spend['clicks'],$total_spend['impressions']); ?></div>
+		   <div class="css_td"><?php echo adcalculate($total_spend['installs'],$total_spend['clicks']); ?></div>							   
+	  </div>
+	  {volist name="data" id="s"}
+	  <div class="pp">
+		  <div class="css_tr body">
+			   <div class="css_td allow_click first" style="font-size:14px;"><i class="fa fa-angle-right"></i>&nbsp;{$s.app_name}{if condition="$s['platform'] eq 'android'" }
+									 <i title="android" style="color:#f0ad4e;" class="fa fa-android"></i>
+									 {elseif condition="$s['platform'] eq 'ios'" /}
+									 <i  class="fa fa-apple"></i>
+									 {/if}</div>
+			   <div class="css_td">${$s['sum_data'][0]['spend']??"0.0"}</div>
+			   <div class="css_td">{$s['sum_data'][0]['impressions']??0}</div>
+			   <div class="css_td">{$s['sum_data'][0]['clicks']??0}</div>
+			   <div class="css_td">{$s['sum_data'][0]['installs']??0}</div>
+			   <div class="css_td"><?php echo adcalculate($s['sum_data'][0]['spend'],$s['sum_data'][0]['installs'],"1"); ?></div>
+			   <div class="css_td"><?php echo adcalculate($s['sum_data'][0]['clicks'],$s['sum_data'][0]['impressions']); ?></div>
+               <div class="css_td"><?php echo adcalculate($s['sum_data'][0]['installs'],$s['sum_data'][0]['clicks']); ?></div>			   
+		  </div>
+		   <div class="hw_child">
+				{volist name="s.country_data" id="item"}
+				<div class="css_tr body child" >
+				   <div class="css_td allow_child_click mar_left first">&nbsp;&nbsp;<i class="fa fa-angle-right"></i>&nbsp; {$item.country|getcountryname}({$item.country})</div>
+				   <div class="css_td">${$item.spend}</div>
+				   <div class="css_td">{$item.impressions}</div>
+				   <div class="css_td">{$item.clicks}</div>
+				   <div class="css_td">{$item.installs}</div>
+				   <div class="css_td"><?php echo adcalculate($item['spend'],$item['installs'],"1"); ?></div>
+			       <div class="css_td"><?php echo adcalculate($item['clicks'],$item['impressions']); ?></div>
+                   <div class="css_td"><?php echo adcalculate($item['installs'],$item['clicks']); ?></div>
+				</div>
+				  <div class="hw_childs" style="display:none;">
+					  {volist name="item.platform_data" id="vv"}												  
+						 <div class="css_tr body">
+							   <div class="css_td mar_left first" style="text-indent:20px;">&nbsp;<img style="height:25px;width:40px;" src="{$vv.platform_type|getplatformimg}" >&nbsp;{$vv.platform_type|getplatform}</div>
+							   <div class="css_td">${$vv.spend}</div>
+							   <div class="css_td">{$vv.impressions}</div>
+							   <div class="css_td">{$vv.clicks}</div>
+							   <div class="css_td">{$vv.installs}</div>
+							  <div class="css_td"><?php echo adcalculate($vv['spend'],$vv['installs'],"1"); ?></div>
+			                  <div class="css_td"><?php echo adcalculate($vv['clicks'],$vv['impressions']); ?></div>
+                              <div class="css_td"><?php echo adcalculate($vv['installs'],$vv['clicks']); ?></div>							   
+						  </div>
+					   {/volist}	  
+				  </div>
+				 {/volist}
+		   </div>
+	  </div>
+	{/volist}					  
+                      

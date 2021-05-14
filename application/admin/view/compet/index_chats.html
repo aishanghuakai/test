@@ -1,0 +1,28 @@
+<script src="/static/js/echarts.min.js"></script>
+<div  id="chats" style="height:300px;"></div>
+
+
+ <script>
+    $(function(){
+	    
+		var myChart = echarts.init(document.getElementById("chats"));
+	  var option = {
+	            title: {
+					left: 'center',
+					text: '最近三天排名变化',
+				},
+				xAxis: {
+					type: 'category',
+					data: [{$dates}]
+				},
+				yAxis: {
+					type: 'value'
+				},
+				series: [{
+					data: [{$nums}],
+					type: 'line'
+				}]
+			};
+	 myChart.setOption(option);		
+	})
+ </script>

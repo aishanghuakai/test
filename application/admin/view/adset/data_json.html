@@ -1,0 +1,27 @@
+﻿
+{volist name="res" id="vv"}
+<tr>
+	{if condition="$vv['platform_type'] eq '32'"}
+	<td class="view" onclick="window.open('/adspend/previewvideo?advertiser_id={$vv['target_id']}&ad_id={$vv['ad_id']}')"
+			style="width:30%;text-align:left;color:#004e31">{$vv.ad_name}
+		<div style="font-size:10px;color:#222">【{$vv.adset_name}】&nbsp;<span
+			style="border: 1px solid #87a5b5;color:#87a5b5;padding:0px 5px;">{$vv.platform_type|getplatform}</span></div>
+	</td>
+	{else /}
+	<td class="view" onclick="iframeopen(this)" ad_id="{$vv.ad_id}" style="width:30%;text-align:left;color:#004e31">
+		{$vv.ad_name}
+		<div style="font-size:10px;color:#222">【{$vv.campaign_name}】&nbsp;<span
+			style="border: 1px solid #87a5b5;color:#87a5b5;padding:0px 5px;">{$vv.platform_type|getplatform}</span></div>
+	</td>
+	{/if}
+	<td onclick="openPlat(this)" ad_id="{$vv.ad_id}" ad_name="{$vv.ad_name}" style="cursor:pointer;">{$vv.installs}</td>
+	<td onclick="openPlat(this)" ad_id="{$vv.ad_id}" ad_name="{$vv.ad_name}" style="cursor:pointer;">${$vv.spend}</td>
+	<td>{$vv.impressions}</td>
+	<td>{$vv.clicks}</td>
+	<td style="color:red;font-weight:700">{$vv.ctr}%</td>
+	<td style="color:green;font-weight:700">{$vv.cvr}%</td>
+	<td {if condition="getuserrole() eq 'material'"}hidden{/if} style="color:#ec971f;font-weight:700">${$vv.cpi}</td>
+	<td {if condition="getuserrole() eq 'material'"}hidden{/if} style="color:#ec971f;font-weight:700">${$vv.ecpm}</td>
+</tr>
+{/volist}
+							  

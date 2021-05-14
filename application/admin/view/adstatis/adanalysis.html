@@ -1,0 +1,191 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GAME BRAIN</title>
+    {include file="./static/html/header_common.html" /}
+	<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+   <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <!-- import JavaScript -->
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <script src="/static/js/axios.min.js"></script>
+	<style>
+	 .cell{font-size:12px;}
+	  .el-table td, .el-table th {
+    padding:9px 0;}
+	  .item {
+		  margin-top: 10px;
+		  margin-right: 40px;
+	}
+	.el-card__body {
+    height: 60px;
+    line-height: 30px;
+}
+	</style>
+</head>
+<body style="background-color:#fff;">
+    <div id="wrapper" style="background-color:#fff;">
+        {include file="./static/html/header.html" /}	
+		<div class="hw_page_content">
+		    <div class="hw_menu_left">
+         {include file="./static/html/side.html" /}  
+			</div>
+		    <div class="hw_content_right" style="padding:10px 10px;">
+			    <ul class="search_tab clearfix" >
+				 <li><a  href="/admin_adstatis/average">统计</a></li>
+			      <li ><a  href="javascript:;">广告类型分析</a></li>
+                  <li class="active"><a  href="/admin_adstatis/adanalysis">打点分析</a></li>				  
+		        </ul>
+	  
+			    <div class="hw_reven clearfix" style="padding:10px 30px;">
+				     <el-row :gutter="2" style="margin-top:30px;">
+						<el-form :inline="true" label-width="100px">
+							   <el-form-item label="选择渠道">								   
+								 <el-select size="small" @change="handleChanage" style="width:150px;" v-model="adsource"  placeholder="请选择">
+								    <el-option label="全部" value="all"></el-option>
+								    <el-option label="Admob" value="Admob"></el-option>
+								    <el-option label="Applovin" value="Applovin"></el-option>
+									<el-option label="Facebook" value="Facebook"></el-option>
+									<el-option label="Unityads" value="Unityads"></el-option>
+								  </el-select>
+							  </el-form-item>
+								<el-form-item label="选择地区">
+									<el-select size="small" @change="handleChanage" filterable style="width:100px;" v-model="country"  placeholder="请选择国家">
+									{volist name="country" id="item"}
+									 <el-option key="{$key}" label="{$item}" value="{$key}"></el-option>
+									{/volist}
+								  </el-select>
+								 </el-form-item>
+                              <el-form-item label="筛选日期">								   
+								    <el-date-picker
+									  v-model="date"
+									  @change="handleChanage"
+                                      size="small"								  
+									  type="daterange"
+									  style="width:250px;"
+									  value-format="yyyy-MM-dd">
+									</el-date-picker>
+								  </el-form-item>
+                                <el-form-item label="">
+								  <el-button size="small" @click="download" type="primary" icon="el-icon-download"></el-button>
+                                </el-form-item>								
+							</el-form>								
+					</el-row>
+					<el-row :gutter="12" style="margin:0px 0px 20px 0px;">
+					  <el-col :span="8">
+						<el-card shadow="always">
+						  内购用户数: <strong>{{purchase.num}}</strong>
+						</el-card>
+					  </el-col>
+					  <el-col :span="8">
+						<el-card shadow="always">
+						  内购金额: <strong>{{purchase.money}}</strong>
+						</el-card>
+					  </el-col>
+					  <el-col :span="8">
+						<el-card shadow="always">
+						  人均内购<el-tooltip class="item" effect="dark" content="已购买用户的人均值" placement="top"><i class="el-icon-question"></i></el-tooltip> <strong>{{purchase.avg}}</strong>
+						</el-card>
+					  </el-col>
+					</el-row>
+                    <el-table
+						:data="tableData"
+						v-loading="loading"
+						height="400"
+						style="width: 100%;">
+						<el-table-column prop="adsource" fixed sortable width="100"  align="center" label="渠道"></el-table-column>
+						<el-table-column prop="unit_id" fixed sortable  width="250" align="center" label="广告id">
+						  <template slot-scope="scope">
+							{{scope.row.remark?scope.row.remark:scope.row.unit_id}}
+						  </template>
+						</el-table-column>								
+						<el-table-column prop="request" sortable  align="center" label="请求"></el-table-column>
+						<el-table-column prop="filled_rate" sortable width="120" align="center" label="填充率(%)"></el-table-column>
+						<el-table-column prop="impressions" sortable width="150"  align="center" label="展示次数"></el-table-column>
+						<el-table-column  sortable prop="impressions_rate"  width="120" align="center" label="展示率(%)"></el-table-column>
+						<el-table-column prop="ctr" sortable align="center" width="120"  label="点击率(%)"></el-table-column>
+						<el-table-column prop="ecpm" sortable align="center"  width="150"  label="千次展示平均费用"></el-table-column>
+						<el-table-column prop="revenue" sortable align="center" width="120" label="收入($)"></el-table-column>
+					</el-table>					
+			    </div>
+				<el-dialog title="编辑" :visible.sync="dialogFormVisible">
+				  <el-form :model="form">
+					<el-form-item label="广告名称"  label-width="120px">
+					  <el-input v-model="form.name" autocomplete="off"></el-input>				
+					</el-form-item>
+				  </el-form>
+				  <div slot="footer" class="dialog-footer">
+					<el-button @click="dialogFormVisible = false">取 消</el-button>
+					<el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+				  </div>
+				</el-dialog>
+			</div>
+		</div>
+		 {include file="./static/html/footer.html" /}
+	</div>	
+</body>
+ {include file="./static/html/footer_common.html" /}
+  <script>
+     let t = new Vue({
+        el: '#wrapper',
+        data: {
+			loading: false,
+			dialogFormVisible:false,
+			form:{},
+			purchase:{},
+			date:['{$start_date}','{$end_date}'],
+			adsource:'all',
+			appid:'{$appid}',
+			country:'all',
+			tableData: []	
+        },
+		mounted(){
+		  this.getlist()
+		},
+        methods: {           
+		    handleChanage(){
+			  this.getlist()
+			},
+			toQueryString(obj) {
+			  var qstring = "&"
+			  for (var k in obj) {
+				qstring += k + "=" + obj[k] + "&"
+			  }
+			  return qstring
+		   },
+		   editName(row){
+		    this.dialogFormVisible = true
+		   },
+		   download(){
+		     let params ={
+			    date:this.date,
+				adsource:this.adsource,
+				appid:this.appid,
+				country:this.country
+			  }
+			 window.location.href='/admin_adstatis/adtype_json_data?is_download=true'+this.toQueryString(params)
+		   },
+			getlist(){
+			  let params ={
+			    date:this.date,
+				adsource:this.adsource,
+				appid:this.appid,
+				country:this.country
+			  }
+			  this.loading = true
+			   axios({
+					method: 'post',
+					url:'/admin_adstatis/adanalysis_json_data',
+					data:params
+				}).then(res=>{			
+				 this.loading = false
+				 this.tableData = res.data.list
+				 this.purchase = res.data.purchase
+			 })
+			}
+        }
+    })
+  </script>	   
+</html>

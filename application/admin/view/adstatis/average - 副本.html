@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GAME BRAIN</title>
+	{include file="./static/html/header_common.html" /}
+	<link href="/static/css/adgain.css?t=122" rel="stylesheet" type="text/css">
+    <link href="/static/css/checkbox.css" rel="stylesheet" type="text/css">
+	<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+   <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <!-- import JavaScript -->
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <script src="/static/js/axios.min.js"></script>
+	 <link rel="stylesheet" type="text/css" media="all" href="/static/plugin/jquery-time/daterangepicker-bs3.css" />
+	  <link href="/static/css/show.css?t=<?php echo time(); ?>" rel="stylesheet">
+	<style>
+	 .fa,.allow_click{cursor:pointer}
+	 th,td{text-align:center;vertical-align:middle}
+	 .hidden{display: none !important;}
+	 tr{
+	   cursor:pointer;
+	  
+	 }
+	 tr.level-1 {
+    background-color: #f8f8f8;
+}
+tr.level-2 {
+    background-color: #f0f0f0;
+}
+tr.level-3 {
+    background-color: #F8F8FF;
+}
+tr.level-0 {
+    background-color: #ffffff;
+}
+tr td .name {
+    line-height: 15px;
+    overflow: hidden;
+    padding: 0;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+td:first-child {
+    text-align: left !important;
+}
+.hw-ad_row td {
+    
+    text-align: center;
+}
+.hw-ad_row thead tr {
+    background-color: #fff;
+}
+.hw-ad_row table {
+    border-collapse: collapse;
+    font-size: 12px !important;
+    color: #222 !important;
+    text-align: left !important;
+    line-height: 40px;
+}
+.hw-ad_row .table > thead > tr > th{
+  border-bottom:1px solid #e8e8e8 !important;
+  border-top:1px solid #e8e8e8 !important;
+   color: #222 !important;
+}
+	</style>
+</head>
+<body style="background-color:#f1f3f8;">
+    <div id="wrapper" style="background-color:#f1f3f8;" >
+        
+		{include file="./static/html/header.html" /} 
+	
+		<div class="hw_page_content">
+		   
+		    <div class="hw_menu_left">
+         {include file="./static/html/side.html" /}  
+			</div>
+		    <div class="hw_content_right" style="background:#f1f3f8;">	
+			  <ul class="search_tab clearfix" >
+			      <li class="active"><a  href="javascript:;">统计</a></li>
+				  <li><a  href="/admin_adstatis/show">广告类型分析</a></li>
+				  <li><a  href="/admin_adstatis/adanalysis">打点分析</a></li>
+				  <li style="float:right;"><a style="font-size:12px;text-decoration:underline;color:#848a9f;" href="/admin_adgain/refresh_data">更新数据</a></li>					          
+			   </ul>
+			     <div class="hw_content">
+				   
+				    <div style="margin-top:5px;">
+					  					
+						<div class="col-md-12">
+						   <span style="float:left;color: #848a9f;font-size: 12px;line-height:40px;margin-right:20px;">筛选条件</span>
+							<ul class="hw_has_search">
+								 <li style="float:left;margin-right:15px;margin-top:4px;" id="hw_one" >
+								  <div style="border: 1px solid #e8e8e8;color: #59607c;"  data_name="广告类型"  data="adtype" data_value="all" class="btn btn-default">广告类型:全部<span class="caret"></span></div>									  
+							    </li>
+								
+								<li style="float:left;margin-right:15px;margin-top:4px;" id="hw_two" >
+								  <div style="border: 1px solid #e8e8e8;color: #59607c;" data_name="渠道"  data="platform" data_value="all" class="btn btn-default">渠道:全部 <span class="caret"></span></div>									
+							    </li> 
+							    
+								<li style="float:left;margin-right:15px;margin-top:4px;" id="hw_three" >
+								  <div style="border: 1px solid #e8e8e8;color:#59607c;" data_name="国家"  data="country" data_value="all" class="btn btn-default">国家:全部 <span class="caret"></span></div>						
+							    </li>
+								
+							 </ul>
+							  
+								<div class="el-checkbox el-checkbox-red" style="float:right;margin:5px 0px">											
+								  <input name="check26" id="group_day"  type="checkbox">
+								  <label class="el-checkbox-style" for="group_day"></label>
+								  <span class="margin-r">按天</span>
+							    </div>                              							
+						</div>
+						<div class="col-md-12" style="margin:15px 0px 20px 0px;">
+						   <div  style="float:left;margin-top:10px;">
+						      <span style="float:left;color: #848a9f;font-size: 12px;line-height:30px;margin-right:20px;">查询时间</span>
+							  <input  class="search-input" value="<?php echo date("Y-m-d",strtotime("-2 day"))."-".date("Y-m-d",strtotime("-2 day")); ?>"id="start_date"  style="width:200px;" placeholder="广告">					  
+						   </div> 
+						   <div style="float: left;" ><div style="border: 1px solid #e8e8e8;color:#59607c;margin-left:10px;" class="btn btn-default">保存条件</div> <button id="hw_add"   type="button" style="height:33px;line-height: 28px;text-align: center;background-color: #fff;border-radius: 2px;border: 1px solid transparent;background-color: #409eff;
+border-color: #409eff;padding:2px 30px;margin-top:10px;margin-left:20px;color:#fff;"><i class="fa fa-search"></i>&nbsp;搜索</button></div>
+						   
+						</div> 
+					</div>
+			        <div class="hw-ad_row" style="margin-top:60px;">
+					 
+					     <table class="table table-hover">
+							 
+							  <thead style="font-weight:700;">
+								<tr>								  
+								  <th>名称</th>
+								  <th>展示</th>
+								  <th>点击</th>
+								  <th>日活</th>
+								  <th>人均展示</th>
+								  <th>人均点击</th>
+								  <th>eCPM</th>
+                                  <th>收益</th>								  
+								</tr>
+						  </thead>
+                         <tbody class="tbody">
+                            <tr style="color:#ccc;text-align:center !important;"><td></td><td colspan="7">还没有数据? 请点击搜索</td></tr>
+						 </tbody>
+						 </table>
+												  
+					</div>					
+			    </div>
+           	</div>
+         </div>
+       {include file="./static/html/footer.html" /}		 
+	</div>
+   {include file="./static/html/footer_common.html" /}
+   
+   <!-- Modal -->
+<div class="modal fade" id="myModal" style="top:30%;" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">类型选择</h4>
+      </div>
+      <div class="modal-body">
+	     <ul>
+	         <li style="clear:both;position:relative;width:150px;">
+				<div id="drop8" style="width:150px;" data="" class="btn btn-default dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true">选择筛选类型<span class="caret"></span></div>       
+				<ul id="search_type" class="dropdown-menu" aria-labelledby="drop8">
+					<li><a href="javascript:;" data="adtype">广告类型</a></li>
+					<li><a href="javascript:;" data="platform">渠道</a></li>
+					<li><a href="javascript:;" data="country">国家</a></li>
+					<li><a href="javascript:;"data="date">时间</a></li>
+					<li><a href="javascript:;"data="sys_app_id">应用</a></li>
+				</ul>
+			</li>      	
+			<li style="position:absolute;left:180px;top:16px;">
+			    <div style="width:200px"><input type="text" id="hw_ss" readonly style="cursor:pointer;" class="form-control"  placeholder="搜索"></div>
+			    <ul class="dropdown-menu" id="hw_select_c" style="height:200px;overflow-y:scroll;">
+					<li style="padding:5px 10px;"><div><input  style="height:30px;" class="form-control" type="text"/></div></li>
+					<li style="padding:5px 10px;">
+					<ul id="adtype">
+					    <li>
+							<div class="el-checkbox el-checkbox-red">											
+								<input name="check26" id="adtype_all" attr_name="全部" value="all" type="checkbox">
+								<label class="el-checkbox-style" for="adtype_all"></label>
+								<span class="margin-r">全部</span>
+							</div>
+						</li>
+					    <li>
+							<div class="el-checkbox el-checkbox-red">											
+								<input name="check26" id="adtype_nat" attr_name="原生" value="nat" type="checkbox">
+								<label class="el-checkbox-style" for="adtype_nat"></label>
+								<span class="margin-r">原生广告</span>
+							</div>
+						</li>
+						<li>
+							<div class="el-checkbox el-checkbox-red">											
+								<input name="check26" id="adtype_rew" attr_name="激励" value="rew"  type="checkbox">
+								<label class="el-checkbox-style" for="adtype_rew"></label>
+								<span class="margin-r">激励视频</span>
+							</div>
+						</li>
+						<li>
+							<div class="el-checkbox el-checkbox-red">											
+								<input name="check26" id="adtype_int"  attr_name="插屏" value="int" type="checkbox">
+								<label class="el-checkbox-style" for="adtype_int"></label>
+								<span class="margin-r">插屏广告</span>
+							</div>
+						</li>
+						<li>
+							<div class="el-checkbox el-checkbox-red">											
+								<input name="check26" id="adtype_ban" attr_name="Banner"  value="ban" type="checkbox">
+								<label class="el-checkbox-style" for="adtype_ban"></label>
+								<span class="margin-r">banner广告</span>
+							</div>
+						</li>
+						
+					</ul>
+					<ul id="platform" style="display:none;">
+					     <li>
+							<div class="el-checkbox el-checkbox-red">											
+								<input name="check26" id="channel_all" attr_name="全部" value="all" type="checkbox">
+								<label class="el-checkbox-style" for="channel_all"></label>
+								<span class="margin-r">全部</span>
+							</div>
+						</li>
+					    <li>
+							<div class="el-checkbox el-checkbox-red">											
+								<input name="check26" id="channel_1" attr_name="Mobvista" value="1" type="checkbox">
+								<label class="el-checkbox-style" for="channel_1"></label>
+								<span class="margin-r">Mobvista</span>
+							</div>
+						</li>
+						<li>
+							<div class="el-checkbox el-checkbox-red">											
+								<input name="check26" id="channel_2" attr_name="Unity" value="2"  type="checkbox">
+								<label class="el-checkbox-style" for="channel_2"></label>
+								<span class="margin-r">Unity</span>
+							</div>
+						</li>
+						<li>
+							<div class="el-checkbox el-checkbox-red">											
+								<input name="check26" id="channel_3" attr_name="Applovin" value="3"  type="checkbox">
+								<label class="el-checkbox-style" for="channel_3"></label>
+								<span class="margin-r">Applovin</span>
+							</div>
+						</li>
+						<li>
+							<div class="el-checkbox el-checkbox-red">											
+								<input name="check26" id="channel_4" attr_name="Vungle" value="4"  type="checkbox">
+								<label class="el-checkbox-style" for="channel_4"></label>
+								<span class="margin-r">Vungle</span>
+							</div>
+						</li>
+						<li>
+							<div class="el-checkbox el-checkbox-red">											
+								<input name="check26" id="channel_5" attr_name="AdMob" value="5" type="checkbox">
+								<label class="el-checkbox-style" for="channel_5"></label>
+								<span class="margin-r">AdMob</span>
+							</div>
+						</li>
+						<li>
+							<div class="el-checkbox el-checkbox-red">											
+								<input name="check26" id="channel_6" attr_name="Facebook" value="6" type="checkbox">
+								<label class="el-checkbox-style" for="channel_6"></label>
+								<span class="margin-r">Facebook</span>
+							</div>
+						</li>
+						<li>
+							<div class="el-checkbox el-checkbox-red">											
+								<input name="check26" id="channel_7" attr_name="ironSource" value="7" type="checkbox">
+								<label class="el-checkbox-style" for="channel_7"></label>
+								<span class="margin-r">ironSource</span>
+							</div>
+						</li>
+						<li>
+							<div class="el-checkbox el-checkbox-red">											
+								<input name="check26" id="channel_9" attr_name="Tapjoy" value="9" type="checkbox">
+								<label class="el-checkbox-style" for="channel_9"></label>
+								<span class="margin-r">Tapjoy</span>
+							</div>
+						</li>
+						<li>
+							<div class="el-checkbox el-checkbox-red">											
+								<input name="check26" id="channel_30" attr_name="Upltv" value="30" type="checkbox">
+								<label class="el-checkbox-style" for="channel_30"></label>
+								<span class="margin-r">Upltv</span>
+							</div>
+						</li>
+					</ul>
+				       					   
+				    <ul id="sys_app_id" style="display:none;">
+					<li>
+							<div class="el-checkbox el-checkbox-red">											
+								<input name="check26" id="app_all" checked attr_name="全部" value="all" type="checkbox">
+								<label class="el-checkbox-style" for="app_all"></label>
+								<span class="margin-r">全部</span>
+							</div>
+						</li>
+					  	
+					</ul>
+					 <ul id="country" style="display:none;">
+						  {volist name="country" id="vvv"}				  
+						<li>						
+							<div class="el-checkbox el-checkbox-red">											
+									<input name="check26" id="country_{$key}" attr_name="{$vvv}" value="{$key}" type="checkbox">
+									<label class="el-checkbox-style" for="country_{$key}"></label>
+									<span class="margin-r">{$vvv}</span>
+							</div>
+						</li>
+						{/volist}		
+					</ul>
+				    <ul id="date">
+					   <li>
+							<div class="el-checkbox el-checkbox-red">											
+								<input name="check26" id="date_all" attr_name="全部" checked value="all" type="checkbox">
+								<label class="el-checkbox-style" for="date_all"></label>
+								<span class="margin-r">全部</span>
+							</div>
+						</li>
+					</ul>
+				</ul>
+			</li>
+		
+      </ul>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">关 闭</button>
+        <button type="button" id="hw_save_search"  class="btn btn-primary">保 存</button>
+      </div>
+    </div>
+  </div>
+</div>
+   
+   
+    <script type="text/javascript" src="/static/plugin/jquery-time/moment.js"></script>
+   <script type="text/javascript" src="/static/plugin/jquery-time/daterangepicker.js"></script>
+   
+</body>
+  <script>
+     var start_date="<?php echo date("Y-m-d",strtotime("-2 day")); ?>";
+	 var end_date = "<?php echo date("Y-m-d",strtotime("-2 day")); ?>";
+    $(function(){
+	    reloaddata( $(".tbody"),"one" );
+	  $('#start_date').daterangepicker({ minDate:'2018-07-08',opens:'right' },function(start, end, label) {
+	 
+		 start_date = start.format('YYYY-MM-DD');end_date=end.format('YYYY-MM-DD');
+		
+	  });
+	   
+	    $("#hw_add").click( function(){
+		   
+		   reloaddata( $(".tbody"),"one" );
+		})
+	    $("#search_type a").click( function(){
+		   var index_tyoe = $(this).attr("data");
+		   var index_title = $(this).text();
+		    $("#drop8").text(index_title);
+			 $("#drop8").attr("data",index_tyoe);
+		    $("#hw_select_c ul").hide();
+		    $("#"+index_tyoe).show();
+		} )
+	    $("#hw_ss").focus( function(){
+		   $("#hw_select_c").show();
+		})
+		$("#hw_save_search").click( function(){
+		
+			   var x_in = $("#drop8").attr("data");
+			   var x_text = $("#drop8").text();
+			   var x_index = $("#drop8").attr("index");
+			   var s_app="";
+			   var s_name="";
+			   var check_obj = $("#"+x_in+" input[type='checkbox']:checked");
+			   if( check_obj.length<1 )
+			     {
+				    layer.msg("请至少勾选一个");return false;
+				 }
+			   check_obj.each( function(index){
+				  s_app+="'"+$(this).val()+"'"+",";
+				  s_name+=$(this).attr("attr_name")+"+";
+			  });
+		      s_name = s_name.slice(0,s_name.length-1);
+			  $("#"+x_index).find("div").attr("data_name",x_text);
+			  $("#"+x_index).find("div").attr("data",x_in);
+			  $("#"+x_index).find("div").attr("data_value",s_app);
+			  $("#"+x_index).find("div").html(x_text+':'+s_name+' <span class="caret"></span>'); 
+			  		 			 
+             $('#myModal').modal('hide');			 
+		})
+		
+		
+		$(document).on( 'click',".hw_has_search li",function(){
+		   
+	      $('#myModal').modal('show');
+		  
+		  $("#hw_select_c ul").hide();
+		  var c_index = $(this).find("div").attr("data");
+		 
+		  var c_value = $(this).find("div").attr("data_value");
+		  $("#drop8").text( $(this).find("div").attr("data_name") );
+		  $("#drop8").attr("data",c_index);
+		  $("#drop8").attr("index",$(this).attr("id") );
+		  var c_arr = c_value.split(",");
+		  $("#hw_select_c").hide();
+		  $("#"+c_index).show();
+		  c_arr.forEach(function(v,i){
+             $("#"+c_index+"_"+v).attr("checked",'true');
+			
+            })
+	   })
+	   
+	   $(document).on( 'click',".hw-ad_row tbody tr",function(){
+	   
+	      var  levle = $(this).attr("data");
+		  var  next_levle = $(this).next("tr").attr("data");
+		  var  tag = $(this).attr("tag");
+		  var  index = $(this).attr("index");
+		  var  prev = $(this).attr("prev_index");
+		  var  prev_tag = $(this).attr("prev_tag");
+		  var  p_prev_index = $(this).attr("p_prev_index");
+		  var  p_prev_tag = $(this).attr("p_prev_tag");
+		  if( levle=="four" && next_levle!="five" )
+		  {
+		     reloaddata( $(this),levle,tag,index,prev,prev_tag,p_prev_index,p_prev_tag);
+			 return ;
+		  }
+		  if(  levle!=next_levle  &&  $(this).next("tr").length  && !( levle=="three" && next_levle=="two" )  )
+		  {
+		     if( $(this).find(".fa").hasClass("fa-angle-down") )
+			 {
+			    $(this).find(".fa").removeClass("fa-angle-down");
+				$(this).find(".fa").addClass("fa-angle-right");
+                	$(this).nextAll("tr").each( function(){
+					     if( ($(this).attr("prev_index") ==index && $(this).attr("prev_tag") ==tag ) || ( $(this).attr("p_prev_index")==index && $(this).attr("p_prev_tag")==tag  )  )
+						 {
+						    $(this).addClass("hidden");
+						 }
+					} )		
+			 }else{
+			    $(this).find(".fa").removeClass("fa-angle-right");
+				$(this).find(".fa").addClass("fa-angle-down");
+                $(this).nextAll("tr").each( function(){
+					     if( ($(this).attr("prev_index") ==index && $(this).attr("prev_tag") ==tag ) || ( $(this).attr("p_prev_index")==index && $(this).attr("p_prev_tag")==tag  )  )
+						 {
+						    $(this).removeClass("hidden");
+						 }
+					} )					
+			 }
+			 return false;
+		  }
+		  
+		  reloaddata( $(this),levle,tag,index,prev,prev_tag,p_prev_index,p_prev_tag);
+	   })
+	   
+	   $(".bar_allow_roe").click( function(){
+	       
+		   if( $(this).find("i").hasClass("fa-angle-double-right") )
+		      {
+			     $(this).find("i").removeClass("fa-angle-double-right");
+				 $(this).find("i").addClass("fa-angle-double-left");
+				 $(this).animate({'left':'21%'},1000);
+				 $(".hw_app_navlist").show(1000);
+			  }else{
+			     $(this).find("i").removeClass("fa-angle-double-left");
+				 $(this).find("i").addClass("fa-angle-double-right");
+				 $(this).animate({'left':'0%'},1000);
+				 $(".hw_app_navlist").hide(1000);
+			  }
+	   })
+	    
+	   
+	    $('#keywords').bind('input propertychange', function()
+		   {
+			   var input_text = $(this).val();
+               $("#ads_content .body").each(  function(i){
+			        var text = $(this).find(".first").text();
+					if( text.indexOf(input_text)!=-1 )
+					  {
+					     $(this).show();
+					  }else{
+					     $(this).hide();
+					  }
+			   })			   
+		   });
+		  
+	}); 
+	
+	var reloaddata = function(obj,levle,tag,index_m,prev,prev_tag,p_prev_index,p_prev_tag)
+	   {
+	      var app="{$appid}";
+		  var all =[];
+		  $(".hw_has_search div").each( function(index){
+		      all[index]={ type:$(this).attr("data"),value:$(this).attr("data_value")  };
+		  });
+		 
+		  var isgroupday=2;//2汇总 1 按天汇总
+		  if( $('#group_day').is(":checked") )
+		  {
+		      isgroupday=1;
+		  }
+		  let params = {
+		        appids:app,
+				all:all,
+				start_date:start_date,
+				end_date:end_date,
+				levle:levle,
+				tag:tag,
+				index:index_m,
+				prev_index:prev,
+				prev_tag:prev_tag,
+				isgroupday:isgroupday,
+				p_prev_index:p_prev_index,
+				p_prev_tag:p_prev_tag
+			}
+		  var index = layer.load();
+		  $.post("/admin_adstatis/levle",params,function(e){
+		      layer.closeAll();
+			  if( "one"==levle )
+			  {
+			    obj.html(e);
+			  }else{
+			    obj.after(e);
+				 obj.find(".fa").removeClass("fa-angle-right");
+			     obj.find(".fa").addClass("fa-angle-down");
+			  }			  
+		  })
+	   }
+	   
+  </script>
+<script>
+     let t = new Vue({
+        el: '#wrapper',
+        data: {
+			loading: false,
+			tableData: []	
+        },
+		mounted(){
+
+		},
+        methods: {           
+		    		   
+			getlist(){
+			  let params ={
+			    date:this.date,
+				adsource:this.adsource,
+				appid:this.appid,
+				country:this.country
+			  }
+			  this.loading = true
+			   axios({
+					method: 'post',
+					url:'/admin_adstatis/adanalysis_json_data',
+					data:params
+				}).then(res=>{			
+				 this.loading = false
+				 this.tableData = res.data.list
+				 this.purchase = res.data.purchase
+			 })
+			}
+        }
+    })
+  </script>
+</html>

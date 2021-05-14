@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>汇率设置</title>
+  {include file="./static/html/fheader_common.html" /}
+  <style>
+    
+  </style>
+</head>
+<body>
+   <div id="wrapper">
+        {include file="./static/html/fheader.html" /}	
+		<div class="hw_page_content">
+		  <div class="hw_menu_left">
+		     {include file="./static/html/fside.html" /}
+		  </div>	 
+		    <div class="hw_content_right" style="padding:10px 10px;">
+			  <Tabs type="card" @on-click="loadData">
+                <Tab-pane label="CNY" name="CNY">
+				 <i-table ref="table" max-height="450"  border disabled-hover :loading="loading"  :columns="report_columns" :data="report_data"></i-table>
+				</Tab-pane>
+                <Tab-pane label="HKD" name="HKD">
+				 <i-table ref="table" max-height="450"  border disabled-hover :loading="loading"  :columns="report_columns" :data="report_data"></i-table>
+				</Tab-pane>
+                <Tab-pane label="TWD" name="TWD">
+				 <i-table ref="table" max-height="450"  border disabled-hover :loading="loading"  :columns="report_columns" :data="report_data"></i-table>
+				</Tab-pane>
+				 
+				 <i-button  type="primary" @click="openModal" slot="extra">+增加</i-button>
+            </Tabs>
+			
+			   <Row :gutter="32" style="padding:10px;">
+			     <i-form ref="formDynamic" :label-width="120" style="width: 300px">
+                  <Form-item label="默认汇率">				  
+                     <i-input type="text" v-model="defaultRate" style="width:150px;"></i-input>
+					 <i-button @click="saveDefault" style="margin-top:10px;" >保存</i-button>				
+				  </Form-item>
+				  </i-form>
+				</Row>				
+			</div>  			   
+		</div>
+		<Modal v-model="modal1" title="添加/编辑汇率" >
+			<i-form :model="formData">
+			  <Row :gutter="32" style="padding:10px;">
+			    <label>选择月份</label>
+				<Date-picker :disabled="editShow" type="month" format="yyyy-MM" @on-change="formData.month=$event" v-model="formData.month" transfer="true"></Date-picker>
+			   </Row>
+			   <Row :gutter="32" style="padding:10px;">
+			    <label>选择货币</label>
+				<Radio-group v-model="formData.currency"  type="button">
+					<Radio :disabled="editShow" label="CNY"></Radio>
+					<Radio :disabled="editShow" label="HKD"></Radio>
+					<Radio :disabled="editShow" label="TWD"></Radio>
+				</Radio-group>
+			   </Row>
+			   <Row :gutter="32" style="padding:10px;">
+			    <label>填写汇率</label>
+				<i-input v-model="formData.val" style="width:180px;"></i-input>
+				<span style="color:red;">兑换美元汇率</span>
+			   </Row>
+			</i-form>
+			<div slot="footer"> 
+			  <i-button type="text" size="large" @click="modal1=false">取消</i-button> 
+			  <i-button type="primary" @click="submitUpdate" size="large">确定</i-button> 
+			</div>
+						
+		</Modal>
+    </div>		
+</body>
+{include file="./static/html/footer_common.html" /}
+</html>
+ <script>
+   let t = new Vue({
+        el: '#wrapper',
+        data: {
+			modal1: false,
+			loading:false,
+			defaultRate:'',
+			editShow:false,
+			currency:'CNY',
+			formData:{},
+			report_columns:[
+			        {
+                        title: '月份',
+						align:'center',
+                        key: 'month'
+                    },
+                    {
+                        title: '汇率',
+						align:'center',
+                        key: 'val'
+                    },
+					{
+                        title: '操作',
+                        key: 'action',
+						align:'center',
+                        render: (h, params) => {
+                            return h('div', [
+                                h('Button', {
+                                    props: {
+                                        type: 'primary',
+                                        size: 'small'
+                                    },
+									style: {
+                                        marginRight: '5px'
+                                    },
+									on: {
+                                        click: () => {
+                                            t.show(params.row)
+                                        }
+                                    }
+                                }, '编辑')
+                            ]);
+                        }
+                    }
+			],
+            report_data: [],
+        },
+		watch: {
+			 
+        },
+		mounted(){		 
+		  this.getdata() 
+		},
+        methods: {
+           
+			loadData(name)
+			{
+			   this.currency = name		   
+               this.getdata()			   
+			},
+			saveDefault(){
+               	 axios({
+						method: 'post',
+						url:'/finance/saveDefault',
+						data:{val:this.defaultRate,currency:this.currency}
+					}).then(res=>{
+					 this.$Message.success('保存成功');
+				 })			
+			},
+			getdata()
+		   {
+		     let _that = this
+			 this.loading  =true
+			 axios.get('/finance/rate_json?currency='+this.currency)
+			  .then(function (response) {
+				 _that.report_data = response.data.list
+				 _that.defaultRate = response.data.defaultRate
+				 _that.loading  =false
+			  })
+			  .catch(function (error) {
+				console.log(error);
+			  });
+		   },
+		   openModal(){
+		    this.formData ={}
+			this.editShow = false
+			this.modal1 = true	  
+		   },
+		   submitUpdate(){
+		    if( !this.formData.val || !this.formData.month || !this.formData.currency )
+			 {
+			    this.$Message.warning('请填写完整信息');
+				return false;
+			 }
+			  axios({
+						method: 'post',
+						url:'/finance/updaterate',
+						data:this.formData
+					}).then(res=>{
+					 this.$Message.success('操作成功');
+					 this.modal1 = false
+					 this.getdata() 
+				 })				 
+		   },
+		   show(row){
+		    this.formData =row || {}
+			this.editShow = true
+			this.modal1 = true	
+		   }
+        }
+    })
+  </script>
+
+

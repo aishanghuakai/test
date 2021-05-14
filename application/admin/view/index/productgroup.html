@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GAME BRAIN</title>
+    {include file="./static/html/header_common.html" /}
+  <link href="/static/css/checkbox.css" rel="stylesheet" type="text/css">	
+	 <link rel="stylesheet" type="text/css" media="all" href="/static/plugin/jquery-time/daterangepicker-bs3.css" />
+     <link href="/static/css/dialog.css?t=<?php echo time(); ?>" rel="stylesheet" type="text/css" />
+    <link href="/static/css/blue/style.css?t=<?php echo time(); ?>" rel="stylesheet">
+	 <style>
+
+
+.d-sm-flex {
+    display: flex !important;
+}
+.col-4 {
+    flex: 0 0 33.33333%;
+    max-width: 33.33333%;
+}
+.col-4 {
+  text-align:center;
+}
+.card-body {
+    padding: 5% 1rem 1rem 10%;
+}
+.btn-inverse-default {
+    color:#212529;
+   background-color: #f3f5f6;
+   border-color: #f3f5f6;
+}
+.h5, h5 {
+    font-size: 2rem;
+}
+.country{
+  font-size:20px;
+  color:#212529;
+}
+.text-primary {
+    color: #308ee0 !important;
+}
+	 </style>
+</head>
+<body style="background-color:#fff;">
+    <div id="wrapper" style="background-color:#fff;">
+        {include file="./static/html/header.html" /}	
+		<div class="hw_page_content">
+		    
+		    <div class="hw_menu_left">
+         {include file="./static/html/side.html" /}  
+			</div>
+			
+		    <div class="hw_content_right" style="padding:0 30px;width:80%" >
+			  <div style="margin-top:30px;">
+				   <ul>
+					 <a class="btn btn-inverse-default btn-sm" href="/admin_index/countrygroup"><i class="fa fa-angle-left"></i> 返回</a>
+				   </ul>
+			  </div>
+			   
+			   <div style="margin-top:30px;text-align:center;">
+				   <ul>
+					 <a class="country"><i class="fa fa-map-marker"></i> {$country}</a>
+				   </ul>
+			  </div>
+			  
+			    <div class="card-body">
+                  <div class="row d-none d-sm-flex mb-4">
+                    <div class="col-4">
+                      <h5 class="text-primary">历史总收益</h5>
+                      <p>${$revenue}</p>
+                    </div>
+                    <div class="col-4">
+                      <h5 class="text-primary">历史总花费</h5>
+                      <p>${$spend}</p>
+                    </div>
+                    <div class="col-4">
+                      <h5 class="text-primary">回收占比</h5>
+                      <p>{$roi}%&nbsp;
+					     {if condition="$roi >= 100"}
+							  <i class="fa fa-long-arrow-up" style="color:#00ce68;"></i>
+						 {else /}
+						    <i class="fa fa-long-arrow-down" style="color:#e65251;"></i>
+						 {/if}
+					  </p>
+                    </div>
+                  </div>
+                 
+                </div>			 
+			    <div style="margin-top:20px;">
+				   <span><i class="fa fa-exclamation-circle"></i> 历史数据即从接入GameBrain系统累计到当前</span>
+			    </div>
+			</div>
+		</div>
+	
+		 {include file="./static/html/footer.html" /}
+	</div>
+</body>
+ {include file="./static/html/footer_common.html" /}
+  <script type="text/javascript" src="/static/plugin/jquery-time/moment.js"></script>
+  <script type="text/javascript" src="/static/plugin/jquery-time/daterangepicker.js"></script>	
+  <script src="/static/js/mTips.js"></script>
+  <script src="/static/js/jquery.tablesorter.min.js"></script>
+   <script src="/static/js/jquery.freezeheader.js"></script>
+  <script src="/static/js/echarts.min.js"></script>
+ <script>
+ 
+     var start_date="";
+	 var end_date = "";
+	 $(function(){
+	    
+	 })
+ </script>
+</html>

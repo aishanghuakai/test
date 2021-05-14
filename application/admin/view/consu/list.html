@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Roi Model--广告聚合平台</title>
+	{include file="./static/html/header_common.html" /}
+	<style>
+	  input:focus{
+	    border:none;
+		outline:none;
+		padding-top:2px;
+	  }
+	</style>
+</head>
+<body>
+    <div id="wrapper" >
+        
+		{include file="./static/html/header.html" /} 
+	
+		<div class="hw_page_content">
+		    <div class="hw_menu_left">
+         {include file="./static/html/side.html" /}  
+			</div>
+		    <div class="hw_content_right">	
+			  <div class="song_list">
+			   <ul class="search_tab clearfix">
+			      <li class="active"><a  href="/admin_consu/applist">应用</a></li>
+				 
+			     <li><div style="margin-top:8px;position:relative;">
+				  <input id="keyword"  style="margin-left:50px;height:40px;padding-left:10px;border:none;" value="{$app_name}" type="text" placeholder="search" />
+				  <div class="searh_btn" title="搜索"><i class="fa fa-search"></i></div>
+				 </div></li>
+				<a style="float:right;margin-right:20px;" href="/admin_consu/s_list">应用设置</a>
+		      </ul>
+			   {if condition="empty($data)"}
+                <div class="hw_nosetapp">
+				  <p>Hi，您还没有设置相关的应用</p>
+				  <a class="btn" href="/admin_consu/s_list" style="width:130px;background-color: #DFDFDF !important;color: #9F9F9F !important;text-align:left;margin-left:27px;margin-top:4px;"><i class="material-icons left" style="margin-left:10px;margin-top:3px;vertical-align:middle;">cloud</i>&nbsp;去设置</a>
+				</div>	
+                 {else /}				
+                 <ul class="list_header clearfix" style="margin-bottom: 0px;">
+                    <li class="width_f_li song_name_li">
+                       <span class="search_icon checkall"></span>应用名称
+                    </li>
+                    <li class="width_s_li">
+                        包名
+                    </li>
+                    <li class="width_t_li" style="margin-left:10px">
+                       添加人
+                    </li>
+                </ul>
+                <ul class="list_content clearfix">
+				{volist name="app_s" id="item"}
+				  <li class="clearfix">
+					   <div class="width_f_li clearfix">
+						 <span class="search_icon checkbox"></span>
+						  <a class="song_name" href="/admin_consu/index1?app_id={$item.id}">{$item.app_name}</a>
+						 </div>
+					   <div class="width_s_li">
+					   <a class="album_name" title="" href="">{$item.package_name}</a>
+					   &nbsp;
+					   </div>
+					   <div class="width_t_li">{$item.updateuser}</div>
+					   <div class="play-item">
+						<span class="common_icon icon_play" title="计算" style="margin-right:10px;color:#ccc;" onclick="window.location.href='/admin_consu/index1?app_id={$item.id}' "><i class="fa fa-tag"></i></span>
+						<span class="common_icon icon_download" title="查看" style="margin-right:10px;color:#ccc;" onclick="window.location.href='/admin_consu/historylist?app_id={$item.id}' " ><i class="fa fa-eye"></i></span>
+						<span class="common_icon icon_share"></span>
+					   </div>
+				   </li>
+				  {/volist}
+				</ul>
+                <div>{$app_s->render()}</div>
+                 {/if}				
+              </div>
+			</div>
+        </div>			
+	 {include file="./static/html/footer.html" /}		 
+	</div>
+   {include file="./static/html/footer_common.html" /}
+   
+</body>
+
+  <script>
+    
+                $(".list_content li").on({  
+                    mouseover : function(){  
+					
+                       $(this).find(".play-item").css("visibility","visible");					 
+                    } ,  
+                    mouseout : function(){  
+					
+                        $(this).find(".play-item").css("visibility","hidden");  
+                    }   
+                }) ;
+                       		 
+            $('#keyword').bind('input propertychange', function()
+		   {
+			   var input_text = $(this).val();
+               $(".list_content li").each(  function(i){
+			        var text = $(this).find(".song_name").text();
+					if( text.indexOf(input_text)!=-1 )
+					  {
+					     $(this).show();
+					  }else{
+					     $(this).hide();
+					  }
+			   })			   
+		   });  
+  </script>
+</html>

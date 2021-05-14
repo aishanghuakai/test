@@ -1,0 +1,247 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+	<meta charset="utf-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<title>GAME BRAIN</title>
+	{include file="./static/html/header_common.html" /}
+	<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+	<script src="https://unpkg.com/vue/dist/vue.js"></script>
+	<!-- import JavaScript -->
+	<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+	<script src="/static/js/axios.min.js"></script>
+	<style>
+		.cell {
+			font-size: 12px;
+			color: #222;
+		}
+
+		.el-table td, .el-table th {
+			padding: 9px 0;
+		}
+
+		.item {
+			margin-top: 10px;
+			margin-right: 40px;
+		}
+
+		.grid-content {
+			background: #fff;
+			padding: 15px !important;
+			border-radius: 10px;
+			border: 0;
+			color: #222;
+			text-align: center;
+		}
+
+		.card-category {
+			font-size: 13px;
+			color: #444;
+			margin-bottom: 0;
+		}
+
+		.card-title {
+			color: #575962;
+			font-size: 18px;
+			font-weight: 400;
+		}
+
+	</style>
+</head>
+<body style="background:#fff;">
+<div id="wrapper" style="background-color:#fff;">
+	{include file="./static/html/header.html" /}
+	<div class="hw_page_content" style="background-color:#fff;">
+		<div class="hw_menu_left">
+			{include file="./static/html/side.html" /}
+		</div>
+		<div class="hw_content_right" style="padding:0px 5px;background: #fff;">
+			<div class="header">
+				<span><a style="font-size: 24px;font-weight: bolder;margin-right: 5px;color: #333" href="/admin_purchase/index">销售概览</a></span>
+				<span><a style="font-size: 24px;font-weight: bolder;margin-right: 5px;color: #838383" href="/admin_purchase/times?is_times=1">内购次数</a></span>
+				<span><a style="font-size: 24px;font-weight: bolder;margin-right: 5px;color: #838383" href="/admin_purchase/times?is_times=0">内购金额</a></span>
+			</div>
+			<div class="hw_chat" id="chats" style="height:350px;margin-top:15px;padding:0px 20px;"></div>
+
+			<div style="padding:10px 20px;">
+				<div class="main" style="margin-bottom:10px;">
+					<h4 style="float:left;font-size:16px;">商品详细</h4>
+					<div style="float:right;margin-left:10px;">
+						<el-button size="small"   icon="el-icon-download" plain @click="goTO('https://analytics.gamebrain.io/adjust/seedUserDownload?gb_id={$appid}')">下载用户</el-button>
+					</div>
+					<div style="float:right;margin-left:10px;">
+						<el-button size="small" class="btn badge-gradient-info btn-sm" @click="goTO('/admin_purchase/times')">内购次数</el-button>
+					</div>
+					<div style="float:right;">
+						<el-select v-model="country" style="width:150px;" size="small" @change="handleCountry" placeholder="请选择国家">
+							{volist name="countryList" id="item"}
+							<el-option key="{$key}" label="{$item}" value="{$key}"></el-option>
+							{/volist}
+						</el-select>
+					</div>
+
+					<div style="float:right;margin-right:10px;">
+						<el-date-picker
+							v-model="date"
+							type="daterange"
+							size="small"
+							@change="handleCountry"
+							value-format="yyyy-MM-dd"
+							style="width:250px;"
+							start-placeholder="开始"
+							end-placeholder="结束">
+						</el-date-picker>
+					</div>
+				</div>
+				<el-table
+					:data="tableData"
+					v-loading="loading"
+					style="width:100%;">
+					<el-table-column prop="product_id" align="center" label="商品ID"></el-table-column>
+					<el-table-column prop="product_name" align="center" label="商品名称"></el-table-column>
+					<el-table-column prop="units" align="center" label="购买数量"></el-table-column>
+					<el-table-column prop="total_usd_money" align="center" label="预估收入(分成后)">
+						<template slot-scope="scope">
+							${{scope.row.total_usd_money}}
+						</template>
+					</el-table-column>
+				</el-table>
+			</div>
+		</div>
+	</div>
+</div>
+{include file="./static/html/footer.html" /}
+</body>
+{include file="./static/html/footer_common.html" /}
+<script src="/static/js/echarts.min.js"></script>
+<script>
+
+	let t = new Vue({
+		el: '#wrapper',
+		data: {
+			loading: false,
+			country: 'all',
+			date: ['{$start}', '{$end}'],
+			tableData: []
+		},
+		created() {
+			this.getlist()
+		},
+		methods: {
+			goBack() {
+				window.location.href = '/admin_index/main';
+			},
+			goTO(url){
+				window.location.href = url
+			},
+			handleCountry() {
+				this.getlist()
+			},
+			getlist() {
+				this.loading = true
+				let params = {
+					date: this.date,
+					country: this.country,
+					appid: '{$appid}'
+				}
+				let _that = this
+				axios({
+					method: 'post',
+					url: '/admin_purchase/json_data',
+					data: params
+				}).then(res => {
+					_that.loading = false
+					this.tableData = res.data
+				})
+			}
+		}
+	})
+</script>
+<script>
+	var myChart = echarts.init(document.getElementById("chats"));
+	var option = {
+		backgroundColor: '#fff',
+		title: {
+			text: "最近一周变化",
+			left: "18px",
+			top: "0",
+			textStyle: {
+				color: "#999",
+				fontSize: 12,
+				fontWeight: '400'
+			}
+		},
+		color: ['#73A0FA', '#73DEB3', '#FFB761'],
+		tooltip: {
+			trigger: 'axis',
+			axisPointer: {
+				type: 'cross',
+				crossStyle: {
+					color: '#999'
+				},
+				lineStyle: {
+					type: 'dashed'
+				}
+			}
+		},
+		grid: {
+			left: '25',
+			right: '25',
+			bottom: '24',
+			top: '75',
+			containLabel: true
+		},
+		legend: {
+			data: ['预估收入'],
+			orient: 'horizontal',
+			icon: "rect",
+			show: true,
+			left: 20,
+			top: 25,
+		},
+		xAxis: {
+			type: 'category',
+			data: [{$chartData.date}],
+			splitLine: {
+				show: false
+			},
+			axisTick: {
+				show: false
+			},
+			axisLine: {
+				show: false
+			},
+		},
+		yAxis: {
+			type: 'value',
+			axisLabel: {
+				color: '#999',
+				textStyle: {
+					fontSize: 12
+				},
+			},
+			splitLine: {
+				show: true,
+				lineStyle: {
+					color: '#F3F4F4'
+				}
+			},
+			axisTick: {
+				show: false
+			},
+			axisLine: {
+				show: false
+			},
+		},
+		series: [{
+			name: '预估收入',
+			type: 'line',
+			smooth: true,
+			data: [{$chartData.val}]
+		}
+		]
+	};
+	myChart.setOption(option);
+</script>
+</html>

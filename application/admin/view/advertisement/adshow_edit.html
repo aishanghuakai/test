@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Game Brain</title>
+    {include file="./static/html/header_common.html" /}
+	<link href="/static/css/checkbox.css" rel="stylesheet" type="text/css" />
+    <style>
+	  input[type="file"] {
+    position: absolute;
+    opacity:1;
+    top: 0;
+    left: 20px;
+    width: 150px;
+    height: 50px;
+    cursor: pointer;
+    line-height: 34px;
+	background:#ccc;
+}
+	</style>	
+</head>
+ 
+<body>
+    <div id="wrapper" style="background-color:#fff;">
+        {include file="./static/html/header.html" /}	
+		<div class="hw_page_content">
+		    <div class="hw_menu_left">
+         {include file="./static/html/side.html" /}  
+			</div>
+		    <div class="hw_content_right">
+			    <ul class="search_tab clearfix" >
+				  <li><a  href="/admin_advertisement/adshow?appid={$res.appid}">返回列表</a></li>
+			      <li class="active"><a  href="javascript:;">产品修改</a></li>				  
+		        </ul>
+			  	
+               <div style="padding:30px 30px;clear:both;">
+			     
+				 
+					 <form class="form-horizontal" action="/admin_advertisement/adshow_post" method="post" enctype="multipart/form-data">
+						  <div class="form-group">
+							<label for="name" class="col-sm-1 control-label">应用名称</label>
+							<div class="col-sm-10">
+							  <input type="text" class="form-control" name="name" value="{$res.name}" id="name" placeholder="名称">
+							</div>
+						  </div>
+						  <div class="form-group">
+							<label for="package_name" class="col-sm-1 control-label">包名</label>
+							<div class="col-sm-6">
+							  <input type="text" placeholder="" name="package_name" value="{$res.package_name}" class="form-control" id="package_name" >					 
+							</div>
+							  
+						  </div>
+						  <div class="form-group">
+							<label for="version" class="col-sm-1 control-label">素材版本</label>
+							<div class="col-sm-3">
+							  <input type="text" class="form-control" value="{$res.version}" name="version" id="version" placeholder="">
+							</div>
+						  </div>
+						  <div class="form-group">
+							<label for="inputEmail3" class="col-sm-1 control-label">上传视频</label>
+							<div class="col-sm-10">
+							  <div class="article-cover-add thumb"><input  value="{$res.video_url}" name="video_url" accept="video/mp4" type="file"><video style="margin-left:200px;" height="100" width="150" src="{$res.video_url}" controls="controls"></video></div>						  
+							</div>
+						  </div>
+						  
+						  <div class="form-group" style="margin-top:40px;">
+							<label for="shop_url" class="col-sm-1 control-label">商店地址</label>
+							<div class="col-sm-10">
+							  <input type="text" class="form-control" value="{$res.shop_url}" name="shop_url" id="shop_url" placeholder="跳转商店地址">
+							</div>
+						  </div>
+						  
+						 <input type="hidden" class="form-control" name="id" value="{$res.id}">
+						  <input type="hidden" class="form-control" name="appid" value="{$res.appid}">
+						 <div class="form-group">
+							<label for="desc" class="col-sm-1 control-label">描述</label>
+							<div class="col-sm-10">
+							  <textarea  class="form-control" name="desc"  id="desc"  rows="4">{$res.desc}</textarea>				 
+							</div>
+						  </div>
+						   <div class="form-group">
+							<div class="col-sm-offset-4 col-sm-6" style="margin-top:10px;">
+							  <button type="button" onclick="window.location.href='/admin_advertisement/adshow?appid={$res.appid}'" style="width:20%;float:left;margin-right:10px;padding-right:10px;" class="btn btn-default">取消</button>
+							  <button type="submit" style="width:50%;" id="save" class="btn btn-danger">立即创建</button>
+							</div>
+						  </div>
+						</form>
+			  </div>				
+			</div>
+		</div>
+		 {include file="./static/html/footer.html" /}
+	</div>	
+</body>
+ {include file="./static/html/footer_common.html" /}
+ <script>
+    $(function(){
+       
+    })
+ </script>
+</html>

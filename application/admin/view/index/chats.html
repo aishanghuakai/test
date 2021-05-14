@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GAME BRAIN</title>
+    {include file="./static/html/header_common.html" /} 
+    <link href="/static/css/checkbox.css" rel="stylesheet" type="text/css">		
+	 <link rel="stylesheet" type="text/css" media="all" href="/static/plugin/jquery-time/daterangepicker-bs3.css" /> 
+	 <style>
+.country .c-dropdown__item {
+    display: block;
+    padding: 0px 7px;
+    border-bottom: none;
+    color: #768093;
+    font-size: 10px;
+    font-weight: 400;
+   
+    float: left;
+}
+
+.c-dropdown__item{
+    border-bottom: none;
+}
+	 </style>
+</head>
+<body style="background-color:#f2edf3;">
+    <div id="wrapper" style="background-color:#f2edf3;">
+        {include file="./static/html/header.html" /}	
+		<div class="hw_page_content">
+		   	   
+		    <div class="hw_menu_left">
+         {include file="./static/html/side.html" /}  
+			</div>
+		    <div class="hw_content_right" style="padding-bottom:30px;border-radius:10px;">
+			  			   
+			    <div style="margin:30px 20px 0px 20px;">
+			     <div class="info_hd">
+				    
+					 <div class="hw_dropdown_menu" id="start_date" style="float:right;margin-left:50px;">
+					    {$start} 到 {$end}
+					  </div>
+					  
+					  <div class="hw_dropdown_menu country"  data="all" style="position:relative;float:right;height:38px;margin-left:30px;">
+					  <a href="javascript:;" class="dropdown_switch dropdown-toggle"  id="dropdownMenuAvatar1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" role="button">
+					    <label  style="font-weight:400;">{if condition="$country eq 'all'"}全部国家{else /}{$countrys[$country]}{/if}</label><i class="fa fa-caret-down" style="margin-left:5px;"></i>
+					  </a>
+					  <div class="c-dropdown__menu has-arrow dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuAvatar1" x-placement="top-end" style="position: absolute; top:38px; left: 0px; will-change: transform;">
+					     {volist name="countrys" id="c"}
+						  <a class="c-dropdown__item dropdown-item" data="{$key}" href="javascript:;">{$c}</a>
+                         {/volist}						
+					 </div>					 
+					</div>					
+					<div style="float:left">
+					    {$r.text}概览
+					</div>
+				  </div>				 
+					<div id="container" style="min-width:400px;height:400px"></div>
+			  </div>
+			   
+			</div>
+		</div>
+		 {include file="./static/html/footer.html" /}
+	</div>	
+</body>
+ {include file="./static/html/footer_common.html" /}
+  <script type="text/javascript" src="/static/plugin/jquery-time/moment.js"></script>
+  <script type="text/javascript" src="/static/plugin/jquery-time/daterangepicker.js"></script>
+  <script src="/static/js/echarts.min.js"></script>  
+ <script>
+ 
+     var start_date="{$start}";
+	 var end_date = "{$end}";
+	 var spm ="{$spm}";
+	 var country ="{$country}";
+    $(function(){
+	   
+	  $('#start_date').daterangepicker({ minDate:'2018-07-08',opens:'left' },function(start, end, label) {
+	 
+		    start_date = start.format('YYYY-MM-DD');end_date=end.format('YYYY-MM-DD');
+			$('#start_date').text(start_date+" 到 "+end_date);
+			var url = "/admin_index/chats?start="+start_date+"&end="+end_date+"&spm="+spm+"&country="+country;
+			window.location.href=url;
+		 });
+		 
+		 $(".c-dropdown__item").click( function(){
+		    var _p = $(this).parent().parent();
+			   country = $(this).attr("data");
+				_p.find("label").text($(this).text() );
+		    var url = "/admin_index/chats?start="+start_date+"&end="+end_date+"&spm="+spm+"&country="+country;
+			window.location.href=url;
+		})
+		 
+		 $(".bar_allow_roe").click( function(){
+	       
+		   if( $(this).find("i").hasClass("fa-angle-double-right") )
+		      {
+			     $(this).find("i").removeClass("fa-angle-double-right");
+				 $(this).find("i").addClass("fa-angle-double-left");
+				 $(this).animate({'left':'21%'},1000);
+				 $(".hw_app_navlist").show(1000);
+			  }else{
+			     $(this).find("i").removeClass("fa-angle-double-left");
+				 $(this).find("i").addClass("fa-angle-double-right");
+				 $(this).animate({'left':'0%'},1000);
+				 $(".hw_app_navlist").hide(1000);
+			  }
+	   })
+	   
+	   $("input[name='app_id']").click( function(){
+	        var app_id  =$(this).val();
+			
+			var url = "/admin_index/chats?appid="+app_id+"&start="+start_date+"&end="+end_date+"&spm="+spm+"&country="+country;
+			window.location.href=url;
+	   })
+		 
+	   });
+ </script>
+ 
+<script>
+var myChart = echarts.init(document.getElementById("container"));
+var beans ='{$r.data}';
+   
+   function obtainEchartDataSource(beans) {           
+     var beans = JSON.parse(beans)
+	 var xAxisData = [];
+     var seriesLineData = [];
+     var tooltipsData = [];
+     var scatterData = [];
+     for (var i in beans) {
+         var y = beans[i].date;
+         var val = beans[i].val;
+         var desc = beans[i].desc;
+         // x轴刻度
+         xAxisData.push({
+             value: y
+         });
+         // 折线数据
+         seriesLineData.push({
+             value: val
+         });
+         // 提示框次级数据
+         tooltipsData.push(desc);
+         // x轴坐标点数据
+         scatterData.push({
+             value: [y, 0]
+         })
+     }    
+     return {
+         xAxisData: xAxisData,
+         scatterData: scatterData,
+         seriesLineData: seriesLineData,
+         tooltipsData: tooltipsData
+     }
+ }
+ var dataSource = obtainEchartDataSource(beans);
+ var option = {
+     tooltip: {
+         show: true
+     },
+     grid: {
+         top: '10%',
+         left: '1%',
+         right: '1%',
+         bottom: '0%',
+         containLabel: true
+     },
+     xAxis: [{
+         type: 'category',
+         // boundaryGap: false,
+         axisTick: {
+             show: false
+         },
+         // x轴 点击触发事件
+         triggerEvent: true,
+		 axisLabel:{
+		    color:function(value, index){			  
+		         var tooltipsData = dataSource.tooltipsData;
+				 var d = tooltipsData[index];
+				 if( d!="0" )
+				 {
+				    return 'red';
+				 }
+				return '#000';
+			},
+			fontSize:'11'
+		 },
+         data: dataSource.xAxisData
+     }],
+     yAxis: [{
+         type: 'value',
+         name: '',
+         splitLine: {
+             show: false
+         },
+         axisLine: {
+             show: false
+         },
+         axisLabel: {
+             show: true
+         },
+         axisTick: {
+             show: false
+         }
+     }],
+     series: [{
+             name: '次留',
+             type: 'line',
+             //是否平滑曲线显示
+             smooth: true,
+             // 默认是空心圆（中间是白色的），改成实心圆
+             symbol: 'circle',
+             // 屏蔽标记鼠标事件
+             silent: true,
+             symbolSize: 1,
+             lineStyle: {
+                 normal: {
+                     width: 4,
+                     // 线条颜色
+                     color: "#4C84FF"
+                 }
+             },
+             label: {
+                 show: true,
+                 position: 'top',
+                 formatter: '{c}',
+                 textStyle: {
+                     color: '#4f4a51',
+                     fontSize: 14,
+                     fontWeight: 'bold'
+                 }
+             },
+             areaStyle: { //区域填充样式
+                 normal: {
+                     color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                         offset: 0,
+                         color: 'rgba(0, 136, 212, 0.2)'
+                     }, {
+                         offset: 1,
+                         color: 'rgba(0, 136, 212, 0)'
+                     }], false),
+                     shadowColor: 'rgba(0, 0, 0, 0.1)',
+                     shadowBlur: 10
+                 }
+             },
+             data: dataSource.seriesLineData
+         },
+         {
+             type: 'pictorialBar',
+             data: deepClone(dataSource.seriesLineData),
+             barGap: "10%",
+             symbolRepeat: true,
+             symbolMargin: 2,
+             // 点状线 鼠标不触发事件
+             silent: true,
+             symbol: "rect",
+             symbolSize: 2,
+             color: '#c8c5d1',
+             symbolClip: true
+
+         },
+         {
+             type: 'scatter',
+             name: '日期',
+             symbolSize: 10,
+             data: dataSource.scatterData,
+             tooltip: {
+                 show: true,
+                 backgroundColor: 'white',
+                 textStyle: {
+                     color: '#000'
+                 },
+                 formatter: function(param) {
+                     var index = param.dataIndex;
+                     var lineData = option.series[0].data[index].value;
+                     var tooltipsData = dataSource.tooltipsData;
+					 if( tooltipsData[index]!="0" )
+					 {
+					   
+						return '<div style="border: medium #0094ff;">'+tooltipsData[index]+'</div>';
+					 }                   
+                 },
+                 extraCssText: 'box-shadow: 0 0 3px #A0C5C8;'
+             },
+             itemStyle: {
+                 borderWidth: 1,
+                 borderColor: '#00a7db',
+                 color: {
+                     type: 'radial',
+                     x: 0.5,
+                     y: 0.5,
+                     r: 0.5,
+                     colorStops: [{
+                         offset: 0.4,
+                         color: '#ffffff'
+                     }, {
+                         offset: 1,
+                         color: '#4C84FF' // 100% 处的颜色
+                     }],
+                     globalCoord: false
+                 }
+             }
+         }
+     ]
+ };
+ myChart.setOption(option);
+ function deepClone(json) {
+     var s = JSON.stringify(json);
+     return JSON.parse(s);
+ }
+</script>
+</html>

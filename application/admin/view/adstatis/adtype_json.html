@@ -1,0 +1,32 @@
+﻿
+		{volist name="list" id="vv"}						  
+			<tr>
+				<td style="width:30%;text-align:left;color:#38f;">
+				{if condition="$vv['remark'] neq ''" }
+				   {$vv.remark}
+				   {else /}
+				   {$vv.unit_id}
+				   {/if}
+				 </td>
+				   {if condition="$vv['isneed'] eq 1"}  
+					 <td style="color:red;">{$vv.decpm}</td>
+					 {elseif condition="$vv['isneed'] eq 2" /}
+					 <td style="color:green;">{$vv.decpm}</td>
+					 {else /}
+					  <td>{$vv.decpm}</td>
+					 {/if}	
+				  <td style="border-left:1px solid #ccc;color:red;">{$vv.ordernum}</td>
+				 <td style="border-right:1px solid #ccc;">{$vv.ecpm}</td>
+				 
+				 <td>{$vv.impressions}</td>
+				 <td style="border-right:1px solid #ccc;">{$vv.impressions_rate}%</td>
+				 
+				 <td>{$vv.revenue}</td>
+				 <td style="border-right:1px solid #ccc;">{$vv.revenue_rate}%</td>
+				 
+				 <td>{$vv.ctr}%</td>
+				 <td>{$vv.filled_rate}%</td>
+				 <td>{$vv.avg_impressions}</td>
+			</tr>
+		{/volist}
+								  

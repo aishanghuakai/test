@@ -1,0 +1,914 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GAME BRAIN</title>
+    {include file="./static/html/header_common.html" /}
+	  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+   <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <!-- import JavaScript -->
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <script src="/static/js/axios.min.js"></script>	 
+	<style>
+	.cell{font-size:12px;}
+	  .el-table td, .el-table th {
+    padding:8px 0;}
+	  .item {
+		  margin-top: 10px;
+		  margin-right: 40px;
+		}
+		.el-tag + .el-tag {
+    margin-left: 10px;
+  }
+  .button-new-tag {
+    margin-left: 10px;
+    height: 32px;
+    line-height: 30px;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  .input-new-tag {
+    width:250px;
+    margin-left: 10px;
+    vertical-align: bottom;
+  }
+  .bg-purple-dark {
+    
+  }
+  .el-select .el-input {
+    width: 130px;
+  }
+  .custom_audience .el-input__inner,.custom_audience .el-input{width: 500px;}
+  .input-with-select{width:400px;}
+  .input-with-select .el-input-group__prepend {
+    background-color: #fff;
+  }
+  ul{list-style:none;}
+.list_item{width:24%;display:inline-block;margin-right:10px;margin-bottom:10px;border:1px solid #f7f7f7;}
+.video_list .list_item:hover{
+ box-shadow: 2px 0 6px rgba(0,21,41,.35);
+}
+.list_image{width:100%;padding:5px;cursor:pointer;}
+.list_image img{width:100%;border-radius:4px;height:250px;}
+.title-wrap{padding:1px 5px;}
+.ga-title{font-size:14px;color: #575e74;max-height: 50px;
+white-space: inherit;
+width: 100%;
+overflow: hidden;
+text-overflow: ellipsis;}
+.ivu-time{
+    display: inline-block;
+    color: #808695;
+    vertical-align: middle;
+    font-size: 13px;
+    margin-top: 6px;
+}
+ .avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 178px;
+    height: 178px;
+    line-height: 178px;
+    text-align: center;
+  }
+  .avatar {
+    width: 178px;
+    height: 178px;
+    display: block;
+  }
+  .el-upload__input {
+    display: none !important;
+}
+.thumbimage{height:100px;width:100px;display:block;cursor:pointer;}
+.thumbimage img{width:100%;height:100%;}
+.image_list li{float:left;margin-right:10px;margin-bottom:10px;}
+.el-drawer{text-align:center;}
+.productitem{padding:5px;width:80%;margin:0 auto;margin-top:20px;border:1px solid #d7d1c9;border-radius:8px;font-size:14px;}
+.productitem:hover{background-color:#d7d1c9;cursor:pointer;}
+	</style>
+</head>
+<body style="background: #fff !important;">
+    <div id="wrapper" >
+        {include file="./static/html/header.html" /}	
+		<div class="hw_page_content">
+		    <div class="hw_menu_left">
+         {include file="./static/html/side.html" /}  
+			</div>
+		    <div class="hw_content_right" style="padding:10px 10px;">
+			   <h3 style="color:#222;margin-bottom: 20px;float:left;">
+			     <el-page-header @back="goBack"  style="cursor:pointer;" :content="campaign_name"></el-page-header>				
+			   </h3>
+			    <div style="float:right;padding:10px;">
+				   <el-button type="danger" @click="drawer=true" icon="el-icon-open" size="small">切换Campaign</el-button>
+				</div>
+				<el-drawer :visible.sync="drawer" size="30%" direction="rtl">
+                   <h3>选择广告主账户</h3>				
+				   <el-select v-model="advertiser_id" @change="selectAdertiser" size="small"  placeholder="请选择">
+					  {volist name="all" id="vv"}
+						<el-option key="{$key}" label="" value="{$key}"></el-option>
+					  {/volist}
+					</el-select>						
+				  <div style="height:50%;overflow-y:auto;">
+				  <div v-for="item in campaignList" :key="item.campaign_id" @click="selectCampagin(item)" class="productitem">
+				   {{item.name}}
+				  </div>
+				  </div>
+				</el-drawer>
+			   <div class="main" style="margin-top:10px 0px;clear:both;">
+                   <el-row style="border:1px solid #f7f7f7;margin-bottom:10px;padding:15px;">
+					  <el-col :span="24" style="padding-bottom:10px;">
+					    <div class="grid-content bg-purple-dark"><h3 style="color:#333">投放及目标</h3></div>						
+					  </el-col>
+					  <el-col :span="24">
+					      <el-form ref="form" :model="form"  label-width="100px" v-loading="loading1">
+							<el-form-item label="投放范围">
+								<el-radio-group @change="handleRange" size="small" v-model="form.delivery_range">
+								  <el-radio-button label="DEFAULT">默认</el-radio-button>
+								  <el-radio-button label="UNION">穿山甲</el-radio-button>								  
+								</el-radio-group>
+							  </el-form-item>
+							  <el-form-item v-show="form.delivery_range=='DEFAULT'" label="广告位置">
+								<el-radio-group  size="small" @change="handlepostion" v-model="smart_inventory">
+								  <el-radio-button label="1">优选广告位</el-radio-button>
+								  <el-radio-button label="inventory_type">按媒体指定位置</el-radio-button>、
+                                  <el-radio-button label="scene_inventory">按场景指定位置</el-radio-button>								  
+								</el-radio-group>
+							  </el-form-item>
+							  <el-form-item v-show="(form.delivery_range=='DEFAULT') && ((smart_inventory=='inventory_type') || (smart_inventory=='scene_inventory'))">
+								 <el-checkbox-group v-model="inventory_value">
+                                     <el-checkbox v-for="p in positionlist" :label="p.value" :key="p.value">{{p.label}}</el-checkbox>
+                                 </el-checkbox-group>
+							  </el-form-item>
+							  <el-form-item  v-show="form.delivery_range=='UNION'" label="投放形式">
+								<el-radio-group size="small" v-model="form.union_video_type">
+								  <el-radio-button label="REWARDED_VIDEO">激励视频</el-radio-button>
+								  <el-radio-button label="ORIGINAL_VIDEO">原生</el-radio-button>								  
+								</el-radio-group>
+							  </el-form-item>
+							  <el-form-item  v-show="(form.delivery_range=='UNION') && (form.union_video_type=='REWARDED_VIDEO')" label="试玩素材">
+								<el-input style="width:60%;" size="small" v-model="createform.playable_url"></el-input>
+								 <el-button @click="openPlayModel" type="text">查询试玩素材</el-button>
+							  </el-form-item>
+							  <el-dialog
+								  title="试玩素材列表"
+								  :visible.sync="dialogPlayVisible"
+								  width="60%">
+								  <el-table :data="PlayData" style="width: 100%">									  
+									  <el-table-column prop="playable_url" label="试玩素材url"></el-table-column>
+									  <el-table-column prop="playable_name" label="试玩素材名"></el-table-column>
+									</el-table>
+								</el-dialog>
+                              <el-form-item label="转化ID">
+                                 <el-input style="width:60%;" size="small" v-model="form.convert_id"></el-input>
+								 <el-button @click="openConvertModel" type="text">查询转化ID</el-button>
+							  </el-form-item>
+							  <el-dialog
+								  title="转化ID列表"
+								  :visible.sync="dialogConvertVisible"
+								  width="60%">
+								  <el-table :data="ConvertData" style="width: 100%">
+									  <el-table-column prop="id" label="转化ID"></el-table-column>
+									  <el-table-column prop="name" label="转化名称"></el-table-column>
+									  <el-table-column  label="操作状态">
+									    <template slot-scope="scope">
+											<el-button size="mini" @click="handleConvertEdit(scope.$index, scope.row)">选择此列</el-button>
+										  </template>
+									  </el-table-column>
+									</el-table>
+								</el-dialog>
+                              <el-form-item label="下载方式">
+								<el-radio-group size="small" v-model="form.download_type">
+								  <el-radio-button label="DOWNLOAD_URL">下载链接</el-radio-button>
+								  <el-radio-button label="EXTERNAL_URL">落地页</el-radio-button>								  
+								</el-radio-group>
+							  </el-form-item>
+                               <el-form-item v-show="form.download_type=='EXTERNAL_URL'" label="来源">
+								<el-input style="width:60%;" size="small" v-model="createform.source"></el-input>
+							  </el-form-item>							  
+							  <el-form-item label="链接地址">
+                                 <el-input style="width:60%;" size="small" v-model="form.download_url"></el-input>
+								 <el-button @click="getpackage" type="text">查询包名</el-button>
+							  </el-form-item>
+							  <el-form-item v-loading="loading" label="应用包名">
+                                 <el-input style="width:60%;"  size="small" v-model="form.package"></el-input>
+							  </el-form-item>
+							   <el-form-item  label="定向人群">
+								<el-select v-model="form.retargeting_tags_include" class="custom_audience" multiple placeholder="请选择">
+									<el-option v-for="item in custom_audience" :key="item.custom_audience_id" :label="item.name" :value="item.custom_audience_id"></el-option>
+								</el-select>
+							  </el-form-item>
+							  <el-form-item  label="排除人群">
+								<el-select v-model="form.retargeting_tags_exclude" class="custom_audience" multiple placeholder="请选择">
+								  <el-option v-for="item in custom_audience" :key="item.custom_audience_id" :label="item.name" :value="item.custom_audience_id"></el-option>
+								</el-select>
+							  </el-form-item>
+							  <el-form-item  label="兴趣定向">
+								<el-radio-group size="small" v-model="form.ad_tag">
+								  <el-radio-button label="">不限</el-radio-button>
+								  <el-radio-button label="0">系统推荐</el-radio-button>								  
+								</el-radio-group>
+							  </el-form-item>                             
+                              <el-form-item  label="网络">								
+								<el-checkbox-group size="small" v-model="ac">
+								 
+								  <el-checkbox-button label="WIFI">WIFI</el-checkbox-button>
+                                  <el-checkbox-button label="2G">2G</el-checkbox-button>
+                                  <el-checkbox-button label="3G">3G</el-checkbox-button>
+                                  <el-checkbox-button label="4G">4G</el-checkbox-button>								  
+								</el-checkbox-group>
+							  </el-form-item>
+                               <el-form-item  label="年龄">
+								<el-checkbox-group size="small" v-model="age">								 
+								  <el-checkbox-button label="AGE_BELOW_18"><18</el-checkbox-button>
+                                  <el-checkbox-button label="AGE_BETWEEN_18_23">18-23</el-checkbox-button>
+                                  <el-checkbox-button label="AGE_BETWEEN_24_30">24-30</el-checkbox-button>
+                                  <el-checkbox-button label="AGE_BETWEEN_31_40">31-40</el-checkbox-button>
+                                  <el-checkbox-button label="AGE_BETWEEN_41_49">41-49</el-checkbox-button>
+                                  <el-checkbox-button label="AGE_ABOVE_50"> >50 </el-checkbox-button>							  
+								</el-checkbox-group>
+							  </el-form-item>
+							  <el-form-item  label="系统版本">
+								<el-select v-model="form.version">
+									<el-option v-for="item in versionList" :key="item.value" :label="item.label" :value="item.value"></el-option>
+								  </el-select>
+                             </el-form-item>
+                             <el-form-item v-show="form.delivery_range=='UNION'" label="设备类型">
+								<el-radio-group size="small" v-model="form.device_type">
+								  <el-radio-button label="0">不限</el-radio-button>
+								  <el-radio-button label="MOBILE">智能手机</el-radio-button>
+								  <el-radio-button label="PAD">平板</el-radio-button>								  
+								</el-radio-group>
+                             </el-form-item>							 
+                        </el-form>							  
+					  </el-col>
+					</el-row>
+					<el-row style="border:1px solid #f7f7f7;margin-bottom:10px;padding:15px;">
+					  <el-col :span="24" style="padding-bottom:10px;">
+					    <div class="grid-content bg-purple-dark"><h3 style="color:#333">预算与出价</h3></div>						
+					  </el-col>
+					  <el-col :span="24">
+					    <el-form ref="form" :model="form"  label-width="80px">
+							<el-form-item label="出价方式">
+								<el-radio-group size="small" v-model="form.smart_bid_type">
+								  <el-radio-button label="SMART_BID_CUSTOM">手动</el-radio-button>
+								  <el-radio-button label="SMART_BID_CONSERVATIVE">自动</el-radio-button>								  
+								</el-radio-group>
+							  </el-form-item>
+							  <el-form-item label="投放方式">
+								<el-radio-group size="small" v-model="form.flow_control_mode">
+								  <el-radio-button label="FLOW_CONTROL_MODE_FAST">优先跑量</el-radio-button>
+								  <el-radio-button label="FLOW_CONTROL_MODE_BALANCE">均衡投放</el-radio-button>
+                                  <el-radio-button label="FLOW_CONTROL_MODE_SMOOTH">优先低成本</el-radio-button>								  
+								</el-radio-group>
+							  </el-form-item>
+							  <el-form-item label="预算">
+								<el-input size="small" placeholder="设置预算金额" v-model="form.budget" class="input-with-select">
+									<el-select v-model="form.budget_mode" slot="prepend" placeholder="请选择">
+									  <el-option label="日预算" value="BUDGET_MODE_DAY"></el-option>
+									  <el-option label="总预算" value="BUDGET_MODE_TOTAL"></el-option>
+									</el-select>									
+								  </el-input>
+							  </el-form-item>
+							  <el-form-item label="投放时间">
+                                 <el-radio-group size="small" v-model="form.schedule_type">
+								  <el-radio-button label="SCHEDULE_FROM_NOW">从今天起长期投放</el-radio-button>
+								  <el-radio-button label="SCHEDULE_START_END">设置开始和结束时间</el-radio-button>					  
+								</el-radio-group>
+							  </el-form-item>
+							  <el-form-item v-show="form.schedule_type=='SCHEDULE_START_END'">
+							     <el-date-picker value-format="yyyy-MM-dd HH:mm" size="small" v-model="form.start_time" type="date" placeholder="开始日期"></el-date-picker>-
+                                 <el-date-picker value-format="yyyy-MM-dd HH:mm" size="small" v-model="form.end_time" type="date" placeholder="结束日期"></el-date-picker>								 
+							  </el-form-item>
+							  <el-form-item label="投放时段">
+							     <el-input type="textarea"  v-model="form.schedule_time"></el-input>								
+							  </el-form-item>
+							  <el-form-item v-show="form.smart_bid_type=='SMART_BID_CUSTOM'" label="目标出价">
+                                 <el-input size="small" style="width:20%;" v-model="form.cpa_bid"></el-input>
+							  </el-form-item>
+							  <el-form-item label="计划名称">
+								  <el-input size="small" type="text"  placeholder="" v-model="form.name"></el-input>
+							  </el-form-item>
+                        </el-form>							  
+					  </el-col>
+					</el-row>
+					<el-row style="border:1px solid #f7f7f7;margin-bottom:10px;padding:15px;">
+					  <el-col :span="24" style="padding-bottom:10px;">
+					    <div class="grid-content bg-purple-dark"><h3 style="color:#333">制作创意</h3></div>						
+					  </el-col>
+					  <el-col :span="24">
+					    <el-form ref="createform" :model="createform" >
+							<el-form-item label="创意方式">
+								 <el-radio-group size="small" v-model="createform.creative_mode">
+								  <el-radio-button label="custom">自定义创意</el-radio-button>
+								  <el-radio-button label="STATIC_ASSEMBLE">程序化创意</el-radio-button>					  
+								</el-radio-group>
+								 <el-button size="small" type="primary" @click="openModel" style="float:right">+创建素材</el-button>
+							  </el-form-item>
+                             <el-form-item>
+							   <div class="my-video-list video_list" style="max-height:400px;border:1px dotted #ebebeb;padding:5px;overflow-y:auto;">
+							      <ul style="width: 100%;padding:0px 10px;">
+										<li v-for="(o,c) in creativeslist" class="list_item">										 
+											  <div class="list_image" @click="video_views(o)">
+											     <img :src="o.imageurl" class="ga-mod-cover" />
+											  </div>
+											  <div class="title-wrap">
+												<div v-show="createform.creative_mode=='custom'" class="main ga-title">
+												  {{o.title}}
+												</div>
+												<div style="text-align:right;">
+												  <el-dropdown>
+														  <span class="el-dropdown-link">
+															操作<i class="el-icon-arrow-down el-icon--right"></i>
+														  </span>
+														  <el-dropdown-menu slot="dropdown">
+															<el-dropdown-item @click.native="editCreate(c)">修改</el-dropdown-item>															
+															<el-dropdown-item @click.native="removeCreate(o)">删除</el-dropdown-item>
+														  </el-dropdown-menu>
+												  </el-dropdown>												 
+												</div>
+											 </div>																	 
+										
+										</li>
+							       </ul>
+							   </div>
+                             </el-form-item>
+                             <el-form-item v-show="createform.creative_mode=='STATIC_ASSEMBLE'" label="创意标题(程序化创意每一个标题5-30个字符)">
+                                 <el-input size="small" type="textarea" placeholder="多个标题请以#分割" v-model="createform.title_list"></el-input>
+							  </el-form-item>
+							  <el-form-item label="应用名">
+                                 <el-input size="small" style="width:20%;" v-model="createform.app_name"></el-input>
+								 <span style="color:#333;margin:0px 10px;">副标题</span>
+								  <el-input size="small" type="text" style="width:40%;" placeholder="" v-model="createform.advanced_creative_title"></el-input>
+								  <span style="color:#333;margin:0px 10px;">创意分类</span>
+								  <el-select size="small" v-model="createform.third_industry_id" placeholder="请选择">
+									{volist name="industrylist" id="vo"}
+									  <el-option key="{$vo.value}" label="{$vo.label}" :value="{$vo.value}"></el-option>
+									{/volist}
+								  </el-select>
+							  </el-form-item>
+                             
+                              <el-form-item  label="创意标签">
+                                 <el-input size="small"  placeholder="最多20个标签，每个不超过10个字，请用#分割" v-model="createform.ad_keywords"></el-input>
+							  </el-form-item>							  
+                        </el-form>							  
+					  </el-col>
+					</el-row>
+					<el-row style="border:1px solid #f7f7f7;margin-bottom:10px;padding:15px;float:right;">
+					   <el-col :span="24">
+					     <label>设置创建广告数量</label>
+						 <el-input-number v-model="num"  :min="1" :max="200"></el-input-number>
+						 <el-button type="primary" v-loading="createloading" @click="submit">确认新建</el-button>					  
+					  </el-col>
+					</el-row>
+				</div>
+				<div class="clear"></div>
+			    <el-dialog title="创意素材"  :visible.sync="dialogFormVisible">
+				  <el-form :model="cform">
+				    <el-form-item label="素材类型" label-width="120px">
+					  <el-radio-group size="small" v-model="cform.image_mode">
+						  <el-radio-button label="CREATIVE_IMAGE_MODE_VIDEO">横版视频</el-radio-button>
+						  <el-radio-button label="CREATIVE_IMAGE_MODE_VIDEO_VERTICAL">竖版视频</el-radio-button>
+						  <el-radio-button label="CREATIVE_IMAGE_MODE_LARGE">横版大图</el-radio-button>	
+                          <el-radio-button label="CREATIVE_IMAGE_MODE_LARGE_VERTICAL">竖版大图</el-radio-button>
+						  <el-radio-button label="CREATIVE_IMAGE_MODE_SMALL">小图</el-radio-button>
+                          <el-radio-button v-show="createform.creative_mode=='custom'" label="CREATIVE_IMAGE_MODE_GROUP">组图</el-radio-button>						  
+					  </el-radio-group>
+					</el-form-item>					
+					<el-form-item v-show="createform.creative_mode=='custom'"  label="创意标题" label-width="120px">
+					  <el-input v-model="cform.title" placeholder="标题5-30个字符" autocomplete="off"></el-input>
+					</el-form-item>
+					<el-form-item v-show="(cform.image_mode=='CREATIVE_IMAGE_MODE_LARGE') || (cform.image_mode=='CREATIVE_IMAGE_MODE_LARGE_VERTICAL') || (cform.image_mode=='CREATIVE_IMAGE_MODE_SMALL')"  label="上传图片" label-width="120px">
+					  <el-upload
+						  action="/delivery/upload?type=image"
+						  list-type="picture-card"
+						  :on-preview="handlePictureCardPreview"
+						  :data="params"
+						  :file-list="imagefile"
+						  :before-upload="beforeUpload"
+						  name="image_file"
+						  :on-success="handleImageSuccess"
+						  :on-remove="handleRemove">
+						  <i class="el-icon-plus"></i>
+						</el-upload>
+						<el-dialog :visible.sync="dialogVisible">
+						  <img width="100%" :src="dialogImageUrl" alt="">
+						</el-dialog>
+					</el-form-item>
+					<el-form-item v-show="(cform.image_mode=='CREATIVE_IMAGE_MODE_VIDEO') || (cform.image_mode=='CREATIVE_IMAGE_MODE_VIDEO_VERTICAL')" label="上传视频" label-width="120px">
+					  <el-upload
+						  class="upload-demo"
+						  name="video_file"
+						  v-loading="uploadloading"
+						  :data="params"
+						  :before-upload="beforeUpload"
+						  :file-list="fileLista"
+						  :on-success="handleVideoSuccess"
+						  action="/delivery/upload?type=video">
+						  <el-button size="small" type="primary">点击上传</el-button>
+						</el-upload>
+					</el-form-item>
+					<el-form-item v-show="(cform.image_mode=='CREATIVE_IMAGE_MODE_VIDEO') || (cform.image_mode=='CREATIVE_IMAGE_MODE_VIDEO_VERTICAL')" label="选择封面图" label-width="120px">
+					   <el-button size="small" @click="selectImagethumb" type="primary">查询封面图</el-button>
+					   <div class="image_list">
+					     <ul>
+						    <li v-for="(o,a) in video_cover_list">
+							  <a class="thumbimage" @click="lookimage(o)"><img :src="o.url" /></a>
+							  <el-radio @change="handleThumb" v-model="radio" :label="a">选择</el-radio>
+							</li>
+						 </ul>
+					   </div>
+					   <el-dialog :visible.sync="dialogimageVisible" :append-to-body="isbody">
+                         <img width="100%" :src="videoimage.url" alt="">
+                       </el-dialog>
+					</el-form-item>
+				  </el-form>
+				  <div slot="footer" class="dialog-footer">
+					<el-button @click="dialogFormVisible = false">取 消</el-button>
+					<el-button type="primary" @click="confirmSubmit">确 定</el-button>
+				  </div>
+				</el-dialog>
+			</div>
+		</div>
+	</div>	
+</body>
+ {include file="./static/html/footer_common.html" /}
+  <script>
+     
+	 new Vue({
+        el: '#wrapper',
+        data: {
+            loading: false,
+			loading1: false,
+			advertiser_id:'{$advertiser_id}',
+			ad_id:'{$ad_id}',
+			num:null,
+			isbody:true,
+			drawer:false,
+			campaignList:[],
+			fileLista:[],
+			imagefile:[],
+			images:[],
+			dialogConvertVisible:false,
+			dialogPlayVisible:false,
+			campaign_name:"{$result['list'][0]['name']}",
+			cform:{},
+			uploadloading:false,
+			dialogVisible:false,
+			dialogimageVisible:false,
+			dialogFormVisible:false,
+			imageUrl: '',
+			form:{},
+			dialogImageUrl:'',
+			video_cover_list:[],
+			ConvertData:[],
+			PlayData:[],
+			videoimage:{},
+			custom_audience:[],
+			versionList:[],
+			image_ids:[],
+			radio:'2',
+			index:-1,
+			params:{
+			  advertiser_id:'{$advertiser_id}',
+			},
+			ac:[],
+			age:[],
+			creativeslist:[],
+			inventory_value:[],
+			smart_inventory :"0",
+			createform:{
+			  creative_mode:'custom',
+			},
+			positionlist:[],
+			scenelist:[
+			   { value:'VIDEO_SCENE',label:'沉浸式竖版视频场景广告位' },
+			   { value:'FEED_SCENE',label:'信息流场景广告位' },
+			   { value:'TAIL_SCENE',label:'视频后贴和尾帧场景广告位' }
+			],
+			medialist:[
+			   { value:'INVENTORY_FEED',label:'头条系' },
+			   { value:'INVENTORY_VIDEO_FEED',label:'西瓜信息流' },
+			   { value:'INVENTORY_HOTSOON_FEED',label:'火山信息流' },
+			   { value:'INVENTORY_AWEME_FEED',label:'抖音信息流' },
+			   { value:'INVENTORY_UNION_SLOT',label:'穿山甲' }
+			],
+			imageobj:{},
+			videoobj:{},
+			createloading:false,
+			campaign_id:'{$campaign_id}',
+        },
+        mounted(){
+		  this.getcampaign()
+		  this.getadinfo()
+		  this.getcampaignlist()
+		},		
+        methods: {
+            lookcreate(campaign_id){
+			  this.campaign_id = campaign_id
+			  this.type = "ad"
+			  this.page =1
+			  this.getlist()
+			},
+			selectAdertiser(val){
+              this.advertiser_id = val
+			  this.getcampaignlist()
+			},
+			handleRemove(file, fileList) {
+              let image_id = '';
+			  if( !file.response )
+			  {
+			     image_id = file.image_id
+			  }else{			   
+				image_id = file.response.data.id
+			  }
+			  const index = this.image_ids.findIndex(c => c ==image_id)
+			  this.image_ids.splice(index,1)
+			  const index1 = this.images.findIndex(c => c.image_id ==image_id)
+			  this.images.splice(index1,1)
+			},
+			handlePictureCardPreview(file) {
+			 this.dialogImageUrl = file.url;
+			 this.dialogVisible = true;
+			},
+			handleConvertEdit(index,obj){
+			  this.$set(this.form,'convert_id',obj.id)
+			  this.dialogConvertVisible = false
+			},
+			getconvert(){
+			  let _that = this
+			   let param ={
+			      advertiser_id:this.advertiser_id,
+			   }
+				axios({
+						method: 'post',
+						url:'/delivery/adv_convert',
+						data:param
+					}).then(res=>{			
+					 _that.ConvertData = res.data.data.ad_convert_list
+				 })
+			},
+			getplay(){
+			  let _that = this
+			   let param ={
+			      advertiser_id:this.advertiser_id,
+			   }
+				axios({
+						method: 'post',
+						url:'/delivery/playable_list',
+						data:param
+					}).then(res=>{			
+					 _that.PlayData = res.data.data.list
+				 })
+			},
+			lookimage(o){
+			 this.dialogimageVisible = true
+			 this.videoimage = o
+			},
+			openConvertModel(){
+			 this.dialogConvertVisible = true
+			 this.getconvert()
+			},
+			openPlayModel(){
+			 this.dialogPlayVisible = true
+			 this.getplay()
+			},
+			handleThumb(val){
+			  let obj = this.video_cover_list[val]
+              this.$set(this.imageobj,'image_id',obj.id)
+			  this.$set(this.imageobj,'imageurl',obj.url)			  
+			},
+			video_views(o){
+			  window.open(o.videourl)
+			},
+			confirmSubmit(){
+			  if( !this.cform.image_mode )
+			  {
+			    this.$message.error('请选择素材类型');return;
+			  }
+			  if( this.cform.image_mode=="CREATIVE_IMAGE_MODE_VIDEO" || this.cform.image_mode=="CREATIVE_IMAGE_MODE_VIDEO_VERTICAL" )
+			  {
+				  if( JSON.stringify(this.imageobj) == "{}" || JSON.stringify(this.videoobj) == "{}" )
+				  {
+					this.$message.error('请上传视频或选择封面图');return;
+				  }
+			  }else{
+			    if( this.image_ids.length<1 )
+				{
+				  this.$message.error('请上传图片');return;
+				}
+			  }			  
+			  this.createform.creatives =[]
+			  this.createform.image_list =[]
+			  if( this.createform.creative_mode =='custom' )
+			  {
+			    let newobj = Object.assign(this.imageobj,this.videoobj);
+				newobj.title = this.cform.title
+				newobj.image_mode = this.cform.image_mode
+				newobj.image_ids = this.image_ids
+				newobj.images = this.images
+				if( this.index==-1 )
+				{
+				  this.creativeslist.push(newobj)
+				}else{
+				  let b = this.index
+				  this.creativeslist[b] = newobj
+				}
+				this.createform.creatives = this.creativeslist
+			  }else{
+			    let newobj = Object.assign(this.imageobj,this.videoobj);
+				newobj.image_mode = this.cform.image_mode
+				newobj.image_ids = this.image_ids
+				newobj.images = this.images
+				if( this.index==-1 )
+				{
+				  this.creativeslist.push(newobj)
+				}else{
+				  let b = this.index
+				  this.creativeslist[b] = newobj
+				}
+				this.createform.image_list = this.creativeslist
+			  }
+			  this.dialogFormVisible = false
+			},
+			removeCreate(o){
+			 const index = this.creativeslist.findIndex(c => c.image_id==o.image_id)
+             this.creativeslist.splice(index,1)
+			},
+			openModel(){			 
+             this.cform ={}
+             this.imageobj ={}
+             this.videoobj ={}
+			 this.image_ids = []
+			 this.images = []
+			 this.imagefile = []
+			 this.video_cover_list = []
+             this.index =-1
+			 this.fileLista =[]
+			 this.uploadloading = false
+             this.dialogFormVisible = true		 
+			},
+			editCreate(c){
+			  let z = parseInt(c)
+			  let obj =  Object.assign({},this.creativeslist[z])		  
+			  this.index = z			  
+			  this.imageobj ={}
+			  this.videoobj = {}
+			  this.image_ids = []
+			  this.images = []
+			  this.video_cover_list = []
+			  this.$set(this.cform,'title',obj.title)
+			  this.$set(this.cform,'image_mode',obj.image_mode)			  
+			  this.imageobj.image_id = obj.image_id
+			  this.imageobj.imageurl = obj.imageurl
+			  this.image_ids = obj.image_ids
+			  this.images = obj.images
+			  if( this.images.length>0 )
+			  {
+			    this.imagefile = this.images.map(item => {
+					return {
+						name: Math.random(),
+						url:item.url,
+						image_id:item.image_id
+					}
+				})
+			  }			  
+			  this.videoobj.video_id = obj.video_id
+			  this.videoobj.videourl = obj.videourl
+			  this.video_cover(obj.video_id)
+              this.dialogFormVisible = true			  
+			},
+			beforeUpload(){
+			  this.uploadloading = true
+			},
+			selectImagethumb(){
+			  if( this.videoobj.video_id )
+			  {
+			    this.video_cover(this.videoobj.video_id)
+			  }else{
+			    this.$message.error('请先上传视频');
+				return false;
+			  }
+			},
+			handleImageSuccess(res, file) {
+              this.uploadloading = false
+			  if( res.code==0 )
+			  {
+				this.image_ids.push(res.data.id)
+				this.images.push({image_id:res.data.id,url:res.data.url})
+				this.$set(this.imageobj,'image_id','')
+			    this.$set(this.imageobj,'imageurl',res.data.url)
+				this.$message({
+				  message: '上传成功',
+				  type: 'success'
+                });
+			  }else{
+			    this.$message.error('上传失败');
+			  }
+            },
+			handleImageSuccess(res, file) {
+              this.uploadloading = false
+			  if( res.code==0 )
+			  {
+				this.image_ids.push(res.data.id)
+				this.$set(this.imageobj,'image_id','')
+			    this.$set(this.imageobj,'imageurl',res.data.url)
+				this.$message({
+				  message: '上传成功',
+				  type: 'success'
+                });
+			  }else{
+			    this.$message.error('上传失败');
+			  }
+            },
+			handleVideoSuccess(res, file) {
+              this.uploadloading = false
+			  if( res.code==0 )
+			  {
+				this.$set(this.videoobj,'video_id',res.data.video_id);
+				this.$set(this.videoobj,'videourl',res.data.video_url);
+				this.video_cover(res.data.video_id)
+				this.$message({
+				  message: '上传成功',
+				  type: 'success'
+                });
+			  }else{
+			    this.$message.error('上传失败');
+			  }
+            },
+			video_cover(video_id){
+			  let _that = this
+			   let param ={
+			      advertiser_id:this.advertiser_id,
+				  video_id:video_id
+			   }
+				   axios({
+						method: 'post',
+						url:'/delivery/video_cover',
+						data:param
+					}).then(res=>{			
+					 _that.video_cover_list = res.data.data.list
+				 })
+			},
+			handlepostion(val){
+			  switch(val){
+			    case '1':
+				  this.positionlist = []
+				break;
+				case 'scene_inventory':
+				  this.positionlist = this.scenelist
+				break;
+				case 'inventory_type':
+				  this.positionlist = this.medialist
+				break;
+			  }
+			  this.inventory_value = []
+			},
+			handleRange(val){
+			  if( val=='DEFAULT' )
+			  {
+			    this.form.device_type ="0"
+			  }
+			},
+			submit(){
+			  this.createloading = true
+               this.form.num = this.num
+               this.form.ac = this.ac
+               this.form.age = this.age
+               this.createform.inventory_value = this.inventory_value
+			   this.createform.smart_inventory = this.smart_inventory
+			  axios({
+						method: 'post',
+						url:'/delivery/createad',
+						data:{ad:this.form,create:this.createform}
+					}).then(res=>{			
+					 this.createloading = false
+					  if( res.data.code==200 )
+					  {
+					    this.$notify({
+						  title: '成功',
+						  message: '创建成功!',
+						  type: 'success'
+						});
+					  }else{
+					    this.$notify({
+						  title: '错误',
+						  message:res.data.message,
+						  type: 'error'
+						});
+					  }
+				 })
+			},
+			goBack() {
+             //window.history.back();
+			 window.location.href='/delivery/index?advertiser_id='+this.advertiser_id+"&campaign_id="+this.campaign_id;
+            },
+			getpackage(){
+			  let param ={
+			    advertiser_id:this.advertiser_id,
+				convert_id:this.form.convert_id
+			  }
+			  this.loading = true
+			  axios({
+						method: 'post',
+						url:'/delivery/getpackage',
+						data:param
+					}).then(res=>{			
+					 this.loading = false
+					 this.$set(this.form,'package',res.data.data.package_name);
+					 this.$set(this.form,'app_type',res.data.data.app_type);
+					 this.$set(this.form,'platform',[this.getplatform(res.data.data.app_type)]);
+					 this.getversion(this.getplatform(res.data.data.app_type))
+				 })
+			},
+			selectCampagin(o){
+		     this.campaign_id = o.campaign_id
+			 this.campaign_name = o.name
+			 this.$set(this.form,'campaign_id',o.campaign_id)
+			 this.drawer = false
+		   },
+			getcampaignlist(){
+			   let _that = this
+			   let param ={
+			      advertiser_id:this.advertiser_id,
+				  type:'campaign',
+				  page:1
+			   }
+				   axios({
+						method: 'post',
+						url:'/delivery/json_data',
+						data:param
+					}).then(res=>{			
+					 this.campaignList = res.data.list
+				 })
+			},
+            getplatform(app_type){
+			  let arr = app_type.split("_");
+			  return arr[1]
+			},
+            getversion(type){
+			   let _that = this
+			   let param ={
+			      type:this.type
+			   } 
+			    axios({
+						method: 'post',
+						url:'/delivery/getversion',
+						data:param
+					}).then(res=>{			
+					 this.versionList = res.data
+				 })
+			},			
+			getcampaign(){
+			   let _that = this
+			   let param ={
+			      advertiser_id:this.advertiser_id,
+				  campaign_id:this.campaign_id
+			   }
+				   axios({
+						method: 'post',
+						url:'/delivery/getcampaign',
+						data:param
+					}).then(res=>{			
+					 this.form = res.data
+				 })
+			},
+			getadinfo(){
+			   this.loading1 = true
+			   let param ={
+			      advertiser_id:this.advertiser_id,
+				  ad_id:this.ad_id
+			   }
+				   axios({
+						method: 'post',
+						url:'/delivery/getad_info',
+						data:param
+					}).then(res=>{
+					 this.loading1 = false
+					 this.getversion(res.data.form.platform[0])
+					 this.form = res.data.form
+					 this.createform = res.data.createform
+					 this.custom_audience = res.data.custom_audience
+					 this.ac = res.data.form.ac
+					 this.creativeslist = res.data.other.creativeslist
+					 this.smart_inventory = res.data.other.smart_inventory
+					 this.handlepostion(this.smart_inventory)
+					 this.inventory_value = res.data.other.inventory_value
+					 this.age = res.data.form.age
+				 })
+			}
+        }
+    })
+  </script>	
+</html>

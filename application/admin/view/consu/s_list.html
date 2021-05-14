@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title></title>
+	{include file="./static/html/header_common.html" /}	
+	  <link rel="stylesheet" type="text/css" media="all" href="/static/css/drag.css?t=23" />	
+     <style>
+	  .fa{
+	    cursor:pointer;
+	  }
+	 </style>	 
+</head>
+<body >
+    <div id="wrapper" style="background: #fff;" >
+       {include file="./static/html/header.html" /} 
+	
+		<div class="hw_page_content">
+		    <div class="hw_menu_left">
+         {include file="./static/html/side.html" /}  
+			</div>
+		    <div class="hw_content_right">	
+			  
+			  <ul class="search_tab clearfix">
+					  <li class="active" data-type="song"><a  href="javascript:;">应用设置</a></li>					
+			  </ul>
+              	<div class="menu_table">
+	
+		<div class="hellowd_drag">
+			<div class="hellowd_drag_left">
+				<div class="hellowd_drag_title">应用管理
+					<div class="hellowd_drag_item_btns">
+						<div class="pgc-hover-popup ">
+						  <i class="fa fa-search hellowd_drag_item_btn drag_search"></i>
+						</div>												
+					</div>
+				</div>
+				<div class="hellowd_drag_tree add_app">
+					<div class="hellowd_drag_item" id="aa">
+							<div class="hellowd_drag_item_title selected">
+							<span class="hellowd_drag_item_text"><input class="hellowd_drag_input" type="text" placeholder="search"/></span></div>
+					  </div>
+					{volist name="app_s" id="item"}
+					<div class="hellowd_drag_item">
+						<div class="hellowd_drag_item_title selected"><span class="hellowd_drag_item_text" data-id="{$item.id}">{$item.app_name}</span></div>
+					</div>
+					{/volist}
+				</div>
+			</div>
+			<div class="hellowd_drag_right">
+				<div class="hellowd_drag_title">从左侧选择你感兴趣的应用,点击保存即可</div>
+				<div class="hellowd_drag_right_body">
+				    {volist name="r" id="item"}
+					<div class="hellowd_drag_action" data="{$item.id}">
+						<span class="hellowd_drag_action_text ap{$item.id}">
+						  <span>{$item.app_name}</span>
+						</span>					  
+						<span class="hellowd_drag_action_btn" onclick="removehtml(this)">移除</span>
+						<span style="float:right;margin-top:2px;" onclick="setaffter(this)"><i class="fa fa-sort-desc" style="padding-right:20px;margin-top:9px;"></i></span>
+						<span style="float:right;margin-top:2px;" onclick="settop(this)"><i class="fa fa-sort-asc" style="padding-right:40px;margin-top:15px;"></i></span>
+                    </div>
+					{/volist}
+				</div>
+			</div>
+		</div>
+	<div class="hellowd_drag_btns">
+	  <div class="hellowd_drag_btn_submit btn-success" onclick="save_like()">保 存</div>
+	   <div class="hellowd_drag_btn_submit" style="background-color:#ccc;" onclick="window.history.back();">取 消</div>
+	</div>
+</div>			  
+		    </div>
+        </div>
+		 {include file="./static/html/footer.html" /}
+	</div>
+{include file="./static/html/footer_common.html" /}	
+</body>
+
+  <script>
+      $('.hellowd_drag_input').bind('input propertychange', function()
+		   {
+			   var input_text = $(this).val();
+               $(".add_app .hellowd_drag_item").not("#aa").each(  function(i){
+			        var text = $(this).find(".hellowd_drag_item_text").text();
+					var ismatch = text.match(new RegExp(input_text, 'i'));
+					if( ismatch )
+					  {
+					     $(this).show();
+					  }else{
+					     $(this).hide();
+					  }
+			   })			   
+		   });
+     $(".add_app .hellowd_drag_item").not("#aa").click( function(){
+	      var name = $(this).find(".hellowd_drag_item_text").text();
+		  var id = $(this).find(".hellowd_drag_item_text").attr("data-id");
+		  $(this).remove();
+		  inserthtml(name,id);
+	 })
+    var inserthtml = function( name,id )
+        {
+		   
+			
+			if( $(".ap"+id).length==0 )
+			{
+			  var html ='<div class="hellowd_drag_action" data="'+id+'">';
+				html+='<span class="hellowd_drag_action_text ap'+id+'">';
+				html+='<span>'+name+'</span>';
+				html+='</span>';					  
+				html+='<span class="hellowd_drag_action_btn" onclick="removehtml(this)">移除</span>';
+				html+='<span style="float:right;margin-top:2px;" onclick="setaffter(this)"><i class="fa fa-sort-desc" style="padding-right:20px;margin-top:9px;"></i></span>';
+				html+='<span style="float:right;margin-top:2px;" onclick="settop(this)"><i class="fa fa-sort-asc" style="padding-right:40px;margin-top:15px;"></i></span>';
+                html+='</div>';
+			
+              $(".hellowd_drag_right_body").append(html);
+			}           		
+		}
+     var removehtml = function(obj){
+	   $(obj).parents(".hellowd_drag_action").remove();
+	}
+    var settop = function(obj)
+	{
+	   var _that =$(obj).parents(".hellowd_drag_action");
+	   var id = _that.attr("data");
+	   var aa = '<div class="hellowd_drag_action" data="'+id+'">';
+	       aa+= _that.html();
+		   aa+='</div>';
+	   _that.remove();
+	   $(".hellowd_drag_right_body").prepend(aa);
+	}
+   var setaffter = function(obj)
+    {
+	    var _currentthat =$(obj).parents(".hellowd_drag_action");
+		 var id = _currentthat.attr("data");
+		var _nextthat = _currentthat.next();
+		 if( _nextthat.length>0 ){
+		     var aa = '<div class="hellowd_drag_action" data="'+id+'">';
+	             aa+= _currentthat.html();
+		         aa+='</div>';
+	            _currentthat.remove();
+		       _nextthat.after(aa);
+		 }
+	}
+    var save_like = function()
+       {
+	      		 
+		  var _action = $(".hellowd_drag_right_body .hellowd_drag_action");
+		   if( _action.length<1 )return false;
+		   var data =[];
+		  _action.each( function(i){
+		      var id = $(this).attr("data");
+			  data[i] = id;
+		  });
+		  var index = layer.load(0, {shade: false});
+		  $.post("/admin_consu/mylike",{data:data},function(e){			       
+			        layer.close(index);				
+					window.location.href="/admin_index/main";
+			})
+	   }	
+  </script>
+</html>

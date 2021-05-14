@@ -1,0 +1,44 @@
+                 		<div class="m-ovsecurity m-card">
+								<div class="ovsecurity_sub">															
+									<div class="ovsecurity_md">
+									   <div class="ovsecurity_ct">独立用户数
+									     <a class="f-du evet_num">{$singe_num}</a>
+									   </div>
+									</div>
+								</div>
+								
+                                <div class="ovsecurity_sub">																
+									<div class="ovsecurity_md">
+									   <div class="ovsecurity_ct">事件总数
+									     <a class="f-du evet_num">{$list->total()}</a>
+		 							   </div>
+									</div>
+								</div>                        							
+                        </div>
+                    <ul class="search_tab clearfix">
+					   <li style="margin-left:0px;" class="active"><a href="javascript:;" onclick="AjaxPage(1,1);">详情展示</a></li>
+                       <li style="margin-left:10px;"><a href="javascript:;" onclick="AjaxPage(1,2);">事件比例</a></li>
+                        <li style="float:right;margin-right:0px;"><a  href="/ad_event/new_download?appid={$appid}&start={$start}&end={$end}"><i class="fa fa-upload"></i></a></li>					   
+					</ul>
+					<table class="table tablesorter">
+                      <thead>
+                        <tr>
+                          <th>时间</th>
+                          <th>事件名称</th>
+                          <th>路径</th>                          
+                        </tr>
+                      </thead>
+                      <tbody>
+                       {volist name="result" id="vo"}					  
+                        <tr>
+                          <td style="width:10%;"><a href="javascript:;">{$vo.add_time}</a></td>
+                          <td>FLOW_{$vo.device_id}_{$vo.day_count}</td>
+                          <td>
+						   <div class="list_container" style="overflow-y:scroll;height:80px;line-height:30px;text-align:left;">{$vo.parameters}</div>
+						  </td>
+                        </tr>
+                         {/volist}						
+                      </tbody>
+                    </table>
+				  
+						<div style="text-align:center;">{$list->render()}</div>

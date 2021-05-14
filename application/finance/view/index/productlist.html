@@ -1,0 +1,266 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GAME BRAIN</title>
+    {include file="./static/html/fheader_common.html" /}
+	<link rel="stylesheet" type="text/css" href="/static/css/goalset.css">
+	<style>
+	.demo-drawer-footer{
+        width: 100%;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        border-top: 1px solid #e8e8e8;
+        padding: 10px 16px;
+        text-align: right;
+        background: #fff;
+    }
+	.box{
+	 border:none;
+	 -webkit-box-shadow: 0 0;
+     box-shadow:0 0;
+	}
+	.table>thead>tr>td, .table>thead>tr>th {
+       padding: 8px;}
+	</style>
+</head>
+<body>
+    <div id="wrapper">
+        {include file="./static/html/fheader.html" /}	
+		<div class="hw_page_content">
+		    <div class="hw_menu_left">
+         {include file="./static/html/fside.html" /}  
+			</div>
+		    <div class="hw_content_right">
+			   <div style="padding:5px 0px 10px 0px;">
+				  <Breadcrumb separator=">">
+					 
+					  <breadcrumb-item to="/testplan/index">产品管理</breadcrumb-item>
+					 
+					</Breadcrumb>
+				</div>
+			   
+				  <div class="box" style="margin-top:10px;">
+						<div class="box-header with-border">
+						 <i-button type="primary"   icon="ios-add" @click="openModal">添加产品</i-button>
+						  <i-select v-model="pd_class"  @on-change="filterProduct" style="width:100px;float:left;margin-right:10px;">
+						    <i-option  value="all" key="0">全部</i-option >
+                            <i-option   value="1" key="1">IG</i-option >
+							<i-option   value="2" key="2">公用</i-option >
+							<i-option   value="3" key="3">游戏</i-option >
+                          </i-select>
+						   <i-select v-model="type"  @on-change="filterProduct1" style="width:100px;float:left;margin-right:10px;">
+						    <i-option  value="all" key="0">全部</i-option >
+                            <i-option   value="1" key="1">内部</i-option >
+							<i-option   value="2" key="2">其他</i-option >
+							<i-option   value="3" key="3">合作</i-option >
+							<i-option   value="4" key="4">发行</i-option >
+                          </i-select>
+						</div>
+						<div class="box-body">
+							<div class="table-responsive">
+							  <table class="table">
+								<tbody>
+								    
+									<tr class="tr_header">									 
+									 
+									  <th>序号</th>
+									  <th>产品名称</th>
+                                      <th>分类</th>									  
+									  <th>类型</th>
+									  <th>备注</th>
+									  <th>编辑者</th>								
+									  <th>编辑时间</th>									  
+									  <th>操作</th>
+									</tr>
+									 {volist name="list" id="item"}
+									<tr>
+									  <td><?php $p = isset($_GET["page"])?$_GET["page"]:1;echo (($p-1))*50+$key+1;  ?></td>									 
+									  <td>{$item.name}</td>
+                                      <td>
+									   {if condition="$item['pd_class'] eq '1'"}IG
+											   {elseif condition="$item['pd_class'] eq '2'"/}公用
+											   {elseif condition="$item['pd_class'] eq '3'"/}游戏
+											   {else /}未知
+									   {/if}
+									  </td>									  
+									  <td>									    
+											 {if condition="$item['type'] eq '1'"}内部
+											   {elseif condition="$item['type'] eq '2'"/} 其他
+											   {elseif condition="$item['type'] eq '3'"/}合作
+											   {elseif condition="$item['type'] eq '4'"/}发行
+											{/if}
+									  </td>
+									  <td>{$item.desc}</td>
+									  <td>{$item.updateuser}</td>	
+									  <td>{$item.updatetime|getadvertime}</td>
+									   <td><a @click="editProduct({$item.id})"  href="javascript:;">编辑</a>&nbsp;&nbsp;<a style="color:red;" {if condition="getuserrole() eq 'advertiser'" } disabled {/if} @click="confirm({$item.id})"  href="javascript:;">删除</a></td>
+									</tr>
+									 {/volist}
+								  </tbody>
+								</table>
+								 
+							</div>
+						</div>
+				  </div>
+                  <div style="text-align:center;">{$list->render()}</div>
+				  <template>
+					
+					<Modal v-model="modal1" :title="title" >
+						<i-form :model="formData">
+						      
+							  <h5 style="padding:5px 0px;">产品名称</h5>
+								 <i-input v-model="formData.name" type="text" clearable ></i-input>
+                            					    							   
+								 <h5 style="padding:10px 0px;">产品状态</h5>
+								 <Radio-group v-model="formData.type" @on-change="handleRadio">
+								<Radio label="1">
+									
+									<span>内部</span>
+								</Radio>
+								<Radio label="2">
+									
+									<span>其他</span>
+								</Radio>
+								<Radio label="3">									
+									<span>合作</span>
+								</Radio>
+								<Radio label="4">									
+									<span>发行</span>
+								</Radio>
+							</Radio-group >
+							
+							<FormItem label="Text" v-show="Show">
+                              <h5 style="padding:10px 0px;">合作商</h5>
+							  <i-select v-model="formData.partner" filterable style="width:200px">
+                                 {volist name="partnerlist" id="p"}
+								 <i-option  value="{$p.id}" key="{$p.id}">{$p.name}</i-option>
+								 {/volist}
+                              </i-select>
+							</FormItem>
+                             <h5 style="padding:10px 0px;">产品分类</h5>
+								 <Radio-group type="button" v-model="formData.pd_class">
+								<Radio label="1">
+									
+									<span>IG</span>
+								</Radio>
+								<Radio label="2">
+									
+									<span>公用</span>
+								</Radio>
+								<Radio label="3">									
+									<span>游戏</span>
+								</Radio>
+							</Radio-group >
+                            <h5 style="padding:10px 0px;">渠道备注</h5>
+							<i-input v-model="formData.desc" type="text" clearable ></i-input>							
+						</i-form>
+						<div slot="footer"> 
+						  <i-button type="text" size="large" @click="modal1=false">取消</i-button> 
+						  <i-button type="primary" {if condition="getuserrole() eq 'advertiser'" } disabled {/if} size="large" @click="addPost">确定</i-button> 
+						</div>
+						
+					</Modal>
+				</template>
+			</div>			
+		</div>
+	</div>	
+</body>
+ {include file="./static/html/footer_common.html" /}
+  <script>
+     new Vue({
+        el: '#wrapper',
+        data: {
+            modal1: false,
+			Show:false,
+			pd_class:'{$pd_class}',
+			type:'{$type}',
+			title:"添加产品",
+			 formData:{
+			    id:0,
+				name:"",
+				partner:0,
+				pd_class:0,
+				desc:"",
+				type:"1"
+			 }
+        },
+		mounted(){		 
+		  		  
+		},
+        methods: {
+            
+		   openModal(){
+		     this.modal1 = true
+			 this.title="添加产品";
+			 this.formData ={id:0,name:"",type:"1",partner:0,pd_class:0,desc:""}
+		   },
+		   confirm (id) {
+                this.$Modal.confirm({
+                    title: '操作确认',
+                    content: '确认删除后,数据将不会保存?',
+                    onOk: () => {
+                        axios.get('/finance/deleteProduct?id='+id)
+						  .then(function (response) {
+							 window.location.reload()
+						  })
+                    },
+                    onCancel: () => {                      
+                    }
+                });
+            },
+		   filterProduct(value){
+		     window.location.href = "/finance/productlist?type={$type}&pd_class="+value
+		   },
+		   filterProduct1(value){
+		     window.location.href = "/finance/productlist?pd_class={$pd_class}&type="+value
+		   },
+		   handleRadio(value){
+		      if( value==3 )
+			   {
+			     this.Show = true;
+			   }else{
+			     this.Show = false;
+			   }
+		   },
+		   editProduct(id){
+		     let _that = this
+				this.title="编辑修改";
+				axios.get('/finance/editProduct?id='+id)
+			  .then(function (response) {
+				  _that.formData = response.data
+				  if( _that.formData.type==3 )
+					 {
+					 _that.Show = true;
+				   }else{
+					 _that.Show = false;
+				   }
+				  _that.modal1 = true
+			  })
+			  .catch(function (error) {
+				console.log(error);
+			  });
+		   },
+			addPost(){
+			   if( this.formData.name=="")
+			   {
+			     this.$Message.warning('请填写产品名称!');
+				 return false;
+			   }
+			   axios({
+						method: 'post',
+						url:'/finance/postProduct',
+						data:this.formData
+					}).then(res=>{
+					  this.modal1 = false
+					  this.$Message.success('操作成功');
+					  window.location.href = window.location.href
+				 })
+			}
+        }
+    })
+  </script>
+</html>

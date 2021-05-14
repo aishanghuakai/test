@@ -1,0 +1,204 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GAME BRAIN</title>
+    {include file="./static/html/header_common.html" /}
+	  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+   <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <!-- import JavaScript -->
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <script src="/static/js/axios.min.js"></script>	 
+	<style>
+	.cell{font-size:12px;}
+	  .el-table td, .el-table th {
+    padding:8px 0;}
+	  .item {
+		  margin-top: 10px;
+		  margin-right: 40px;
+		}
+		.el-tag + .el-tag {
+    margin-left: 10px;
+  }
+  .button-new-tag {
+    margin-left: 10px;
+    height: 32px;
+    line-height: 30px;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  .input-new-tag {
+    width:250px;
+    margin-left: 10px;
+    vertical-align: bottom;
+  }
+	</style>
+</head>
+<body style="background: #fff !important;">
+    <div id="wrapper" >
+        {include file="./static/html/header.html" /}	
+		<div class="hw_page_content">
+		    <div class="hw_menu_left">
+         {include file="./static/html/side.html" /}  
+			</div>
+		    <div class="hw_content_right" style="padding:10px 10px;">
+			   <h3 style="color:#222;margin-bottom: 20px;"><i style="color:#409eff;" class="el-icon-edit"></i> 账号设置   <a href="/delivery/index" style="font-size:14px;cursor:pointer;">返回</a></h3>
+			   <div class="main" style="margin-top:10px 0px;">
+                    <el-form :inline="true"  class="demo-form-inline">						
+						<el-form-item>					
+							<el-input  size="small" v-model="advertiser_id" placeholder="账号ID" clearable class="input-with-select"></el-input>							
+						</el-form-item>
+						
+						<el-form-item>
+						  <el-button icon="el-icon-search" @click="search" type="primary" size="small" >搜索</el-button>
+						   <el-button icon="el-icon-plus" type="primary" @click="openModel()" size="small" plain>添加</el-button>
+						</el-form-item>
+					</el-form>
+				</div>
+				<div class="clear"></div>
+			    <div class="hw_reven clearfix" style="margin-top:10px;">
+				   <el-table :data="tableData" style="width: 100%">
+				     <el-table-column prop="advertiser_id" label="账号ID"></el-table-column>
+				     <el-table-column prop="user_names" label="所属者"></el-table-column>
+				     <el-table-column prop="app_name" label="关联产品"></el-table-column>
+					 <el-table-column label="操作">
+					    <template slot-scope="scope">
+									<el-button  type="text" @click="editModel(scope.row)"  size="small">编辑</el-button>									
+							  </template>
+					 </el-table-column>
+				   </el-table>
+				  <div style="text-align:center;margin:10px;">
+				    <el-pagination
+					  background
+					  :current-page.sync="page"
+					  layout="total,prev, pager, next, jumper"
+					  @current-change="handleCurrentChange"
+					  :page-size="page_size"
+					  :total="total_number">
+					</el-pagination> 
+                 </div>					
+			    </div>
+			</div>
+			<el-dialog title="账号创建/编辑"  :visible.sync="dialogFormVisible">
+				  <el-form :model="form" v-loading="editLoading">
+				    <el-form-item label="账号ID" label-width="120px">
+					  <el-input v-model="form.advertiser_id"  autocomplete="off"></el-input>
+					</el-form-item>						
+                    <el-form-item label="主体类型" label-width="120px">
+					  <el-radio-group size="small" v-model="form.type">						  
+						  <el-radio-button label="1">老主体</el-radio-button>
+                          <el-radio-button label="2">新主体</el-radio-button>					  
+					  </el-radio-group>
+					</el-form-item>
+                    <el-form-item label="所属者" label-width="120px">
+					   <el-select size="small" multiple v-model="form.user_ids" placeholder="请选择所属者">
+						{volist name="users" id="vv"}
+						 <el-option key="{$vv.id}" label="{$vv.truename}" value="{$vv.id}"></el-option>
+						{/volist}
+					  </el-select>
+					</el-form-item>					
+					<el-form-item label="关联产品" label-width="120px">
+					 <el-select size="small" filterable v-model="form.app_id" placeholder="请选择产品">
+						{volist name="apps" id="vv"}
+						 <el-option key="{$vv.id}" label="{$vv.app_name}" value="{$vv.id}"></el-option>
+						{/volist}
+					  </el-select>
+					</el-form-item>									  
+				  </el-form>
+				  <div slot="footer" class="dialog-footer">
+					<el-button @click="dialogFormVisible = false">取 消</el-button>
+					<el-button type="primary" @click="CreateAccount">创 建</el-button>
+				  </div>
+			</el-dialog>
+		</div>
+	</div>	
+</body>
+ {include file="./static/html/footer_common.html" /}
+  <script>
+     new Vue({
+        el: '#wrapper',
+        data: {
+            loading: false,
+			page:1,
+			user_ids:[],
+			app_id:"",
+			advertiser_id:'',
+			total_number:0,
+			dialogFormVisible:false,
+			editLoading:false,
+			keyword:'',
+			page_size:10,
+			form:{},
+			tableData: []	
+        },
+        mounted(){
+		  this.getlist()
+		},		
+        methods: {          
+			openModel(){
+			 this.dialogFormVisible = true
+			 this.form={}
+			},
+			editModel(row){
+			 this.dialogFormVisible = true
+			 this.form = Object.assign({},row);
+			},
+			CreateAccount(){
+			  if( !this.form.advertiser_id || this.form.user_ids.length<1 || !this.form.app_id )
+			  {
+			    this.$message.error("请填写完整信息!")
+				return false;
+			  }
+			  this.editLoading = true
+			  axios({
+						method: 'post',
+						url:'/delivery/CreateAccount',
+						data:this.form
+					}).then(res=>{			
+					 this.editLoading = false
+					 if( res.data=="ok" )
+					  {
+					    this.$message.success('创建成功!')
+						this.dialogFormVisible = false
+						this.page =1
+						this.getlist()					
+					  }else{
+					     this.$message.error("创建失败!")
+					  }					
+				 })
+			},		
+			search(){
+			  this.page =1
+			  this.getlist()
+			},
+			handleClick(tab, event) {
+			  this.page =1
+			  this.getlist()
+			},
+			handleCurrentChange(val) {
+              this.getlist()
+			},			
+			getlist(){
+			   this.loading = true
+			   let _that = this
+			   let param ={
+			      advertiser_id:this.advertiser_id,
+				  page:this.page
+			   }
+				   axios({
+						method: 'post',
+						url:'/delivery/account_list',
+						data:param
+					}).then(res=>{			
+					 _that.loading = false
+					 this.tableData = res.data.list
+					 this.total_number  =res.data.total_number
+					 this.page_size = res.data.page_size
+				 })
+			}
+        }
+    })
+  </script>	
+</html>

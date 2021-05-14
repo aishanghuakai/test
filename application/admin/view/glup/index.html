@@ -1,0 +1,232 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GAME BRAIN</title>
+    {include file="./static/html/header_common.html" /}
+	 <link rel="stylesheet" type="text/css" media="all" href="/static/plugin/jquery-time/daterangepicker-bs3.css" />
+	  <link href="/static/css/checkbox.css" rel="stylesheet" type="text/css">
+	   <link href="/static/css/campagin.css?t=<?php echo time(); ?>" rel="stylesheet">
+    <link href="/static/css/show.css?t=<?php echo time(); ?>" rel="stylesheet">
+	 <link href="/static/css/blue/style.css?t=<?php echo time(); ?>" rel="stylesheet">
+	<style>
+	  .info {
+    color: #8F8F8F;
+    margin-top: 25px;
+}
+.info .col-lg-2 {
+    width: 13.666666667%;
+}
+.right-div {
+    border-right: 1px solid #ddd;
+}
+.rateit-selected {
+    background: url("https://www.chandashi.com/Public/Home/images/y32.png");
+        background-size: auto auto;
+    background-size: 16px 16px;
+}
+title {
+    float: left;
+    margin: 0;
+    font-size: 16px;
+    font-weight: 700;
+}
+.title .time {
+    display: inline-block;
+    margin-left: 5px;
+    font-size: 12px;
+    font-weight: 400;
+    color: #666;
+}
+.mar-b-30 {
+    margin-bottom: 30px !important;
+}
+.cds-table-default {
+    width: 100%;
+    border: 1px solid #E5E5E5;
+}
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+cds-table-default tbody {
+    background: #fff;
+}
+.cds-table-default th {
+    padding: 10px;
+    text-align: left;
+}
+.pad-15 {
+    padding: 15px !important;
+}
+.cds-table-default tr {
+    border-bottom: 1px solid #E5E5E5;
+}
+ .hw_reven thead tr {
+    background-color: #f9f9f9;
+}
+	 .hw_reven table {
+    border-collapse: collapse;
+    font-size: 12px !important;
+    color: #222 !important;
+    text-align: left !important;
+    line-height: 40px;
+}
+.hw_reven .table > thead > tr > th{
+  border-bottom:1px solid #e8e8e8 !important;
+  border-top:1px solid #e8e8e8 !important;
+   color: #222 !important;
+}
+.dropdown-item {
+    display: block;
+    padding: 7px 16px;
+        padding-right: 16px;
+        padding-left: 16px;
+    padding-right: 16px;
+    padding-left: 16px;
+    color: #768093;
+    font-size: 12px;
+    font-weight: 400;
+    padding-left: 8px;
+    padding-right: 24px;
+    cursor: pointer;
+    transition: background .2s ease-in-out;
+}
+.dropdown-item:hover {
+    background: #eaeefb;
+    color: #606266 !important;
+}
+.app-name {
+    font-size: 25px;
+    margin-right: 20px;
+    vertical-align: middle;
+    display: inline-block;
+    max-width: 720px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+	</style>
+</head>
+<body>
+    <div id="wrapper">
+        {include file="./static/html/header.html" /}	
+		<div class="hw_page_content">
+		    <div class="hw_menu_left">
+         {include file="./static/html/side.html" /}  
+			</div>
+		    <div class="hw_content_right" style="padding:10px 30px;">
+			     
+			    <div class="hw_reven clearfix" style="padding:10px 10px;clear:both;">
+				    <p style="padding: 15px;margin-bottom:20px;" class="bg-warning">
+						<i class="fa fa-exclamation-triangle"></i>&nbsp;本数据抓取只针对iOS产品，安卓版本暂无
+						</p>
+				    <div>
+				    <div style="float:left;">
+                        <img style="height: 100px;width: 100px;border-radius: 5px;align-self: center;margin: 5px 15px 5px 5px;margin-right:15px"  src="{$product.icon_url}">
+					</div>
+					<div style="float:left;margin-top:15px;">
+                        <span class="js-app-name app-name">{$product.app_name}</span>                    
+						<div style="width:150px;line-height:29px;position:relative;margin-top:10px">
+							  <a class="search-input" id="country" data="all" style="background-color: #099;
+border: 1px solid #099;width:150px;display:block;height:29px;line-height:15px;color:#fff;text-align:center;">中国</a>
+                              <ul class="dropdown-menu country" style="width: 150px; height: 200px; overflow-y: scroll; z-index: 10 !important; display: none;">													  
+								{volist name="country" id="vvv"}				  
+										 <a class="dropdown-item" data="{$key}" href="javascript:;">{$vvv}</a>
+								{/volist}													  																				
+							  </ul>							  
+				        </div>
+                    </div>
+					</div>
+					<div class="info" style="clear:both"></div>	          
+			    </div>
+				<h3 class="title"></h3>
+				<div class="rank_pai"></div>
+				<div class="hw_reven clearfix">
+			      <h3 class="asotitle">ASO关键词</h3>
+				  <table id="tablehw" class="table"></table>
+			    </div>
+			</div>
+			
+		</div>
+		 {include file="./static/html/footer.html" /}
+	</div>
+	
+</body>
+ {include file="./static/html/footer_common.html" /}
+ <script src="/static/js/jquery.freezeheader.js"></script>
+ <script src="https://www.chandashi.com/Public/wp/libs/ec.min.js?110216"></script>
+  <script>
+    var app_id ="{$product.package_name}";
+	var country="cn";
+    $(function(){
+	  loadhtml();
+      asoloadhtml();
+       $("#country").click( function(){
+		    $(".country").show();
+			return false;
+		 });
+		 
+       $(".dropdown-item").click( function(){
+		  
+			var c_name ="";			
+			country=$(this).attr("data");
+			c_name=$(this).text();		
+			$("#country").text(c_name);
+           	loadhtml();
+            asoloadhtml();	
+		 });
+		 
+		 $("#wrapper").click( function(e){
+		 
+		   var target = $(e.target);
+          
+			if(target.context.nodeName=="LABEL" || target.context.nodeName=="INPUT" )
+			{
+			  return;
+			}
+           	
+		   $(".country").hide();
+		   
+		 })
+	});
+	var loadhtml = function()
+	{
+	 layer.load();
+	  $.post("/glup/load_html",{app_id:app_id,country:country},function(e){
+			layer.closeAll();
+			var html = $(e);
+			var aa =html.find(".info");
+			    aa.find(".right-div").eq(0).remove();
+				aa.find(".right-div").eq(2).find("a").attr("href","###");
+				aa.find(".col-xs-12").remove();
+				aa.find(".ofe a").attr("href","###");
+				aa.find("#emergencyRefresh").attr("src","https://www.chandashi.com/Public/Home/images/ud.png");
+				aa.find(".rateit").text( aa.find(".rateit").attr("data-rateit-value")+"分" );
+			var title = html.find(".main-hd .title").html();
+            var table = html.find(".with-padding").html();			
+            $(".info").html(aa);
+            $(".title").html(title);
+            $(".rank_pai").html(table);	
+	   });
+	}
+	var asoloadhtml = function()
+	{
+	  layer.load();
+	  var data = {
+                appId:app_id,
+                country:country,
+                date:'',
+                prevDate:''
+            };
+            data = makeArgs(data);
+	  $.post("/glup/aso_load_html",data,function(e){
+			layer.closeAll();
+			$(".table").html(e);
+			$("#tablehw").freezeHeader({'offset':'60px'});
+	   });
+	}
+  </script>	   
+</html>

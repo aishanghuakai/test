@@ -1,0 +1,174 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GAME BRAIN</title>
+    {include file="./static/html/header_common.html" /}  
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+   <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <!-- import JavaScript -->
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <script src="/static/js/axios.min.js"></script>	 
+	<style>
+	  .cell{font-size:12px;}
+	  .el-table td, .el-table th {
+    padding:9px 0;}
+	  .item {
+		  margin-top: 10px;
+		  margin-right: 40px;
+		}
+	  .el-badge__content.is-fixed{position:relative !important;}	
+	</style>
+</head>
+<body>
+    <div id="wrapper">
+        {include file="./static/html/header.html" /}	
+		<div class="hw_page_content" style="background:#fff;">
+		    <div class="hw_menu_left">
+             {include file="./static/html/side.html" /}  
+			</div>
+		    <div class="hw_content_right" style="padding:20px 5px;background: #fff;">
+			            <div class="main" style="margin-bottom:10px;">					
+						
+						<el-button size="small" @click="dialogModel=true" type="primary" >+ 创建预警</el-button>
+						</div>
+						<div class="clear"></div>
+						<div class="m-list hw_reven">
+							  <el-table
+							  :data="tableData"
+							  style="width: 100%">
+							  <el-table-column
+								prop="date"
+								label="创建日期"
+								width="180">
+							  </el-table-column>
+							  <el-table-column
+								prop="name"
+								label="预警名称"
+								width="180">
+							  </el-table-column>
+							  <el-table-column
+								prop="address"
+								label="描述">
+							  </el-table-column>
+							  <el-table-column label="操作">
+								  <template slot-scope="scope">
+									<el-button  type="text" @click="dialogVisible=true" size="small">编辑</el-button>
+									<el-button type="text" style="color:#f56c6c;" size="small">删除</el-button>
+								  </template>
+								</el-table-column>
+							</el-table>
+						</div>
+				<el-dialog
+				  title="提示"
+				  :visible.sync="dialogVisible"
+				  width="50%">
+				  <el-card class="box-card fiterbody" shadow="never" >
+				  <div slot="header" class="clearfix">
+					<span>条件列表</span>
+					<el-button type="text" style="float:right;padding:3px 0px;" >添加</el-button>
+				  </div>
+				  <div class="text item">
+					<el-input size="small" style="width:100px;" placeholder="活跃"></el-input>
+					<el-input size="small" style="width:100px;" placeholder="小于"></el-input>
+					<el-input size="small" style="width:100px;" placeholder="22"></el-input>					
+					<el-button  icon="el-icon-delete"  size="small" type="danger" plain>删除</el-button>
+				  </div>
+				  
+				  </el-card>
+				  <span slot="footer" class="dialog-footer">
+				    <span style="float:left;">					  
+						<el-switch v-model="value1" active-text="邮件发送"></el-switch>
+						<el-select v-model="value" style="margin-left:10px;width:100px;" size="small" placeholder="时间段">
+						  <el-option key="1" label="00-06" value="1"></el-option>
+						  <el-option key="2" label="07-12" value="2"></el-option>
+						  <el-option key="3" label="13-18" value="3"></el-option>
+						  <el-option key="4" label="18-24" value="4"></el-option>
+						</el-select>
+					</span>
+					<el-button size="small" @click="dialogVisible = false">取 消</el-button>
+					<el-button size="small" type="primary" @click="dialogVisible = false">确 定</el-button>
+				  </span>
+				</el-dialog>
+				
+				<el-dialog
+				  title="提示"
+				  :visible.sync="dialogModel"
+				  width="40%">
+				   <el-form :model="ruleForm"  ref="ruleForm" label-width="40px" class="demo-ruleForm">
+					  <el-form-item label="名称">
+						<el-input type="text"  style="width:250px;" autocomplete="off"></el-input>
+					  </el-form-item>
+					  <el-form-item label="描述">
+						<el-input type="text"  style="width:250px;" autocomplete="off"></el-input>
+					  </el-form-item>					 
+					</el-form>
+				  <span slot="footer" class="dialog-footer">
+					<el-button @click="dialogModel = false">取 消</el-button>
+					<el-button type="primary" @click="dialogModel = false">确 定</el-button>
+				  </span>
+				</el-dialog>
+				
+			  </div>
+			</div>
+		</div>
+		 {include file="./static/html/footer.html" /}
+	</div>
+</body>
+ {include file="./static/html/footer_common.html" /}
+  <script>
+    new Vue({
+        el: '#wrapper',
+        data: {
+            loading: false,
+			date:['{$start}','{$end}'],			
+			country: 'all',
+			dialogVisible: false,
+			dialogModel:false,
+			value1: true,
+			formInline: {
+             user: '',
+             region: '',
+			 val:''
+          },
+		  ruleForm:{
+		   
+		  }, 
+		  tableData: [{
+            date: '2016-05-02',
+            name: '王小虎',
+            address: '大叔大婶'
+          }, {
+            date: '2016-05-04',
+            name: '王小虎',
+            address: '厄齐尔无群二无'
+          }, {
+            date: '2016-05-01',
+            name: '王小虎',
+            address: '上海市普恶趣味群翁陀'
+          }, {
+            date: '2016-05-03',
+            name: '王小虎',
+            address: '大叔大婶'
+          }]
+        },
+		computed:{
+		    
+		},
+		watch: {
+		  
+		},
+		created(){
+		 
+		},
+        methods: {
+           onSubmit() {
+            console.log('submit!');
+          }
+			
+        }
+    })
+  </script>
+</html>

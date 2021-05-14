@@ -1,0 +1,520 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GAME BRAIN</title>
+    {include file="./static/html/header_common.html" /}
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+	<link href="/static/css/dialog.css?t=<?php echo time(); ?>" rel="stylesheet" type="text/css" />
+   <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <!-- import JavaScript -->
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <script src="/static/js/axios.min.js"></script>
+	<style>
+	  .cell{font-size:12px;color:#222;}
+	  .el-table td, .el-table th {
+    padding:9px 0;}
+	  .item {
+		  margin-top: 10px;
+		  margin-right: 40px;
+		}
+      .grid-content{
+	    background: #fff;
+		padding: 15px !important;
+		border-radius:10px;
+		border: 0;
+		color:#222;
+		text-align:center;
+	  }
+       .card-category{
+	   font-size: 13px;
+	   color:#444;
+	   margin-bottom: 0;}
+	   .card-title{
+	    color:#575962;
+		font-size: 18px;
+		font-weight: 400;
+	   }
+.filter-container .filter{
+    font-size: 14px;
+    color: #333;
+    position: relative;
+    line-height:40px;
+}
+.filter-container .filter .filter-label{
+    font-weight: 600;
+    color: #333;
+    display: inline-block;
+    width: 76px;
+}
+.filter-container .filter .filter-options{
+    display: inline-block;
+    vertical-align: top;
+    width: calc(100% - 100px);
+    min-width: 700px;
+}
+.filter .filter-options .filter-option.active{
+    border-radius: 3px;
+    color: #4c84ff;
+	background: #ecf5ff;
+	border: 1px solid #d9ecff;
+	border-radius: 4px;
+    font-size: 12px;
+}
+.filter .filter-options .filter-option{
+    line-height: 22px;
+    display: inline-block;
+    padding: 2px 18px;
+    margin-right: 24px;
+    cursor: pointer;
+    font-size: 12px;
+}
+.count {
+    background:#4285f4;
+    display: inline-block;
+    padding:7px 1px;
+    margin-right: 5px;
+}
+.search .el-select .el-input {
+    width:100px;
+  }
+.el-table .warning-row {
+    background: oldlace;
+  }
+.el-table .danger-row {
+    background:#f56c6c;
+  }
+.el-table .success-row {
+    background: #f0f9eb;
+  }
+  .el-table--scrollable-x .el-table__body-wrapper {
+    z-index : 1;
+}
+.m-list p{color:#333;}
+.hw_game-dialog{background:#fff !important;width:60% !important;}
+	</style>
+</head>
+<body style="background:#f5f6fa;">
+    <div id="wrapper" style="background-color:#f5f6fa;">
+        {include file="./static/html/header.html" /}
+		<div class="hw_page_content" style="background-color:#f5f6fa;">
+		    <div class="hw_menu_left">
+             {include file="./static/html/side.html" /}
+			</div>
+		    <div class="hw_content_right" style="padding:10px 5px;background: #f5f6fa;">
+			           
+						<el-tabs v-model="activeName" @tab-click="handleClick">
+							<el-tab-pane label="历史ROI分布" name="history"></el-tab-pane>
+							<el-tab-pane label="ROI校正" name="revise"></el-tab-pane>							
+						  </el-tabs>
+						<div class="clear" style="clear:both;"></div>						
+						<div class="main filter-container" style="margin:20px 30px;">
+						                       
+                            <div  class="filter"><span  class="filter-label">条件筛选</span>
+								<div class="filter-options">									
+									<span>
+									  <el-select v-model="date" size="mini" style="width:120px" placeholder="选择时间">
+										<el-option label="过去7天" value="7"></el-option>
+										<el-option label="过去15天" value="15"></el-option>
+										<el-option label="过去30天" value="30"></el-option>
+										<el-option label="过去45天" value="45"></el-option>
+										<el-option label="过去60天" value="60"></el-option>
+										<el-option label="过去90天" value="90"></el-option>
+										<el-option label="过去120天" value="120"></el-option>
+									  </el-select>
+									</span>
+									<span>
+									  <el-select v-model="country" filterable style="width:100px" size="mini" placeholder="选择国家">
+										{volist name="country" id="item"}
+										  <el-option key="{$key}" label="{$item}" value="{$key}"></el-option>
+									    {/volist}
+									  </el-select>
+									</span>
+									<span>
+									  <el-select v-model="day" size="mini" style="width:100px" placeholder="选择ROI天数">
+										<el-option label="ROI3" value="3"></el-option>
+										<el-option label="ROI7" value="7"></el-option>
+										<el-option label="ROI15" value="15"></el-option>
+										<el-option label="ROI30" value="30"></el-option>
+									  </el-select>
+									</span>									
+									<!-- <span>
+									  <el-select v-model="type" size="mini" style="width:100px" placeholder="类型">
+										<el-option label="AEO" value="AEO"></el-option>
+										<el-option label="GP" value="GP"></el-option>
+										<el-option label="YD" value="YD"></el-option>
+									  </el-select>
+									</span> -->
+									<span><el-button type="primary" plain @click="updateCampaign('day')" size="mini">按天应用</el-button></span>
+									<span><el-button type="primary" plain @click="updateCampaign('campaign')" size="mini">按Campaign应用</el-button></span>
+								</div>
+							</div>
+                                                     
+						</div>
+						<div class="clear">
+						  <h4  style="font-size:15px;font-weight:700;color: #333;line-height:20px;margin-bottom:10px;margin-left:30px;"><i class="count"></i> ROI分布图</h4>
+						</div>
+						<div class="m-list hw_reven" id="chats" style="padding:10px;height:400px;">
+							 
+						</div>
+						
+						<div class="clear">
+						  <h4  style="font-size:15px;font-weight:700;color: #333;line-height:20px;margin-bottom:10px;margin-left:30px;"><i class="count"></i>  
+						   指标展示
+						  </h4>
+						  <div class="m-list hw_reven" style="padding:10px 40px;">
+							<p><i class="el-icon-success" style="color:#54e346;"></i> 样本数:{{num}} </p>
+							<p><i class="el-icon-success" style="color:#54e346;"></i> 样本ROI:{{proi}}</p>
+							<p><i class="el-icon-success" style="color:#54e346;"></i> IAP:IAA = {{prate}}</p>
+							<p><i class="el-icon-success" style="color:#54e346;"></i> IAP天数分布:{{iap}}</p>
+							<p><i class="el-icon-success" style="color:#54e346;"></i> IAA天数分布:{{iaa}}</p>
+						  </div>
+						</div>
+						
+						
+						
+						<div id="revenue_content1">
+						  <div class="hw-dialog">
+							<div class="hw_modal"></div>
+							<div class="hw_game-dialog">
+							   <div class="dialog-header">
+								 <div class="title" style="color:#1a202c;font-weight:600;text-align:left;">样本天数分布</div>
+							   </div>
+							   <div style="clear:both;"></div>
+							   
+							   <div class="dialog-body" style="overflow:hidden;width:100%;">
+								  <div id="daycharts" style="height:250px;padding:10px;width:100%;"></div>								 
+							   </div>
+							   <div class="dialog-footer">						 
+								  <button type="button" class="hw_game-btn hw_game-btn-default hw_close">关 闭</button>
+							   </div>
+							</div>
+						   </div>
+		                 </div>
+						
+					
+			  </div>
+			</div>
+		</div>
+		 {include file="./static/html/footer.html" /}
+	</div>
+</body>
+ {include file="./static/html/footer_common.html" /}
+  <script src="/static/js/echarts.min.js"></script>
+  <script>
+    var isRemark = false;
+	let t = new Vue({
+        el: '#wrapper',
+        data: {
+			loading: false,
+			date:'15',
+			day:"7",
+			group:'day',
+			activeName:'history',
+			roi:"",
+			sroi:"120",
+			xdata:[],
+			ydata:[],
+			country:'all',
+			type:'AEO',
+			num:"--",
+			proi:"--",
+			iap:"--",
+			iaa:"--",
+			prate:"--",
+			dayData:[],
+			tableData: []
+        },
+		computed:{
+		    
+		},
+		watch: {
+		 
+		},
+		
+		mounted(){
+		 	this.$nextTick(() => {
+			 // this.myEcharts()
+			});
+			//this.updateList()
+		},
+        methods: {
+		   goBack() {
+		     window.location.href='/admin_index/main';
+		   },
+		   handleClick(){
+		     window.location.href='/admin_ltv/data?by='+this.activeName;
+		   },
+		   updateCampaign(group){
+		     this.group = group //'campaign'
+			 this.updateList()
+		   },
+           updateList(){
+		    let day = this.day
+			   let roi=''			   
+			 switch(day)
+			   {
+				 case '3':
+				   roi='45';
+				   break;
+				  case '7':
+				   roi='75';
+				   break;
+				  case '15':
+				   roi='85';
+				   break;
+				 case '30':
+				   roi='95';
+				   break;
+			   }
+			 this.getlist(roi)
+		   },		   
+			getlist(roi){
+			    this.tableData =[]
+				const loading = this.$loading({
+				  lock: true,
+				  text: '数据加载中,请稍后',
+				  spinner: 'el-icon-loading',
+				  background: 'rgba(0, 0, 0, 0.7)'
+				});
+			   let _that = this
+			   let param ={
+			     date:this.date,
+				 day:this.day,
+				 country:this.country,
+				 roi:roi,
+				 sroi:this.sroi,
+				 type:this.type,
+				 group:this.group
+			   }
+			   axios({
+					method: 'post',
+					url:'/admin_appsflyer/history_json_v1',
+					data:param
+				}).then(res=>{
+				 loading.close();
+				 this.xdata = res.data.xdata
+				 this.ydata = res.data.ydata
+				 this.num = res.data.num
+				 this.proi= res.data.proi
+				 this.iap= res.data.iap
+				 this.iaa= res.data.iaa
+				 this.prate=res.data.prate
+				 this.dayData = res.data.dayData
+				 getChart()
+			 })
+			}
+        }
+    })
+  </script>
+<script>
+$(function(){  
+  $(document).on("click",".hw_close",function(){
+	       $("#show_content .hw-dialog").hide();
+		   $("#revenue_content1").hide()
+		  })
+})
+getChart()
+getChart1()
+function getChart(){
+  var myChart = echarts.init(document.getElementById("chats"));
+  myChart.off('click');
+  let data = {
+    xData:t.xdata,
+    yData:t.ydata
+}
+/**
+    双X轴标签对应，伪实现思路：
+    底部的标签也是柱状图，对应包含的区域为上方X轴条数占总数的比例，设为宽度即可
+*/
+var option = {
+    tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+            type: 'shadow'
+        },
+		formatter: 'ROI:{b0}<br>样本次数 {c0}' 
+    },
+    grid: [
+        {
+            top: 40,
+            bottom:60
+        },
+        {
+            height: 60,
+            bottom: 40
+        }
+    ],
+    xAxis: [{
+        name:'ROI',
+		 nameTextStyle: {
+            color: '#222',
+            padding: [0, 0, 0, 20]
+
+          },
+		show: true,
+		type: 'category',
+        data: data.xData,
+       
+        axisLabel: {
+            color: '#333',
+			interval:0,
+			rotate:20
+        },
+        axisLine: {
+            show: true,
+            lineStyle: {
+                color: '#222',
+                 shadowColor:'#222',
+                shadowOffsetX: '20',
+            },
+            symbol: ['none', 'arrow'],
+            symbolOffset: [0, 25]
+        },
+        axisTick: {
+            lineStyle: {
+                color: '#e7e7e7'
+            }
+        },
+        zlevel: 2
+    }, {
+        type: 'category',
+        gridIndex: 1,
+        axisLine: {
+            show: false
+        },
+        zlevel: 1
+    }],
+    yAxis: [{
+		type: 'value',
+        gridIndex: 0,
+        axisLabel: {
+            color: '#333',
+			formatter: '{value} 次数'
+        },
+        splitLine: {
+            lineStyle: {
+                type: 'dashed'
+            }
+        },
+        axisLine: {
+            lineStyle: {
+                color: '#ccc'
+            }
+        },
+        axisTick: {
+            lineStyle: {
+                color: '#ccc'
+            }
+        }
+    },{
+		type: 'value',
+        gridIndex: 1,
+        axisLabel: {
+            show: false
+        },
+        axisLine: {
+            show: false
+        },
+        splitLine: {
+            show: false
+        },
+        axisTick: {
+            show: false
+        }
+    }],
+    series: [{
+        data: data.yData,
+        type: 'bar',
+        label: {
+            show: true,
+            position: 'top',
+            textStyle: {
+                color: '#555'
+            }
+        },
+        itemStyle: {
+            normal: {
+                color: (params) => {
+                    let colors = ['#4150d8', '#28bf7e', '#ed7c2f', '#f2a93b', '#f9cf36', '#4a5bdc', '#4cd698', '#f4914e', '#fcb75b', '#ffe180', '#b6c2ff', '#96edc1']
+                    return colors[params.dataIndex]
+                }
+            }
+        },
+        xAxisIndex: 0,
+        yAxisIndex: 0
+    }]
+};
+
+ 
+  
+  myChart.on('click',  function(param) {
+		let name = param.name.replace(/%/g,'')
+		let arr = name.split('~')
+		let avg =''
+		 if(arr[1]>0)
+		 {
+		   avg =arr[1]-2;
+		 }else{
+		   
+		   avg = parseInt(arr[0])+2
+		 }		 
+		 t.getlist(avg)
+	});
+	 myChart.setOption(option);
+ }
+
+function getChart1(){
+   var myChart = echarts.init(document.getElementById("daycharts"));
+   myChart.resize();
+  var option = {
+    tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+            type: 'shadow'
+        },
+		formatter: (params) => {
+            return `天数：${params[0].data[0]} <br /> 样本数：${params[0].data[1]}`
+        }
+    },
+	grid: [
+        {
+            left:40,
+			right:100
+        }
+    ],
+    xAxis: {
+	  name:'天数',
+		 nameTextStyle: {
+            color: '#222',
+            padding: [0, 0, 0, 20]
+
+          },
+	 splitLine:{show: true},
+		show: true,
+	},
+    yAxis: {
+	  name:'样本次数',
+		 nameTextStyle: {
+            color: '#222',
+            padding: [0, 0, 0, 20]
+
+          },
+	  splitLine:{show:true},
+		show: true,
+	},
+    series: [{
+        symbolSize:10,
+        data:t.dayData,
+        type: 'scatter',
+		xAxisIndex: 0,
+        yAxisIndex: 0
+    }]
+};
+  myChart.setOption(option);
+ }
+   
+</script>
+</html>

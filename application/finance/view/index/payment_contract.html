@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>财务管理</title>
+      <link type="favicon" rel="icon" href="/favicon.ico?t=344">
+	<link href="/static/css/bootstrap.css" rel="stylesheet">
+	<link href="/static/css/finance_index.css?t=<?php echo time();  ?>" rel="stylesheet">
+	 <link href="/static/css/font-awesome.min.css" type="text/css" rel="stylesheet">
+	  <link rel="stylesheet" type="text/css" href="/static/barrager/css/barrager.css">
+	  <!-- 引入样式 -->
+     <!-- 引入样式 -->
+     <link rel="stylesheet" href="https://unpkg.com/element-ui@2.13.0/lib/theme-chalk/index.css">
+	 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <!-- import JavaScript -->
+  <script src="https://unpkg.com/element-ui@2.13.0/lib/index.js"></script>
+  <script src="/static/js/axios.min.js"></script>
+  <style>
+     .hw_content_right .cell{font-size:12px;}
+	 //.el-input__inner{height:25px;line-height:25px;font-size:12px;}
+	 .el-icon-more-outline{cursor:pointer;}
+	.fullscreen{
+	  width:100% !important;
+	  margin-left:0px !important;
+	  height:100% !important;
+	  position:fixed !important;
+	  margin-top:0px !important;
+	  z-index:9999
+	}
+	.ivu-badge-dot{z-index:0;}
+	.red{color:#f38181;font-size:14px;}
+	.ivu-input[disabled]{background:#fff;color:#515a6e}
+	.ivu-input{height:auto;border:none;text-align:center;}
+	.ivu-table-cell{font-size:12px;}
+	.checkaftercolor{color:#515a6e;}
+	.checkbeforecolor{color:#ffaf00;}
+	.item {
+	  margin-top: 10px;
+	  margin-right: 40px;
+	}
+	.el-icon-more-outline{color:#dedede;font-size:10px;}
+	.el-dialog__body {
+    padding: 0px 20px;}
+	input[type="file"] {
+    display: none !important;
+}
+
+.avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 100px;
+    height: 100px;
+    line-height: 100px;
+    text-align: center;
+  }
+  .avatar {
+    width: 100px;
+    height: 100px;
+    display: block;
+  }
+  </style>
+</head>
+<body>
+   <div id="wrapper">
+        {include file="./static/html/fheader.html" /}	
+		<div class="hw_page_content">
+		  <div class="hw_menu_left">
+		     {include file="./static/html/fside.html" /}
+		  </div>	 
+		    <div class="hw_content_right" style="padding:10px 10px;">
+			
+			   <div style="padding:5px 0px 20px 0px;">
+				  <h4 style="font-size:16px;color:#333;">付款业务合同</h4>
+				  <div style="">
+				     <el-select @change="getdata" v-model="channel_id" clearable filterable placeholder="请选择渠道">
+						{volist name="channel" id="c"}
+						<el-option
+						  key="{$c.id}"
+						  label="{$c.name}"
+						  value="{$c.id}">
+						</el-option>
+						{/volist}
+					  </el-select>
+					   
+					  <el-button type="default" @click="openModal">+添加</el-button>
+
+				  </div>
+				</div>
+				
+				<el-tabs v-model="year" type="card" @tab-click="loadData">
+					<el-tab-pane label="2021年" name="2021"></el-tab-pane>
+					<el-tab-pane label="2020年" name="2020"></el-tab-pane>
+					<el-tab-pane label="2019年" name="2019"></el-tab-pane>
+					<el-tab-pane label="2018年" name="2018"></el-tab-pane>
+					<el-tab-pane label="2017年" name="2017"></el-tab-pane>					
+				</el-tabs>
+				
+				<el-table :data="tableData" border style="width:100%" size="mini" v-loading="loading"  max-height="500">
+				
+				<el-table-column type="index" label="序号" width="80" align="center"></el-table-column>
+				<el-table-column prop="name" label="公司主体" width="190">
+				 <template slot-scope="scope">
+				    {{scope.row.name}} <sup v-if="scope.row.expire_show!=''" style="color:red;">{{scope.row.expire_show}}</sup>
+				  </template>
+				</el-table-column>
+				<el-table-column prop="number" label="合同编号" width="190"></el-table-column>
+				<el-table-column prop="channel_name" label="合作方" width="190">
+				  <template slot-scope="scope">
+					<a :href="'/finance/payment_invoice?year='+year+'&channel_id='+scope.row.channel_id" :title="scope.row.channel_name">{{scope.row.channel_name}}</a>
+				  </template>
+				</el-table-column>
+				<el-table-column prop="contract_content" label="合作内容" width="190"></el-table-column>
+				<el-table-column prop="group_name" label="支出项目组" width="190"></el-table-column>
+				<el-table-column prop="start_date" label="合同起始日" width="120" align="center"></el-table-column>
+				<el-table-column prop="end_date" label="合同终止日" width="120" align="center"></el-table-column>
+				<el-table-column prop="is_complete" label="是否执行完毕" width="100">
+				<template slot-scope="scope">
+					{{scope.row.is_complete>0?'是':'否'}}
+				  </template>
+				</el-table-column>
+				<el-table-column prop="require" label="收付款比例或条件" width="190"></el-table-column>
+				<el-table-column prop="pay_period" label="账期" width="100"></el-table-column>
+				<el-table-column prop="manager" label="公司经办人" width="100" align="center"></el-table-column>
+				<el-table-column prop="desc" label="备注" width="190"></el-table-column>
+				<el-table-column label="担保函" width="80" align="center">
+				  <template slot-scope="scope">
+					<a v-if="scope.row.guarantee" target="__blank" :href="scope.row.guarantee"><img  :src ="scope.row.guarantee" style="width:20px;height:20px;cursor:pointer;" title="担保函" /></a>
+				  </template>
+				</el-table-column>
+				<el-table-column  label="授权书" width="80" align="center">
+				  <template slot-scope="scope">
+					<a v-if="scope.row.authorize" target="__blank" :href="scope.row.authorize"><img  :src ="scope.row.authorize" style="width:20px;height:20px;cursor:pointer;" title="授权书" /></a>
+				  </template>
+				</el-table-column>
+				<el-table-column
+				  prop=""
+				  label="操作"
+				  width="200">
+				   <template slot-scope="scope">
+					<el-button type="text" size="small" @click="edit(scope.row)">编辑</el-button>
+					<el-button @click="handleClick(scope.row,1)" type="text" size="small">签约版合同</el-button>
+					<el-button @click="handleClick(scope.row,2)" type="text" size="small">文档版合同</el-button>
+					{if condition="$userid eq 57" }
+					 <el-button @click="deleteRow(scope.row)" style="color:red;" type="text" size="small">删除</el-button>
+					{/if}
+				  </template>
+				</el-table-column>
+				
+			  </el-table>
+			 
+			</div>
+			
+		</div>		
+		<el-dialog title="录入合同" v-loading.lock="fullscreenLoading" width="75%" :visible.sync="modal1">
+			  <el-form :inline="true">
+				<el-form-item label="公司主体">
+				  <el-select v-model="editForm.s_type" @change="handleNum" size="small"  filterable placeholder="请选择">				 
+					  <el-option  value="1" label="武汉"></el-option>					 
+					  <el-option  value="3" label="Hellogames"></el-option>
+				  </el-select>
+				</el-form-item>
+				<el-form-item label="合同编号" size="small" >
+				  <el-input v-model="editForm.number" placeholder="请输入内容"></el-input>
+				</el-form-item>
+				<el-form-item label="合作方" size="small">
+				   <el-select v-model="editForm.channel_id" multiple clearable filterable placeholder="请选择">
+					{volist name="channel" id="c"}
+					  <el-option  value="{$c.id}" key="{$c.id}" label="{$c.name}"></el-option>	
+                    {/volist}
+				  </el-select>
+				</el-form-item>				
+			  </el-form>
+			  <el-form>
+			     <el-form-item label="合作内容" style="width:100%;" size="small" >
+				  <el-input type="textarea"  v-model="editForm.contract_content"></el-input>
+				</el-form-item>
+			  </el-form>
+			  <el-form :inline="true">
+			    <el-form-item label="营业执照">
+				   <el-upload
+					  class="avatar-uploader"
+					  action="/finance/upload?type=3"
+					  accept="image/png,image/jpeg"
+					  :show-file-list="false"
+					  name="upload"
+					  :on-success="handleSuccessWork">
+					  <img v-if="editForm.business_license" :src="editForm.business_license" class="avatar">
+					  <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+					</el-upload>
+					<span style="color:red;font-size:12px;">(营业执照必填)
+					 <el-tooltip class="item" effect="dark" content="当对方为境外公司时，需提供注册说明书或商业登记证" placement="top">
+                        <i class="el-icon-warning"></i>
+					</el-tooltip>					 
+					</span>
+				</el-form-item>
+				<el-form-item label="担保函" size="small">				  
+				   <el-upload
+					  class="avatar-uploader"
+					  action="/finance/upload?type=4"
+					  accept="image/png,image/jpeg"
+					  :show-file-list="false"
+					  name="upload"
+					  :on-success="handleSuccessWork">
+					  <img v-if="editForm.guarantee" :src="editForm.guarantee" class="avatar">
+					  <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+					</el-upload>
+				</el-form-item>
+				<el-form-item label="授权书" size="small">
+				   <el-upload
+					  class="avatar-uploader"
+					  action="/finance/upload?type=5"
+					  accept="image/png,image/jpeg"
+					  :show-file-list="false"
+					  name="upload"
+					  :on-success="handleSuccessWork">
+					  <img v-if="editForm.authorize" :src="editForm.authorize" class="avatar">
+					  <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+					</el-upload>
+					<span style="color:red;font-size:12px;">(授权书说明)
+					 <el-tooltip class="item" effect="dark" content="当对方为分公司时，需提供总公司的授权书，当对方合同经办人为非法人时，需提供公司出具的经办人授权书；境外公司条形章一定要经办人签名" placement="top">
+                        <i class="el-icon-warning"></i>
+					</el-tooltip>					 
+					</span>
+				</el-form-item>
+			  </el-form>
+			  <el-form :inline="true">
+			    <el-form-item label="支出项目组">
+				  <el-select v-model="editForm.group" size="small" clearable filterable placeholder="请选择">
+					<el-option  value="1" label="商业化"></el-option>
+					<el-option  value="2" label="用户增长部"></el-option>
+					<el-option  value="3" label="中台部"></el-option>
+					<el-option  value="4" label="研发部"></el-option>
+					<el-option  value="5" label="产品部"></el-option>
+				  </el-select>
+				</el-form-item>
+				<el-form-item label="合同起始日" size="small">				  
+				  <el-date-picker v-model="editForm.start_date" value-format="yyyy-MM-dd" style="width:150px;" type="date" placeholder="选择日期"></el-date-picker>
+				</el-form-item>
+				<el-form-item label="合同终止日" size="small">
+				  <el-date-picker v-model="editForm.end_date" value-format="yyyy-MM-dd" type="date" style="width:150px;" placeholder="选择日期"></el-date-picker>
+				</el-form-item>
+			  </el-form>
+			  <el-form>
+			     <el-form-item label="收付款比例或条件" style="width:100%;" size="small" >
+				  <el-input type="textarea"  v-model="editForm.require"></el-input>
+				</el-form-item>
+			  </el-form>
+			  <el-form :inline="true">
+			    <el-form-item label="账期" >
+				  <el-select v-model="editForm.pay_method" size="small" clearable filterable placeholder="请选择">
+					  <el-option  value="Net.30" key="1">Net.30</el-option>
+					  <el-option  value="Net.35" key="2">Net.35</el-option>
+					  <el-option  value="Net.40" key="3">Net.40</el-option>
+					  <el-option  value="Net.45" key="6">Net.45</el-option>
+					  <el-option  value="Net.50" key="4">Net.50</el-option>
+					  <el-option  value="Net.60" key="5">Net.60</el-option>
+				  </el-select>
+				</el-form-item>
+				<el-form-item label="公司经办人" size="small" >
+				  <el-select v-model="editForm.manager" size="small" clearable filterable placeholder="请选择">					
+					  <el-option  value="喻久港" key="2">喻久港</el-option>
+					  <el-option  value="汤文娟" key="3">汤文娟</el-option>
+					  <el-option  value="熊奥迪" key="4">熊奥迪</el-option>
+					  <el-option  value="万美玲" key="5">万美玲</el-option>			
+					  <el-option  value="李碧莲" key="8">李碧莲</el-option>
+					  <el-option  value="郝娇娇" key="9">郝娇娇</el-option>
+					  <el-option  value="刘滋" key="10">刘滋</el-option>
+					  <el-option  value="吴柯庆" key="11">吴柯庆</el-option>
+					  <el-option  value="桂丽君" key="12">桂丽君</el-option>
+				  </el-select>
+				</el-form-item>
+				<el-form-item label="是否执行完毕" size="small" >
+				  <el-radio-group v-model="editForm.is_complete">
+					<el-radio :label="1">是</el-radio>
+					<el-radio :label="0">否</el-radio>
+				  </el-radio-group>
+				</el-form-item>
+			  </el-form>
+			  <el-form>
+			     <el-form-item label="备注" style="width:100%;" size="small" >
+				  <el-input type="textarea"  v-model="editForm.desc"></el-input>
+				</el-form-item>
+			  </el-form>
+			  <div slot="footer" class="dialog-footer">
+				<el-button  @click="modal1 = false">取 消</el-button>
+				<el-button type="primary" @click="save">确认</el-button>
+			  </div>
+        </el-dialog>
+		<el-drawer
+		  :title="param.type==1?'签约版合同':'文档版合同终稿'"
+		  :visible.sync="dialogVisible"
+		  direction="rtl">
+		   <div style="position:relative;left:0;right:0;top:0;bottom:0;height:100%;">
+		  <div style="padding:3% 6%;max-height:96%;overflow:auto;position:absolute;" class="demo-drawer__content">
+		    <el-card class="box-card" v-for="item in fileList" style="overflow:hidden;">			  				 
+		        <div><iframe style="width:100%;" :src="item.file_url"></iframe></div>
+				<div class="bottom clearfix">
+				  {{item.filename}}
+				  <a style="float: right;" target="__blank" :href="item.file_url" class="button"><i class="el-icon-zoom-in"></i> 查看详情</a>
+				</div>
+			</el-card>			
+			<div class="demo-drawer__footer" style="margin-top:20px;text-align:center;">			 
+			  
+			  <el-upload
+				  class="upload-demo"
+				  name="upload"
+				  :data="param"
+				  action="/finance/upload"
+				  :on-success="handleAvatarSuccess"
+				  accept="application/pdf,application/msword"
+				  :before-upload="beforeAvatarUpload"				  
+				  :limit="3">
+				  <el-button icon="el-icon-upload2">上传合同</el-button>				  
+				</el-upload>
+			</div>
+		  </div>
+		  </div>
+		</el-drawer>
+    </div>		
+</body>
+{include file="./static/html/footer_common.html" /}
+</html>
+ <script>
+    
+    new Vue({
+      el: '#wrapper',
+      data: function() {
+        return {
+            year:'2021',
+            channel_id: '',
+			modal1:false,
+			fullscreenLoading:false,
+            dialogFormVisible: false,
+			dialogVisible:false,
+            loading: false,
+			editForm:{},
+			fileList:[],
+			param:{type:1},
+            tableData: []
+		}
+      },
+	  mounted(){
+
+		  this.getdata()
+	  },
+	  methods:{
+	    getdata()
+		   {
+		     let _that = this
+			 _that.loading  =true
+			 axios.get('/finance/get_contract_data?year='+this.year+"&channel_id="+this.channel_id+"&type=2")
+			  .then(function (response) {
+				 _that.loading  =false
+				 _that.tableData = response.data.list
+			  })
+			  .catch(function (error) {
+				console.log(error);
+			  });
+		   },
+	    beforeAvatarUpload(file){
+		   const isPDF = (file.type === 'application/pdf' || file.type === 'application/msword');
+		   if (!isPDF) {
+		      this.$message.error('只能是 PDF或word 文件格式!');
+			}
+			return isPDF
+		  },
+		handleSuccessWork(res,file){
+
+			if(res.status==200)
+			{
+			  this.$message.success("上传成功!");
+			  let field = res.type==3?'business_license':(res.type==4?'guarantee':'authorize')
+			  this.$set(this.editForm,field,res.url)			  
+			}else{
+			  this.$message.error(res.message);
+			}
+		},
+        handleAvatarSuccess(res,file)
+		{
+            if(res.status==200)
+			{
+			  this.$message.success("上传成功!");
+			  this.getdata()
+			  this.dialogVisible = false
+			}else{
+			  this.$message.error(res.message);
+			}
+		},		
+        handleNum(value)
+		   {
+             
+			 if( (typeof(this.editForm.id)=="undefined") || (this.editForm.id==0) )
+			 {			    
+			   this.getNumber(2,value)
+			 }			 			 
+		   },
+		   getNumber(type,s_type){
+		      let _that = this
+			  axios({
+						method: 'post',
+						url:'/finance/createContractNum',
+						data:{ type:type,s_type:s_type }
+					}).then(res=>{
+					 delete _that.editForm.number;  //这里删除对象属性，是为了让VUE检测到数据更新了，并更新视图			
+					 this.$set(this.editForm,'number',res.data)
+				 })
+		   },
+		download()
+		{
+		  window.open("/finance/download?type=3");
+		},
+		handleClick(row,type){
+		  this.dialogVisible = true
+		  this.param.contract_id = row.id
+		   this.param.type = type
+		  let field = "file_list"+type
+		  this.fileList = row[field]
+		},
+		edit(row){
+		  this.modal1 = true
+		  this.editForm = row
+		},
+		openModal(){
+		  this.modal1 = true
+          this.editForm.year = this.year
+		  this.editForm.type = 2
+		  this.editForm.id = "0"		  
+		},		
+		loadData(tab,event)
+		{
+		   this.year = tab.name
+		   this.getdata()			   
+		},
+        deleteRow(row){
+		  this.$confirm('此操作将永久该记录, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+			}).then(() => {
+			   axios({
+						method: 'post',
+						url:'/finance/delete_contract',
+						data:{id:row.id}
+					}).then(res=>{				
+					  this.$message.success('已删除!');
+					  this.getdata()
+				 })
+			}).catch(() => {
+			          
+			});
+		},		
+        save()
+		{
+           if(!this.editForm.number)
+		   {
+		     this.$message.error('请填写合同编号');
+			 return false
+		   }
+		   if(!this.editForm.business_license)
+		   {
+		     this.$message.error('请上传营业执照');
+			 return false
+		   }
+		   let _that = this
+			  axios({
+						method: 'post',
+						url:'/finance/saveContract',
+						data:this.editForm
+					}).then(res=>{				
+					  this.$message.success('操作成功!');
+					  _that.modal1 = false
+					  this.getdata()
+				 })
+		}		
+	  }
+    })
+  </script>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GAMEBRAIN</title>
+	{include file="./static/html/header_common.html" /}
+    <style>
+	  .hw_page_content{
+	    margin: 0 auto;
+	  }
+	</style>
+</head>
+<body style="background:#fff !important;">
+    <div id="wrapper" style="background-color:#fff;">
+        
+		<nav class="navbar hw_navbar top-navbar" style="background-color:#0a1e39;color:#fff;">
+			  <div class="hw_logo">
+				<a class="navbar-brand" href="javascript:;"><img src="/static/images/logo.png"></a>
+			  </div>
+          <div class="hw_nav_right">		      		      
+			   <a class="hw_logout" style="color:#fff;" href="/admin_cate/logout">安全退出</a>
+		  </div>		  
+        </nav>
+	    
+		<div class="hw_page_content" style="padding:10px 20px;display: block;width:60%;min-height: 300px;margin-top:8%;">
+		<div style="background-color:#F56C6C;padding:8px 5px;color:#fff;text-align:center;">由于系统进行服务迁移，应用需要重新添加，给您带来不便之处，尽请谅解！</div>
+		 <div class="tit">请选择一个你熟悉的应用</div>
+		 <div class="boutique-app-box">
+						<ul>
+						    {volist name="res" id="item"}
+							<li>
+								<div class="com-vertical-app">
+									<a href="/admin_index/main?appid={$item.id}&from=1"><img  src="{$item.icon_url??'/static/images/appdefault.jpg'}" width="72" height="72"></a>
+									<div>{$item.app_name}</div>														
+								</div>
+							</li>
+							 {/volist}						
+						</ul>
+		</div>
+		</div>   
+	</div>
+  
+</body>
+  <script>
+    
+  </script>
+</html>

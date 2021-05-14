@@ -1,0 +1,37 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GAME BRAIN</title>
+    {include file="./static/html/header_common.html" /}  
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+   <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <!-- import JavaScript -->
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <script src="/static/js/axios.min.js"></script>	 
+	<style>
+	  
+	</style>
+</head>
+<body style="background:#f5f6fa;">
+    <div id="wrapper" style="background-color:#f5f6fa;">
+        {include file="./static/html/header.html" /}	
+		<div class="hw_page_content" style="background-color:#f5f6fa;">
+		    <div class="hw_menu_left">
+             {include file="./static/html/side.html" /}  
+			</div>
+		    <div class="hw_content_right" style="padding:3px 1px;background: #f5f6fa;">
+			        <iframe frameborder="0" marginheight="0" seamless src='http://gbsc.7766.org:3031/#/data?app_id={$app_id}' style="width:100%;height:100%;"></iframe>  
+			  </div>
+			</div>
+		</div>
+		 {include file="./static/html/footer.html" /}
+	</div>
+</body>
+ {include file="./static/html/footer_common.html" /}
+  <script>
+    
+  </script>
+</html>

@@ -1,0 +1,449 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GAME BRAIN</title>
+    {include file="./static/html/header_common.html" /}
+	<link rel="stylesheet" type="text/css" href="http://unpkg.com/iview/dist/styles/iview.css">
+    <script type="text/javascript" src="http://vuejs.org/js/vue.min.js"></script>
+    <script type="text/javascript" src="http://unpkg.com/iview/dist/iview.min.js"></script>
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+	<style>
+     .hw_content_right{background:#fff !important;font-size:14px;}
+	</style>
+</head>
+<body>
+    <div id="wrapper" style="background-color:#fff;">
+        {include file="./static/html/header.html" /}	
+		<div class="hw_page_content">
+		    <div class="hw_menu_left">
+         {include file="./static/html/side.html" /}  
+			</div>
+		    <div class="hw_content_right" style="padding:10px 10px">
+			    <template>
+					     <h3> <Icon type="logo-buffer"></Icon> Tenjin 数据展示</h3>
+						   <div style="padding:30px 0px;margin-bottom:30px;">
+						           <div style="float:left;">
+									<i-select v-model="country" placeholder="选择国家" style="width:150px">
+									   {volist name="countrys" id="c"}
+									   <i-option  value="{$key}" key="{$key}">{$c}</i-option>
+									   {/volist}
+									</i-select>
+									<i-select v-model="adnetwork_id" placeholder="选择渠道" style="width:150px">
+									   
+									     <i-option v-for="item in channels" :value="item.adnetwork_id" :key="item.adnetwork_id">{{item.name}}</i-option>
+									  
+									</i-select>
+								  <i-select v-model="field" placeholder="默认分组" style="width:100px">
+								   <i-option value="day" key="1">按天</i-option>
+								   <i-option value="country" key="2">按国家</i-option>
+								   <i-option value="channel" key="3">按渠道</i-option>							  
+								</i-select>
+									<i-button type="primary">搜索</i-button>
+									</div>
+								 <div  style="float:right;margin-right:10px;">
+								 
+								  <Date-picker type="daterange" :options="options2"  @on-change="handleChange" :value="date" format="yyyy-MM-dd" placement="bottom-end" placeholder="选择日期" style="width: 200px"></Date-picker>
+							     <i-button type="info"  @click="exportData()"><Icon type="ios-download-outline"></Icon> 导出</i-button>
+							   </div>
+							</div>
+					<Tabs value="overview" type="card" style="clear:both" @on-click="loadData">
+						
+						<Tab-pane label="概览" name="overview">						   
+							<i-table ref="table" border :loading="loading" max-height="400" :columns="report_columns" :data="report_data"></i-table>					
+						</Tab-pane>
+						<Tab-pane label="留存 " name="reten">
+						 <i-table ref="table" border :loading="loading" max-height="400" :columns="reten_columns" :data="report_data"></i-table>
+						</Tab-pane>
+						<Tab-pane label="收益 " name="revenue">
+						 <i-table ref="table" border :loading="loading" max-height="400" :columns="revenue_columns" :data="report_data"></i-table>
+						</Tab-pane>
+					</Tabs>
+					
+					
+					
+				</template>
+			</div>			
+		</div>
+		 {include file="./static/html/footer.html" /}
+	</div>	
+</body>
+ {include file="./static/html/footer_common.html" /}
+  <script>
+     new Vue({
+        el: '#wrapper',
+        data: {
+			country:"all",
+			loading: false,
+			type:"overview",
+			adnetwork_id:"all",
+			tag:"1",
+			channels:[],
+			field:"day",
+			date:["{$start}","{$end}"],
+			options2: {
+                    shortcuts: [
+                        {
+                            text: '昨天',
+                            value () {
+                                const end = new Date();
+                                const start = new Date();
+                                start.setTime(start.getTime() - 3600 * 1000 * 24 * 1);
+                                return [start, start];
+                            }
+                        },
+						{
+                            text: '上周',
+                            value () {
+                                const end = new Date();
+                                const start = new Date();
+								var weekday = start.getDay()||7;
+								    start.setDate(start.getDate() - weekday-6); //本周第一天 
+								    end.setDate(start.getDate() + 6);//本周最后一天
+                                return [start, end];
+                            }
+                        },
+                        {
+                            text: '本周',
+                            value () {
+                                const end = new Date();
+                                const start = new Date();
+								var weekday = start.getDay()||7;
+								    start.setDate(start.getDate() - weekday+1); //本周第一天 
+								    end.setDate(start.getDate() + 6);//本周最后一天
+                                return [start, end];
+                            }
+                        },
+						{
+                            text: '上月',
+                            value () {
+                                const end = new Date();
+                                const start = new Date();
+								start.setMonth(start.getMonth()-1);//下个月
+                                start.setDate(1);//下个月第一天减1得到本月最后一天
+								end.setMonth(start.getMonth()+1);//下个月
+                                end.setDate(1);//下个月第一天减1得到本月最后一天
+								end.setDate(end.getDate()-1);
+                                return [start, end];
+                            }
+                        },
+                        {
+                            text: '本月',
+                            value () {
+                                const end = new Date();
+                                const start = new Date();
+                                      start.setDate(1);//本月第一天
+								end.setMonth(start.getMonth()+1);//下个月
+                                end.setDate(1);//下个月第一天减1得到本月最后一天
+								end.setDate(end.getDate()-1);
+                                return [start, end];
+                            }
+                        }
+                    ]
+                },
+			report_columns: [
+			        {
+                        title: 'Name',
+                        key: 'name',
+						width: 150,
+						align:'center',
+						sortable: true,
+						fixed: 'left'
+                    },
+					{
+                        title: 'DAU',
+						width: 100,
+						align:'center',
+						sortable: true,
+                        key: 'daily_active_users'
+                    },
+                    {
+                        title: 'Tracked installs',
+						width: 180,
+						align:'center',
+						sortable: true,
+                        key: 'tracked_installs'
+                    },
+                    {
+                        title: 'Reten 1',
+						width: 100,
+						align:'center',
+						sortable: true,
+                        key: 'reten_1'
+                    },
+					{
+                        title: 'Spend',
+						width: 100,
+						align:'center',
+						sortable: true,
+                        key: 'spend'
+                    },
+					{
+                        title: 'tCPI',
+						width: 100,
+						align:'center',
+						sortable: true,
+                        key: 'tcpi'
+                    },
+					{
+                        title: 'Ad ARPDAU',
+						width: 150,
+						align:'center',
+						sortable: true,
+                        key: 'arpdau'
+                    },
+					{
+                        title: '1 ROAS',
+						width: 150,
+						align:'center',
+						sortable: true,
+                        key: 'roas_1'
+                    },
+					{
+                        title: '7 ROAS',
+						width: 150,
+						align:'center',
+						sortable: true,
+                        key: 'roas_7'
+                    },
+					{
+                        title: '30 ROAS',
+						width: 150,
+						align:'center',
+						sortable: true,
+                        key: 'roas_30'
+                    },
+					{
+                        title: '1-DAY ADREV LTV',
+						width: 200,
+						align:'center',
+						sortable: true,
+                        key: 'ltv_1'
+                    },
+					{
+                        title: 'Reported installs',
+						width: 180,
+						align:'center',
+						sortable: true,
+                        key: 'reported_installs'
+                    }
+                ],
+				reten_columns: [
+			        {
+                        title: 'Name',
+                        key: 'name',
+						width: 150,
+						align:'center',
+						sortable: true,
+						fixed: 'left'
+                    },
+					{
+                        title: 'Installs',
+						width: 100,
+						align:'center',
+						sortable: true,
+                        key: 'installs'
+                    },
+					{
+                        title: 'Reten 1',
+						width: 100,
+						align:'center',
+						sortable: true,
+                        key: 'reten_1'
+                    },
+                    {
+                        title: 'Reten 2',
+						width: 100,
+						align:'center',
+						sortable: true,
+                        key: 'reten_2'
+                    },
+					{
+                        title: 'Reten 3',
+						width: 100,
+						align:'center',
+						sortable: true,
+                        key: 'reten_3'
+                    },
+					{
+                        title: 'Reten 4',
+						width: 100,
+						align:'center',
+						sortable: true,
+                        key: 'reten_4'
+                    },
+					{
+                        title: 'Reten 5',
+						width: 100,
+						align:'center',
+						sortable: true,
+                        key: 'reten_5'
+                    },
+					{
+                        title: 'Reten 6',
+						width: 100,
+						align:'center',
+						sortable: true,
+                        key: 'reten_6'
+                    },
+						{
+                        title: 'Reten 7',
+						width: 100,
+						align:'center',
+						sortable: true,
+                        key: 'reten_7'
+                    },
+						{
+                        title: 'Reten 14',
+						width: 150,
+						align:'center',
+						sortable: true,
+                        key: 'reten_14'
+                    },
+						{
+                        title: 'Reten 30',
+						width: 150,
+						align:'center',
+						sortable: true,
+                        key: 'reten_30'
+                    },
+						{
+                        title: 'Reten 60',
+						width: 150,
+						align:'center',
+						sortable: true,
+                        key: 'reten_60'
+                    },
+						{
+                        title: 'Reten 90',
+						width: 150,
+						align:'center',
+						sortable: true,
+                        key: 'reten_90'
+                    }
+					
+                ],
+				revenue_columns:[
+				    {
+                        title: 'Name',
+                        key: 'name',
+						
+						align:'center',
+						sortable: true,
+						fixed: 'left'
+                    },
+				    {
+                        title: 'Ad revenue',
+						
+						align:'center',
+						sortable: true,
+                        key: 'revenue'
+                    },
+					{
+                        title: 'Impressions',
+						
+						align:'center',
+						sortable: true,
+                        key: 'impressions'
+                    },
+					{
+                        title: 'Clicks',
+						
+						align:'center',
+						sortable: true,
+                        key: 'clicks'
+                    },
+					{
+                        title: 'eCPM',
+						
+						align:'center',
+						sortable: true,
+                        key: 'ecpm'
+                    },
+					{
+                        title: 'eCPC',
+						
+						align:'center',
+						sortable: true,
+                        key: 'ecpc'
+                    }
+				],
+                report_data: []
+        },
+		watch: {
+			  field(val, oldVal) {				
+				this.getReportData()
+			  },
+			  country(val, oldVal) {				
+				this.getReportData()
+			  },
+			  adnetwork_id(val, oldVal) {
+				this.getReportData()
+			  },
+			  date(val,oldVal){
+				this.getReportData()
+			  },
+             type(val,oldVal){
+				this.getReportData()
+			  }			  
+        },
+		mounted(){		 
+		  this. getReportData()
+          this.getdata()		  
+		},
+        methods: {
+            getReportData(){
+			    let _that = this
+				this.loading = true
+				axios({
+						method: 'post',
+						url:'/admin_tenjin/getReportData',
+						data:{
+						   start:_that.date[0],
+						   end:_that.date[1],
+						   country:_that.country,
+						   field:_that.field,
+						   type:_that.type,
+						   adnetwork_id:_that.adnetwork_id
+						}
+					}).then(res=>{
+					 _that.report_data = res.data
+					 this.loading = false
+				 })
+			},
+			getdata()
+		   {
+		     let _that = this
+			 axios.get('/admin_tenjin/getchannel?type='+this.tag)
+			  .then(function (response) {
+				 _that.channels = response.data
+			  })
+			  .catch(function (error) {
+				console.log(error);
+			  });
+		   },
+			exportData(){
+			 this.$refs.table.exportCsv({
+                        filename: 'The original data'
+                    });
+			},
+			loadData(name)
+			{
+			   this.type = name
+			   if( name=="revenue")
+			   {
+			      this.tag ="2";
+			   }else{
+			      this.tag ="1";
+			   }
+			   this.getdata()
+			},
+			handleChange (date) {
+                this.date = date;
+           }
+        }
+    })
+  </script>
+</html>

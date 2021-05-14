@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{$app_name}--Roi Model--GAME BRAIN</title>
+	{include file="./static/html/header_common.html" /}
+	<link rel="stylesheet" type="text/css" media="all" href="/static/plugin/jquery-time/daterangepicker-bs3.css" />
+	 <style>
+	   
+	    td{
+		  height:40px;
+		  padding: 0px !important;
+		}
+		input[type="text"]{
+		  padding: 0px;
+		  margin:0px;
+		}
+		th, td {
+         vertical-align: middle !important;
+          text-align: center !important;
+      }
+	  .tarbk{
+	    margin:10px auto;
+	  }
+	  .form-group
+	  {
+	    float:left;
+		margin-left:3%;
+	  }
+	  .form-group .form-control{
+	     text-indent:10px;
+		 height: 32px;
+	  }
+	  
+.hw_ad_title{
+	margin-left:3%;
+}
+.hw-date-wrapper{margin-right:15px;}
+
+.hw-input {
+    position: relative;
+    display: inline-block;
+    padding: 6px 3px;
+    height: 32px;  
+    outline: none;
+    text-indent:10px;
+    cursor: text;
+    font-size: 12px;
+    line-height: 1.5;
+    color: #666;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #d9d9d9;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    -webkit-transition: border .2s cubic-bezier(.645,.045,.355,1),background .2s cubic-bezier(.645,.045,.355,1),-webkit-box-shadow .2s cubic-bezier(.645,.045,.355,1);
+    transition: border .2s cubic-bezier(.645,.045,.355,1),background .2s cubic-bezier(.645,.045,.355,1),-webkit-box-shadow .2s cubic-bezier(.645,.045,.355,1);
+    -moz-transition: border .2s cubic-bezier(.645,.045,.355,1),background .2s cubic-bezier(.645,.045,.355,1),box-shadow .2s cubic-bezier(.645,.045,.355,1),-moz-box-shadow .2s cubic-bezier(.645,.045,.355,1);
+    transition: border .2s cubic-bezier(.645,.045,.355,1),background .2s cubic-bezier(.645,.045,.355,1),box-shadow .2s cubic-bezier(.645,.045,.355,1);
+    transition: border .2s cubic-bezier(.645,.045,.355,1),background .2s cubic-bezier(.645,.045,.355,1),box-shadow .2s cubic-bezier(.645,.045,.355,1),-webkit-box-shadow .2s cubic-bezier(.645,.045,.355,1),-moz-box-shadow .2s cubic-bezier(.645,.045,.355,1);
+}
+.hw_ad_title a.dropdown_switch{
+	padding: 4px 45px;
+	border: 1px solid #ed4040;
+	font-size: 14px;
+	color: #ed4040;
+	margin-top:30px;
+}
+
+.country .c-dropdown__item {
+    display: block;
+    padding: 3px 7px;
+    border-bottom: none;
+    color: #768093;
+    font-size: 10px;
+    font-weight: 400;
+    border:none !important;	
+    float: left;
+}
+.hw_reven thead tr {
+    background-color: #f9f9f9;
+	height:40px;
+}
+.hw_reven table {
+    border-collapse: collapse;
+    font-size: 12px !important;
+    color: #222 !important;
+    text-align: left !important;
+    line-height: 40px;
+}
+.hw_reven .table > thead > tr > th{
+   border:none;
+   color: #222 !important;
+}
+.button {
+  -webkit-border-radius: 28;
+  -moz-border-radius: 28;
+  border-radius: 28px;
+  text-shadow: 0px 1px 0px #2f6627;
+  -webkit-box-shadow: 1px 1px 3px 0px #666666;
+  -moz-box-shadow: 1px 1px 3px 0px #666666;
+  box-shadow: 1px 1px 3px 0px #666666;
+  font-family: Arial;
+  color: #ffffff;
+  font-size: 16px;
+  background: #44c767;
+  padding: 6px 30px 6px 30px;
+  border: solid #18ab29 1px;
+  text-decoration: none;
+}
+	</style>	
+</head>
+<body>
+    <div id="wrapper" style="background-color:#fff;">
+        {include file="./static/html/header.html" /} 
+	
+		<div class="hw_page_content">
+		    <div class="hw_menu_left">
+         {include file="./static/html/side.html" /}  
+			</div>
+		    <div class="hw_content_right">
+			  <ul class="search_tab clearfix">
+			       <li ><a  href="/admin_consu/historylist?appid={$app_id}">列表</a></li>
+			       <li><a  href="/admin_consu/index1?appid={$app_id}">ROI</a></li>
+				   <li class="active"><a  href="/admin_consu/ltv?appid={$app_id}">LTV</a></li>
+				   <li><a  href="/admin_consu/tenjin?appid={$app_id}">Tenjin</a></li>				   
+		      </ul>
+			  		  <div class="hw_ad_title">					     						  
+						     <span>
+                                筛选条件：							 
+                                <span class="hw-date-wrapper">
+						          <input readonly style="width:200px;" id="start_date" placeholder="筛选日期" class="hw-input" value="{$start_date}-{$end_date}" type="text">
+						        </span>							 
+								
+								<span class="country" id="country"   data="all" style="position:relative;">
+								  <a href="javascript:;" style="margin-right:10px;" class="dropdown_switch dropdown-toggle active"  id="dropdownMenuAvatar1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" role="button">
+									<label  style="font-weight:400;">{$country_name}</label><i class="fa fa-caret-down" style="margin-left:5px;"></i>
+								  </a>
+								  <div class="c-dropdown__menu has-arrow dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuAvatar1" x-placement="top-end" style="position: absolute; top:28px; left: 0px; will-change: transform;">
+								     {volist name="countrys" id="c"}
+									  <a class="c-dropdown__item dropdown-item" data="{$key}" href="javascript:;">{$c}</a>
+									 {/volist}	
+								  </div>
+							   </span>
+								
+							 </span>						    
+					   </div>
+			  <div class="tarbk form-inline">
+		                 <div class="form-group">
+						    <label style="font-weight:400" for="dau">当前新增</label>
+						    <input type="text" class="hw-input" style="width:80px" id="dau" value="{$new_users}">
+					     </div>
+					     <div class="form-group" style="margin-left:10px;">
+						     <label style="font-weight:400" for="spend">当前花费</label>
+						     <input type="text" class="hw-input" style="width:80px" id="spend" value="{$spend}">
+					     </div>
+						<div class="form-group" style="margin-left:10px;">
+						     <label style="font-weight:400" for="spend">自然量</label>
+						     <input disabled style="border:none;width:40px;font-weight:700" type="text" class="hw-input" value="{$nature_num}">
+					     </div>
+						 <div class="form-group" style="margin-left:10px;">
+						     <label style="font-weight:400" for="spend">自然占比</label>
+						    <input type="text" class="hw-input" disabled style="border:none;width:50px;font-weight:700" value="{$nature_rat}%">
+					     </div>
+						 <div class="form-group" style="margin-left:10px;">
+						     <label style="font-weight:400" for="spend">平均CPI</label>
+						     <input type="text" class="hw-input" disabled style="border:none;width:40px;font-weight:700"  value="{$avgcpi}">
+					     </div>
+						 <div class="form-group" style="margin-left:10px;">
+						     <label style="font-weight:400" for="spend">推广CPI</label>
+						     <input type="text" class="hw-input" disabled style="border:none;width:40px;font-weight:700"  value="{$ad_cpi}">
+					     </div>
+						<div class="form-group" style="margin-left:10px;">
+						    <button class="button" href="javascript:;" id="js" style="width:100px;">应用</button>
+							<button class="button" href="javascript:;" id="download" style="width:100px;background:#ff7055;border:1px solid #ff7055">下载</button>
+					     </div>					 
+				</div>
+				<div style="clear:both"></div>
+				 <div class="hw_reven" style="width:95%;margin:20px auto;">
+					 <table class="table table-bordered table-hover">
+						
+					   <thead>
+						  <tr>
+						     <th>天数</th>
+							 <th>日期</th>
+							 <th>ARPDAU</th>
+							 <th>留存</th>
+							 <th>留存用户</th>
+							 <th>eCPM</th>
+							 <th>当天收益</th>
+							 <th>总收益</th>
+							 <th>ROI</th>
+						  </tr>
+					   </thead>
+					   <tbody id="r_model">
+						 {$html}					 
+					   </tbody>
+					</table> 
+				   <div style="text-align:center;"><button type="button" data-toggle="modal" data-target="#myModal" style="width:200px;margin-bottom:40px;" class="btn btn-success">保存数据</button></div>
+			    </div>
+			</div>
+		</div>
+    {include file="./static/html/footer.html" /}		 
+	</div>
+   {include file="./static/html/footer_common.html" /}
+   
+   <div class="modal fade" id="myModal" style="top:10%;" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+       <!--  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button> -->
+        <h4 class="modal-title" id="myModalLabel">设置名称</h4>
+      </div>
+      <div class="modal-body">
+         <input type="text" class="form-control" id="save_name" value="{$app_name}">
+      </div>
+      <div class="modal-footer">       
+		 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		 <button type="button" class="btn btn-primary" id="save">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>	
+</body>
+  <script type="text/javascript" src="/static/plugin/jquery-time/moment.js"></script>
+   <script type="text/javascript" src="/static/plugin/jquery-time/daterangepicker.js"></script>
+   <script src="/static/js/jquery.freezeheader.js"></script>
+  <script>
+    $( function(){
+	   var start_date='{$start_date}';
+	   var end_date='{$end_date}';
+	   Roi.allwork();
+	   $("#js").bind( "click",function(e){
+	      
+			Roi.allwork();
+	   })
+	   $(".table").freezeHeader({'offset' : '60px'});
+	   $('#start_date').daterangepicker({ minDate:'2018-07-08',singleDatePicker:false },function(start, end, label) {
+	         start_date = start.format('YYYY-MM-DD');
+		     end_date=end.format('YYYY-MM-DD');
+		 window.location.href ="/admin_consu/ltv?appid={$app_id}&start_date="+start_date+"&end_date="+end_date+"&country={$country}";
+	  });
+        $("#download").click( function(){
+		    var appid ="{$app_id}";
+			var date = start_date;
+			var data = [];
+			$("#r_model tr").each(function(i)
+			{
+				 var lc = $(this).find(".lc").val()+"%";
+				 var arpdau = $(this).find(".arpdau").val();
+				 var todayrevenu = $(this).find(".todayrevenu").text();
+				 var date = $(this).find("td").eq(0).text();
+				 var time = $(this).find("td").eq(1).text();
+				 var ecpm = $(this).find(".ecpm").text();
+				 var revenu = $(this).find(".revenu").text();
+				 var users = $(this).find(".users").text();
+                 var roi_rate = $(this).find(".roi").text();	
+                 data[i] = { reten:lc,day:date,date:time,ecpm:ecpm,total_revenue:revenu,roi:roi_rate,arpdau:arpdau,current_revenue:todayrevenu,reten_user:users };				 
+			});
+			var index = layer.load(0, {shade: false});
+			$.post("/admin_consu/download",{appid:appid,date:date,data:data},function(e){
+			  layer.close(index);
+			   if( "ok"==e )
+			   {
+			     window.location.href ="/admin_consu/excel?appid={$app_id}&date="+date;
+			   }
+			})
+			
+		})
+		$(".c-dropdown__item").click( function(){
+		    var _p = $(this).parent().parent();
+			    _p.attr("data",$(this).attr("data") );
+				_p.find("label").text($(this).text() );	
+             window.location.href ="/admin_consu/ltv?appid={$app_id}&start_date="+start_date+"&end_date="+end_date+"&country="+$(this).attr("data");				
+		})
+	   
+	   $("#save").bind("click",function(){
+	        Roi.save();
+	   });
+	   $(window).scroll(function(){
+		        var scroll =$(window).scrollTop();
+				if(scroll > 100){
+					$("#topp").show('slow');
+				}else{
+					$("#topp").hide('slow');
+				}
+			})
+	})
+    //初始化 数据模型  by lxf
+    var Roi = window.Roi || {};
+	
+	  ( function(){
+	     
+		 var dau ="";
+		 var spend ="";
+		 var a_index = false;
+		 
+		 var update = function()
+		 {
+		    dau = $("#dau").val();
+			spend = $("#spend").val();
+		 }
+		 
+	     this.check = function()
+		 {
+		     update();
+			 if( !dau || !spend )
+			 {
+			    layer.msg("新增,花费不能为空");return false;
+			 }
+			 return true;
+		 }
+		//单个数据核心处理计算
+		Roi.init = function()
+		{
+	    		
+			var _that = this;
+			$('.arpdau').bind('input propertychange', function()
+		   {
+			   let lc = $(this).parents("tr").find(".lc").val();
+			   if(_that.check() && lc )
+			   {				  
+                  _that.allwork();				  
+			   }				  
+		   });
+		   $('.lc').bind('input propertychange', function()
+		   {
+			   let ad = $(this).parents("tr").find(".arpdau").val();
+			   if(_that.check() && ad )
+			   {				  
+                  _that.allwork();				  
+			   }				  
+		   });
+		}
+		
+		//计算核心
+		Roi.work = function(t,sum_roi,users)
+		{
+			var total_sum_roi = sum_roi;
+			t.parents("tr").prevAll().each(function(i)
+				{
+					 let _$lc = $(this).find(".lc");
+					 let arpdau =$(this).find(".arpdau").val(); 
+					 let _m_sum = _$lc.val();
+					 let one_revenue = (arpdau*dau*_m_sum)/100;
+					 total_sum_roi+=parseFloat(one_revenue);
+				});
+			 this.show( t,total_sum_roi,sum_roi,users);
+		}
+		//重新整个计算
+		Roi.allwork = function()
+		{
+		  
+		   var _that = this;
+		   if(_that.check())
+			   {					
+					$("#r_model tr").each(function(i)
+					{
+						 let _$lc = $(this).find(".lc");
+						 let arpdau =$(this).find(".arpdau").val(); 
+						 let _m_sum = _$lc.val();
+						 let one_revenue = (arpdau*dau*_m_sum)/100;
+						 let sum_roi =parseFloat(one_revenue);
+						 let users = Math.round(dau*_m_sum/100);
+						 _that.work(_$lc,sum_roi,users);						
+					});
+		       }	
+		}
+	 	 // 数据渲染 
+		 Roi.show = function( t,total_sum_roi,sum_roi,users)
+		 {
+		    if( t.val()=="0" )sum_roi=0;
+			
+			var show_roi_num =parseFloat((total_sum_roi/spend)*100).toFixed(2);
+			t.parents("tr").find(".revenu").text(parseFloat(total_sum_roi).toFixed(2));
+			t.parents("tr").find(".todayrevenu").text(parseFloat(sum_roi).toFixed(2));
+			t.parents("tr").find(".roi").text(show_roi_num);
+			t.parents("tr").find(".users").text(users);
+			if( show_roi_num<100 )
+			{
+			   t.parents("tr").css({"background-color":"#fff","font-weight":"normal"});
+			   a_index=false;
+			}
+			if( show_roi_num>=100 && !a_index )
+			{
+			    a_index=true;  //重置当前
+				t.parents("tr").css( {
+				   "background-color":"#ee6e73",
+				   "font-weight":"bold"
+				});
+			}
+			
+		 }
+		 
+		 //数据保存
+		 Roi.save = function()
+		 {
+		    update();
+			var data = [];
+			$("#r_model tr").each(function(i)
+			{
+				 var lc = $(this).find(".lc").val();
+				 var arpdau = $(this).find(".arpdau").val();
+				 var todayrevenu = $(this).find(".todayrevenu").text();
+				 var date = $(this).find("td").eq(0).text();
+				 var time = $(this).find("td").eq(1).text();
+				 var ecpm = $(this).find(".ecpm").text();
+				 var revenu = $(this).find(".revenu").text();
+				 var users = $(this).find(".users").text();
+                 var roi_rate = $(this).find(".roi").text();	
+                 data[i] = { lc:lc,date:date,time:time,ecpm:ecpm,revenu:revenu,roi_rate:roi_rate,arpdau:arpdau,todayrevenu:todayrevenu,users:users };				 
+			});
+			var save_name = $("#save_name").val();
+			var start_date = '{$start_date}';
+			var country ='{$country}';
+			if( save_name=="" )
+			{
+			  layer.msg("保存名称不能为空");return false;
+			}
+			$("#save").attr("disabled",true);
+			var index = layer.load(0, {shade: false});
+			$('#myModal').modal('hide');
+			$.post("/admin_consu/save",{ type:2,start_date:start_date,country:country,arpdau:dau,cpi:spend,data:data,save_name:save_name,appid:'<?php echo $app_id; ?>' },function(e){
+			
+			        $("#save").attr("disabled",false);
+			        layer.close(index);					
+			        layer.alert('数据已保存');
+					window.location.href="/admin_consu/historylist?app_id={$app_id}";
+			})
+		 }
+		 
+	  }.call(Roi) );
+	  
+	// Roi.init();
+	 
+</script>
+</html>

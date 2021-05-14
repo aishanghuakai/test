@@ -1,0 +1,354 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GAME BRAIN</title>
+    {include file="./static/html/header_common.html" /}
+	<link rel="stylesheet" type="text/css" href="http://unpkg.com/iview/dist/styles/iview.css">
+		<link rel="stylesheet" type="text/css" href="/static/css/goalset.css">
+    <script type="text/javascript" src="http://vuejs.org/js/vue.min.js"></script>
+    <script type="text/javascript" src="http://unpkg.com/iview/dist/iview.min.js"></script>
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+	<script src="/static/js/html2canvas.min.js"></script>
+   <link href="/static/css/froala_editor.min.css" rel="stylesheet" type="text/css">
+	<style>
+	 body,.hw_content_right{font-size:14px;}
+	 .demo-drawer-footer{
+        width: 100%;
+
+        bottom: 0;
+        left: 0;
+        border-top: 1px solid #e8e8e8;
+        padding: 10px 16px;
+        text-align: right;
+        background: #fff;
+    }
+	.table input{text-align:center;}
+	.textaram textarea{background-color:#fff !important;color:#222 !important;border:none;}
+	#capture input{border:none;width:100%;background-color:#fff;}
+	#capture th,#capture input{font-weight:400;color:#222;}
+	.ivu-drawer-body{padding:2px 16px !important;}
+	</style>
+</head>
+<body>
+    <div id="wrapper" style="background-color:#fff;">
+        {include file="./static/html/header.html" /}
+		<div class="hw_page_content">
+		    <div class="hw_menu_left">
+         {include file="./static/html/side.html" /}
+			</div>
+		    <div class="hw_content_right"  style="position:relative;">
+			    <div style="padding:10px 0px;">
+				<Breadcrumb separator=">">
+			      <breadcrumb-item to="/admin_index/main">主页</breadcrumb-item>
+			      <breadcrumb-item to="/testplan/index">发行测试</breadcrumb-item>
+			      <breadcrumb-item>{$list[0]["name"]}</breadcrumb-item>
+		        </Breadcrumb>
+				</div>
+			     {volist name="list" id="vo"}
+				  <div class="box" style="margin-top:10px;">
+						<div class="box-header with-border">
+						  <span class="box-title"><img style="width:40px;height:40px;border-radius:10px;margin-right:5px;" src="{$vo.icon_url}" />{$vo.name}测试计划</span>
+						</div>
+						<div class="box-body">
+							<div class="table-responsive">
+							  <table class="table">
+								<tbody>
+
+									<tr class="tr_header">
+									  <th style="text-align:left;">计划名称</th>
+									  <th>测试时间</th>
+									  <th>负责人</th>
+									  <th>测试状态</th>
+									  <th>地区</th>
+									  <th>渠道</th>
+									  <th>预算</th>
+									  <th>目标CPI</th>
+									</tr>
+									{volist name="vo.list" id="vv"}
+									<tr>
+
+									  <td style="text-align:left;">{$vv.title}</td>
+									  <td>{$vv.start_date}~{$vv.end_date}</td>
+									  <td>{$vv.username}</td>
+									   <td>
+									   {if condition="$vv['status'] eq 1"}
+										 <span class="badge bg-success" style="background-color:#2d8cf0 !important;">测试中</span>
+										{elseif condition="$vv['status'] eq 3" /}
+										  <span class="badge bg-danger" style="background-color:#ed4014 !important;">测试结束</span>
+                                        {elseif condition="$vv['status'] eq 2" /}
+                                         <span class="badge bg-info" style="background-color:#19be6b !important;">待测试</span>
+										 {else /}
+                                        {/if}
+									   </td>
+									   <td>{$vv.country}</td>
+									   <td>{$vv.channel}</td>
+									   <td>{$vv.budget}</td>
+									   <td>{$vv.cpi}</td>
+									</tr>
+									{/volist}
+								  </tbody>
+								</table>
+							</div>
+						</div>
+				  </div>
+				  {/volist}
+				  <h5 style="color:#866ec7;margin-top:-10px;">【测试目的】<span style="color:#02576c;font-size:12px;">{$list[0]['list'][0]['intent']}</span></h5>
+				  {if condition="$list[0]['list'][0]['status'] eq 3"}
+				   <div style="float:right;"><i-button style="margin-right: 8px" @click="edit">编辑</i-button><i-button type="info" @click="SaveReport">保存</i-button></div>
+				  {/if}
+				 <div id="capture" style="clear:both;padding:10px;width:60%;margin:0 auto;margin-bottom:40px;">
+					 <div class="box-header with-border">
+					  <h5 class="box-title"><Icon type="md-document"></Icon> {$list[0]["name"]}测试报告
+					   {if condition="$list[0]['list'][0]['status'] eq 3"}
+					    <span style="float:right;"><Rate disabled  show-text v-model="rate" /></span>
+					   {/if}
+					 </h5>
+					</div>
+					 <table class="table">
+
+								<tbody>
+									<tr class="tr_header">
+									  <th>产品指标</th>
+									  <th v-for="item in formData">实际输出</th>
+									</tr>
+									<tr>
+									 <th>推广地区</th>
+									 <th v-for="item in formData"><i-input  :disabled="editShow" v-model="item.country" ></i-input></th>
+									</tr>
+									<tr>
+									 <th>日活</th>
+									 <th v-for="item in formData"><i-input :disabled="editShow"  v-model="item.dau" ></i-input></th>
+									</tr>
+									<tr>
+									 <th>次留/3留/5留/7留</th>
+									 <th v-for="item in formData"><i-input :disabled="editShow" v-model="item.reten" ></i-input></th>
+									</tr>
+									<tr>
+									 <th>用户每日登录次数</th>
+									 <th v-for="item in formData"><i-input :disabled="editShow" v-model="item.num" ></i-input></th>
+									</tr>
+									<tr>
+									 <th>用户单次停留时长</th>
+									 <th v-for="item in formData"><i-input :disabled="editShow" v-model="item.onetime"></i-input></th>
+									</tr>
+									<tr>
+									 <th>用户每日游戏总时长</th>
+									 <th v-for="item in formData"><i-input :disabled="editShow" v-model="item.totaltime"></i-input></th>
+									</tr>
+									<tr>
+									 <th>CTR</th>
+									 <th v-for="item in formData"><i-input :disabled="editShow" v-model="item.ctr"></i-input></th>
+									</tr>
+									<tr>
+									 <th>CVR</th>
+									 <th v-for="item in formData"><i-input :disabled="editShow" v-model="item.cvr" ></i-input></th>
+									</tr>
+									<tr>
+									 <th>CPI</th>
+									 <th v-for="item in formData"><i-input :disabled="editShow" v-model="item.cpi" ></i-input></th>
+									</tr>
+									<tr>
+									 <th>ARPDAU</th>
+									 <th v-for="item in formData"><i-input :disabled="editShow" v-model="item.arpudau"></i-input></th>
+									</tr>
+								</tbody>
+					  </table>
+				</div>
+				<div class="demo-drawer-footer">
+				 {if condition="$list[0]['list'][0]['status'] eq 3"}
+				  <div class="textaram" style="text-align:left;">
+				    <div><h5 style="padding:10px;font-weight:700">【分析总结】</h5>{$list[0]['list'][0]['summary']}</div>
+				  </div>
+				 {else /}
+				  <div style="float:left;">
+					   <Tooltip content="抄送开启后,即可发送邮箱给该抄送人." placement="top-start">
+					     <span><Icon type="ios-information-circle"></Icon> 抄送</span>
+					   </Tooltip>
+					   <i-switch size="large" v-model="switch1" @on-change="change" >
+						<span slot="open">ON</span>
+						<span slot="close">OFF</span>
+					  </i-switch>
+                  </div>
+                   <Tooltip content="数据仅为参考,若数据存在异常,请手动校对" placement="top-end">
+					<i-button style="margin-right: 8px" @click="edit">编辑</i-button>
+				  </Tooltip>
+					<i-button type="error" @click="openModal">发布</i-button>
+				{/if}
+				</div>
+			</div>
+		</div>
+
+		<Modal v-model="modal1" fullscreen width="600px" title="{$list[0]["name"]}报告中心">
+			<FormItem label="Text">
+			  <!-- <div id="edit">{if condition="$list[0]['list'][0]['status'] eq 3"}{$list[0]['list'][0]['summary']}{/if}</div> -->
+			  <div id="edit">{$list[0]['list'][0]['summary']}</div>
+			</FormItem>
+
+			<FormItem label="Text">
+			  <h5 style="padding:5px 15px 5px 5px;font-weight:700">选择抄送人</h5>
+				<i-select v-model="manager" multiple >
+					<i-option v-for="item in users" :value="item.value" :key="item.value">{{ item.label }}</i-option>
+				</i-select>
+			</FormItem>
+			<div slot="footer">
+				<i-button type="text" size="large" @click="modal1=false">取消</i-button>
+				<i-button type="primary" size="large" @click="addPost">确定</i-button>
+			</div>
+       </Modal>
+
+	</div>
+</body>
+ {include file="./static/html/footer_common.html" /}
+ <script src="/static/js/froala_editor.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="/static/js/froala_editor_ie8.min.js"></script>
+  <![endif]-->
+    <script src="/static/plugin/froala/tables.min.js"></script>
+	  <script src="/static/js/mTips.js"></script>
+  <script src="/static/plugin/froala/lists.min.js"></script>
+  <script src="/static/plugin/froala/colors.min.js"></script>
+  <script src="/static/plugin/froala/media_manager.min.js"></script>
+  <script src="/static/plugin/froala/font_family.min.js"></script>
+  <script src="/static/plugin/froala/font_size.min.js"></script>
+  <script src="/static/plugin/froala/block_styles.min.js"></script>
+  <script src="/static/plugin/froala/video.min.js"></script>
+  <script>
+     $(function(){
+	 $('#edit').editable({
+		  inlineMode: false,
+		  width:'100%',
+		  height: '300px' //高度
+		  })
+	 })
+ </script>
+ <script>
+    var url="";
+	function capture()
+	{
+	  html2canvas(document.querySelector("#capture"),{
+      useCORS:true,
+	  height:document.body.scrollHeight,
+	  }).then(canvas => {
+           url = canvas.toDataURL("image/png",1);//图片地址
+      });
+	}
+ </script>
+  <script>
+     new Vue({
+        el: '#wrapper',
+        data: {
+            modal1: false,
+			editShow:true,
+			switch1:'open',
+			isedit:1,
+			manager:"",
+			rate:"{$list[0]['list'][0]['finish_status']}",
+			selectPerson:false,
+			finish_status:3,
+			formData:[],
+			id:"{$id}",
+			summary:"",
+			users: []
+        },
+		mounted(){
+		  this. getdata()
+          this.getreport()
+		},
+        methods: {
+
+		   openModal(){
+			 capture();
+			 this.modal1 = true
+			 this.finish_status =3
+			 this.isedit =1
+			 this.summary=""
+		   },
+		   edit(){
+		    this.editShow  =false
+			this.isedit =2
+			this.modal1  = true
+			let _that =this
+			setInterval(function(){
+			  _that.real_save()
+			}, 3000);
+		   },
+		   real_save(){
+		    var content = $('div.froala-element').html();
+			  
+			   axios({
+						method: 'post',
+						url:'/testplan/real_save',
+						data:{id:this.id,summary:content}
+					}).then(res=>{
+					  
+				 })
+		   },
+		   SaveReport()
+		   {
+		      var content = $(".textaram textarea").val();
+			   axios({
+						method: 'post',
+						url:'/testplan/SaveReport',
+						data:{id:this.id,summary:content,list:this.formData}
+					}).then(res=>{
+
+					  if( res.data=="ok" )
+					  {
+						  this.$Message.success('操作成功');
+						  window.location.href = window.location.href
+					  }else{
+					      this.$Message.warning('操作失败');
+					  }
+				 })
+		   },
+		   getdata()
+		   {
+		     let _that = this
+			 axios.get('/goalset/getData')
+			  .then(function (response) {
+				 _that.users = response.data.users
+			  })
+			  .catch(function (error) {
+				console.log(error);
+			  });
+		   },
+		   getreport()
+		   {
+		     let _that = this
+			 axios.get("/testplan/getReportData?id={$id}")
+			  .then(function (response) {
+				 _that.formData = response.data
+			  })
+			  .catch(function (error) {
+				console.log(error);
+			  });
+		   },
+			addPost(){
+			   var content = $('div.froala-element').html();
+			   this.$Spin.show();
+			   axios({
+						method: 'post',
+						url:'/testplan/postReport',
+						data:{id:this.id,url:url,manager:this.manager,isedit:this.isedit,summary:this.summary,finish_status:this.finish_status,list:this.formData,content:content}
+					}).then(res=>{
+					  this.$Spin.hide();
+					  if( res.data=="ok" )
+					  {
+						  this.modal1 = false
+						  this.$Message.success('操作成功');
+						  window.location.href = window.location.href
+					  }else{
+					      this.$Message.warning('操作失败');
+					  }
+				 })
+			},
+			change (status) {
+                this.selectPerson = status
+            }
+        }
+    })
+  </script>
+</html>

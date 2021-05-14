@@ -1,0 +1,71 @@
+
+				 <tbody >
+						     {volist name="list" id="vv"}
+							<tr>
+							  <td style="background-color: #eef1f6;border-bottom:1px solid #ccc;">({$vv.date|getweekday}){$vv.date} <i date="{$vv.date}" class="fa fa-tag" style="font-size:10px;color:#ccc;"></i></td>
+							  <td>${$vv["result"]["total"]["dauarpu"]}</td>
+							  <td>${$vv["result"]["total"]["revenue"]+$vv['result']['total']['purchase']} {if condition="$vv['publisher_showtips'] neq '0'"}<sup data-mtpis="{$vv['publisher_showtips']}" ><i style="color:red;font-size:10px;" class="fa fa-commenting-o"></i></sup>  {/if}</td>
+							  <td>${$vv["result"]["total"]["purchase"]}&nbsp;<i date="{$vv.date}" v="{$vv['result']['total']['purchase']}" class="fa fa-edit purchase_edit"></i></td>
+							  <td style="border-right:1px solid #ccc">{$vv["result"]["total"]["active_users"]}</td>
+							 
+							  <td>${$vv["result"]["int"]["revenue"]}<span style="color:#777">/<?php if( $vv["result"]["total"]["revenue"]<=0 ){ echo "0";}else{ echo round($vv["result"]["int"]["revenue"]*100/$vv["result"]["total"]["revenue"],2); } ?>%</span></td>
+							  <td>${$vv["result"]["rew"]["revenue"]}<span style="color:#777">/<?php if( $vv["result"]["total"]["revenue"]<=0 ){ echo "0";}else{ echo round($vv["result"]["rew"]["revenue"]*100/$vv["result"]["total"]["revenue"],2); } ?>%</span></td>
+							  <td>${$vv["result"]["ban"]["revenue"]}<span style="color:#777">/<?php if( $vv["result"]["total"]["revenue"]<=0 ){ echo "0";}else{ echo round($vv["result"]["ban"]["revenue"]*100/$vv["result"]["total"]["revenue"],2); } ?>%</span></td>
+							  <td>${$vv["result"]["nat"]["revenue"]}<span style="color:#777">/<?php if( $vv["result"]["total"]["revenue"]<=0 ){ echo "0";}else{ echo round($vv["result"]["nat"]["revenue"]*100/$vv["result"]["total"]["revenue"],2); } ?>%</span></td>
+							  <td>${$vv["result"]["sp"]["revenue"]}<span style="color:#777">/<?php if( $vv["result"]["total"]["revenue"]<=0 ){ echo "0";}else{ echo round($vv["result"]["sp"]["revenue"]*100/$vv["result"]["total"]["revenue"],2); } ?>%</span></td>
+                              <td style="border-right:1px solid #ccc">${$vv["result"]["total"]["revenue"]}</td>
+							  <td>{$vv["result"]["int"]["impressions"]}</td>
+                              <td>{$vv["result"]["rew"]["impressions"]}</td>
+							  <td>{$vv["result"]["ban"]["impressions"]}</td>
+							  <td>{$vv["result"]["nat"]["impressions"]}</td>
+							  <td>{$vv["result"]["sp"]["impressions"]}</td>
+							  <td style="border-right:1px solid #ccc">{$vv["result"]["total"]["impressions"]}</td>
+                              <td>{$vv["result"]["int"]["avgshow"]}/{$vv.new_users_avg_int_show}</td>
+							  <td>{$vv["result"]["rew"]["avgshow"]}/{$vv.new_users_avg_rew_show}</td>
+							  <td>{$vv["result"]["ban"]["avgshow"]}</td>
+							  <td>{$vv["result"]["nat"]["avgshow"]}</td>
+							  <td>{$vv["result"]["sp"]["avgshow"]}</td>
+                              <td style="border-right:1px solid #ccc">{$vv["result"]["total"]["avgshow"]}</td>
+							  <td>${$vv["result"]["int"]["ecpm"]}</td>
+                              <td>${$vv["result"]["rew"]["ecpm"]}</td>
+							  <td>${$vv["result"]["ban"]["ecpm"]}</td>
+							  <td>${$vv["result"]["nat"]["ecpm"]}</td>
+							  <td>${$vv["result"]["sp"]["ecpm"]}</td>
+							  <td>${$vv["result"]["total"]["ecpm"]}</td>                        						  
+							</tr>
+							{/volist}
+						  </tbody>
+						  <tfoot>
+						    <tr style="border-top:2px solid red;">
+							  <td style="background-color: #eef1f6;border-bottom:1px solid #ccc;color:#f27056;font-weight:700">总计</td>
+							  <td>${$total_data["total"]["dauarpu"]}</td>
+							  <td>${$total_data["total"]["revenue"]+$total_data['total']['purchase']}</td>
+							  <td>${$total_data["total"]["purchase"]}</td>
+							  <td style="border-right:1px solid #ccc">{$total_data["total"]["active_users"]}</td>
+							  <td>${$total_data["int"]["revenue"]}<span style="color:#777">/<?php if( $total_data["total"]["revenue"]<=0 ){ echo "0";}else{ echo round($total_data["int"]["revenue"]*100/$total_data["total"]["revenue"],2); } ?>%</span></td>
+							  <td>${$total_data["rew"]["revenue"]}<span style="color:#777">/<?php if( $total_data["total"]["revenue"]<=0 ){ echo "0";}else{ echo round($total_data["rew"]["revenue"]*100/$total_data["total"]["revenue"],2); } ?>%</span></td>
+							  <td>${$total_data["ban"]["revenue"]}<span style="color:#777">/<?php if( $total_data["total"]["revenue"]<=0 ){ echo "0";}else{ echo round($total_data["ban"]["revenue"]*100/$total_data["total"]["revenue"],2); } ?>%</span></td>
+							  <td>${$total_data["nat"]["revenue"]}<span style="color:#777">/<?php if( $total_data["total"]["revenue"]<=0 ){ echo "0";}else{ echo round($total_data["nat"]["revenue"]*100/$total_data["total"]["revenue"],2); } ?>%</span></td>
+							  <td>${$total_data["sp"]["revenue"]}<span style="color:#777">/<?php if( $total_data["total"]["revenue"]<=0 ){ echo "0";}else{ echo round($total_data["sp"]["revenue"]*100/$total_data["total"]["revenue"],2); } ?>%</span></td>
+                              <td style="border-right:1px solid #ccc">${$total_data["total"]["revenue"]}</td>
+							  <td>{$total_data["int"]["impressions"]}</td>
+                              <td>{$total_data["rew"]["impressions"]}</td>
+							  <td>{$total_data["ban"]["impressions"]}</td>
+                              <td>{$total_data["nat"]["impressions"]}</td>
+							  <td>{$total_data["sp"]["impressions"]}</td>
+							  <td style="border-right:1px solid #ccc">{$total_data["total"]["impressions"]}</td>
+                              <td>{$total_data["int"]["avgshow"]}/{$total_data['new_users_avg_int_show']}</td>
+							  <td>{$total_data["rew"]["avgshow"]}/{$total_data['new_users_avg_rew_show']}</td>
+							  <td>{$total_data["ban"]["avgshow"]}</td>
+							  <td>{$total_data["nat"]["avgshow"]}</td>
+							  <td>{$total_data["sp"]["avgshow"]}</td>
+                              <td style="border-right:1px solid #ccc">{$total_data["total"]["avgshow"]}</td>
+							  <td>${$total_data["int"]["ecpm"]}</td>
+                              <td>${$total_data["rew"]["ecpm"]}</td>
+							  <td>${$total_data["ban"]["ecpm"]}</td>
+                              <td>${$total_data["nat"]["ecpm"]}</td>
+							  <td>${$total_data["sp"]["ecpm"]}</td>
+							  <td>${$total_data["total"]["ecpm"]}</td>                       						  
+							</tr>
+						  </tfoot>
+						  

@@ -1,0 +1,126 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title></title>
+	{include file="./static/html/header_common.html" /}
+	 <style>
+	li{
+	   padding: 5px 0;
+list-style: none;
+ 
+font-size: 12px;
+	}
+	
+	td {
+    text-align: center;
+    color: #666666;
+}
+.card-action a {
+    font-size: 14px;
+    color: #999;
+}
+.card-action a:hover{
+  color:#222;
+}	
+	</style>	
+</head>
+<body>
+    <div id="wrapper">
+        
+		<!-- Dropdown Structure -->
+         {include file="./static/html/header.html" /} 
+         {include file="./static/html/side.html" /} 
+        <!-- /. NAV SIDE  -->
+        <div id="page-wrapper">
+		  <div class="header" style="float:left;">
+                  		  
+                    <h1 class="page-header">
+                            收益管理
+                        </h1>
+						<ol class="breadcrumb">
+					  <li><a href="#">主页</a></li>
+					  <li><a href="#">收益管理</a></li>
+					  <li class="active">列表</li>
+					</ol> 				   
+		    </div>
+						
+            <div id="page-inner" style="clear:both;padding-top:5px;"> 
+			
+			  <div class="row">
+                     <!--    Hover Rows  -->
+                    <div class="card">
+                         <div class="card-action">
+                            <div style="float:left;margin-right:20px;"><a style="color: #222;font-weight: normal;" href="/admin_income/list">收益详情</a></div>
+							<div style="float:left;"><a style="color: #999;font-weight: normal;" href="/admin_income/daylist">按天统计</a></div>
+							<div style="float:left;"><p><input id="uuid" style="height:2rem;margin:0;float:left;width:200px;color:#ccc;font-size: 12px;" placeholder="输入用户ID" value="{$uuid}" type="text" /> </p></div>			
+							<div style="float:right;margin-left:30px;">#{$list->total()}</div>
+							<div id="search" style="float:left;margin-left:50px;color:#ccc;cursor:pointer;">搜索</div>
+							<div style="float:right;">
+							 <p style="line-height: 0px;">
+							  <input name="type" type="radio" {eq name="type" value="1"} checked {/eq}  id="test4" value="1" />
+							  <label for="test4">直播</label>
+							   <input name="type" type="radio" {eq name="type" value="4"} checked {/eq} id="test5" value="4" />
+							  <label for="test5">私聊</label>
+							</p>
+							</div>
+                        </div> 
+						
+                        <div class="card-content">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th style="vertical-align:middle; text-align:center;">#</th>
+                                            <th style="vertical-align:middle; text-align:center;">用户id(国家)</th>
+                                            <th style="vertical-align:middle; text-align:center;">收益金币</th>                                         
+											 <th style="vertical-align:middle; text-align:center;">收益来源</th>
+											 <th style="vertical-align:middle; text-align:center;">收益时间</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+									 {volist name="list" id="item"}
+                                        <tr>
+                                            <td style="vertical-align:middle; text-align:center;"><?php $p=isset($_GET["page"])?$_GET["page"]:1; echo ($p-1)*10+$key+1; ?></td>
+                                            <td style="vertical-align:middle; text-align:center;">
+											<img src="{$item.avatar}" onerror="this.src='/static/images/noheader.png'" style="width:32px;height:32px;border-radius:50%;"/>
+											<em style="color: #31bc86;;">{$item.uuid}</em><em style="color: #717171;"> * {$item.country}</em>
+											</td>
+                                            <td style="vertical-align:middle; text-align:center;">{$item.account}</td>                                         
+											<td style="vertical-align:middle; text-align:center;">
+											{if condition="$item.type eq 1"}
+											  <span class="new  green" style="padding:2px 4px;">直播</span>
+											{elseif condition="$item.type eq 4"/}
+											   <span class="new orange" style="padding:2px 4px;">私聊</span>
+											{/if}
+											</td>
+                                            <td style="vertical-align:middle; text-align:center;">{$item.addtime|date='m-d H:i',###}</td>
+                                        </tr>
+                                    {/volist}
+                                    </tbody>
+                                </table>
+								 <div>{$list->render()}</div>
+                            </div>
+                        </div>
+                    </div>
+         <!-- /. PAGE WRAPPER  -->
+        </div>
+     <!-- /. WRAPPER  -->
+    <!-- JS Scripts-->
+   {include file="./static/html/footer_common.html" /}
+</body>
+<script>
+   $("input[name='type']").click( function(){
+        window.location.href="/admin_income/list?type="+$(this).val();
+   } );
+    $("#search").click( function(){
+      var uuid = $("#uuid").val();
+	   if(uuid)
+	   {
+	     window.location.href='/admin_income/list?uuid='+uuid;
+	   }
+   })
+</script>
+</html>

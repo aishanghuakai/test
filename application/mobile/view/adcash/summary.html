@@ -1,0 +1,143 @@
+﻿<!DOCTYPE html>
+<html class="um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<link rel="stylesheet" href="https://cdn.bootcss.com/weui/1.1.2/style/weui.min.css">
+<link rel="stylesheet" href="https://cdn.bootcss.com/jquery-weui/1.2.0/css/jquery-weui.min.css">
+    <link rel="stylesheet" href="/static/sign/css/public.css">
+    <link rel="stylesheet" href="/static/sign/css/ui-box.css">
+    <link rel="stylesheet" href="/static/sign/css/user.css">
+	<link href="/static/sign/date/css/mobiscroll.css" rel="stylesheet" />
+    <link href="/static/sign/date/css/mobiscroll_date.css" rel="stylesheet" />
+	<script src="https://cdn.bootcss.com/jquery/1.11.0/jquery.min.js"></script>
+    <script src="/static/sign/weui/js/jquery-weui.min.js"></script>
+	 
+    <title>数据平台</title>
+       
+</head>
+<body>
+<div class="user center" style="max-width:700px;margin:0 auto;">
+    
+	 <ul class="user_ul">
+       
+        <li>
+            <a href="###" class="clearfix">
+                
+                <p>当前应用</p>
+                <div style="float:right;"><input style="outline:none;" id="app" data-values="hw_tk" value="Tankr.io" /></div>
+                <span></span>
+            </a>
+        </li>
+      
+		<li>
+            <a href="###" class="clearfix">
+                
+                <p>选择日期</p>			
+                <div  style="float:right;"><input type="text" name="USER_AGE" id="USER_AGE" style="vertical-align:middle;border:0;outline:none;margin-top:8px;0;height:30px;"  value="<?php echo date("Y-m-d",strtotime("-1 day")); ?>" /></div>
+                <span></span>
+            </a>
+        </li>
+        
+         <li>
+            <a href="###" class="clearfix">
+                
+                <p>选择平台</p>
+                <div style="float:right;"><input style="outline:none;vertical-align:middle;margin-top:-7px" data-values="total" id="platform" value="total" /></div>
+                <span></span>
+            </a>
+        </li>  		
+    </ul>
+	<div id="content">
+       
+	</div>
+   
+</div> 
+<div class="footer_ko"></div>
+ <div class="footer">
+    <ul class="ub" id="search">
+        <li style="padding-top: 0rem;" class="ub-f1">
+            <a  style="height:4.16rem;line-height:4.16rem;color:#fff;font-size:1.3rem;" href="javascript:;" >              
+                应用
+            </a>
+        </li>
+       
+    </ul>
+</div> 
+
+<!-- 如果使用了某些拓展插件还需要额外的JS -->
+<script src="/static/sign/date/js/mobiscroll_date.js" charset="gb2312"></script> 
+<script src="/static/sign/date/js/mobiscroll.js"></script> 
+<script type="text/javascript">
+
+ $(function () {
+     var start = $("#USER_AGE").val();
+     ajaxdata("hw_tk",start,"total");
+	 $("#search").click( function(){
+	    var start = $("#USER_AGE").val(); 
+		var ap_code = $("#app").attr("data-values");
+		var platform = $("#platform").attr("data-values");
+		ajaxdata(ap_code,start,platform);
+	 })
+	$("#platform").select({
+	  title: "选择平台类型",
+	  items: ["total", "android", "ios"]
+	});
+	$("#app").select({
+	  title: "选择应用",
+	  items: [
+	  
+	        {
+			  title: "Helix Rush",
+			  value: "hw_hr",
+			},
+			{
+			  title: "RushBalls",
+			  value: "hw_rb",
+			},
+			{
+			  title: "Tankr.io",
+			  value: "hw_tk",
+			},
+			{
+			  title: "Color Balls",
+			  value: "hw_cb",
+			},
+			{
+			  title: "Hexland.io",
+			  value: "hw_hl",
+			}
+		 ]
+	});
+	
+	var currYear = (new Date()).getFullYear();	
+	var opt={};
+	opt.date = {preset : 'date'};
+	opt.datetime = {preset : 'datetime'};
+	opt.time = {preset : 'time'};
+	opt.default = {
+		theme: 'android-ics light', //皮肤样式
+		display: 'modal', //显示方式 
+		mode: 'scroller', //日期选择模式
+		dateFormat: 'yyyy-mm-dd',
+		lang: 'zh',
+		showNow: true,
+		nowText: "今天",
+		startYear: currYear - 50, //开始年份
+		endYear: currYear + 10 //结束年份
+	};
+
+	$("#USER_AGE").mobiscroll($.extend(opt['date'], opt['default']));
+});
+  
+  var ajaxdata = function(ap_code,start,platform)
+  {
+     $.showLoading();
+	 $.post("/m_adcash/ajaxdata",{ap_code:ap_code,start:start,end:start,platform:platform},function(e){
+	    $.hideLoading();
+		$("#content").html(e);
+	})
+  }
+</script>
+</body>
+</html>

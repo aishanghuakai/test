@@ -1,0 +1,134 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title></title>	
+	{include file="./static/html/header_common.html" /}
+</head>
+<body>
+    <div id="wrapper">
+         {include file="./static/html/header.html" /} 
+		  {include file="./static/html/side.html" /} 
+        <!-- /. NAV SIDE  -->
+        <div id="page-wrapper" >
+		  <div class="header"> 
+                        <h1 class="page-header">
+                             个人信息修改
+                        </h1>
+						<ol class="breadcrumb">
+					  <li><a href="#">Home</a></li>
+					  <li><a href="#">Forms</a></li>
+					  <li class="active">Data</li>
+					</ol> 
+									
+		   </div>
+		
+            <div id="page-inner"> 
+			 <div class="row">
+					 <div class="col-lg-12">
+					 <div class="card">
+								<div class="card-action">
+									 
+								</div>
+								<div class="card-content">
+			<form class="col s12" method="post" enctype="multipart/form-data"  action="/admin_user/edit_update">
+			  <div class="row">
+			    <p style="font-weight:bold;color:#333;">用户名</p>
+				<div class="input-field col s6">
+				  <input placeholder="Placeholder" id="first_name" name="username" value="{$ret.username}" type="text" class="validate">
+				  
+				</div>
+				<div class="input-field col s6">
+				
+					 <select name="country" aria-controls="dataTables-example" class="form-control input-sm">
+						<option value="OT">请选择国家</option>
+						{volist name="country" id="vo" }
+						   <option {if condition="$ret.country eq $vo.short"} selected="selected" {/if} value="{$vo.short}">{$vo.name}</option>
+						   
+						{/volist}
+					 </select>
+				</div>
+			  </div>
+			 
+			<div class="row">
+			  <p style="font-weight:bold;color:#333;">用户类型</p>
+			   <p>
+				  <input name="user_type" type="radio" {eq name="ret.user_type" value="1"} checked {/eq} id="test1" value="1" />
+				  <label for="test1">普通用户</label>
+				</p>
+				<p>
+				  <input name="user_type" type="radio" {eq name="ret.user_type" value="2"} checked {/eq}  id="test2" value="2" />
+				  <label for="test2">主播</label>
+				</p>
+				<p>
+				  <input class="with-gap" name="user_type" {eq name="ret.user_type" value="3"} checked {/eq}  id="test3" type="radio" value="3"  />
+				  <label for="test3">测试用户</label>
+				</p>
+			</div>
+			 
+			  <div class="row">
+				<p style="font-weight:bold;color:#333;">用户性别</p>
+				  <p>
+				  <input name="gender" type="radio" {eq name="ret.gender" value="1"} checked {/eq} id="test4" value="1" />
+				  <label for="test4">男性</label>
+				   <input name="gender" type="radio" {eq name="ret.gender" value="2"} checked {/eq}  id="test5" value="2" />
+				  <label for="test5">女性</label>
+				</p>
+              </div>
+			  
+			   <div class="row">
+				<p style="font-weight:bold;color:#333;">用户状态</p>
+				  <p>
+				  <input name="status" type="radio" {eq name="ret.status" value="1"} checked {/eq} id="test6" value="1" />
+				  <label for="test6">开启</label>
+				   <input name="status" type="radio" {eq name="ret.status" value="2"} checked {/eq}  id="test7" value="2" />
+				  <label for="test7">封禁</label>
+				</p>
+              </div>
+			  
+			 <div class="row">
+			    <div class="file-field input-field">
+				  <div class="btn">
+					<span>图像</span>
+					<input type="file" name="upload_img" multiple>
+				  </div>
+				  <div class="file-path-wrapper">
+					<input class="file-path validate" type="text" name="avatar" value="{$ret.avatar}"  placeholder="Upload one or more files">
+				  </div>
+				</div>
+			 </div>
+             <div class="row">
+			    <p style="font-weight:bold;color:#333;">钻石</p>
+				<div class="input-field col s12">
+				  <input name="balance" type="text" value="{$ret.balance}" class="validate">		  
+				</div>
+			 </div>
+			 <div class="row">
+			    <p style="font-weight:bold;color:#333;">个人描述</p>
+				<div class="input-field col s12">
+				  <input name="describe" type="text" value="{$ret.describe}" class="validate">		  
+				</div>
+			  </div>
+			  <input type="hidden" name="id" value="{$ret.id}" />
+			  <input type="hidden" name="prev" value="<?php echo $_SERVER['HTTP_REFERER']??"";?>" />
+			   <input class="waves-effect waves-light btn" type="submit" style="background-color: #2ec376;" value="修改"></input>
+    </form>
+	<div class="clearBoth"></div>
+  </div>
+    </div>
+ </div>	
+	 </div>		
+
+                <!-- /.col-lg-12 -->
+			</div>
+             <!-- /. PAGE INNER  -->
+            </div>
+         <!-- /. PAGE WRAPPER  -->
+        </div>
+     <!-- /. WRAPPER  -->
+    {include file="./static/html/footer_common.html" /}
+</body>
+
+</html>

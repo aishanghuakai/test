@@ -1,0 +1,159 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GAME BRAIN</title>
+    {include file="./static/html/header_common.html" /}  
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+   <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <!-- import JavaScript -->
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <script src="/static/js/axios.min.js"></script>	 
+	<style>
+	  .cell{font-size:12px;}
+	  .el-table td, .el-table th {
+    padding:9px 0;}
+	  .item {
+		  margin-top: 10px;
+		  margin-right: 40px;
+		}
+      .grid-content{
+	    background: #fff;
+		padding: 15px !important;
+		box-shadow: 0 1px 15px 1px rgba(69,65,78,.08);
+		border-radius:10px;
+		border: 0;
+		text-align:center;
+	  }	
+       .card-category{
+	   font-size: 13px;
+	   color:#444;
+	   margin-bottom: 0;}
+	   .card-title{
+	    color:#575962;
+		font-size: 18px;
+		font-weight: 400;
+	   }
+	   .page-title {
+		font-size:16px;
+		font-weight: 600;
+		color:#444;
+		
+		}
+		.count {
+    background:#4285f4;
+    display: inline-block;
+    padding:7px 1px;
+    margin-right: 5px;
+}
+	  .el-badge__content.is-fixed{position:relative !important;}	
+	</style>
+</head>
+<body style="background:#f9fbfd;">
+    <div id="wrapper" style="background-color:#f9fbfd;">
+        {include file="./static/html/header.html" /}	
+		<div class="hw_page_content" style="background-color:#f9fbfd;">
+		    <div class="hw_menu_left">
+             {include file="./static/html/side.html" /}  
+			</div>
+		    <div class="hw_content_right" style="padding:20px 5px;background: #f9fbfd;">
+			            <div class="main" style="margin-bottom:10px;">
+						    
+                            <h4 class="page-title">
+							<el-page-header @back="goBack" style="float:left;"></el-page-header></h4>							
+							<div class="clear" style="clear:both;"></div>
+							<el-row :gutter="2" style="margin-top:40px;">
+							   <el-form :inline="true" label-width="120px">
+							     <el-form-item label="渠道">
+									<el-select size="small" @change="handleChange" filterable  v-model="platform"  placeholder="请选择渠道">
+									{volist name="channelList" id="item"}
+									 <el-option key="{$item.platform_id}" label="{$item.platform_name}" value="{$item.platform_id}"></el-option>
+									{/volist}
+								  </el-select>
+								 </el-form-item>
+							       <el-form-item label="日期">								   
+								    <el-date-picker
+									  v-model="date"
+									  @change="handleInstallDate"
+                                      size="small"								  
+									  type="daterange"
+									  style="width:250px;"
+									  value-format="yyyy-MM-dd">
+									</el-date-picker>
+								  </el-form-item>		
+								</el-form>
+							</el-row>  
+							  </div>						      
+						<div class="clear">
+						  <h4  style="font-size:16px;font-weight:700;line-height:20px;margin-bottom:10px;"><i class="count"></i>花费维度详情展示</h4>
+						</div>
+						<div class="m-list hw_reven" style="padding:15px;">
+							 <el-table
+								:data="tableData"
+								v-loading="loading"
+								height="500"
+								style="width: 100%;">								
+								<el-table-column prop="name"  align="center" label="名称"></el-table-column>								
+								<el-table-column prop="spend" sortable align="center" label="花费"></el-table-column>
+								<el-table-column  sortable prop="installs" align="center" label="安装"></el-table-column>
+								<el-table-column prop="cpi" sortable align="center"  label="CPI"></el-table-column>
+							</el-table>
+						</div>
+			  </div>
+			</div>
+		</div>
+		 {include file="./static/html/footer.html" /}
+	</div>
+</body>
+ {include file="./static/html/footer_common.html" /}
+  <script>
+    
+    let t = new Vue({
+        el: '#wrapper',
+        data: {
+			loading: false,
+			platform:'all',
+			date:['{$start}','{$end}'],
+			tableData: []	
+        },
+		computed:{
+		},
+		created(){
+		 
+		},
+        methods: {           
+		   goBack() {
+		     window.location.href='/admin_index/main';
+		   },
+		   handleInstallDate(){
+			this.getlist()
+		   },
+		   handleChange(){
+			 this.getlist()
+		   },
+			getlist(){
+			   let params ={
+			      platform:this.platform,
+				  appid:'{$appid}',
+				  date:this.date
+			   }
+			   let _that = this
+			   this.loading = true
+			   axios({
+					method: 'post',
+					url:'/admin_index/by_country_spend_json',
+					data:params
+				}).then(res=>{			
+				 _that.loading = false
+				 this.tableData = res.data
+			 })
+			}
+        },
+		mounted(){
+		  this.getlist()
+		}
+    })
+  </script>
+</html>

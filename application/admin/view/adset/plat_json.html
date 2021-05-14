@@ -1,0 +1,31 @@
+﻿<div class="table-head" style="">
+		<table class="table12 tablesorter" id="body" style="margin-bottom:0px;">
+
+			<thead style="font-size:12px;">
+			<tr>
+				<th>平台</th>
+				<th>版位</th>
+				<th>安装</th>
+				<th>花费</th>
+				<th>展示</th>
+				<th>点击</th>
+				<th>CTR</th>
+				<th>CVR</th>				
+			</tr>
+			</thead>
+			<tbody id="tablehw">
+			{volist name="res" id="vv"}
+				<tr>				
+					<td>{$vv.publisher_platform}</td>
+					<td>{$vv.platform_position}</td>
+					<td>{$vv.installs}</td>
+					<td>${$vv.spend}</td>
+					<td>{$vv.impressions}</td>
+					<td>{$vv.clicks}</td>
+					<td style="color:red;font-weight:700">{$vv.ctr}%</td>
+					<td style="color:green;font-weight:700">{$vv.cvr}%</td>				
+				</tr>
+            {/volist}			
+			</tbody>
+		</table>
+</div>

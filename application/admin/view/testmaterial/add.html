@@ -1,0 +1,368 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GAME BRAIN</title>
+    {include file="./static/html/header_common.html" /}
+	  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+   <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <!-- import JavaScript -->
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <script src="/static/js/axios.min.js"></script>	 
+	<style>
+	.cell{font-size:12px;}
+	  .el-table td, .el-table th {
+    padding:8px 0;}
+	  .item {
+		  margin-top: 10px;
+		  margin-right: 40px;
+		}
+		.el-tag + .el-tag {
+    margin-left: 10px;
+  }
+label{
+ font-weight:400;
+}
+.h3{
+ font-weight: 700;
+ font-size: 18px;
+ color: rgb(45, 55, 72);
+ position: relative;
+}
+.h3::before {
+    content: "";
+    position: absolute;
+    left: -10px;
+    width: 5px;
+    margin-right: 10px;
+    height: 100%;
+    background-color: #007fff;
+}
+.el-upload__input {
+    display: none !important;
+}
+.content___2EcEw {
+    position: relative;
+    height:148px;
+    border: 1px solid #dfe2e8;
+    border-radius: 8px;
+    background-color: #000;
+    cursor: pointer;
+}
+
+.add_crerive{background-color:#fff;border:1px dashed #d9d9d9;line-height:100px;text-align:center;}
+.content___2EcEw img {
+    width: 100%;
+    height: 100%;
+    -o-object-fit: contain;
+    object-fit: contain;
+    border-radius: 8px;
+}
+.content___2EcEw:hover .playButton___2XCIb {
+    opacity: 1;
+    filter: alpha(opacity=100);
+    -webkit-transform: scale(1);
+    transform: scale(1);
+}
+
+.desc___18eoK {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    -ms-flex-align: center;
+    align-items: center;
+    margin: 10px 0 10px;
+	height:30px;
+}
+.desc___18eoK span {
+    font-size:10px;
+	line-height: 10px;
+	float: left !important;
+	overflow: hidden !important;
+	text-overflow: ellipsis !important;
+}
+.el-upload--picture-card{width:100%;}
+.avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 100px;
+    height: 100px;
+    line-height:100px;
+    text-align: center;
+  }
+  .avatar {
+    width: 100px;
+    height: 100px;
+    display: block;
+  }
+	</style>
+</head>
+<body style="background: #fff !important;">
+    <div id="wrapper" >
+        {include file="./static/html/header.html" /}	
+		<div class="hw_page_content">
+		    <div class="hw_menu_left">
+         {include file="./static/html/side.html" /}  
+			</div>
+		    <div class="hw_content_right" style="padding:10px 10px;">
+			   <h3 style="color:#222;margin-bottom: 20px;float:left;">
+			     <el-page-header @back="goBack"  style="cursor:pointer;" ></el-page-header>				
+			   </h3>
+			    <div style="clear:both;"></div>
+			   <div class="main" style="margin-top:20px;margin-left:18%;">                  
+					      <el-form  :model="testform"  label-width="100px" >
+						    <h2 class="h3" style="font-weight: 700; font-size: 18px; color: rgb(45, 55, 72); position: relative;">必填设置</h2>
+							  
+							  <el-form-item label="测试账户">
+							        <el-cascader :options="options" :props="{emitPath:false}" @change="handleMoney" v-model="testform.advertiser_id" style="width:45%;" size="mini" :show-all-levels="false"></el-cascader>
+									<span style="font-size:10px;color:#456268">余额:${{balance}} <span v-if="balance<100" style="color:red;">【提醒】余额不足</span>
+									<span v-if="!isapp" style="color:red;">【提醒】该账户没有应用授权，请先授权</span>
+									</span>
+							  </el-form-item>
+							  <el-form-item label="添加素材">
+									<el-row :gutter="20" style="margin-left:0px;">					  
+									  <el-col :span="6" :key="item.id" v-for="(item,i) in testform.videoList"><div class="grid-content bg-purple">
+										<a :href="item.path" target="__blank">
+										<div class="content___2EcEw">
+											<img :src="item.thumb">
+											<div class="mask___jwIsO"></div>
+										</div>
+										</a>
+										<p class="desc___18eoK">
+										  <span :title="item.filename">{{item.filename}}</span>
+										  <span style="margin-left:10px;padding-right:10px;"><i @click="deleteVidwoRow(i)" class="el-icon-delete" style="cursor:pointer;color:red;"></i></span>
+										</p>
+										
+										<div class="videoMask___1rDp0"></div>
+									  </div></el-col>
+									  <el-col :span="6">
+										<div class="content___2EcEw">
+										  <el-upload
+											  action="http://gbsc.7766.org:3030/upload_file/uploadVideo"
+											  list-type="picture-card"
+											  :show-file-list="false"
+											  :on-success="handleVideoSuccess"
+											  :before-upload="beforeVideoUpload">
+											  <i class="el-icon-plus avatar-uploader-icon"></i>
+										  </el-upload>
+											
+										</div>
+									  </el-col>	  
+								  </el-row>
+                                  <div style="font-size:12px;color:red;">视频上传名称格式为：产品名称-xxxxx.mp4</div>								  
+							  </el-form-item>
+							  <h2 class="h3" style="font-weight: 700; font-size: 18px; color: rgb(45, 55, 72); position: relative;">可选设置 <span style="font-size:12px;margin-left:20px;cursor:pointer;color:#1989fa;" @click="showInput=!showInput"><i class="el-icon-arrow-down"></i>展开</span></h2>
+							  <div v-if="showInput">
+							  <el-form-item label="产品名称">
+								<el-input style="width:40%;" size="mini" placeholder="输入产品名称" v-model="testform.title"></el-input>
+							  </el-form-item>
+							  <el-form-item label="产品链接">
+								<el-input style="width:40%;" size="mini" placeholder="输入产品链接" v-model="testform.url"></el-input>
+								<span style="font-size:10px">说明：测试的产品商店地址</span>
+							  </el-form-item>
+							  <el-form-item label="产品图标">
+								<el-upload
+								  class="avatar-uploader"
+								  action="http://gbsc.7766.org:3030/upload_file/uploadImage"
+								  accept=".jpg,.jpeg,.png,.JPG,.JPEG,.PBG"
+								  :on-success="handleImageSuccess"
+								  :show-file-list="false">
+								  <img v-if="testform.icon" :src="testform.icon" class="avatar">
+								  <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+								</el-upload>
+							  </el-form-item>
+							  <el-form-item label="产品类型">
+								<el-checkbox-group v-model="testform.game_type">
+								    {volist name="gameTypeList" id="vo"}
+									  <el-checkbox label="{$vo.value}">{$vo.label}</el-checkbox>
+									{/volist}
+								</el-checkbox-group>
+							  </el-form-item>							  
+                              <el-form-item label="测试地区">
+									<el-select v-model="testform.country" style="width:20%" filterable size="mini" placeholder="请选择">
+										{volist name="countryList" id="vo"}
+										  <el-option label="{$vo}" value="{$key}"></el-option>
+										{/volist}
+									</el-select>
+							  </el-form-item>
+							  <el-form-item label="展示次数">
+									<el-input-number style="width:20%;" size="mini" v-model="testform.impressions" :min="100" :max="10000" ></el-input-number>
+									<span style="font-size:10px">说明：默认展示次数为1000次，即每个素材展示达到该次数系统会暂停</span>
+							  </el-form-item>
+							  
+							  <el-form-item label="文案选择">
+									<el-select v-model="testform.official" style="width:40%" filterable size="mini" placeholder="请选择">
+											{volist name="officialList" id="vo"}
+											  <el-option label="{$vo}" value="{$vo}"></el-option>
+											{/volist}
+									</el-select>									
+							  </el-form-item>
+							  <el-form-item label="测试备注">
+								<el-input style="width:30%;" size="mini" placeholder="输入备注" v-model="testform.desc"></el-input>
+								<el-checkbox v-model="custom_time">定时创建</el-checkbox>
+								 <el-date-picker
+									  v-model="create_time"
+									  type="datetime"
+									  v-if="custom_time"
+									  value-format="yyyy-MM-dd HH:mm:ss"
+									  size="mini"
+									  placeholder="选择日期时间">
+								  </el-date-picker>
+							  </el-form-item>
+                              </div>							  
+							  <div style="text-align:right;margin-top:50px;margin-right:10%;">
+								   <el-button size="small" @click="goBack" type="default">取消</el-button>
+								   <el-button  size="small" type="primary" @click="create">开始测试</el-button>								   
+								</div>			 
+                        </el-form>							  
+				</div>
+				<div class="clear"></div>
+
+			</div>
+		</div>
+	</div>	
+</body>
+ {include file="./static/html/footer_common.html" /}
+  <script>
+     
+	 new Vue({
+        el: '#wrapper',
+        data: {
+            loading: false,
+			showInput:false,
+			isapp:true,
+			balance:'0',
+			host:'http://gbsc.7766.org:3030/uploads',
+			testform:{
+			  country:'US',
+			  game_type:[],
+			  impressions:"1000",
+			  icon:'',
+			  advertiser_id:'',
+			  videoList:[],
+			},
+			countryList:[],
+			custom_time:false,
+			create_time: '',
+			options:[],
+			uploadloading:false,
+			dialogVisible:false,
+			video_cover_list:[],
+			createloading:false
+        },
+        mounted(){
+		  this.getlist()
+		},		
+        methods: {			
+			deleteVidwoRow(i){
+			  this.testform.videoList.splice(i,1);
+			},
+			getlist(){			    
+			   axios({
+					method: 'post',
+					url:'/testmaterial/get_adv_account',
+					data:this.param
+				}).then(res=>{
+				 this.options = res.data
+			 })
+			},
+            handleMoney(){
+			  axios({
+						method: 'post',
+						url:'http://ad.gamebrain.io/facebook/get_account_info',
+						data:{advertiser_id:this.testform.advertiser_id}
+					}).then(res=>{
+					this.balance = res.data.data.balance
+					this.isapp = res.data.data.isapp
+				 })
+			},			
+			handleImageSuccess(res, file) {
+              this.uploadloading = false
+			  if( res.code==200 )
+			  {
+				this.$message({
+				  message: '上传成功',
+				  type: 'success'
+                });
+				this.testform.icon = this.host+res.data.path
+			  }else{
+			    this.$message.error('上传失败');
+			  }
+            },
+			beforeVideoUpload(file){
+			  let filename = file.name
+			    if(filename.search('-')<0)
+				{
+				  this.$message.error('上传的视频不符合命名规范，请修改!');
+				  return false
+				}
+			},
+			handleVideoSuccess(res, file) {
+              this.uploadloading = false
+			  if( res.code==200 )
+			  {
+				this.testform.videoList.push({
+				   filename:file.name,
+				   thumb:this.host+res.data.thumb,
+				   path:this.host+res.data.path
+				})
+				this.$message({
+				  message: '上传成功',
+				  type: 'success'
+                });
+			  }else{
+			    this.$message.error('上传失败');
+			  }
+            },			
+			create(){
+			  this.createloading = true
+			  if(!this.testform.advertiser_id)
+			  {
+			    this.$message.error('请选择测试账户');
+				return false
+			  }
+			  this.testform.custom_time = this.custom_time
+			  this.testform.create_time = this.create_time
+			  axios({
+						method: 'post',
+						url:'/testmaterial/create',
+						data:this.testform
+					}).then(res=>{			
+					 this.createloading = false
+					  if( res.data.code==200 )
+					  {
+					    this.$notify({
+						  title: '成功',
+						  message: '创建成功!,等待系统开始测试',
+						  type: 'success'
+						});
+						window.location.href='/testmaterial/index';
+					  }else{
+					    this.$notify({
+						  title: '错误',
+						  message:res.data.message,
+						  type: 'error'
+						});
+					  }
+				 })
+			},
+			goBack() {
+			  window.location.href='/testmaterial/index';
+			}
+        }
+    })
+  </script>	
+</html>

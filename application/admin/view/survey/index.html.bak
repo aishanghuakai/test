@@ -1,0 +1,362 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GAME BRAIN</title>
+    {include file="./static/html/header_common.html" /}  
+<link href="/static/css/survey.css?t=<?php echo time(); ?>" rel="stylesheet" type="text/css" />	
+  <link rel="stylesheet" type="text/css" media="all" href="/static/plugin/jquery-time/daterangepicker-bs3.css" />
+ <link href="/static/css/adid.css?t=<?php echo time(); ?>" rel="stylesheet">	
+	<style>
+	th,td{text-align:center;vertical-align:middle}
+	  .hw_reven thead tr {
+    background-color: #f7f8fa;
+}
+.hw_reven table {
+    border-collapse: collapse;
+    font-size: 12px !important;
+    color: #222 !important;
+    text-align: left !important;
+   
+}
+.hw_reven .table > thead > tr > th{
+  border-bottom:1px solid #e8e8e8 !important;
+  border-top:1px solid #e8e8e8 !important;
+   color: #222 !important;
+}
+#gamebind,.fa-info-circle{
+  cursor:pointer;
+}
+.country .c-dropdown__item {
+    display: block;
+    padding: 5px 7px;
+    border-bottom: none;
+    color: #768093;
+    font-size: 10px;
+    font-weight: 400;
+   
+    float: left;
+}
+.channel .c-dropdown__item{
+    padding: 10px 7px;
+    border-bottom: none;
+}
+	</style>
+</head>
+<body>
+    <div id="wrapper">
+        {include file="./static/html/header.html" /}	
+		<div class="hw_page_content">
+		    <div class="hw_menu_left">
+             {include file="./static/html/side.html" /}  
+			</div>
+		    <div class="hw_content_right" style="padding:10px 5px;position:relative;background: #f8f8f8;">
+			  <div class="main">
+			    <div class="g-row">
+					<div class="g-col g-col-12">
+						<div class="m-card m-ov_cloud_security">
+							<div>
+								
+								<hr class="ov_cloud_security_divider">
+								<div class="ov_cloud_security_sub ov_cloud_security_sub2">
+									<h3><strong>{$end}</strong>&nbsp;数据汇总展示</h3>
+									<p>活跃&nbsp;<span>{$current_data.active_users}</span></p>
+									<p>插屏展示&nbsp;<span>{$current_data["int"]["impressions"]}</span></p>
+									<p>激励展示&nbsp;<span>{$current_data["rew"]["impressions"]}</span></p>
+								
+                                    <p>人均插屏展示&nbsp;<span>{$current_data["int"]["avgshow"]}</span></p>
+									<p>人均激励展示&nbsp;<span>{$current_data["rew"]["avgshow"]}</span></p>
+									<p ><span id="gamebind" class="u-btn u-btn-primary" style="font-size:16px;margin-top:10px;">立即绑定</span></p>
+								</div>
+																
+							</div>
+						</div>
+					</div>
+					<div class="clear"></div>
+					<div class="g-col-12" style="background-color:#fff;padding:5px 20px 30px 20px;margin-right:40px;width:70%">
+						<div>
+							<div class="u-title" style="float:left">人均统计</div>
+							<div class="hw_dropdown_menu country" type="avg"  data="all" style="position:relative;float:left;margin-top:15px;margin-left:30px;">
+							  <a href="javascript:;" class="dropdown_switch dropdown-toggle"  id="dropdownMenuAvatar1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" role="button">
+								<label  style="font-weight:400;">全部国家</label><i class="fa fa-caret-down" style="margin-left:5px;"></i>
+							  </a>
+							  <div class="c-dropdown__menu has-arrow dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuAvatar1" x-placement="top-end" style="position: absolute; top:38px; left: 0px; will-change: transform;">
+								 {volist name="country" id="c"}
+								  <a class="c-dropdown__item dropdown-item" data="{$key}" href="javascript:;">{$c}</a>
+								 {/volist}						
+							 </div>
+							</div>
+							<div  style="float:right;margin-top:15px;">
+							  <input  class="search-input" id="start_date" style="" value="{$start} 到 {$end}">
+							</div>
+						</div>
+						<div class="clear"></div>
+						<div class="m-list hw_reven">
+							 <table class="table">
+						  <thead style="font-size:13px;">
+							<tr>
+							  <th>时间</th>
+							   <th>活跃</th>
+							  <th>人均插屏展示</th>
+							  <th>人均激励展示</th>
+							  <th>人均会话次数</th>
+                              <th>人均单次使用时长(s)</th>							  
+							</tr>
+						  </thead>
+						  <tbody id="avg">
+						   {volist name="avg_data" id="a"}
+							<tr>
+							     <td><i style="color:#bcbcbc">({$a.date|getweekday})</i>{$a.date}{if condition="$a['producter_showtips'] neq '0'"}<sup  data-mtpis="{$a['producter_showtips']}" ><i style="color:red;font-size:10px;" class="fa fa-commenting-o"></i></sup>{/if}</td>
+								 <td>{$a.dau}</td>
+								 <td>{$a["impressions"]["int"]["avgshow"]}</td>
+								 <td>{$a["impressions"]["rew"]["avgshow"]}</td>
+                                 <td>{$a.num??0}</td>								 
+								 <td>{$a.usertime??0}</td>
+							</tr>
+							{/volist}
+                            <tr style="font-size:13px;font-weight:700">
+							     <td>汇总</td>
+								 <td>{$total.dau}</td>
+								 <td>{$total.intavgshow}</td>
+								 <td>{$total.rewavgshow}</td>
+								 <td>{$total.num}</td>
+								 <td>{$total.usertime}</td>
+							</tr>							
+						  </tbody>
+						</table>  
+						</div>
+					</div>
+					<div class="g-col-12" style="background-color:#fff;padding:5px 20px 30px 20px;margin-top:20px;margin-right:40px;width:70%">
+						<div>
+							<div class="hw_dropdown_menu country" type="event_country"  data="all" style="position:relative;float:left;margin-top:15px;margin-left:30px;">
+							  <a href="javascript:;" class="dropdown_switch dropdown-toggle"  id="dropdownMenuAvatar1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" role="button">
+								<label  style="font-weight:400;">全部国家</label><i class="fa fa-caret-down" style="margin-left:5px;"></i>
+							  </a>
+							  <div class="c-dropdown__menu has-arrow dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuAvatar1" x-placement="top-end" style="position: absolute; top:38px; left: 0px; will-change: transform;">
+								
+								  {volist name="country" id="c"}
+								  <a class="c-dropdown__item dropdown-item" data="{$key}" href="javascript:;">{$c}</a>
+								 {/volist}								 							  
+							 </div>
+							</div>
+							<div class="hw_dropdown_menu channel" type="event"  data="all" style="position:relative;float:left;margin-top:15px;margin-left:30px;">
+							  <a href="javascript:;" class="dropdown_switch dropdown-toggle"  id="dropdownMenuAvatar1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" role="button">
+								<label  style="font-weight:400;">全部渠道</label><i class="fa fa-caret-down" style="margin-left:5px;"></i>
+							  </a>
+							  <div class="c-dropdown__menu has-arrow dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuAvatar1" x-placement="top-end" style="position: absolute; top:38px; left: 0px; will-change: transform;">
+								
+								  <a class="c-dropdown__item dropdown-item" data="all" href="javascript:;">全部</a>
+								  <a class="c-dropdown__item dropdown-item" data="google" href="javascript:;">Google</a>
+								  <a class="c-dropdown__item dropdown-item" data="facebook" href="javascript:;">Facebook</a>
+								  <a class="c-dropdown__item dropdown-item" data="mobvista" href="javascript:;">Mobvista</a>
+                                  <a class="c-dropdown__item dropdown-item" data="applovin" href="javascript:;">Applovin</a>
+                                  <a class="c-dropdown__item dropdown-item" data="applifier" href="javascript:;">Unity</a>								  
+							 </div>
+							</div>
+							<div class="hw_dropdown_menu channel" type="event_lable"  data="all" style="position:relative;float:left;margin-top:15px;margin-left:30px;">
+							  <a href="javascript:;" class="dropdown_switch dropdown-toggle"  id="dropdownMenuAvatar1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" role="button">
+								<label  style="font-weight:400;">新增</label><i class="fa fa-caret-down" style="margin-left:5px;"></i>
+							  </a>
+							  <div class="c-dropdown__menu has-arrow dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuAvatar1" x-placement="top-end" style="position: absolute; top:38px; left: 0px; will-change: transform;">
+								
+								  <a class="c-dropdown__item dropdown-item" data="NewUser" href="javascript:;">新增</a>
+								  <a class="c-dropdown__item dropdown-item" data="Dau" href="javascript:;">活跃</a>								  							  
+							 </div>
+							</div>
+							<div  style="float:right;margin-top:15px;">
+							  <input  class="search-input" id="self_start_date" style="" value="{$start} 到 {$end}">
+							</div>
+						</div>
+						<div class="clear"></div>
+						<div class="m-list hw_reven">
+							 <table class="table">
+						  <thead style="font-size:13px;">
+							<tr>
+							  <th>时间</th>
+							  <th>人数</th>
+							  <th>人均总广告数量</th>
+							  <th>人均激励</th>
+							  <th>人均插屏</th>
+							  <th>次留</th>						  
+							</tr>
+						  </thead>
+						  <tbody id="event">
+						    {volist name="event_data" id="e"}
+								<tr>
+									 <td>{$e.date}</td>
+									 <td>{$e.num}</td>
+									 <td>{$e.total}</td>
+									 <td>{$e.rew}</td>
+									 <td>{$e.int}</td>
+									 <td>{$e.reten_1}%</td>
+								</tr>
+							{/volist}
+						  </tbody>
+						</table>  
+						</div>
+					</div>
+				</div>
+			  </div>
+			  <div class="side m-box">
+			    <div class="m-general_news"> 
+					  <h3>产品调整</h3>
+					  <div class="list_container">
+						<ul>
+						   {volist name="remarks" id="r"}
+							<li>
+							  <a class="name" id="auto-id-1536760954828">{$r.title}</a>
+							  <div class="desc">{$r.content}</div>
+							  <div class="date">{$r.date}</div>
+						   </li>
+						   {/volist}
+					    </ul>
+						<div class="operate">   
+						  <span class="more">更多动态，敬请期待</span>
+						</div>
+					  </div>
+				</div>
+              </div>
+			</div>
+		</div>
+		 {include file="./static/html/footer.html" /}
+	</div>
+    
+				<div class="hw_adid_dialog">
+			      <div class="modal1"></div>
+					<div class="dialog">
+					  <div class="dialog-header">
+						 <div class="title" style="text-align:left;">绑定产品统计</div>
+						 <div class="close1">
+						   <i class="fa fa-close"></i>
+						 </div>
+					  </div>
+					  <div class="dialog-body">
+						<div>
+						  
+						  <div class="gb-input-hint">
+							<span class="gb_b-input-wrapper"><input id="bind_id"  value="{$bind_id}" class="gb_b-input" placeholder="game id" type="text"></span>
+						  </div>
+						</div>
+					   </div>
+					   <div class="dialog-footer"><button onclick="bind_data()" style="background-color:#3e93e8;color:#fff" type="button" class="gb_b-btn gb_b-btn-primary">确 认</button></div>
+				   </div>
+			    </div>
+    	
+</body>
+ {include file="./static/html/footer_common.html" /}
+  <script type="text/javascript" src="/static/plugin/jquery-time/moment.js"></script>
+  <script src="/static/js/mTips.js?t=1333"></script>
+  <script type="text/javascript" src="/static/plugin/jquery-time/daterangepicker.js"></script>
+   <script type="text/javascript" src="/static/js/jquery.nicescroll.js"></script>
+ <script>
+    var avg_start_date="{$start}";
+	var avg_end_date="{$end}"
+	var event_start_date="{$start}";
+	var event_end_date="{$end}";
+	var avg_country ="all";
+	var channel="all";
+	var event_country ="all";
+	var lable="NewUser";
+   $(function(){
+     $("#gamebind").click( function(){	     
+		 $(".hw_adid_dialog").show();
+	  });
+	  $(".close1").click( function(){
+	    $(".hw_adid_dialog").hide();
+		
+	  });
+	  
+	  $("#gamebind").mouseover(function (){  
+           layer.tips('该绑定为GA的game id,已绑定则无需再绑定', '#gamebind');
+        }).mouseout(function (){  
+            
+        }); 
+		
+		 $(".c-dropdown__item").click( function(){
+		    var _p = $(this).parent().parent();
+			    _p.attr("data",$(this).attr("data") );
+				_p.find("label").text($(this).text() );
+				var type = _p.attr("type");
+				if( type=="event" )
+				{
+				   channel = $(this).attr("data");
+				}else if(type=="event_country"){
+				   event_country = $(this).attr("data");
+				   type ="event";
+				}else if(type=="event_lable"){
+				   lable = $(this).attr("data");
+				   type ="event";
+				}else{
+				   avg_country = $(this).attr("data");
+				}
+				load_json(type);
+		})
+	  
+	  $('.list_container').niceScroll({
+					cursorcolor: "#ccc",//#CC0071 光标颜色
+					cursoropacitymax: 0.3, //改变不透明度非常光标处于活动状态（scrollabar“可见”状态），范围从1到0
+					touchbehavior: false, //使光标拖动滚动像在台式电脑触摸设备
+					cursorwidth: "5px", //像素光标的宽度
+					cursorborder: "0", // 游标边框css定义
+					cursorborderradius: "5px",//以像素为光标边界半径
+					autohidemode: false //是否隐藏滚动条
+	  });
+	  
+	  $('#start_date').daterangepicker({ minDate:'2018-07-08',opens:'left' },function(start, end, label) {	 
+		      avg_start_date = start.format('YYYY-MM-DD');avg_end_date=end.format('YYYY-MM-DD');
+			$('#start_date').val(avg_start_date+" 到 "+avg_end_date);
+			load_json("avg");
+		 });
+      $('#self_start_date').daterangepicker({ minDate:'2018-07-08',opens:'left' },function(start, end, label) {	 
+		       event_start_date = start.format('YYYY-MM-DD');event_end_date=end.format('YYYY-MM-DD');
+			$('#self_start_date').val(event_start_date+" 到 "+event_end_date);
+			load_json("event");
+		 });		 
+   })
+   var bind_data = function()
+   {
+      var app_id  ="{$app_id}";
+	  var bind_id = $("#bind_id").val();
+	  if( bind_id=="" )
+	  {
+		layer.msg("请填写绑定的ID值");return false;
+	  }
+	  var index = layer.load(1, {
+          shade: [0.1,'#fff'] //0.1透明度的白色背景
+        });
+	  $.post("/survey/bind_data",{app_id:app_id,bind_id:bind_id},function(e){
+	     layer.close(index);
+		 if( "ok"==e )
+		  {
+		    $(".hw_adid_dialog").hide();
+			window.location.reload();return;
+		  }else{
+		    layer.msg("提交失败");return false;
+		  }
+	  })
+   }
+   var load_json = function(type)
+   { 
+      var index = layer.load(1, {
+          shade: [0.1,'#fff'] //0.1透明度的白色背景
+        });
+	  if( type=="event" )
+         {
+		    start_date = event_start_date;
+			end_date = event_end_date;
+			country = event_country;
+		 }else{
+		    start_date = avg_start_date;
+			end_date = avg_end_date;
+			country = avg_country;
+		 }	  
+	  var app_id  ="{$app_id}";	
+	   $.post("/survey/json_data",{app_id:app_id,type:type,start:start_date,end:end_date,country:country,channel:channel,lable,lable},function(e){
+	     layer.close(index);
+         $("#"+type).html(e);		 
+	  })	
+   }
+ </script>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Game Brain</title>
+    {include file="./static/html/header_common.html" /}
+	<link href="/static/css/checkbox.css" rel="stylesheet" type="text/css" />
+	<link href="/static/css/adshow.css?t=<?php echo time(); ?>" rel="stylesheet">
+    <style>
+	  input[type="file"] {
+    position: absolute;
+    opacity:1;
+    top: 0;
+    left: 20px;
+    width: 150px;
+    height: 50px;
+    cursor: pointer;
+    line-height: 34px;
+	background:#ccc;
+}
+	</style>	
+</head>
+ 
+<body>
+    <div id="wrapper" style="background-color:#fff;">
+        {include file="./static/html/header.html" /}	
+		<div class="hw_page_content">
+		    <div class="hw_menu_left">
+         {include file="./static/html/side.html" /}  
+			</div>
+		    <div class="hw_content_right">
+			    <ul class="search_tab clearfix" >
+				  <li><a  href="/admin_advertisement/adshow?appid={$appid}">返回列表</a></li>
+			      <li class="active"><a  href="javascript:;">内推创建</a></li>				  
+		        </ul>
+			  	
+               <div style="padding:30px 30px;clear:both;">
+			     <div class="adshow_left">
+				    <ul>
+					  {volist name="res" id="vv"}
+					    <li class="border"><a data-name="{$vv.app_name}" data-package="{$vv.package_name}" href="javascript:;"><img src="{$vv.icon_url}" /> {$vv.app_name}</a></li>
+					  {/volist}
+					</ul>
+				 </div>
+				  <div class="adshow_right">
+					 <form class="form-horizontal" action="/admin_advertisement/adshow_post" method="post" enctype="multipart/form-data">
+						  <div class="form-group">
+							<label for="name" class="col-sm-2 control-label">应用名称</label>
+							<div class="col-sm-10">
+							  <input type="text" class="form-control" name="name" id="name" placeholder="名称">
+							</div>
+						  </div>
+						  <div class="form-group">
+							<label for="package_name" class="col-sm-2 control-label">包名</label>
+							<div class="col-sm-6">
+							  <input type="text" placeholder="" name="package_name" class="form-control" id="package_name" >					 
+							</div>
+							  
+						  </div>
+						  <div class="form-group">
+							<label for="version" class="col-sm-2 control-label">素材版本</label>
+							<div class="col-sm-3">
+							  <input type="text" class="form-control" value="1" name="version" id="version" placeholder="只能为整数">
+							  
+							</div>
+							<i style="float:left;font-size:10px;color:red;">*素材更新版本默认从1开始</i>
+						  </div>
+						  <div class="form-group">
+							<label for="inputEmail3" class="col-sm-2 control-label">上传视频</label>
+							<div class="col-sm-10">
+							  <div class="article-cover-add thumb"><input name="video_url" accept="video/mp4" type="file"></div>						  
+							</div>
+							 <i style="margin-left:200px;font-size:10px;color:red;">*文件大小不得超过2M</i>
+						  </div>
+						 
+						  <div class="form-group">
+							<label for="shop_url" class="col-sm-2 control-label">商店地址</label>
+							<div class="col-sm-10">
+							  <input type="text" class="form-control" name="shop_url" id="shop_url" placeholder="跳转商店地址">
+							</div>
+						  </div>
+						  
+						 <input type="hidden" class="form-control" name="appid" value="{$appid}">
+						 <div class="form-group">
+							<label for="desc" class="col-sm-2 control-label">描述</label>
+							<div class="col-sm-10">
+							  <textarea  class="form-control" name="desc" id="desc"  rows="4"></textarea>				 
+							</div>
+						  </div>
+						   <div class="form-group">
+							<div class="col-sm-offset-4 col-sm-6" style="margin-top:10px;">
+							  <button type="button" onclick="window.location.href='/admin_advertisement/adshow?appid={$appid}'" style="width:20%;float:left;margin-right:10px;padding-right:10px;" class="btn btn-default">取消</button>
+							  <button type="submit" style="width:50%;" id="save" class="btn btn-danger">立即创建</button>
+							</div>
+						  </div>
+						</form>
+				 </div>
+			  </div>				
+			</div>
+		</div>
+		 {include file="./static/html/footer.html" /}
+	</div>	
+</body>
+ {include file="./static/html/footer_common.html" /}
+ <script>
+    $(function(){
+        $(".adshow_left a").click( function(){
+		   $(".adshow_left a").removeClass("app_active");
+		   $(this).addClass("app_active");
+		   $("#name").val( $(this).attr("data-name") );
+		   $("#package_name").val( $(this).attr("data-package") );
+		})
+    })
+ </script>
+</html>

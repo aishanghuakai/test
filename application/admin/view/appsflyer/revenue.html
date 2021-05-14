@@ -1,0 +1,399 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GAME BRAIN</title>
+    {include file="./static/html/header_common.html" /}
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+   <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <!-- import JavaScript -->
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <script src="/static/js/axios.min.js"></script>
+	<style>
+	  .cell{font-size:12px;color:#222;}
+	  .el-table td, .el-table th {
+    padding:9px 0;}
+	  .item {
+		  margin-top: 10px;
+		  margin-right: 40px;
+		}
+      .grid-content{
+	    background: #fff;
+		padding: 15px !important;
+		border-radius:10px;
+		border: 0;
+		color:#222;
+		text-align:center;
+	  }
+       .card-category{
+	   font-size: 13px;
+	   color:#444;
+	   margin-bottom: 0;}
+	   .card-title{
+	    color:#575962;
+		font-size: 18px;
+		font-weight: 400;
+	   }
+.filter-container .filter{
+    font-size: 14px;
+    color: #333;
+    position: relative;
+    line-height:40px;
+}
+.filter-container .filter .filter-label{
+    font-weight: 600;
+    color: #333;
+    display: inline-block;
+    width: 76px;
+}
+.filter-container .filter .filter-options{
+    display: inline-block;
+    vertical-align: top;
+    width: calc(100% - 100px);
+    min-width: 700px;
+}
+.filter .filter-options .filter-option.active{
+    border-radius: 3px;
+    color: #4c84ff;
+	background: #ecf5ff;
+	border: 1px solid #d9ecff;
+	border-radius: 4px;
+    font-size: 12px;
+}
+.filter .filter-options .filter-option{
+    line-height: 22px;
+    display: inline-block;
+    padding: 2px 18px;
+    margin-right: 24px;
+    cursor: pointer;
+    font-size: 12px;
+}
+.count {
+    background:#4285f4;
+    display: inline-block;
+    padding:7px 1px;
+    margin-right: 5px;
+}
+.search .el-select .el-input {
+    width:100px;
+  }
+.el-table .warning-row {
+    background: oldlace;
+  }
+.el-table .danger-row {
+    background:#f56c6c;
+  }
+.el-table .success-row {
+    background: #f0f9eb;
+  }
+  .el-table--scrollable-x .el-table__body-wrapper {
+    z-index : 1;
+}
+.r0 {
+    background-color: rgba(0, 160, 234, 0.85);
+}
+.r1 {
+    background-color: rgba(0, 160, 234, 0.75);
+}
+.r2 {
+    background-color: rgba(0, 160, 234, 0.65);
+}
+.r3 {
+    background-color: rgba(0, 160, 234, 0.55);
+}
+.r7 {
+    background-color: rgba(0, 160, 234, 0.45);
+}
+.r14 {
+    background-color: rgba(0, 160, 234, 0.35);
+}
+.r30 {
+    background-color: rgba(0, 160, 234, 0.25);
+}
+.r45 {
+    background-color: rgba(0, 160, 234, 0.15);
+}
+.r60 {
+    background-color: rgba(0, 160, 234, 0.05);
+}
+.r90 {
+    background-color: rgba(0, 160, 234, 0.05);
+}
+.el-table__body tr {
+    pointer-events:none;
+ }
+	</style>
+</head>
+<body style="background:#f5f6fa;">
+    <div id="wrapper" style="background-color:#f5f6fa;">
+        {include file="./static/html/header.html" /}
+		<div class="hw_page_content" style="background-color:#f5f6fa;">
+		    <div class="hw_menu_left">
+             {include file="./static/html/side.html" /}
+			</div>
+		    <div class="hw_content_right" style="padding:20px 5px;background: #f5f6fa;">
+			            <h4 class="page-title" style="margin-bottom:20px;font-size:18px;color:#333;">ROI构成</h4>
+							<div class="clear" style="clear:both;"></div>
+						
+						
+						<div class="main filter-container" style="margin:20px 30px;">
+						    <div class="filter"><span  class="filter-label">地区</span>
+								<div class="filter-options">
+									<span @click="addAttr('country','all')" :class="filter.country.length<1?'filter-option active':'filter-option'">全部</span>
+									<span @click="addAttr('country','US')" :class="isExistArray('country','US')?'filter-option active':'filter-option'">美国</span>
+									<span @click="addAttr('country','TW')" :class="isExistArray('country','TW')?'filter-option active':'filter-option'">台湾</span>
+									<span @click="addAttr('country','CN')" :class="isExistArray('country','CN')?'filter-option active':'filter-option'">中国</span>
+									<span>
+									 <el-select ref="country" v-model="filter.country" {if condition="$userid eq 19"}  @change="handleCountry" {/if} multiple filterable size="mini" placeholder="更多选择">
+										{volist name="country" id="item"}
+										  {if condition="$key!='all'"}
+									       <el-option key="{$key}" label="{$item}" value="{$key}"></el-option>
+										  {/if}
+									    {/volist}
+									  </el-select>
+									</span>
+									<span class="filter-option" style="color:#409eff" @click="openShow">{{ishow?'收起':'展开'}}<i :class="ishow?'el-icon-arrow-up el-icon--right':'el-icon-arrow-down el-icon--right'"></i></span>
+
+								    <a href="/admin_ltv/data" style="float:right;cursor:pointer;" ><el-tag effect="dark">返回LTV展示</el-tag></a>
+								</div>
+							</div>
+							                    
+                            <div v-show="ishow" class="filter"><span  class="filter-label">安装时间</span>
+								<div class="filter-options">
+									<span @click="FilterMaterial('day_num','1')" :class="filter.day_num==1?'filter-option active':'filter-option'">昨天</span>
+									<span @click="FilterMaterial('day_num','3')" :class="filter.day_num==3?'filter-option active':'filter-option'">过去三天</span>
+									<span @click="FilterMaterial('day_num','7')" :class="filter.day_num==7?'filter-option active':'filter-option'">过去七天</span>
+									<span @click="FilterMaterial('day_num','15')" :class="filter.day_num==15?'filter-option active':'filter-option'">过去15天</span>
+									<span @click="FilterMaterial('day_num','30')" :class="filter.day_num==30?'filter-option active':'filter-option'">过去30天</span>
+									<span>
+									 <el-date-picker
+									  v-model="date"
+                                      size="mini"
+									  style="width:240px"
+									  @change="updateDate"
+									  type="daterange"
+									  value-format="yyyy-MM-dd">
+									</el-date-picker>
+									</span>
+								</div>
+							</div>
+                                                     
+						</div>
+						<div class="clear">
+						  <h4  style="font-size:15px;font-weight:700;color: #333;line-height:20px;margin-bottom:10px;margin-left:30px;"><i class="count"></i> 过去收益周期占比图 </h4>
+						</div>
+						<div style="clear:both;"></div>
+						<div class="hw_chat" id="chats" style="height:350px;margin-top:15px;padding:0px 20px;"></div>
+											
+			  </div>
+			</div>
+		</div>
+		 {include file="./static/html/footer.html" /}
+	</div>
+</body>
+ {include file="./static/html/footer_common.html" /}
+ <script src="/static/js/echarts.min.js"></script>
+ 
+  <script>
+	let t = new Vue({
+        el: '#wrapper',
+        data: {
+			loading: false,			
+            ishow:false,			
+            spend:{},
+			date:[],
+			xdate:[],
+			rate0:[],
+			rate30:[],
+			rate60:[],
+			rate90:[],
+			ratem:[],
+			filter:{
+			  day:"0",
+			  country:[],
+			  day_num:"7",
+			  media_source:[],
+			  device:[]
+			},
+			tableData: []
+        },
+		computed:{
+		    param(){
+			   let params = this.filter
+			   params.app_id = '{$app_id}'
+			   return params
+			}
+		},
+		watch: {
+		  param:{
+		    handler:function(val,oldval){
+			  if( val.day_num!='custom' || val.date.length>0 )
+			  {
+			    this.getlist()
+			  }
+			  
+			},
+			deep:true//对象内部的属性监听，也叫深度监听
+		  }
+		},
+		created(){
+		  this.getlist()
+		},
+		mounted(){
+		 	this.$nextTick(() => {
+			 
+			});
+		},
+        methods: {
+		   goBack() {
+		     window.location.href='/admin_index/main';
+		   },
+		   updateDate(){
+		     this.filter.day_num = 'custom'
+			 this.getlist()
+			 //this.get_total_list()
+		   },
+		   
+		   handleCountry(val){
+			let ele = val
+			if( val.length>1 )
+			{
+			   ele = [val.pop()]
+			}
+			this.filter.country = ele
+			this.$refs.country.blur()
+		   },
+		   openShow(){
+		    this.ishow = !this.ishow
+		   },		   
+		   
+		   isExistArray(field,val){
+		    return this.filter[field]==val
+		   },
+		   addAttr(field,val){
+		    if(val=='all')
+			{
+			  this.filter[field] =[]
+			}else{
+			  this.filter[field] = val			   
+			}
+		   },
+		  FilterMaterial(field,val){
+		    this.filter[field] = val
+		  },
+		  
+		   handleInstallDate(){
+
+		   },
+			getlist(){
+			    this.tableData =[]
+				const loading = this.$loading({
+				  lock: true,
+				  text: '数据加载中,请稍后',
+				  spinner: 'el-icon-loading',
+				  background: 'rgba(0, 0, 0, 0.7)'
+				});
+			   let _that = this
+			   this.param.date =this.date
+			   axios({
+					method: 'post',
+					url:'/admin_appsflyer/revenue_rate',
+					data:this.param
+				}).then(res=>{
+				 loading.close();
+				 this.rate0 = res.data.data.rate0
+				 this.rate30 = res.data.data.rate30
+				 this.rate60 = res.data.data.rate60
+				 this.rate90 = res.data.data.rate90
+				 this.ratem = res.data.data.ratem
+				 this.date = res.data.date
+				 this.xdate = res.data.xdate
+				 getChart()
+			 })
+			}
+        }
+    })
+  </script>
+<script>
+getChart()
+function getChart(){
+  var myChart = echarts.init(document.getElementById("chats"));
+  option = {
+    tooltip: {
+        trigger: 'axis',
+        axisPointer: { // 坐标轴指示器，坐标轴触发有效
+            type: 'shadow' // 默认为直线，可选为：'line' | 'shadow',			
+        },
+		formatter: '{a0}:{c0} % <br/>{a1}:{c1} % <br/>{a2}:{c2} % <br/>{a3}:{c3} % <br/>{a4}:{c4} %' 
+    },
+    color: [
+            '#73A0FA', 
+			'#73DEB3', 
+			'#FFB761',
+            "#93b7e3",
+            "#a5e7f0",
+            "#cbb0e3"
+        ],
+    legend: {
+        data: ['当天占比', '过去30天', '过去30~60天', '过去60~90天', '其他'],
+        left: 10
+    },
+    grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '3%',
+        containLabel: true
+    },
+    xAxis: [{
+        type: 'category',
+        data:t.xdate
+    }],
+    yAxis: [  
+        {  
+            type: 'value',
+            max:100,			
+            axisLabel: {  
+                  show: true,  
+                  formatter: '{value} %'  
+                },  
+            show: true  
+        }  
+    ],
+    series: [{
+            name: '当天占比',
+            type: 'bar',
+            stack: '广告', 
+            data:t.rate0
+        },
+        {
+            name: '过去30天',
+            type: 'bar',
+            stack: '广告',
+			data:t.rate30
+        },
+        {
+            name: '过去30~60天',
+            type: 'bar',
+            stack: '广告',            
+            data:t.rate60
+        },
+        {
+            name: '过去60~90天',
+            type: 'bar',
+            stack: '广告',           
+            data:t.rate90
+        },
+        {
+            name: '其他',
+            type: 'bar',
+            stack: '广告',            
+            data:t.ratem
+        }
+    ]
+};
+  myChart.setOption(option);
+ }
+</script>
+</html>

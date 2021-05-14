@@ -1,0 +1,20 @@
+   	   				
+	{volist name="data" id="s"}
+	   <tr class="level-0" data="two" tag="{$tag}" index="{$s.type}" prev_index="" prev_tag="" p_prev_index="" p_prev_tag="">
+		  <td style="width: 28%;">
+		  <div class="name"><i class="fa fa-angle-right pull-left" style="line-height: 15px; margin-right: 5px;"></i>
+		  <span class="displayName">{$s.name}</span></div>
+		 </td>
+		  <td>{$s.impressions}</td>
+		  <td>{$s.clicks}</td>
+		  <td>{$s.activenum}
+		   {if condition="isset($s['producter_showtips']) and ($s['producter_showtips'] neq '0')"}<sup  data-mtpis="{$s['producter_showtips']}" ><i style="color:red;font-size:10px;" class="fa fa-commenting-o"></i></sup>{/if}
+		  </td>
+		  <<td><?php echo adcalculate($s['impressions'],$s['activenum'],"3"); ?></td>
+		  <td><?php echo adcalculate($s['clicks'],$s['activenum'],"3"); ?></td>
+		  <td><?php echo adcalculate($s['revenue'],$s['impressions'],"2"); ?>
+		    {if condition="isset($s['publisher_showtips']) and ($s['publisher_showtips'] neq '0')"}<sup  data-mtpis="{$s['publisher_showtips']}" ><i style="color:red;font-size:10px;" class="fa fa-commenting-o"></i></sup>{/if}
+		  </td>
+		  <td>${$s.revenue}</td>
+	   </tr>
+	{/volist}

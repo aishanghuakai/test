@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title></title>
+	{include file="./static/html/header_common.html" /}
+	<link href="/static/css/adspend.css" rel="stylesheet" type="text/css">
+     <link href="/static/css/checkbox.css" rel="stylesheet" type="text/css">
+	<style>
+	 .allow_click{cursor:pointer}
+	 .app_cx li{cursor:pointer}
+	</style>
+</head>
+<body>
+    <div id="wrapper" style="background-color:#fff;">
+        
+		{include file="./static/html/header.html" /} 
+	
+		<div class="hw_page_content">
+		   
+		    <div class="hw_menu_left">
+         {include file="./static/html/side.html" /}  
+			</div>
+		    <div class="hw_content_right">	
+			  <ul class="search_tab clearfix" >
+			      <li><a  href="/admin_newuser/action">新增管理</a></li>
+				  <li class="active"><a  href="/admin_adstatis/daynewuser">新增设置</a></li>			 
+			   </ul>
+			     <div class="hw_content">
+				    <form style="padding:10px 20px;">
+					  <div class="form-group" style="position:relative">
+						<label for="exampleInputEmail1">产品名称</label>
+						  <input type="text" id="app_id" class="form-control" readonly  value="">
+						 <ul class="dropdown-menu" style="height:300px;overflow-y:scroll;">
+						    <li style="padding:5px 10px;"><div><input id="search_id" style="height:30px;" class="form-control" type="text"/></div></li>
+							<ul class="app_cx">
+							 {volist name="apps" id="vv"}
+						    <li data="{$vv.id}" style="padding:5px 10px;">{$vv.app_name}</li>
+							{/volist}
+							</ul>
+                         </ul>						 
+					  </div>
+					  <div class="form-group">
+						<label for="datetime">日期</label>
+						<input type="date" class="form-control" id="reten_date" value="<?php echo date("Y-m-d"); ?>">
+					  </div>
+					  <div class="form-group">
+						<label for="country">country</label>
+						 <select class="form-control" id="country">
+						  {volist name="all_country" id="vvv"}
+						  <option  value="{$key}">{$vvv}</option>
+						  {/volist}
+						 </select>
+					  </div>
+					  <div class="form-group">
+						<label for="Retention">新增</label>
+						<input type="text" class="form-control" for="Retention" id="reten_val" value="">
+					  </div>
+					  <button type="button" id="reten_sub" class="btn btn-default">Submit</button>
+					</form>				
+			    </div>
+           	</div>
+         </div>
+       {include file="./static/html/footer.html" /}		 
+	</div>
+   {include file="./static/html/footer_common.html" /}
+    
+</body>
+  <script>
+    $( function(){
+	   $("#app_id").click( function(){
+	      $(".dropdown-menu").toggle();
+		  return false;
+	   })
+	   $(".app_cx li").click( function(){
+	       $("#app_id").val( $(this).text() );
+		    $("#app_id").attr("val_id",$(this).attr("data") );
+		   $(".dropdown-menu").hide();
+	   })
+	 $('#search_id').bind('input propertychange', function()
+	   {
+		   var input_text = $(this).val();
+		   $(".app_cx li").each(  function(i){
+				var text = $(this).text();
+				if( text.indexOf(input_text)!=-1 )
+				  {
+					 $(this).show();
+				  }else{
+					 $(this).hide();
+				  }
+		   })			   
+	   });
+	   
+	   $(document).on( 'click',"#reten_sub",function(){
+	     
+	      var reten_appid = $("#app_id").attr("val_id");
+		  var reten_date = $("#reten_date").val();
+		  var reten_val = $("#reten_val").val();
+		  var country = $("#country").val();
+		    if( reten_appid=="" || reten_appid=="0" )
+			{
+			  layer.msg("请选择产品");return false;
+			}
+            if( reten_val=="" )
+			{
+			  layer.msg("请输入完整");return false;
+			}			
+		  var index = layer.load(2);
+		  
+		   $.post("/admin_newuser/day_save",{app_id:reten_appid,date:reten_date,val:reten_val,country:country},function(e){
+		        if( e=="ok" )
+				{
+				   layer.closeAll();
+				   layer.msg("设置成功");
+				}else{
+				   layer.close(index);
+				   layer.msg("提交失败，请检查是否重复设置");return false;
+				}		        
+		  })
+		  
+	   })
+	   
+	})
+  </script>
+</html>

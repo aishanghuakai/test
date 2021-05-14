@@ -1,0 +1,155 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title></title>
+	{include file="./static/html/header_common.html" /}
+    <style>
+	li{
+	   padding: 5px 0;
+list-style: none;
+ 
+font-size: 12px;
+	}
+	li.alone{
+	  padding-top:20px;
+	
+	}
+	 li .avatar {
+    height: 50px;
+    width: 50px;
+    float: left;
+    margin: 3px 15px 0px 10px;
+    border: none;
+    border-radius: 50%;
+}
+img {
+    vertical-align: middle;
+}
+.date-picker {
+    cursor: pointer;
+	float:right;
+	padding-right:20px;
+	color: #999;
+}
+	</style>	
+</head>
+<body>
+    <div id="wrapper">
+        {include file="./static/html/header.html" /} 
+		
+	   <!--/. NAV TOP  -->
+         {include file="./static/html/side.html" /} 
+        <!-- /. NAV SIDE  -->
+        <div id="page-wrapper">
+		  <div class="header"> 
+			<h1 class="page-header">
+				女主播管理
+			</h1>
+			<ol class="breadcrumb">
+			  <li><a href="#">主页</a></li>
+			  <li><a href="#">用户管理</a></li>
+			  <li class="active">列表</li>
+			</ol> 									
+		</div>
+            <div id="page-inner"> 
+			     <div class="row">
+                <div class="col-md-12">
+                     <!--    Hover Rows  -->
+                    <div class="card">
+                        <div class="card-action">
+                            女主播列表
+							<span style="float:right;font-weight: normal;">{$list->total()}</span>							
+                        </div>
+						<div>
+										
+						<div class="col-sm-3" style="float:left;">
+							  <select class="form-control" id="selectType">
+							  <option selected="selected" value="all">所有</option>
+							  <option  {if condition="$param_name eq 'id'"}selected="selected"{/if}  value="id">ID</option>
+							  <option  {if condition="$param_name eq 'username'"}selected="selected"{/if} value="username">用户名</option>
+							  <option  {if condition="$param_name eq 'email'"}selected="selected"{/if} value="email">邮箱</option>
+							  <option  {if condition="$param_name eq 'gender'"}selected="selected"{/if} value="gender">性别</option>
+							  <option  {if condition="$param_name eq 'registered_source'"}selected="selected"{/if} value="registered_source">注册来源(1:android 2:ios)</option>
+							  </select>				
+				        </div>
+						<div style="float:left;"><input id="text" value="{$param_value}" placeholder="输入内容" type="text"></div>
+						<div class="date-picker" id="search" onclick="searchs()" >搜索</div>
+				     </div>
+                        <div class="card-content" style="padding: 5px 20px 20px 20px;clear:both;">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th style="vertical-align:middle; text-align:center;">#id</th>
+                                            <th >用户信息</th>
+                                            <th style="vertical-align:middle; text-align:center;">当前收益</th>
+											 <th style="vertical-align:middle; text-align:center;">提现金额</th>
+                                            <th style="vertical-align:middle; text-align:center;">直播收益</th>
+											<th style="vertical-align:middle; text-align:center;">私聊收益</th>
+											<th style="vertical-align:middle; text-align:center;">粉丝数</th>
+											<th style="vertical-align:middle; text-align:center;">操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+									     {volist name="list" id="item"}
+                                        <tr>
+                                            <td style="vertical-align:middle; text-align:center;"><li class="alone" >{$item.id}</li></td>
+                                            <td >
+											   <li>
+													<a href="#">
+														<img class="avatar" alt="" src="{$item.avatar|getheaderimg}" onerror="this.src='/static/images/noheader.png'">
+													</a>
+													<strong>用户名:</strong> {$item.username} <strong>uuid:</strong>{$item.uuid} <br>
+													<strong>国家:</strong> {$item.country} <strong>version:</strong> {$item.version}<br>
+													<strong>邮箱:</strong> {$item.email}           
+												</li>
+											</td>
+                                             <td style="vertical-align:middle; text-align:center;"> <li class="alone" >{$item.available_gold_coin}</li></td>
+                                             <td style="vertical-align:middle; text-align:center;"> <li class="alone" >{$item.withdrawal_gold_coin}</li></td>
+											 <td style="vertical-align:middle; text-align:center;"> <li class="alone" >{$item.livepresent_gold_coin}</li></td>
+                                             <td style="vertical-align:middle; text-align:center;"> <li class="alone" >{$item.chatpresent_gold_coin}</li></td>
+											  <td style="vertical-align:middle; text-align:center;"> <li class="alone" >{$item.fans_num}</li></td>
+											 <td style="vertical-align:middle; text-align:center;"> <li class="alone" onclick="window.location.href='/admin_user/edit?id={$item.id}'" ><i class="material-icons dp48">mode_edit</i></li></td>
+                                           
+                                        </tr>
+                                        {/volist}
+                                    </tbody>
+                                </table>
+								
+								
+                                <div>{$list->render()}</div>
+								
+                            </div>
+														
+                        </div>
+                    </div>
+                    <!-- End  Hover Rows  -->
+                </div>
+         
+            </div>		
+         <!-- /. PAGE WRAPPER  -->
+        </div>
+     <!-- /. WRAPPER  -->
+   {include file="./static/html/footer_common.html" /}
+  <!-- Morris Chart Js -->
+    <script src="/static/assets/js/morris/raphael-2.1.0.min.js"></script>
+    <script src="/static/assets/js/morris/morris.js"></script>
+    <script>
+	   var  searchs = function(){
+		  
+			var reportType = $('#selectType').val();
+            var url = '/admin_female/list';
+			var input = $("#text").val();
+            var params = '';
+            if(reportType!=''){
+            	params+='?'+reportType+'='+input;
+            }
+            window.location.href = url + params;  
+    }
+	</script>
+</body>
+
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>数据更新</title>
+	{include file="./static/html/header_common.html" /}
+	<link href="/static/css/adgain.css?t=14444" rel="stylesheet" type="text/css">
+    <link href="/static/css/checkbox.css" rel="stylesheet" type="text/css">
+	 <link rel="stylesheet" type="text/css" media="all" href="/static/plugin/jquery-time/daterangepicker-bs3.css" />
+	
+	<style>
+	 .fa,.allow_click{cursor:pointer}
+	 th,td{text-align:center;vertical-align:middle}
+	 .hw_reven thead tr {
+    background-color: #f9f9f9;
+}
+    .hw_content ul{
+	   margin-left:20%;
+	}
+	.hw_content li{
+	  margin-bottom:20px;
+	}
+    .platform{
+	  float:left;
+	  margin-right:150px;
+	}
+	.platform img{
+	  vertical-align:middle;
+	  height:50px;
+	  width:150px;
+	}
+	.update{
+	  
+	  line-height:50px;
+	}
+	</style>
+</head>
+<body>
+    <div id="wrapper" >
+        
+		{include file="./static/html/header.html" /} 
+	
+		<div class="hw_page_content">
+		     
+		    <div class="hw_menu_left">
+         {include file="./static/html/side.html" /}  
+			</div>
+		    <div class="hw_content_right">	
+			  <ul class="search_tab clearfix" >
+			      <li><a  href="/admin_adstatis/average">统计</a></li>
+				  <li class="active"><a  href="/admin_adgain/refresh_data">更新数据</a></li>
+                  <div style="float:right;position:relative;margin-right:40px;"><a ><i style="position:absolute;top:22px;left:10px;color:#ccc;" class="fa fa-calendar"></i><input type="text" value="<?php echo date("Y-m-d",time() ); ?>"id="start_date"  style="width:140px;margin-top:12px;padding-left:35px;" class="form-control"  /></a></div>  
+			  </ul>	  
+			     <div class="hw_content">					 
+					<ul>
+					  {volist name="all" id="item"}
+					  <li>
+					     <div class="platform"><img  src="{$item}" /></div>
+						 <div class="update" ><span  data="{$key}" class="btn updateaa" style="border:1px solid red;color:red;"><i class="fa fa-refresh"></i> 更新</span></div>
+					  </li>
+					  {/volist}
+					</ul> 
+			    </div>
+           	</div>
+         </div>
+       {include file="./static/html/footer.html" /}		 
+	</div>
+   {include file="./static/html/footer_common.html" /}
+   
+   
+   
+    <script type="text/javascript" src="/static/plugin/jquery-time/moment.js"></script>
+   <script type="text/javascript" src="/static/plugin/jquery-time/daterangepicker.js"></script>
+    <script src="/static/js/echarts.min.js"></script>
+</body>
+  <script>
+     var start_date="<?php echo date("Y-m-d",time() ); ?>";
+	 var end_date = "<?php echo date("Y-m-d",time()); ?>";
+    $(function(){
+	   
+	
+	  $('#start_date').daterangepicker({ minDate:"<?php echo date("Y-m-d",strtotime("-2 day")); ?>",singleDatePicker:true },function(start, end, label) {
+	 
+		 start_date = start.format('YYYY-MM-DD');end_date=end.format('YYYY-MM-DD');
+		
+	  });
+	  
+	  
+	  
+	 
+	  $(".updateaa").click( function(){
+	     var _this = $(this);
+		 $.Pop('1,请确认要更新的时间<br/>2,当前更新数据，需要一点时间，请耐心等待！<br/>3,如长时间没有响应，请刷新页面重新再试','confirm',function(){ 
+             
+			  var url = "/admin_adgain/updatedata";
+			   var index2 = layer.load();
+			   var type = _this.attr("data");
+			   $.post(url,{start_date:start_date,end_date:end_date,type:type},function(e){
+					 layer.closeAll();
+                     if(e=="ok")
+						{
+						  layer.msg("更新成功");
+						}else{
+						  layer.msg("更新失败，网络超时，请刷新再试");
+						}					 
+			   })
+		 })
+	  })
+	   
+	  });
+  </script>
+</html>

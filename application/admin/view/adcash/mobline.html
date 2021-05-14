@@ -1,0 +1,253 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title></title>
+	<link rel="stylesheet" type="text/css" media="all" href="/static/css/public.css" />
+	<link href="/static/css/special.css" rel="stylesheet">
+	{include file="./static/html/header_common.html" /}
+	<link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" media="all" href="/static/plugin/daterangepicker/daterangepicker.css" />
+	<link rel="stylesheet" type="text/css" media="all" href="/static/css/select.css" />
+    <style>
+
+	</style>	
+</head>
+<body>
+    <div id="wrapper">
+        {include file="./static/html/header.html" /} 
+		
+	   <!--/. NAV TOP  -->
+         {include file="./static/html/side.html" /} 
+        <!-- /. NAV SIDE  -->
+        <div id="page-wrapper">
+		  <div class="header"> 
+			<h1 class="page-header">
+				广告变现管理
+			</h1>
+			<ol class="breadcrumb">
+			  <li><a href="#">主页</a></li>
+			  <li><a href="#">变现管理</a></li>
+			  <li class="active">应用列表</li>
+			</ol> 									
+		</div>
+            <div id="page-inner"> 
+			     <div class="row">
+                <div class="col-md-12">
+				  
+                     <!--    Hover Rows  -->
+                    <div class="card">
+					  
+                        <div class="card-action">
+						 <div>
+						  <div class="app-right-content">
+							  <div class="ant-card-head-title">
+								<ul class="message-tabs">
+								 <li><a class="active" href="###">列表展示</a></li>
+								
+								</ul>
+								<div id="search" style="float:right;margin-right:20px;color:#ccc;cursor:pointer;margin-left:40px;">搜索</div>		                              	
+								
+								<div class="select_zyd" style="float:right;width:100px;margin-top:6px;margin-left:20px;">
+								<p>
+								<select class="form-control">
+								  <option value="all">国家</option>
+								  {volist name="country" id="vc"}
+								  <option value="{$vc.code}">{$vc.code}</option>
+								  {/volist}
+								</select>
+								</p>
+								</div>
+                               	
+                                <div class="select_zyd"  style="float:right;margin-top:6px;">
+								<p>
+								<select class="form-control">
+								  <option>应用名称</option>
+								  {volist name="app" id="va"}
+								  <option value="{$va.app_id}">{$va.app_name}</option>
+								   {/volist}
+								</select>
+								</p>
+								</div>							
+							  </div> 
+							 <div class="overview-container">
+								<ul class="overview-number">
+									 <li>
+									   <div class="pgc-dashboard-column"><div class="pgc-dashboard-title">总收益(昨日)</div>
+										   <div class="pgc-dashboard-primary">0</div>
+										   <div class="pgc-dashboard-secondary">
+											   <span class="pgc-income-dash-secondary"><span class="pgc-income-fans">收益增长：0</span></span>
+										   </div>
+									   </div>								  
+									  </li>
+									  <li>
+									   <div class="pgc-dashboard-column"><div class="pgc-dashboard-title">总收益(昨日)</div>
+										   <div class="pgc-dashboard-primary">0</div>
+										   <div class="pgc-dashboard-secondary">
+											   <span class="pgc-income-dash-secondary"><span class="pgc-income-fans">收益增长：0</span></span>
+										   </div>
+									   </div>
+									  </li>
+								</ul>  
+							</div>
+							
+						</div>
+						
+						 </div>
+                       <div style="margin-top:20px;">	 
+                       <div style="float:left;margin-right:20px;"><a style="color:#222;font-weight: normal;" href="###">最近一周</a></div>
+                       <div style="float:left;margin-right:20px;"><a style="color:#999;font-weight: normal;" href="###">最近14天</a></div>
+					    <div style="float:left;"><a style="color:#999;font-weight: normal;" href="###">最近30天</a></div>
+					     <div style="float:left;margin-left:20px;"><p><input id="datetime" style="margin:-10px;box-sizing: inherit;float:left;width:200px;color:#ccc;font-size: 12px;margin-left:8px;" placeholder="搜索日期" value="" type="text" /> </p></div>												
+					    <div style="float:right;"><a style="color:#999;font-weight: normal;" href="###">绘制图表</a></div>
+					   </div>
+					  <!--  <div style="float:right;margin-top:-18px;margin-right:-10px;">#</div> -->
+                       <!--  <div style="float:right;" id="add"><a class="btn-floating"><i class="material-icons">add</i></a></div>	 -->		   
+                        </div>
+						<div>					
+				     </div>
+                        <div class="card-content" style="padding: 15px 20px 20px 20px;clear:both;">
+                          
+							<div id="main" style="width: 100%px;height:400px;margin-top:10px;"></div>							
+                        </div>
+                    </div>
+                    <!-- End  Hover Rows  -->
+                </div>
+         
+            </div>		
+         <!-- /. PAGE WRAPPER  -->
+        </div>
+     <!-- /. WRAPPER  -->
+  
+ {include file="./static/html/footer_common.html" /}
+  <!-- Morris Chart Js -->
+    <script src="/static/assets/js/morris/raphael-2.1.0.min.js"></script>
+	<script src="/static/js/echarts.min.js"></script>
+    <script src="/static/assets/js/morris/morris.js"></script>
+    <script type="text/javascript" src="/static/plugin/daterangepicker/moment.js"></script>
+    <script type="text/javascript" src="/static/plugin/daterangepicker/daterangepicker.js"></script>	
+</body>
+<script>
+  	
+	var myChart = echarts.init(document.getElementById('main'));
+	var colors = ['#5793f3', '#d14a61', '#675bba'];
+
+var options = {
+    color: colors,
+
+    tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+            type: 'cross'
+        }
+    },
+    grid: {
+        right: '20%'
+    },
+    toolbox: {
+        feature: {
+            dataView: {
+                show: true,
+                readOnly: false
+            },
+            restore: {
+                show: true
+            },
+            saveAsImage: {
+                show: true
+            }
+        }
+    },
+    legend: {
+        data: ['应用1', '应用2', '应用3']
+    },
+    xAxis: [{
+        type: 'category',
+        axisTick: {
+            alignWithLabel: true
+        },
+        data: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']
+    }],
+    yAxis: [{
+            type: 'value',
+            name: '应用1',
+            min: 0,
+            max: 250,
+            position: 'right',
+            axisLine: {
+                lineStyle: {
+                    color: colors[0]
+                }
+            },
+            axisLabel: {
+                formatter: '{value} $'
+            }
+        },
+        {
+            type: 'value',
+            name: '应用2',
+            min: 0,
+            max: 250,
+            position: 'right',
+            offset: 80,
+            axisLine: {
+                lineStyle: {
+                    color: colors[1]
+                }
+            },
+            axisLabel: {
+                formatter: '{value} $'
+            }
+        },
+        {
+            type: 'value',
+            name: '应用3',
+            min: 0,
+            max: 25,
+            position: 'left',
+            axisLine: {
+                lineStyle: {
+                    color: colors[2]
+                }
+            },
+            axisLabel: {
+                formatter: '{value} $'
+            }
+        }
+    ],
+    series: [{
+            name: '应用1',
+            type: 'bar',
+            data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3]
+        },
+        {
+            name: '应用2',
+            type: 'bar',
+            yAxisIndex: 1,
+            data: [2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2, 48.7, 18.8, 6.0, 2.3]
+        },
+        {
+            name: '应用3',
+            type: 'line',
+            yAxisIndex: 2,
+            data: [2.0, 2.2, 3.3, 4.5, 6.3, 10.2, 20.3, 23.4, 23.0, 16.5, 12.0, 6.2]
+        }
+    ]
+};
+myChart.setOption(options);
+</script>
+ <script>
+    $('#datetime').daterangepicker({
+	 "dateLimit": {
+        "days": 7
+    },
+    "startDate": "04/04/2018",
+    "endDate": "04/10/2018"
+	}, function(start, end, label) {
+	   console.log(start.format('YYYY-MM-DD'));
+	  console.log("New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')");
+	});
+ </script>
+</html>

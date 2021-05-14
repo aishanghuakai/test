@@ -1,0 +1,246 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GAME BRAIN</title>
+    {include file="./static/html/header_common.html" /}  
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+   <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <!-- import JavaScript -->
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <script src="/static/js/axios.min.js"></script>	 
+	<style>
+.avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 100px;
+    height: 100px;
+    line-height: 100px;
+    text-align: center;
+  }
+  .avatar {
+    width: 100px;
+    height: 100px;
+    display: block;
+  } 
+  input[type="file"] {
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    left: 0;
+    width: 150px;
+    height: 105px;
+    cursor: pointer;
+    line-height: 34px;
+}
+	</style>
+</head>
+<body style="background:#f9fbfd;">
+    <div id="wrapper" style="background-color:#f9fbfd;">
+        {include file="./static/html/header.html" /}	
+		<div class="hw_page_content" style="background-color:#f9fbfd;">
+		    <div class="hw_menu_left">
+             {include file="./static/html/side.html" /}  
+			</div>
+		    <div class="hw_content_right" style="padding:20px 5px;background: #f9fbfd;">
+			            <div class="main" style="margin-bottom:10px;">
+						  <h4 class="page-title">
+							<el-page-header @back="goBack" content="创建应用设置" ></el-page-header></h4>
+							<el-row style="padding:20px;">
+							  <el-form ref="form" :rules="rules2" :model="form" label-width="80px">
+								  <el-form-item label="应用名称" prop="name">
+									<el-input style="width:50%;" size="small" v-model="form.name"></el-input>
+								  </el-form-item>
+								  <el-form-item label="应用图标" prop="icon">
+									<el-upload
+									  class="avatar-uploader"
+									  name="upload_img"
+									  action="/admin_advertisement/uploads?type=app"
+									  :show-file-list="false"
+									  :on-success="handleAvatarSuccess">
+									  <img v-if="imageUrl" :src="imageUrl" class="avatar">
+									  <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+									</el-upload>
+								  </el-form-item>
+								  <el-form-item label="应用类型" prop="type">
+									<el-radio-group v-model="form.type">
+									  <el-radio label="1">自研</el-radio>
+									  <el-radio label="2">发行</el-radio>
+									</el-radio-group>
+								  </el-form-item>
+								  <el-form-item label="应用平台" prop="platform">
+									<el-checkbox-group v-model="form.platform">
+									  <el-checkbox label="android"><i style="color:#21b384;" class="fa fa-android"></i> 安卓</el-checkbox>
+									  <el-checkbox label="ios"><i style="color:#222;" class="fa fa-apple"></i> IOS</el-checkbox>
+									  <el-checkbox label="apk"><i class="fa fa-android"></i> APK</el-checkbox>
+									</el-checkbox-group>
+								  </el-form-item>
+								  <el-form-item v-if="checkPlatform('android')>-1" label="安卓">
+									<div class="demo-input-suffix">
+									  应用包名：									 
+									  <el-input
+										placeholder="请输入内容"
+										style="width:250px"
+										size="small"
+										v-model="form.android_package_name">
+									  </el-input>
+									</div>
+									<div class="demo-input-suffix">
+									  商店地址：									 
+									  <el-input
+										placeholder="请输入内容"
+										style="width:250px"
+										size="small"
+										v-model="form.android_shop_url">
+									  </el-input>
+									</div>
+								  </el-form-item>
+								  <el-form-item v-if="checkPlatform('ios')>-1" label="IOS">
+									<div class="demo-input-suffix">
+									  Bundle ID：									 
+									  <el-input
+										placeholder="请输入内容"
+										style="width:250px"
+										size="small"
+										v-model="form.ios_package_name">
+									  </el-input>
+									</div>
+									<div class="demo-input-suffix">
+									  商店地址：									 
+									  <el-input
+										placeholder="请输入内容"
+										style="width:250px"
+										size="small"
+										v-model="form.ios_shop_url">
+									  </el-input>
+									</div>
+								  </el-form-item>
+								  <el-form-item v-if="checkPlatform('apk')>-1" label="APK">
+									<div class="demo-input-suffix">
+									  应用包名：									 
+									  <el-input
+										placeholder="请输入内容"
+										style="width:250px"
+										size="small"
+										v-model="form.apk_package_name">
+									  </el-input>
+									</div>
+									<div class="demo-input-suffix">
+									  商店地址：									 
+									  <el-input
+										placeholder="请输入内容"
+										style="width:250px"
+										size="small"
+										v-model="form.apk_shop_url">
+									  </el-input>
+									</div>
+								  </el-form-item>
+								  <el-form-item>
+									<el-button type="primary" @click="onSubmit">立即创建</el-button>
+									<el-button @click="goBack">取消</el-button>
+								  </el-form-item>
+								</el-form>
+							</el-row>  
+					    </div>			 
+			</div>
+		</div>
+		 {include file="./static/html/footer.html" /}
+	</div>
+</body>
+ {include file="./static/html/footer_common.html" /}
+  <script>
+    
+    let t = new Vue({
+        el: '#wrapper',
+        data: {
+			loading: false,
+			imageUrl:'',
+			form:{
+			  platform:[]
+			},
+			rules2: {
+				  name: [
+					{ required: true, message: '请输入应用名称', trigger: 'blur' },
+				  ],
+				  type: [
+					{ required: true, message: '请选择应用类型', trigger: 'change' }
+				  ],
+				  platform:[
+				    { type: 'array', required: true, message: '请选择应用平台', trigger: 'change' }
+				  ]
+			},
+			disabled:false,
+        },
+		computed:{
+		},
+		watch:{
+		  channel(){
+		    this.getlist()
+		  }
+		},
+		created(){
+		 
+		},
+        methods: {           
+		   goBack() {
+		     window.location.href='/admin_index/revenue';
+		   },
+		   onSubmit(){
+		      this.$refs.form.validate((valid) => {
+				  if (valid) {
+					  if(!this.form.icon)
+					  {
+					    this.$message.error('请上传应用图标!');
+						return false;
+					  }
+					  axios({
+							method: 'post',
+							url:'/app/add_setting',
+							data:this.form
+						}).then(res=>{			
+						 if(res.data.code ==200)
+						 {
+						   this.$message.success('操作成功!');
+						   window.location.href='/app/index';
+						 }else{
+						   this.$message.error(res.data.message);
+						 }
+					 })
+				  } else {
+				    console.log(valid)
+				  }
+				});
+		   },
+		  handleAvatarSuccess(res, file) {
+            if(res.status==200)
+			{
+			 this.imageUrl = URL.createObjectURL(file.raw);
+			 this.form.icon = res.url
+			}else{
+			  this.$message.error('上传失败，请检查文件是否正确!');
+			  return;
+			}			
+		  },
+		   checkPlatform(platform){
+		    const platforms = this.form.platform
+			return platforms.findIndex((n) => n==platform)
+		   }
+        },
+		mounted(){
+		 
+		}
+    })
+  </script>
+</html>

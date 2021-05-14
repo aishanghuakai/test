@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GAME BRAIN</title>
+	{include file="./static/html/header_common.html" /}
+	<link href="/static/css/adgain.css?t=14444" rel="stylesheet" type="text/css">
+    <link href="/static/css/checkbox.css" rel="stylesheet" type="text/css">
+	 <link href="/static/css/analysis.css" rel="stylesheet" type="text/css">
+	 <link rel="stylesheet" type="text/css" media="all" href="/static/plugin/jquery-time/daterangepicker-bs3.css" />
+	
+	<style>
+	 .fa,.allow_click{cursor:pointer}
+	 th,td{text-align:center;vertical-align:middle}
+	 .hw_reven thead tr {
+    background-color: #f9f9f9;
+}
+.hw_reven table {
+    border-collapse: collapse;
+    font-size: 12px !important;
+    color: #222 !important;
+    text-align: left !important;
+    line-height: 40px;
+}
+.hw_reven .table > thead > tr > th{
+  border-bottom:1px solid #e8e8e8 !important;
+  border-top:1px solid #e8e8e8 !important;
+   color: #222 !important;
+}
+
+	</style>
+</head>
+<body>
+    <div id="wrapper" style="background-color:#fff;">
+        
+		{include file="./static/html/header.html" /} 
+	
+		<div class="hw_page_content">
+		     
+		    <div class="hw_menu_left">
+         {include file="./static/html/side.html" /}  
+			</div>
+		    <div class="hw_content_right">	
+			  <ul class="search_tab clearfix" >
+			      <li ><a  href="/admin_adgain/index">成效概览</a></li>
+                  <li class="active"><a   href="/admin_adgain/analysis">类型分析</a></li>
+                  <li><a  href="/admin_adgain/countryanalysis">国家细分</a></li>			  
+		          <li style="float:right;"><a style="font-size:12px;text-decoration:underline" href="/admin_adgain/relateapp"><i style="vertical-align:middle" class="fa fa-volume-off"></i>&nbsp;关联产品</a></li>
+			  </ul>	  
+			     <div class="hw_content">				 				   
+					   <div class="hw_ad_title">
+					     	  <span>					    								
+								<a class="active" date="three">3天</a>
+								<a date="oneweek">7天</a>
+								<a date="twoweek">14天</a>								
+								<span class="hw-date-wrapper">
+						          <input readonly="" id="start_date" placeholder="开始日期  -  结束日期" class="hw-input" value="{$start_date}  -  {$end_date}" type="text">
+						        </span>
+							 </span>						    
+					   </div>
+					 
+					    <h3>渠道细分</h3>
+						  <div class="caplatform c-dropdown dropdown" style="float:left;margin-top:10px;">
+							<div class="dropdown-toggle" id="dropdownMenuAvatar" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" role="button">
+							  <a class="c-badge c-badge--small c-badge--danger u-mb-xsmall showpre1" href="javascript:;">展示</a>
+							</div>
+							<div class="c-dropdown__menu has-arrow dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuAvatar" x-placement="top-end" style="position: absolute; top: 15px; left: 0px; will-change: transform;">
+							  <a class="c-dropdown__item dropdown-item" data="revenue" href="javascript:;">收益($)</a>
+							  <a class="c-dropdown__item dropdown-item" data="impressions" href="javascript:;">展示</a>
+							  <a class="c-dropdown__item dropdown-item" data="clicks" href="javascript:;">点击</a>
+							  <a class="c-dropdown__item dropdown-item" data="ecpm" href="javascript:;">ECPM</a>
+							</div>
+						  </div>
+						<div style="float:right;margin-top:15px;">
+						
+						  
+						   <div class="el-checkbox el-checkbox-red el-checkbox-sm" style="float:left;margin-right:5px;">								
+								<input name="platform" id="platform_1" checked value="1" type="checkbox">
+								<label class="el-checkbox-style" for="platform_1"></label>
+								<span class="margin-r">Mobvista</span>
+							</div>
+							<div class="el-checkbox el-checkbox-red el-checkbox-sm" style="float:left;margin-right:5px;">								
+								<input name="platform" id="platform_2" checked value="2" type="checkbox">
+								<label class="el-checkbox-style" for="platform_2"></label>
+								<span class="margin-r">Unity</span>
+							</div>
+							<div class="el-checkbox el-checkbox-red el-checkbox-sm" style="float:left;margin-right:5px;">								
+								<input name="platform" id="platform_3" checked value="3" type="checkbox">
+								<label class="el-checkbox-style" for="platform_3"></label>
+								<span class="margin-r">Applovin</span>
+							</div>
+							<div class="el-checkbox el-checkbox-red el-checkbox-sm" style="float:left;margin-right:5px;">								
+								<input name="platform" id="platform_4" checked value="4" type="checkbox">
+								<label class="el-checkbox-style" for="platform_4"></label>
+								<span class="margin-r">Vungle</span>
+							</div>
+							<div class="el-checkbox el-checkbox-red el-checkbox-sm" style="float:left;margin-right:5px;">								
+								<input name="platform" id="platform_5" checked value="5" type="checkbox">
+								<label class="el-checkbox-style" for="platform_5"></label>
+								<span class="margin-r">Admob</span>
+							</div>
+							<div class="el-checkbox el-checkbox-red el-checkbox-sm" style="float:left;margin-right:5px;">								
+								<input name="platform" id="platform_6" checked value="6" type="checkbox">
+								<label class="el-checkbox-style" for="platform_6"></label>
+								<span class="margin-r">Facebook</span>
+							</div>
+							<div class="el-checkbox el-checkbox-red el-checkbox-sm" style="float:left;margin-right:5px;">								
+								<input name="platform" id="platform_7" checked value="7" type="checkbox">
+								<label class="el-checkbox-style" for="platform_7"></label>
+								<span class="margin-r">IronSource</span>
+							</div>
+						</div>
+                    					  
+					 <div class="hw_chat" id="date" style="height:400px;margin-top:80px;"></div>
+					 
+					 <h3>类型细分</h3>
+					 <div class="cadtype c-dropdown dropdown" style="float:left;margin-top:10px;">
+							<div class="dropdown-toggle" id="dropdownMenuAvatar" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" role="button">
+							  <a class="c-badge c-badge--small c-badge--danger u-mb-xsmall showpre2" href="javascript:;">展示</a>
+							</div>
+							<div class="c-dropdown__menu has-arrow dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuAvatar" x-placement="top-end" style="position: absolute; top: 15px; left: 0px; will-change: transform;">
+							  <a class="c-dropdown__item dropdown-item" data="revenue" href="javascript:;">收益($)</a>
+							  <a class="c-dropdown__item dropdown-item" data="impressions" href="javascript:;">展示</a>
+							  <a class="c-dropdown__item dropdown-item" data="clicks" href="javascript:;">点击</a>
+							  <a class="c-dropdown__item dropdown-item" data="ecpm" href="javascript:;">ECPM</a>
+							</div>
+						  </div>
+					 <div style="float:right;margin-top:15px;">
+						   
+						   
+						   <div class="el-checkbox el-checkbox-red el-checkbox-sm" style="float:left;margin-right:5px;">								
+								<input name="adtype" id="adtype_int" checked value="int" type="checkbox">
+								<label class="el-checkbox-style" for="adtype_int"></label>
+								<span class="margin-r">插屏</span>
+							</div>
+							<div class="el-checkbox el-checkbox-red el-checkbox-sm" style="float:left;margin-right:5px;">								
+								<input name="adtype" id="adtype_rew" checked value="rew" type="checkbox">
+								<label class="el-checkbox-style" for="adtype_rew"></label>
+								<span class="margin-r">激励</span>
+							</div>
+							<div class="el-checkbox el-checkbox-red el-checkbox-sm" style="float:left;margin-right:5px;">								
+								<input name="adtype" id="adtype_nat" checked value="nat" type="checkbox">
+								<label class="el-checkbox-style" for="adtype_nat"></label>
+								<span class="margin-r">原生</span>
+							</div>
+							<div class="el-checkbox el-checkbox-red el-checkbox-sm" style="float:left;margin-right:5px;">								
+								<input name="adtype" id="adtype_ban" checked value="ban" type="checkbox">
+								<label class="el-checkbox-style" for="adtype_ban"></label>
+								<span class="margin-r">banner</span>
+							</div>
+							<div class="el-checkbox el-checkbox-red el-checkbox-sm" style="float:left;margin-right:5px;">								
+								<input name="adtype" id="adtype_no" checked value="no" type="checkbox">
+								<label class="el-checkbox-style" for="adtype_no"></label>
+								<span class="margin-r">未知</span>
+							</div>
+						</div>
+						<div class="hw_chat" id="adtype" style="height:400px;margin-top:80px;"></div>
+			    </div>
+           	</div>
+         </div>
+       {include file="./static/html/footer.html" /}		 
+	</div>
+   {include file="./static/html/footer_common.html" /}
+   
+   
+   
+    <script type="text/javascript" src="/static/plugin/jquery-time/moment.js"></script>
+   <script type="text/javascript" src="/static/plugin/jquery-time/daterangepicker.js"></script>
+    <script src="/static/js/echarts.min.js"></script>
+</body>
+  <script>
+     var start_date="{$start_date}";
+	 var end_date = "{$end_date}";
+	 var appid ="{$appid}";
+	 var p_tag = "revenue";
+	 var a_tag ="revenue";
+	 var index ="three";
+    $(function(){
+	  
+	   lineechats("{$res.date}","{$res['int']}","{$res['rew']}","{$res['nat']}","{$res['ban']}","{$res['no']}");
+	   adtypeline("{$resadtype.date}","{$resadtype[1]}","{$resadtype[2]}","{$resadtype[3]}","{$resadtype[4]}","{$resadtype[5]}","{$resadtype[6]}","{$resadtype[7]}");
+	  $('#start_date').daterangepicker({ minDate:'2018-07-08' },function(start, end, label) {
+	 
+		 start_date = start.format('YYYY-MM-DD');end_date=end.format('YYYY-MM-DD');
+		 index="";
+		 platformdata();
+		 adtypedata();
+	  });
+	  
+	  $(".hw_ad_title a").click( function(){
+	     $(".hw_ad_title a").removeClass("active");
+		 $(this).addClass("active");
+		 index = $(this).attr("date");
+		 platformdata();
+		 adtypedata();
+	  })
+	  $(".caplatform .c-dropdown__item").click( function(){
+	       p_tag = $(this).attr("data");
+		  $(".showpre1").text($(this).text());
+		  platformdata();
+		  
+	  })
+	  
+	  $(".cadtype .c-dropdown__item").click( function(){
+	       a_tag = $(this).attr("data");
+		  $(".showpre2").text($(this).text());
+		  adtypedata();
+		  
+	  })
+	  
+	  $("input[name='platform']").click( function(){
+	      platformdata();
+	  })
+	  
+	   $("input[name='adtype']").click( function(){
+	      adtypedata();
+	  })
+	   
+	   $(".bar_allow_roe").click( function(){
+	       
+		   if( $(this).find("i").hasClass("fa-angle-double-right") )
+		      {
+			     $(this).find("i").removeClass("fa-angle-double-right");
+				 $(this).find("i").addClass("fa-angle-double-left");
+				 $(this).animate({'left':'21%'},1000);
+				 $(".hw_app_navlist").show(1000);
+			  }else{
+			     $(this).find("i").removeClass("fa-angle-double-left");
+				 $(this).find("i").addClass("fa-angle-double-right");
+				 $(this).animate({'left':'0%'},1000);
+				 $(".hw_app_navlist").hide(1000);
+			  }
+	   })
+	    	   
+	   $("input[name='app_id']").click( function(){
+	        window.location.href="/admin_adgain/analysis?appid="+$(this).val();
+	   })	   
+	}); 
+	
+	var platformdata = function()
+	{
+	  
+	  
+	   var platform="";
+	   $("input[name='platform']:checked").each( function(index){
+				  platform+="'"+$(this).val()+"'"+",";
+			  });
+	   var url = "/admin_adgain/ajaxdataplatform?appid="+appid+"&tag="+p_tag+"&start_date="+start_date+"&end_date="+end_date+"&index="+index+"&platform="+platform;
+	   var index1 = layer.load();
+	   $.get(url,{},function(e){
+             layer.closeAll();	   
+	        lineechats(e.date,e.int,e.rew,e.nat,e.ban,e.no);
+	   },'json')
+	}
+	var adtypedata = function()
+	{
+	  
+	  
+	   var adtype="";
+	   $("input[name='adtype']:checked").each( function(index){
+				  adtype+="'"+$(this).val()+"'"+",";
+			  });
+	   var url = "/admin_adgain/ajaxdataadtype?appid="+appid+"&tag="+a_tag+"&start_date="+start_date+"&end_date="+end_date+"&index="+index+"&adtype="+adtype;
+	   var index1 = layer.load();
+	   $.get(url,{},function(e){
+             layer.closeAll();	   
+	        adtypeline(e.date,e[1],e[2],e[3],e[4],e[5],e[6],e[7]);
+	   },'json')
+	}
+	
+	  function lineechats(date,intdata,rewdata,natdata,bandata,nodata)
+  {
+	  var myChart = echarts.init(document.getElementById("date"));
+	  var option = {
+    title: {
+        text: ''
+    },
+    tooltip: {
+        trigger: 'axis'
+    },
+    legend: {
+        data:['插屏','激励','原生','banner','未知'],
+		top:'20'
+    },
+    grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '3%',
+        containLabel: true
+    },
+    xAxis: {
+        type: 'category',
+        boundaryGap: false,
+        data: date.split(',')
+    },
+    yAxis: {
+        type: 'value'
+    },
+    series: [
+        {
+            name:'插屏',
+			smooth:true,
+            type:'line',
+            stack: '总量',
+            data:intdata.split(',')
+        },
+        {
+            name:'激励',
+			smooth:true,
+            type:'line',
+            stack: '总量',
+            data:rewdata.split(',')
+        },
+        {
+            name:'原生',
+			smooth:true,
+            type:'line',
+            stack: '总量',
+            data:natdata.split(',')
+        },
+        {
+            name:'banner',
+			smooth:true,
+            type:'line',
+            stack: '总量',
+            data:bandata.split(',')
+        },
+		{
+            name:'未知',
+			smooth:true,
+            type:'line',
+            stack: '总量',
+            data:nodata.split(',')
+        }
+    ]
+};
+
+	 myChart.setOption(option); 
+  }
+  
+  function adtypeline(date,data1,data2,data3,data4,data5,data6,data7)
+  {
+    var myChart = echarts.init(document.getElementById("adtype"));
+	  var option = {
+    //title: {
+      //  text: '广告类型占比',
+       // subtext: '数据来自网络'
+    //},
+    tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+            type: 'shadow'
+        }
+    },
+    legend: {
+        data: ['Mobvista','Unity','Applovin','Vungle','Admob','Facebook','IronSource']
+    },
+    grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '3%',
+        containLabel: true
+    },
+    xAxis: {
+        type: 'category',
+        position: "bottom",
+        data:date.split(',')
+    },
+    yAxis: {
+        type: 'value',
+        boundaryGap: [0, 0.01]
+    },
+    series: [
+        {
+            name: 'Mobvista',
+            type: 'bar',
+            stack: 'group',
+            data: data1.split(',')
+        },
+        {
+            name: 'Unity',
+            type: 'bar',
+            stack: 'group',
+            data: data2.split(',')
+        },
+        {
+            name: 'Applovin',
+            type: 'bar',
+            stack: 'group',
+            data: data3.split(',')
+        },
+		{
+            name: 'Vungle',
+            type: 'bar',
+            stack: 'group',
+            data: data4.split(',')
+        },
+		{
+            name: 'Admob',
+            type: 'bar',
+            stack: 'group',
+            data: data5.split(',')
+        },
+		{
+            name: 'Facebook',
+            type: 'bar',
+            stack: 'group',
+            data: data6.split(',')
+        },
+		{
+            name: 'IronSource',
+            type: 'bar',
+            stack: 'group',
+            data: data7.split(',')
+        }
+    ]
+};
+   myChart.setOption(option);
+  }
+  </script>
+</html>

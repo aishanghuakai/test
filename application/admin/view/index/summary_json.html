@@ -1,0 +1,82 @@
+							    
+								 <tbody>
+								    
+								   {volist name="list" id="vv"}
+									<tr >
+									  <td date="{$vv.date}" title="备注标记" class="edit_remark"><i style="color:#bcbcbc">({$vv.date|getweekday})</i>{$vv.date}
+									  {if condition="$vv['producter_showtips'] neq '0'"}<sup  data-mtpis="{$vv['producter_showtips']}" ><i style="color:red;font-size:10px;" class="fa fa-commenting-o"></i></sup>{/if}</td>
+									  <td>{$vv["result"]["revenue"]["total"]["active_users"]}</td>
+									  <td title="统计新增:{$vv["result"]["adjust_new_users"]}" style="cursor:pointer;">{$vv["result"]["new_users"]}</td>
+									  <td>{$vv["result"]["reten"]}%</td>
+									  {if condition="permission(30)" }
+									  <td>{$vv["result"]["nature_rat"]}%</td>
+									  {/if}
+									  <td>
+									  <?php
+									    $str = purchaseShow($vv['date'],$appid);
+										if($str!="")
+										{
+										  echo $str;
+										}else{
+										 echo "$".$vv["result"]["purchase"];
+										}
+									  ?>									  
+									  {if condition="$role eq 'producter'"}
+									  &nbsp;<i date="{$vv.date}" v="{$vv['result']['purchase']}" class="fa fa-edit purchase_edit"></i>
+									  {/if}
+									  </td>
+									  <td style="{if condition="$vv['result']['roi'] >= 100"}color:#fe496d;{/if}" >{$vv["result"]["roi"]}%</td>
+									  <td><div>${$vv["result"]["spend"]["spend"]}{if condition="$vv['result']['ctr_spend']>0"}/<span style="color:#f48b29;" title="测试消耗">{$vv['result']['ctr_spend']}</span>{/if} {if condition="$vv['advertiser_showtips'] neq '0'"}<sup data-mtpis="{$vv['advertiser_showtips']}"  <i style="color:red;font-size:10px;" class="fa fa-commenting-o"></i></sup>{/if} {if condition="$appid eq 112"}&nbsp;<i date="{$vv.date}" type="spend" v="{$vv["result"]["spend"]["spend"]}" style="font-size:10px;color:#ccc;" class="fa fa-pencil"></i>{/if}</div></td>
+									  {if condition="permission(30)" }
+									  <td>{$vv["result"]["spend"]["cpi"]}+{$vv["result"]["spend"]["ad_cpi"]}
+									   <?php $lowest =$total_data["spend"]["cpi"]*0.7;if( $lowest>$vv["result"]["spend"]["cpi"] ){  ?>
+									    &nbsp;<i class="fa fa-long-arrow-down" data-mtpis="该项指标波动变化较大,请注意" style="color:#ec7357"></i>
+									   <?php } ?>
+									   <?php $highest =$total_data["spend"]["cpi"]*1.3;if( $highest<$vv["result"]["spend"]["cpi"] ){  ?>
+									    &nbsp;<i class="fa fa-long-arrow-up" data-mtpis="该项指标波动变化较大,请注意" style="color:#589bff"></i>
+									   <?php } ?>
+									  </td>
+									  {/if}
+									  <td date="{$vv.date}" style="cursor:pointer;" class="revenue_ltv"><div >${$vv["result"]["revenue"]["total"]["revenue"]} {if condition="$vv['publisher_showtips'] neq '0'"} <sup data-mtpis="{$vv['publisher_showtips']}">  <i style="color:red;font-size:10px;" class="fa fa-commenting-o"></i></sup>{/if} {if condition="$appid eq 112"}&nbsp;<i date="{$vv.date}" type="revenue" v="{$vv["result"]["revenue"]["total"]["revenue"]}" style="font-size:10px;color:#ccc;" class="fa fa-pencil"></i>{/if}</div></td>							 
+									     {if condition="permission(30)" }
+										<td>{$vv["result"]["revenue"]["total"]["dauarpu"]}
+									   <?php $lowest =$total_data["revenue"]["total"]["dauarpu"]*0.7;if( $lowest>$vv["result"]["revenue"]["total"]["dauarpu"] ){  ?>
+									    &nbsp;<i class="fa fa-long-arrow-down" data-mtpis="该项指标波动变化较大,请注意" style="color:#ec7357"></i>
+									   <?php } ?>
+									   <?php $highest =$total_data["revenue"]["total"]["dauarpu"]*1.3;if( $highest<$vv["result"]["revenue"]["total"]["dauarpu"] ){  ?>
+									    &nbsp;<i class="fa fa-long-arrow-up" data-mtpis="该项指标波动变化较大,请注意" style="color:#589bff"></i>
+									   <?php } ?>
+									  
+									  </td>
+									   <td>{$vv["result"]["ltv0"]}=({$vv["result"]["ltv_ad0"]}+{$vv["result"]["ltv_pr0"]})</td>
+									  <td style="cursor:pointer;" class="roi_ltv" date="{$vv.date}">{$vv["result"]["roi0"]}%</td>
+									  {/if}							   
+									</tr>
+									{/volist}
+								  </tbody>
+								<tfoot>
+								  <tr style="border-top:1px solid #222 !important;background-color:#fff;font-size:14px;font-weight:700">
+									  <td style="font-weight:700">总计</td>
+									  <td>{$total_data["revenue"]["total"]["active_users"]}</td>
+									  <td>{$total_data["new_users"]}</td>
+									  <td>{$total_data["reten"]}%</td>
+									  {if condition="permission(30)" }
+									  <td>{$total_data["nature_rat"]}%</td>
+									  {/if}
+									  <td>${$total_data["purchase"]}</td>
+									  <td>{$total_data["roi"]}%</td>
+									  <td>${$total_data["spend"]["spend"]}
+									  {if condition="$total_data['ctr_spend']>0"}/<span style="color:#f48b29;" title="测试消耗">{$total_data['ctr_spend']}</span>{/if}
+									  </td>
+									  {if condition="permission(30)" }
+									  <td>{$total_data["spend"]["cpi"]}+{$total_data["spend"]["ad_cpi"]}</td>
+									  {/if}
+									  <td>${$total_data["revenue"]["total"]["revenue"]}</td>
+									  {if condition="permission(30)" }									  
+									   <td>{$total_data["revenue"]["total"]["dauarpu"]}</td>
+									   <td>{$total_data["ltv0"]}=({$total_data["ltv_ad0"]}+{$total_data["ltv_pr0"]})</td>
+									   <td style="cursor:pointer;" class="roi_total_ltv">{$total_data["roi0"]}</td>
+                                      {/if}						  
+									</tr>
+								</tfoot>
+							  

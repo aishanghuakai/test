@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GAME BRAIN</title>
+    {include file="./static/html/header_common.html" /}
+  <link href="/static/css/checkbox.css" rel="stylesheet" type="text/css">	
+	 <link rel="stylesheet" type="text/css" media="all" href="/static/plugin/jquery-time/daterangepicker-bs3.css" />
+<link href="/static/css/show.css?t=<?php echo time(); ?>" rel="stylesheet">
+ <link href="/static/css/adid.css?t=1539348927" rel="stylesheet">	
+	 <style>
+	    th,td{text-align:center;vertical-align:middle}
+
+
+.cursor,#download,.country label,.fa-pencil-square-o,.fa-line-chart{
+cursor:pointer;
+}
+.result_app img {
+    border-radius: 10px;
+    margin-right: 0px;
+}
+.result_app img {
+    height: 150px;
+    width: 150px;
+    border-radius: 5px;
+    align-self: center;
+    margin: 5px 15px 5px 5px;
+        margin-right: 15px;
+}
+.result_app .app-name {
+    font-size: 25px;
+    margin-right: 20px;
+    vertical-align: middle;
+    display: inline-block;
+    max-width: 720px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.result_app .info {
+    color: #8F8F8F;
+}
+.result_app .info .col-lg-1 {
+    width: 9.3333333%;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+.right-div {
+    border-right: 1px solid #ddd;
+}
+.btn {
+    display: inline-block;
+    padding: 6px 12px;
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-image: none;
+    border: 1px solid transparent;
+        border-top-color: transparent;
+        border-right-color: transparent;
+        border-bottom-color: transparent;
+        border-left-color: transparent;
+    border-radius: 4px;
+}
+.btn-yellow {
+    color: #fff;
+    background-color: #5cb85c;
+    border-color: transparent;
+}
+.chart-grid ul {
+    clear: both;
+    list-style-type: none;
+    margin: 15px 0 0 10px;
+}
+.chart-grid ul li {
+    float: left;
+  
+    width: 150px;
+    margin: 0;
+    padding: 0 44px 30px 0;
+    font-size: 0.6875em;
+}
+.chart-grid h3 a {
+    color: #4c4c4c;
+}
+.chart-grid a {
+    display: block;
+    position: relative;
+    padding: 7px;
+    margin: -7px 0 -3px -7px;
+    color: #999;
+    font-weight: 600;
+}
+.chart-grid img {
+    margin-top: -9px;
+    margin-bottom: 10px;
+    border-radius: 20px;
+    box-shadow: 0 4px 3px -2px rgba(0, 0, 0, 0.8);
+}
+.chart-grid h3 {
+    clear: left;
+    font-weight: bold;
+}
+.chart-grid h3, .chart-grid h4 {
+    position: relative;
+    display: block;
+    width: 120px;
+    height: 1.4em;
+    margin: 0;
+    font-weight: normal;
+    font-size: 1em;
+    line-height: 1.4em;
+    color: #999;
+    overflow: hidden;
+}
+.sendmessage{
+ position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    height: 100%;
+    overflow-y: auto;
+	
+}
+.hw_game-dialog {
+    position: relative;
+    width: 60%;
+    background: #fff !important;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    -webkit-box-shadow: 0 0 5px #333;
+    -moz-box-shadow: 0 0 5px #333;
+    box-shadow: 0 0 5px #333;
+    margin: 0 auto 40px;
+    overflow: hidden;
+    top: 80px;
+    z-index: 1002;
+}
+.hw_modal {
+    z-index: 1000;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    opacity: .5;
+    background: #333;
+}
+</style>
+</head>
+<body>
+    <div id="wrapper" style="background-color:#fff;">
+        {include file="./static/html/header.html" /}	
+		<div class="hw_page_content">
+		    
+		    <div class="hw_menu_left">
+         {include file="./static/html/side.html" /}  
+			</div>
+		    <div class="hw_content_right" style="padding:50px 30px;width:80%;" >
+			  
+				<div class="result_app" style="display:flex;">          
+					<div style="flex-grow:1;">
+					   <img src="{$image}">
+					</div>       
+            <div style="flex-grow:10; padding-left:10px;">
+              
+                <div>
+                    <span class="js-app-name app-name">{$title}</span>
+					<p style="color: #8F8F8F">{$subtitle}</p>
+                </div>
+                <!--信息-->
+                <div class="row info ">
+                    <div>
+						<div class="col-lg-2 col-md-2 col-sm-6 col-xs-6 right-div">
+							<div class="info-name">评论数({$comment_num})</div>
+							<div class="info-value" style="color:red;">{$comment_score}分</div>
+						</div>
+						<div style="width:20%;" class="col-lg-2 col-md-2 col-sm-6 col-xs-6 right-div">
+							<div class="info-name">版本更新时间</div>
+							<div class="info-value ">{$update_time}</div>
+						</div>
+						<div style="width:15%;" class="col-lg-1 col-md-1 col-sm-6 col-xs-6 right-div">
+							<div class="info-name">分类</div>
+							<div class="info-value"><a>{$game_type}</a>
+							</div>
+						</div>                    
+						<div class="col-lg-2 col-md-1 col-sm-6 col-xs-6">
+							<div class="info-name">包名或APP ID</div>
+							<div class="info-value"><a id="info-app-id" href="{$shop_url}">{$package}</a></div>
+						</div>						
+					</div>
+					<div style="clear:both;"></div>
+					<div style="margin-top:40px;">
+						<div class="col-lg-2 col-md-2 col-sm-6 col-xs-6 right-div">
+							<div class="info-name">安装量</div>
+							<div class="info-value">{$installs}</div>
+						</div>
+						<div class="col-lg-2 col-md-1 col-sm-6 col-xs-6 right-div">
+							<div class="info-name">商店地址</div>
+							<div class="info-value"><a id="info-app-id" href="{$shop_url}" target="_blank" title="">前往</a></div>
+						</div>
+						
+						<div class="col-lg-3 col-md-2 col-sm-6 col-xs-6 ">
+							<div class="info-name">开发者</div>
+							<div class="info-value ofe"><a href="{$developer_url}" target="_blank">{$email}</a></div>
+						</div>
+						 <div class="col-lg-1 col-md-1 col-sm-6" style="margin-left:60px"  >
+						   {if condition="$islike"}
+						   <button type="button"  style="background-color:#c81e82;"  class="btn btn-default btn-yellow follow">√已关注</button>
+						   {else /}
+						   <button type="button" id="like" data_url ="{$developer_url}" {if condition="$platform eq 'ios'"} data_name="{$email}" {else /}data_name="{$subtitle}"{/if} data_platform="{$platform}" style="background-color:#c81e82;"  class="btn btn-default btn-yellow follow">+关注开发者</button>
+						   {/if}
+						   
+						 </div>
+						<div class="col-lg-1 col-md-1 col-sm-6" style="margin-left:40px">						  
+                           <button type="button" id="sendemail" style="background-color:#d45500;" class="btn btn-default btn-yellow follow">发送邮箱</button>
+						   </div>
+					</div>
+                    
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+			<div class="chart-grid" style="padding-top:50px;">
+			  <h3 style="font-size:20px;width:220px;margin-bottom:20px;">该开发者下的其他应用</h3>
+			  <ul>
+			    {volist name="out_data" id="vv"}
+					<li>
+						<a href="{$vv.shop_url}" title="{$vv.title}"><img src="{$vv.img}" alt="{$vv.title}" width="100" height="100"></a>
+						<h3><a href="{$vv.shop_url}">{$vv.title}</a></h3>
+						<h4><a href="###" style="color:#ff8282;">{$vv.subtitle}</a></h4>
+				   </li>
+                {/volist}			   
+			  </ul>
+			</div>						  
+			</div>			   
+			
+		</div>
+		     
+		 {include file="./static/html/footer.html" /}
+	</div>
+	
+	<div class="sendmessage" style="display:none;">
+			     <div class="hw_modal"></div>
+				 <div class="hw_game-dialog" style="padding:20px 0px">
+			     <form class="form-horizontal">
+				     
+					  <div class="form-group" style="padding:10px 0px">
+						<label for="email" class="col-sm-2 control-label">收件人</label>
+						<div class="col-sm-8">
+						  <input type="text" class="form-control" id="email" value="<?php echo filter_var($email, FILTER_VALIDATE_EMAIL)?$email:""; ?>"/>
+						  <?php if(!filter_var($email, FILTER_VALIDATE_EMAIL)){ ?> 
+						    <p style="height:0px;color:red;"><i class="fa fa-exclamation-triangle"></i>&nbsp;注意，该应用没有获取到邮箱</p>
+						  <?php } ?>
+						</div>
+					  </div>
+					  <div class="form-group" style="margin-bottom:20px">
+						<label for="title" class="col-sm-2 control-label">选择模板</label>
+						<div class="col-sm-8">
+						    <div class="radio">
+							  <label>
+								<input type="radio" name="optionsRadios" id="optionsRadios1" value="0" checked>
+								This is English
+							  </label>
+							</div>
+							<div class="radio">
+							  <label>
+								<input type="radio" name="optionsRadios" id="optionsRadios2" value="1">
+								This is Chinese
+							  </label>
+							</div>
+						</div>
+					  </div>
+					   <div class="form-group" style="">
+						<label for="title" class="col-sm-2 control-label">标题</label>
+						<div class="col-sm-8">
+						  <input type="text" class="form-control" id="title" placeholder="标题长度2-30个字符内">
+						</div>
+					  </div>
+					  
+					 
+					 <div class="form-group" style="margin-top:20px;">
+						<label for="inputEmail3" class="col-sm-2 control-label">内容</label>
+						<div class="col-sm-8">
+						  
+						    <textarea id="content" style="height:150px;resize: none;" class="form-control"></textarea>											 
+						</div>
+					  </div>
+					 
+						<div class="col-sm-offset-4 col-sm-6" style="margin-top:10px;">
+						  <button type="button" id="cancel" style="width:20%;float:left;margin-right:10px;padding-right:10px;" class="btn btn-default">取消</button>
+						  <button type="button" style="width:50%;" id="save" class="btn btn-danger">立即发送</button>
+						</div>
+					  </div>
+					</form>
+				</div>	
+			  </div>
+			  
+</body>
+ {include file="./static/html/footer_common.html" /}
+ 
+ <script>
+     
+     var message = [
+	    {
+		  title:"Game Publishing Inquiry from Hello Games",
+		  content:"<h3>Hello there,</h3><p>Nice to e-meet you.</p> <p>I'm Tracy, Publishing Manager @Hello Games. We've played your game - {$title}, and we really liked it!</p><p>We are interested in publishing games with a good potential in terms of metrics (retention, advertising potential, monetization potential). Now we are mostly focused on casual and puzzle games because they have good retention statistics and generate a lot of revenues. </p><p>Would you be available for a Skype call this week to discuss more deeply about what we are doing and how we can collaborate? In case you are, please let me know your Skype ID and the day and time slot that would suit you best.</p><p>Look forward to talk with you,</p><p>Best Regards,</p><p>Tracy</p><p style='color:red;font-weight:bold'>game@hello-games.net</p>",
+		},
+		{
+		  title:"游戏发行合作咨询",
+		  content:"<h3>你好:</h3><p>我是武汉哈乐沃德的发行总监Tracy,我们对您所开发的游戏-{$title}非常感兴趣!</p><p>我们一直专注于海外休闲游戏的发行和运营.我们曾成功发行过Tankr.io等产品,该产品在Android,iOS平台上获得全球多个国家首页推荐,带来超过500万次下载.</p><p>我们一直在寻找优秀的开发者和有潜力的游戏来合作发行运营.此外,我们还会跟合作方分享游戏创意,提供产品和变现方面的优化建议,让您的游戏更有可能获得成功.</p><p>如果您也对此感兴趣,请告知你的联系方式(Skype,微信,电话等)以便进一步的了解和合作.</p><p>祝好,</p><p>Tracy</p><p style='color:red;font-weight:bold'>game@hello-games.net</p>"
+		}
+	 ];
+    $(function(){
+	    $("#content").val(message[0].content);
+		$("#title").val(message[0].title);
+	     $(":input[name='optionsRadios']").click(function(){
+		    var index = $(this).val();
+			$("#content").val(message[index].content);
+			$("#title").val(message[index].title);
+		 });
+	     $("#cancel").click( function(){		   
+		   $(".sendmessage").hide();
+		})
+		$("#sendemail").click( function(){
+		   $(".sendmessage").show();
+		})
+		$("#like").click( function(){
+		    layer.load();
+			 var developer = $(this).attr("data_name");
+			 var developer_url =$(this).attr("data_url");
+			 var platform =$(this).attr("data_platform"); 
+		      $.post("/admin_compet/likesave",{developer:developer,developer_url:developer_url,platform:platform},function(e){
+			      layer.closeAll();
+				  layer.msg("关注成功");
+				  window.location.href="/admin_compet/mylikelist";			  
+			  })
+		})
+		  $(document).on( 'click',"#save",function(){
+		      var email = $("#email").val();
+			  var title = $("#title").val();
+			  var content = $("#content").val();
+			  var developer ='<?php if($platform=="ios"){ echo $email; }else{ echo $subtitle; } ?>';
+			  var developer_url ='{$developer_url}';
+			  var platform ='{$platform}'; 
+			  if( !email || !title || !content)
+			  {
+			    layer.msg("请填写完整信息");return false;
+			  }
+			  layer.load();
+			  $(this).attr("disabled",true);
+		      $.post("/admin_compet/sendmessage",{email:email,title:title,content:content,developer:developer,developer_url:developer_url,platform:platform},function(e){
+			      $('#save').removeAttr("disabled");
+				  layer.closeAll();
+				  if( e=="ok" )
+                     {
+					    layer.msg("邮件发送成功");
+						$(".sendmessage").hide();
+						window.location.href='/admin_compet/send';
+					 }else{
+					     layer.msg("邮件发送失败"); 
+					 }				  
+			  })
+		  })
+		  
+       })
+ </script>
+
+</html>

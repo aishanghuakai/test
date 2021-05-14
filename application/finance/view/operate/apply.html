@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Apply withdraw</title>
+    	<meta name="author" content="www.vivachat.net">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta name="author" content="m.jd.com">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta name="format-detection" content="telephone=no">
+        <meta http-equiv="Expires" content="-1">
+        <meta http-equiv="Cache-Control" content="no-cache">
+        <meta http-equiv="Pragma" content="no-cache">
+		<meta name="description" content="" />
+        <meta name="Keywords" content="" />
+		<link rel="stylesheet" type="text/css" href="/static/css/apply.css" charset="utf-8"/>
+		<!-- Google Tag Manager -->
+	<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+	new Date().getTime(),event:'gtm.js'});
+	var f=d.getElementsByTagName(s)[0],
+	   j=d.createElement(s),
+	   dl=l!='dataLayer'?'&l='+l:'';
+	   j.async=true;
+	   j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+	   f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-5TKF672');
+	   </script>
+<!-- End Google Tag Manager -->
+        <script type="text/javascript">
+        var cssEl = document.createElement('style');
+        document.documentElement.firstElementChild.appendChild(cssEl);
+    
+        function setPxPerRem(){
+            var dpr = 1;
+            //把viewport分成10份的rem，html标签的font-size设置为1rem的大小;
+            var pxPerRem = document.documentElement.clientWidth * dpr / 10;
+			
+            cssEl.innerHTML = 'html{font-size:' + pxPerRem + 'px!important;}';
+        }
+        setPxPerRem();
+    </script>		
+	</head>
+<body class="content_body">
+    <div class="content_content">
+	  <ul>
+	    <li>
+		  <div class="div_title "><img class="left_img radius active" data="1" src="/static/img/ic_radio_button_checked.png"/><span class="tag right">Paypal</span></div>
+		  <div class="common_p"><img class="left_img" src="/static/img/ic_paypel.png"/><input  class="text right" type="text" name="account" placeholder="Enter your Paypal account"/></div>
+		  <div class="common_p"><img class="left_img" src="/static/img/ic_name.png"/><input  class="text right" type="text" name="name" placeholder="Enter your real name"/></div>
+		  <div class="common_p"><img class="left_img" src="/static/img/ic_call.png"/><input  class="text right" type="text" name="phone" placeholder="Enter your phone number (+country code)"/></div>
+		  <div class="last_p"><img class="left_img" src="/static/img/ic_email.png"/><input  class="text right" type="text" name="email" placeholder="Enter your email"/></div>
+		</li>
+		 <li>
+		  <div class="div_title"><img class="left_img radius" data="2" src="/static/img/ic_radio_button_unchecked.png"/><span class="tag right">Western Union</span></div>
+		  <div class="common_p"><img class="left_img" src="/static/img/ic_name.png"/><input  class="text right" type="text" name="name" placeholder="Enter your real name"/></div>
+		  <div class="common_p"><img class="left_img" src="/static/img/ic_whatsapp_icon.png"/><input  class="text right" type="text" name="account" placeholder="Enter your WhatsApp"/></div>
+		  <div class="common_p"><img class="left_img" src="/static/img/ic_call.png"/><input  class="text right" type="text" name="phone" placeholder="Enter your phone number (+country code)"/></div>
+		  <div class="last_p"><img class="left_img" src="/static/img/ic_email.png"/><input  class="text right" type="text" name="email" placeholder="Enter your email"/></div>
+		</li>
+		<li>
+		  <div class="div_title"><img class="left_img radius" data="3" src="/static/img/ic_radio_button_unchecked.png"/><span class="tag right">Bank Transfer</span></div>
+		  <div class="common_p"><img class="left_img" src="/static/img/ic_name.png"/><input  class="text right" type="text" name="beneficiary_name" placeholder="Enter beneficiary name"/></div>
+		  <div class="common_p"><img class="left_img" src="/static/img/ic_genericcard.png"/><input  class="text right" type="text" name="bankcard_number" placeholder="Enter your bank card number"/></div>	
+         <div class="common_p"><img class="left_img" src="/static/img/ic_genericcard.png"/><input  class="text right" type="text" name="name" placeholder="Enter your bank code"/></div>			  
+		  <div class="common_p"><img class="left_img" src="/static/img/ic_swiftcode.png"/><input  class="text right" type="text" name="account" placeholder="Enter swift code"/></div>
+		  <div class="common_p"><img class="left_img" src="/static/img/ic_bankname.png"/><input  class="text right" type="text" name="bankname" placeholder="Enter the bank name"/></div>
+		  <div class="common_p"><img class="left_img" src="/static/img/ic_location.png"/><input  class="text right" type="text" name="banklocation" placeholder="Enter the bank address"/></div>
+		  <div class="common_p"><img class="left_img" src="/static/img/ic_call.png"/><input  class="text right" type="text" name="phone" placeholder="Enter your phone number (+country code)"/></div>
+		  <div class="last_p"><img class="left_img" src="/static/img/ic_email.png"/><input  class="text right" type="text" name="email" placeholder="Enter your email"/></div>
+		</li>
+		<li class="speci_li">
+		  <div class="div_footer"><img class="left_mark" src="/static/img/ic_info.png"/><span class="remark" style="margin-left:0.22rem">The fee generated during money transfer will be deducted by the platform.</span></div>
+		  <div class="apply_button">Apply withdraw</div> 
+		</li>
+	  </ul>
+	</div>
+	<script src="/static/js/jquery.js"></script>
+	<script src="/static/js/layer/mobile/layer.js"></script>
+	<script>
+	   $(".radius").click( function (){
+	        $(".radius").attr("src","/static/img/ic_radio_button_unchecked.png");
+			$(".radius").removeClass("active");
+			 $('input').css("border","none");
+			 $('input').not( $(this) ).val("");
+	        $(this).attr("src","/static/img/ic_radio_button_checked.png");
+			$(this).addClass("active");
+	   } );
+	     $(".apply_button").bind('click',function(){
+		     if( !$("img").hasClass("active") )
+			   {
+			        				   
+					return false;
+			   }
+			   var ischeck=true;  //检查输入问题
+			   var selecttype = $(".active").attr("data");
+			   
+			        var index  = parseInt(selecttype-1);
+					
+				     var InputDowObject = $(".content_content li").eq(index).find("input");
+					   
+						InputDowObject.each( function(){
+						    
+							var value = $(this).val();
+							
+						    if( value==null || value=="" || typeof(value)=="undefined" || value.length<1 )
+							   {
+							       vivaalert("Please fill all the information");
+								   $(this).css("border","1px solid red").focus();
+								   ischeck = false;
+								   return false;
+							   }else{
+							       ischeck=true;
+								   $(this).css("border","none");
+							   }
+						});
+				if( ischeck )
+                   {
+				      
+					   layer.open({
+								content: 'Please double-check that the information entered is correct.'
+								,btn: ['Submit', 'Check again']
+								,yes: function(index){
+								  layer.closeAll();
+									  var submitform =  InputDowObject.serialize();
+										   submitform+="&userid={$userid}&remark={$expend}&type="+selecttype;
+									   var index_lay =  layer.open({type: 2});
+										   $.post( "/operate/addapply.html",submitform,function(result){
+											   layer.closeAll();
+												if(result.code==404 )
+												  {
+													vivaalert('Without this user');				   
+													return false;
+												  }else if( result.code==405 )
+												  {
+													vivaalert('The balance is not enough');				   
+													return false;
+												  }
+												  else if( result.code==500 )
+												  {
+													vivaalert('Network anomalies, operation failure');				   
+													return false;
+												  }else if( result.code==200 )
+												  {
+													  $('input').val("");
+													  window.location.replace("/operate/apply_success.html");									 
+													 return false;
+												  }
+										   },'json');
+										   
+						              }
+						});
+				   }				
+				 			   
+		 });
+		 
+		 var  vivaalert = function(content)
+		 {
+		    layer.open({
+						content: content
+						,time: 2 //2秒后自动关闭
+					  });
+		 }
+	</script>
+</body>
+<!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5TKF672" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+</html>

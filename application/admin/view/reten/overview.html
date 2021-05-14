@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta charset="utf-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<title>GAME BRAIN</title>
+	{include file="./static/html/header_common.html" /}
+	<link href="/static/css/adspend.css?t=122444455" rel="stylesheet" type="text/css">
+	<link href="/static/css/checkbox.css" rel="stylesheet" type="text/css">
+	<link rel="stylesheet" type="text/css" media="all" href="/static/plugin/jquery-time/daterangepicker-bs3.css"/>
+	    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+   <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <!-- import JavaScript -->
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <script src="/static/js/axios.min.js"></script>
+	<style>
+		.el-table th > .cell{color:#222;font-weight:bold;}
+		.el-table td > .cell{color:#222;font-size:12px;}
+	</style>
+</head>
+<body style="background-color:#fff;">
+<div id="wrapper" style="background-color:#fff;">
+
+	{include file="./static/html/header.html" /}
+
+	<div class="hw_page_content">
+
+		<div class="hw_menu_left">
+			{include file="./static/html/side.html" /}
+		</div>
+		<div class="hw_content_right hlwd_reten" style="border-radius:10px;width:100%;">
+
+			<div class="hw_content">
+                
+				<div class="reten_title" style="float:left;margin-top:35px;font-size:18px;margin-left:10px;color:#222">
+				  <el-page-header @back="goBack" content="30天留存展示">
+				</div>
+				<div class="hw_ad_title">
+					<span>						
+						<span class="hw-date-wrapper">
+                          <el-date-picker
+								  v-model="date"					 
+								  type="daterange"
+								  size="small"
+								  @change="getlist"
+								  value-format="yyyy-MM-dd"
+                                  style="width:300px;"								  
+								  start-placeholder="开始"
+								  end-placeholder="结束">
+						  </el-date-picker>						
+						</span>
+						<el-select @change="getlist" v-model="country" filterable style="width:150px" size="small" placeholder="选择国家">
+							{volist name="countrys" id="item"}
+							  <el-option key="{$key}" label="{$item}" value="{$key}"></el-option>
+							{/volist}
+						</el-select>						
+					</span>
+				</div>
+                <div style="clear:both;"></div>				
+				<div class="hw_reven clearfix" style="background:#fff;padding:30px 10px;">
+					 <el-table
+					  :data="tableData"
+					  border
+					  v-loading="loading"
+					  style="width: 100%">
+					  <el-table-column prop="date" label="日期" width="120"></el-table-column>
+					  <el-table-column prop="new_users" label="新增" width="100"></el-table-column>
+					  <el-table-column prop="day1" label="day1" width="100"></el-table-column>
+					  <el-table-column prop="day2" label="day2" width="100"></el-table-column>
+					  <el-table-column prop="day3" label="day3" width="100"></el-table-column>
+					  <el-table-column prop="day4" label="day4" width="100"></el-table-column>
+					  <el-table-column prop="day5" label="day5" width="100"></el-table-column>
+					  <el-table-column prop="day6" label="day6" width="100"></el-table-column>
+					  <el-table-column prop="day7" label="day7" width="100"></el-table-column>
+					  <el-table-column prop="day8" label="day8" width="100"></el-table-column>
+					  <el-table-column prop="day9" label="day9" width="100"></el-table-column>
+					  <el-table-column prop="day10" label="day10" width="100"></el-table-column>
+					  <el-table-column prop="day11" label="day11" width="100"></el-table-column>
+					  <el-table-column prop="day12" label="day12" width="100"></el-table-column>
+					  <el-table-column prop="day13" label="day13" width="100"></el-table-column>
+					  <el-table-column prop="day14" label="day14" width="100"></el-table-column>
+					  <el-table-column prop="day15" label="day15" width="100"></el-table-column>
+					  <el-table-column prop="day16" label="day16" width="100"></el-table-column>
+					  <el-table-column prop="day17" label="day17" width="100"></el-table-column>
+					  <el-table-column prop="day18" label="day18" width="100"></el-table-column>
+					  <el-table-column prop="day19" label="day19" width="100"></el-table-column>
+					  <el-table-column prop="day20" label="day20" width="100"></el-table-column>
+					  <el-table-column prop="day21" label="day21" width="100"></el-table-column>
+					  <el-table-column prop="day22" label="day22" width="100"></el-table-column>
+					  <el-table-column prop="day23" label="day23" width="100"></el-table-column>
+					  <el-table-column prop="day24" label="day24" width="100"></el-table-column>
+					  <el-table-column prop="day25" label="day25" width="100"></el-table-column>
+					  <el-table-column prop="day26" label="day26" width="100"></el-table-column>
+					  <el-table-column prop="day27" label="day27" width="100"></el-table-column>
+					  <el-table-column prop="day28" label="day28" width="100"></el-table-column>
+					  <el-table-column prop="day29" label="day29" width="100"></el-table-column>
+					  <el-table-column prop="day30" label="day30" width="100"></el-table-column>
+					</el-table>
+				</div>
+			</div>
+		</div>
+	</div>
+	{include file="./static/html/footer.html" /}
+</div>
+{include file="./static/html/footer_common.html" /}
+
+</body>
+  <script>
+   
+	let t = new Vue({
+        el: '#wrapper',
+        data: {
+			country:'all',
+			date:['{$start}','{$end}'],
+			loading:false,
+			tableData:[],
+        },		
+		mounted(){
+           this.getlist()		
+		},
+        methods: {
+		   goBack(){
+		    window.location.href="/admin_reten/index"
+		   },
+		   getlist(){
+			    this.loading = true
+			   let _that = this
+			   let param ={
+			     date:this.date,
+				 country:this.country
+			   }
+			   axios({
+					method: 'post',
+					url:'/admin_reten/reten_json',
+					data:param
+				}).then(res=>{			
+				 _that.loading = false
+				 this.tableData = res.data
+			 })
+			}
+        }
+    })
+  </script>
+
+</html>

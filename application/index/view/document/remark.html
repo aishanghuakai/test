@@ -1,0 +1,337 @@
+<html>
+  <head>
+    <title>Game Brain 文档说明</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="robots" content="noindex">
+	<style>
+.markdown_views{
+  float:left;
+  width:75%;
+}	
+	.markdown_views blockquote {
+    display: block;
+    padding: 16px;
+    margin: 0 0 24px;
+    border-left: 8px solid #dddfe4;
+    background: #eef0f4;
+    overflow: auto;
+    word-break: break-word !important;
+}
+.markdown_views h6 {
+    font-size: 16px;
+    line-height: 24px;
+	color: #4f4f4f;
+    margin: 8px 0 16px;
+   font-weight: 700;
+}
+.markdown_views blockquote p {
+    font-size: 14px;
+    line-height: 22px;
+    color: #999;
+    font-weight: 400; 
+	margin: 0 0 5px;
+}
+.markdown_views a {
+    text-decoration-skip: ink;
+    color: #4ea1db;
+    text-decoration: none;
+}
+.markdown_views table {
+    border-collapse: collapse;
+    display: table;
+    width: 100%;
+    text-align: center;
+    margin-bottom: 24px;
+}
+.markdown_views table {
+    background-color: transparent;
+    border-spacing: 0;
+}
+.markdown_views table tr {
+    border: 0;
+        border-top-color: currentcolor;
+        border-top-style: none;
+        border-top-width: 0px;
+    border-top: 1px solid #ddd;
+    background-color: #fff;
+}
+.markdown_views table tr th {
+    font-weight: 700;
+    background-color: #eff3f5;
+}
+.markdown_views table tr td,.markdown_views table tr th {
+    font-size: 14px;
+    color: #4f4f4f;
+    line-height: 22px;
+    border: 1px solid #ddd;
+    padding: 8px;
+    word-break: break-word !important;
+    vertical-align: middle;
+}
+.markdown_views tbody {
+    border: 0;
+}
+
+.markdown_views pre > code {
+    background-color: rgba(0,0,0,.05);
+    display: block;
+  
+    -webkit-text-size-adjust: none;
+    overflow-x: auto;
+    white-space: pre;
+}
+.markdown_views pre code {
+    display: block;
+    font-size: 14px;
+    line-height: 22px;
+    overflow-x: auto;
+    padding: 0 !important;
+    color: #000;
+    white-space: pre;
+    word-wrap: normal;
+    background-color: #f6f8fa;
+    border-radius: 4px;
+}
+
+.markdown_views ul li {
+    list-style-type: disc;
+   
+}
+.markdown_views .pre-numbering li {
+ 
+    list-style: none;
+    margin: 0;
+}
+.side-list {
+    float: left;
+    width: 20%;
+    padding: 20px 10px;
+    position: relative;
+}
+.side-list li.list_active {
+    background: #dbeeff;
+}
+.side-list li:hover {
+    background: #dbeeff;
+}
+.side-list li {
+    padding: 10px 0 10px 10px;
+    margin: 5px 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 14px;
+    line-height: 20px;
+}
+li {
+    list-style: none;
+}
+.side-list li.list_active a {
+    color: #02cfd4;
+}
+.side-list li a {
+    color: #8c8c8c;
+	text-decoration: none;
+}
+a:hover {
+    text-decoration: none;
+    color: #02cfd4;
+}
+	</style>
+   </head>
+   <body style="text-align:center;margin:0 0;padding:0 0;">
+     <div style="margin:0 auto;width:90%;height:100%;text-align:left;">
+     <div class="side-list">
+		<ul class="list_item">
+			<li class="list_active"><a href="#ad1">基础字段说明</a></li>
+			<li><a href="#ad2">内购请求</a></li>
+        </ul>
+	  <div class="guide guide_one" rel="1"></div>
+	  </div>
+     <div  class="markdown_views" style="margin-top:20px;">
+	    <div id="ad1">
+		 <h6>Game Brain 广告参数基础字段</h6>
+		 <blockquote>
+		  <p>在Game Brain创建应用后,以下基础字段为广告参数所必须字段，再您添加参数时，请务必添加 </p>
+		</blockquote>
+		<h6>URL</h6>
+		 <blockquote>
+		  <p>http://console.gamebrain.io/advertise/advlist?appid=xx</p>
+		</blockquote>
+		<h6>支持格式</h6>
+		 <blockquote>
+		  <p>JSON</p>
+		</blockquote>
+		<h6>HTTP请求方式</h6>
+		 <blockquote>
+		  <p>GET/POST</p>
+		</blockquote>
+		<h6>基础字段(*)</h6>
+		<blockquote>
+		  <table>
+			<thead>
+			<tr>
+			  <th align="left">参数</th>
+			  <th align="left">必选</th>
+			  <th align="left">类型</th>
+			  <th align="left">默认</th>
+			  <th>说明</th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr>
+			  <td align="left">interadsinteral</td>
+			  <td align="left">ture</td>
+			  <td align="left">string</td>
+			  <td align="left">30</td>
+			  <td>新用户前多少秒没有插屏广告</td>
+			</tr>
+			<tr>
+			  <td align="left">noadtime</td>
+			  <td align="left">ture</td>
+			  <td align="left">string</td>
+			  <td align="left">120</td>
+			  <td>新用户前多少秒无广告，单位秒</td>
+			</tr>
+			<tr>
+			  <td align="left">interadscount</td>
+			  <td align="left">ture</td>
+			  <td align="left">string</td>
+			  <td align="left">0</td>
+			  <td>插屏局数控制，几局出插屏广告，默认是0</td>
+			</tr>
+			<tr>
+			  <td align="left">noadday</td>
+			  <td align="left">ture</td>
+			  <td align="left">string</td>
+			  <td align="left">30</td>
+			  <td>新用户前几天无插屏，单位天，默认值是0</td>
+			</tr>
+			<tr>
+			  <td align="left">interChangeToVideoCount</td>
+			  <td align="left">ture</td>
+			  <td align="left">string</td>
+			  <td align="left">0</td>
+			  <td>插屏转视频的次数，默认是0，不转；具体数值就代表转换几次</td>
+			</tr>
+			<tr>
+			  <td align="left">interChangeToVideoIntervalTime</td>
+			  <td align="left">ture</td>
+			  <td align="left">string</td>
+			  <td align="left">3</td>
+			  <td>插屏转视频，间隔视频的时间，默认是3分钟</td>
+			</tr>
+			<tr>
+			  <td align="left">AuditAds</td>
+			  <td align="left">ture</td>
+			  <td align="left">string</td>
+			  <td align="left">0</td>
+			  <td>审核期间，广告总开关，默认是0，默认总开关关；1是开</td>
+			</tr>
+			<tr>
+			  <td align="left">NetWorkDetectionCanClose</td>
+			  <td align="left">ture</td>
+			  <td align="left">string</td>
+			  <td align="left">0</td>
+			  <td>网络检测期间，默认是0，显示'稍后再说'文案，点击可以关闭；若设置成1，显示“刷新”文案，必须设置才可关闭</td>
+			</tr>			
+			</tbody>
+		</table>
+      </blockquote>
+	  <h6>返回格式</h6>
+	  <pre class="prettyprint" style="position:relative;" name="code">
+	  <code class="language-javascript hljs  has-numbering">
+	    {
+		   "int": [
+					{
+					  "name": "am1",
+					  "val": "ca-app-pub-6491984961722312/7205269193"
+					}
+			  ],
+		   "rew": [],
+		   "nat": [],
+		   "ban": [],
+		   "conf": {
+			"InterTimeOne": "60",
+		   },
+		  "country": ""
+        }
+	  </code>	  
+    </pre>
+	</div>
+	      <div id="ad2" class="markdown_views" style="margin-top:20px;">
+		 <h6>内购请求</h6>
+		 <blockquote>
+		  <p>用于统计每个产品的内购收益情况</p>
+		</blockquote>
+		<h6>URL</h6>
+		 <blockquote>
+		  <p>http://console.gamebrain.io/purchase/index</p>
+		</blockquote>
+		<h6>支持格式</h6>
+		 <blockquote>
+		  <p>JSON</p>
+		</blockquote>
+		<h6>HTTP请求方式</h6>
+		 <blockquote>
+		  <p>GET/POST</p>
+		</blockquote>
+		<h6>基础字段(*)</h6>
+		<blockquote>
+		  <table>
+			<thead>
+			<tr>
+			  <th align="left">参数</th>
+			  <th align="left">必选</th>
+			  <th align="left">类型</th>			  
+			  <th>说明</th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr>
+			  <td align="left">appid</td>
+			  <td align="left">ture</td>
+			  <td align="left">string</td>
+			  <td>应用ID</td>
+			</tr>
+			<tr>
+			  <td align="left">income</td>
+			  <td align="left">ture</td>
+			  <td align="left">string</td>			  
+			  <td>用户每次购买的金额</td>
+			</tr>
+			<tr>
+			  <td align="left">orderid</td>
+			  <td align="left">ture</td>
+			  <td align="left">string</td>
+			  <td>商品购买交易ID</td>
+			</tr>
+            <tr>
+			  <td align="left">country</td>
+			  <td align="left">ture</td>
+			  <td align="left">string</td>
+			  <td>用户所属国家简写标志 CN</td>
+			</tr>			
+			</tbody>
+		</table>
+      </blockquote>
+	  <h6>返回格式</h6>
+	  <pre class="prettyprint" style="position:relative;" name="code">
+	  <code class="language-javascript hljs  has-numbering">
+	    {		  
+		  "code":200
+        }
+	  </code>	  
+    </pre>
+	</div>
+	</div>
+	
+	
+	
+	</div>
+  </body>
+</html>

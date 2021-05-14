@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GAME BRAIN</title>
+	{include file="./static/html/header_common.html" /}
+	<link href="/static/css/adgain.css?t=14444" rel="stylesheet" type="text/css">
+    <link href="/static/css/checkbox.css" rel="stylesheet" type="text/css">
+	 <link href="/static/css/analysis.css" rel="stylesheet" type="text/css">
+	 <link rel="stylesheet" type="text/css" media="all" href="/static/plugin/jquery-time/daterangepicker-bs3.css" />
+	
+	<style>
+	 .fa,.allow_click{cursor:pointer}
+	 th,td{text-align:center;vertical-align:middle}
+	 .hw_reven thead tr {
+    background-color: #f9f9f9;
+}
+.hw_reven table {
+    border-collapse: collapse;
+    font-size: 12px !important;
+    color: #222 !important;
+    text-align: left !important;
+    line-height: 40px;
+}
+.hw_reven .table > thead > tr > th{
+  border-bottom:1px solid #e8e8e8 !important;
+  border-top:1px solid #e8e8e8 !important;
+   color: #222 !important;
+}
+
+	</style>
+</head>
+<body>
+    <div id="wrapper" style="background-color:#fff;">
+        
+		{include file="./static/html/header.html" /} 
+	
+		<div class="hw_page_content">
+		     
+		    <div class="hw_menu_left">
+         {include file="./static/html/side.html" /}  
+			</div>
+		    <div class="hw_content_right">	
+			  <ul class="search_tab clearfix" >
+			      <li><a href="/admin_adgain/index">成效概览</a></li>
+                  <li><a href="/admin_adgain/analysis">类型分析</a></li>
+                  <li class="active"><a  href="/admin_adgain/countryanalysis">国家细分</a></li>			  
+		          <li style="float:right;"><a style="font-size:12px;text-decoration:underline" href="/admin_adgain/relateapp"><i style="vertical-align:middle" class="fa fa-volume-off"></i>&nbsp;关联产品</a></li>
+			  </ul>	  
+			     <div class="hw_content">				 				   
+					   <div class="hw_ad_title" style="float:right">
+					     	  <span>					    								
+														
+								<span class="hw-date-wrapper">
+						          <input readonly="" id="start_date" placeholder="开始日期  -  结束日期" class="hw-input" value="{$start_date} -  {$end_date}" type="text">
+						        </span>
+							 </span>						    
+					   </div>
+					 
+					    <h5>国家选择</h5>
+						  <ul class="selectcountry" id="country">
+						    <li><a class="c-badge c-badge--small c-badge--danger u-mb-xsmallall country_sel" data="all" href="javascript:;">全部 <i class="fa fa-times"></i></a></li>
+							 
+						  </ul>
+						 
+						  <div class="caplatform c-dropdown dropdown" style="float:left;margin-top:5px;">
+							<div class="dropdown-toggle" id="dropdownMenuAvatar" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" role="button">
+							  <a class="c-badge c-badge--small c-badge--danger c-badge--default  showpre1" style="font-size:10px;"  href="javascript:;">+</a>
+							</div>
+							<div class="c-dropdown__menu has-arrow dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuAvatar" x-placement="top-end" style="position: absolute; top: 22px; left: 0px; will-change: transform;">
+							  {volist name="country" id="vv"}
+							  <a class="c-dropdown__item dropdown-item" data="{$key}" href="javascript:;">{$vv}</a>
+							  {/volist}
+							</div>
+						  </div>
+						  <div class="clearfix"></div> 
+						  <div style="margin-top:20px;">
+						  <h5>类型选择</h5>
+						  <ul class="selectcountry" id="country">
+						      <div class="el-checkbox el-checkbox-yellow el-checkbox-sm" style="float:left;margin-right:5px;">								
+								<input name="adtype" id="adtype_int" checked value="int" type="checkbox">
+								<label class="el-checkbox-style" for="adtype_int"></label>
+								<span class="margin-r">插屏</span>
+							</div>
+							<div class="el-checkbox el-checkbox-yellow el-checkbox-sm" style="float:left;margin-right:5px;">								
+								<input name="adtype" id="adtype_rew" checked value="rew" type="checkbox">
+								<label class="el-checkbox-style" for="adtype_rew"></label>
+								<span class="margin-r">激励</span>
+							</div>
+							<div class="el-checkbox el-checkbox-yellow el-checkbox-sm" style="float:left;margin-right:5px;">								
+								<input name="adtype" id="adtype_nat" checked value="nat" type="checkbox">
+								<label class="el-checkbox-style" for="adtype_nat"></label>
+								<span class="margin-r">原生</span>
+							</div>
+							<div class="el-checkbox el-checkbox-yellow el-checkbox-sm" style="float:left;margin-right:5px;">								
+								<input name="adtype" id="adtype_ban" checked value="ban" type="checkbox">
+								<label class="el-checkbox-style" for="adtype_ban"></label>
+								<span class="margin-r">banner</span>
+							</div>
+							<div class="el-checkbox el-checkbox-yellow el-checkbox-sm" style="float:left;margin-right:5px;">								
+								<input name="adtype" id="adtype_no" checked value="no" type="checkbox">
+								<label class="el-checkbox-style" for="adtype_no"></label>
+								<span class="margin-r">未知</span>
+							</div>
+						  </ul>
+						  </div>
+						 <div class="clearfix"></div> 
+						 <div style="margin-top:20px;">
+						  <h5>渠道选择</h5>
+						  <ul class="selectcountry qudao">
+						    <div class="el-checkbox el-checkbox-red " style="float:left;margin-right:5px;">								
+								<input name="platform" id="platform_1" checked value="1" type="checkbox">
+								<label class="el-checkbox-style" for="platform_1"></label>
+								<span class="margin-r">Mobvista</span>
+							</div>
+							<div class="el-checkbox el-checkbox-red " style="float:left;margin-right:5px;">								
+								<input name="platform" id="platform_2" checked value="2" type="checkbox">
+								<label class="el-checkbox-style" for="platform_2"></label>
+								<span class="margin-r">Unity</span>
+							</div>
+							<div class="el-checkbox el-checkbox-red " style="float:left;margin-right:5px;">								
+								<input name="platform" id="platform_3" checked value="3" type="checkbox">
+								<label class="el-checkbox-style" for="platform_3"></label>
+								<span class="margin-r">Applovin</span>
+							</div>
+							<div class="el-checkbox el-checkbox-red " style="float:left;margin-right:5px;">								
+								<input name="platform" id="platform_4" checked value="4" type="checkbox">
+								<label class="el-checkbox-style" for="platform_4"></label>
+								<span class="margin-r">Vungle</span>
+							</div>
+							<div class="el-checkbox el-checkbox-red " style="float:left;margin-right:5px;">								
+								<input name="platform" id="platform_5" checked value="5" type="checkbox">
+								<label class="el-checkbox-style" for="platform_5"></label>
+								<span class="margin-r">Admob</span>
+							</div>
+							<div class="el-checkbox el-checkbox-red " style="float:left;margin-right:5px;">								
+								<input name="platform" id="platform_6" checked value="6" type="checkbox">
+								<label class="el-checkbox-style" for="platform_6"></label>
+								<span class="margin-r">Facebook</span>
+							</div>
+							<div class="el-checkbox el-checkbox-red " style="float:left;margin-right:5px;">								
+								<input name="platform" id="platform_7" checked value="7" type="checkbox">
+								<label class="el-checkbox-style" for="platform_7"></label>
+								<span class="margin-r">IronSource</span>
+							</div>					
+						  </ul> 
+                        </div>
+
+                       <div class="hw_reven clearfix" style="margin-top:30px;padding:30px 0px;">
+					    
+					     <table class="table">
+						  <thead style="font-size:13px;">
+							<tr>
+							  <th>日期</th>
+							  <th style="text-align:left;">国家</th>
+							  <th>收益</th>
+							  <th>展示</th>
+							  <th>点击</th>
+							  <th>eCPM</th>
+							</tr>
+						  </thead>
+						  <tbody id="c_body">
+						   
+							 {volist name="data" id="item"}
+							<tr>
+							  <td>---</td>
+							  <td style="text-align:left;">{$item.country|getadmincountryname}</td>
+							  <td>{$item.revenue}</td>
+							  <td>{$item.impressions}</td>
+							  <td>{$item.clicks}</td>
+							  <td><?php echo adcalculate($item['revenue'],$item['impressions'],"2"); ?></td>							
+							</tr>
+						{/volist}	
+						  </tbody>
+						</table>
+					 </div>						
+												
+			    </div>
+           	</div>
+         </div>
+       {include file="./static/html/footer.html" /}		 
+	</div>
+   {include file="./static/html/footer_common.html" /}
+   
+   
+   
+    <script type="text/javascript" src="/static/plugin/jquery-time/moment.js"></script>
+   <script type="text/javascript" src="/static/plugin/jquery-time/daterangepicker.js"></script>
+    <script src="/static/js/echarts.min.js"></script>
+</body>
+  <script>
+     var start_date="{$start_date}";
+	 var end_date = "{$end_date}";
+	 var appid="{$appid}";
+    $(function(){
+	  
+	  
+	  $('#start_date').daterangepicker({ minDate:'2018-07-08',opens:'left' },function(start, end, label) {
+	 
+		 start_date = start.format('YYYY-MM-DD');end_date=end.format('YYYY-MM-DD');
+		 getdata();
+	  });
+	    
+		$("input[name='app_id']").click( function(){
+	        window.location.href="/admin_adgain/countryanalysis?appid="+$(this).val();
+	   })
+	  	    
+	   $(".bar_allow_roe").click( function(){
+	       
+		   if( $(this).find("i").hasClass("fa-angle-double-right") )
+		      {
+			     $(this).find("i").removeClass("fa-angle-double-right");
+				 $(this).find("i").addClass("fa-angle-double-left");
+				 $(this).animate({'left':'21%'},1000);
+				 $(".hw_app_navlist").show(1000);
+			  }else{
+			     $(this).find("i").removeClass("fa-angle-double-left");
+				 $(this).find("i").addClass("fa-angle-double-right");
+				 $(this).animate({'left':'0%'},1000);
+				 $(".hw_app_navlist").hide(1000);
+			  }
+	   })
+	    
+       $(".c-dropdown__item").click( function(){
+	       var name = $(this).text();
+		 
+		   var country_code = $(this).attr("data");
+		   var html ='<li><a class="c-badge  c-badge--danger u-mb-xsmall'+country_code+' country_sel" data="'+country_code+'" href="javascript:;">'+name+' <i class="fa fa-times"></i></a></li>';
+	       if( $(".u-mb-xsmall"+country_code).length<1 )
+		   {
+		     $("#country").append(html);
+			 getdata();
+		   }
+		   
+	   })
+     	   
+	    $(document).on( 'click',".country_sel",function(){
+		   $(this).parent().remove();
+		   getdata();
+		})
+        
+        $("input[type='checkbox']").click( function(){
+		   getdata();
+		})		
+	}); 
+	
+	
+	var getdata = function()
+	{
+	  
+	  
+	   var adtype="";
+	   var platform="";
+	   var country="";
+	   $("input[name='adtype']:checked").each( function(index){
+				  adtype+="'"+$(this).val()+"'"+",";
+			  });
+	   $("input[name='platform']:checked").each( function(index){
+				  platform+="'"+$(this).val()+"'"+",";
+			  });
+        $(".country_sel").each( function(index){
+				  country+="'"+$(this).attr("data")+"'"+",";
+			  });			  
+	   var url = "/admin_adgain/countrydata?appid="+appid+"&country="+country+"&start_date="+start_date+"&end_date="+end_date+"&platform="+platform+"&adtype="+adtype;
+	   var index1 = layer.load();
+	   $.get(url,{},function(e){
+             layer.closeAll();	   
+	         $("#c_body").html(e);
+	   },'json')
+	}
+	
+	  
+  </script>
+</html>

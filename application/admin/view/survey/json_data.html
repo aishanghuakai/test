@@ -1,0 +1,32 @@
+﻿                           {if condition="$type eq 'event'"}
+							    {volist name="res" id="e"}
+								<tr>
+									 <td>{$e.date}</td>
+									 <td>{$e.num}</td>
+									 <td>{$e.total}</td>
+									 <td>{$e.rew}</td>
+									 <td>{$e.int}</td>
+									 <td>{$e.reten_1}%</td>
+								</tr>
+							   {/volist}						
+						    {else /}
+							    {volist name="res.out_data" id="a"}
+								<tr>
+									<td><i style="color:#bcbcbc">({$a.date|getweekday})</i>{$a.date}{if condition="$a['producter_showtips'] neq '0'"}<sup  data-mtpis="{$a['producter_showtips']}" ><i style="color:red;font-size:10px;" class="fa fa-commenting-o"></i></sup>{/if}</td>
+									<td>{$a.dau}</td>
+									 <td>{$a["impressions"]["int"]["avgshow"]}</td>
+									 <td>{$a["impressions"]["rew"]["avgshow"]}</td>
+									 <td>{$a.num??0}</td>
+									 <td>{$a.usertime??0}</td>
+									 
+								</tr>
+								{/volist}
+								<tr style="font-size:13px;font-weight:700">
+							     <td>汇总</td>
+								 <td>{$res.total["dau"]}</td>
+								 <td>{$res.total["intavgshow"]}</td>
+								 <td>{$res.total["rewavgshow"]}</td>
+								 <td>{$res.total["num"]??0}</td>
+								 <td>{$res.total["usertime"]??0}</td>
+							   </tr>
+							{/if}

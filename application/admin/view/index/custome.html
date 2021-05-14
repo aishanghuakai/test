@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GAME BRAIN</title>
+    {include file="./static/html/header_common.html" /}
+  <link href="/static/css/checkbox.css" rel="stylesheet" type="text/css">	
+	 <link rel="stylesheet" type="text/css" media="all" href="/static/plugin/jquery-time/daterangepicker-bs3.css" />
+     <link href="/static/css/dialog.css?t=<?php echo time(); ?>" rel="stylesheet" type="text/css" />
+    <link href="/static/css/blue/style.css?t=<?php echo time(); ?>" rel="stylesheet">
+	 <style>
+	     th,td{text-align:center;vertical-align:middle}
+	 .hw_reven thead tr {
+    background-color: #fff;
+}
+
+.hw_reven .table th, .hw_reven .table td {
+    padding: 18px 30px;
+    vertical-align: top;
+    border-top: 1px solid #f2f2f2;
+
+}
+table.tablesorter{
+  background-color:#fff;
+}
+.hw_reven .table thead th {
+    border-top: 0;
+    border-bottom-width: 1px;
+    font-family: "Poppins", sans-serif;
+    font-weight:700;
+}
+table.tablesorter thead tr th{
+  background-color:#fff !important;
+}
+.hw_reven .table thead th {
+    vertical-align: bottom;
+    border-bottom: 2px solid #f2f2f2;
+        border-bottom-width: 2px;
+}
+.hw_reven{
+  display: block;
+width: 100%;
+overflow-x: auto;
+}
+.hw_reven table {
+    border-collapse: collapse;
+    font-size: 12px !important;
+    color: #222 !important;
+    text-align: left !important;
+    line-height: 40px;
+}
+.form-control {
+    border: 1px solid #f2f2f2 !important;
+    font-family: "Poppins", sans-serif;
+    font-size: 1.3rem;
+    padding: 0.56rem 0.75rem;
+    line-height: 14px;
+    font-weight: 300;
+	text-align:center;
+}
+.form-control:focus,.form-control {
+    box-shadow: none;
+}
+
+.btn-inverse-dark {
+    color: #fff;
+    background-color: rgba(66, 73, 100, 0.2);
+    background-image: none;
+    border-color: rgba(66, 73, 100, 0);
+}
+.btn-inverse-danger {
+    color: #e65251;
+    background-color: rgba(230, 82, 81, 0.2);
+    background-image: none;
+    border-color: rgba(230, 82, 81, 0);
+}
+
+.btn-inverse-default {
+    color:#212529;
+   background-color: #f3f5f6;
+   border-color: #f3f5f6;
+}
+.count{
+    background: #4285f4;
+    display: inline-block;
+    padding: 5px 1px;
+    margin-right: 5px;
+}
+	 </style>
+</head>
+<body style="background-color:#f2f8f9;">
+    <div id="wrapper">
+        {include file="./static/html/header.html" /}	
+		<div class="hw_page_content">
+		    
+		    <div class="hw_menu_left">
+         {include file="./static/html/side.html" /}  
+			</div>
+			
+		    <div class="hw_content_right" style="padding:0 30px;width:80%" >
+			  <div style="margin-top:30px;">
+				 <a style="">
+					    <div>
+                            <input type="text" style="width:190px;" id="data_start_date" value="2019-12-23 到 2019-12-23"  class="form-control">
+                          </div>
+				</a> 
+			  </div>
+			  
+			 				
+				  <div class="hw_reven" style="width:100%;">
+				      
+				     
+							<table class="table tablesorter" id="tablehw">
+                      <thead>
+                        <tr>
+                          <th>地区</th>
+                          <th>活跃</th>
+                          <th>新增</th>
+                          <th>留存</th>
+						  <th>ROI</th>
+						  <th>花费</th>
+						  <th>CPI</th>
+						  <th>收益</th>
+						  <th>ARPDAU</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+					   
+                        <tr>
+                          
+						 
+                        </tr>
+                                   
+                      </tbody>
+                    </table>
+						
+					 </div>
+			         			   
+			</div>
+		</div>
+	
+		 {include file="./static/html/footer.html" /}
+	</div>
+</body>
+ {include file="./static/html/footer_common.html" /}
+  <script type="text/javascript" src="/static/plugin/jquery-time/moment.js"></script>
+  <script type="text/javascript" src="/static/plugin/jquery-time/daterangepicker.js"></script>	
+  <script src="/static/js/mTips.js"></script>
+  <script src="/static/js/jquery.tablesorter.min.js"></script>
+   <script src="/static/js/jquery.freezeheader.js"></script>
+ <script>
+ 
+     var start_date="";
+	 var end_date = "";
+	 $(function(){
+	    $.tablesorter.addParser({  
+		 id: "num", //指定一个唯一的ID  
+		 is: function(s){  
+			 return false;  
+			 },  
+		 format: function(s){  
+			 return s.substring(0,s.length-2);//去除后面的汉字
+			 },  
+		 type: "numeric"  
+		 });  
+	 $(".table").tablesorter({headers:{}});
+	 
+	 $("#tablehw").freezeHeader({'offset' : '60px'});
+	    $('#data_start_date').daterangepicker({ minDate:'2018-07-08',opens:'right',ranges: {'今天': [moment(),moment()],
+'昨天': [moment().subtract(1, 'days'),moment().subtract(1, 'days')],
+'近7天': [moment().subtract(7, 'days'), moment()],
+'这个月': [moment().startOf('month'), moment()],
+'上个月': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]} },function(start, end, label) {	 
+		    start_date = start.format('YYYY-MM-DD');end_date=end.format('YYYY-MM-DD');
+			$('#data_start_date').val(start_date+" 到 "+end_date);
+            window.location.href="/admin_index/countrygroup?start="+start_date+"&end="+end_date;
+		 });
+		 
+		 $('#keyword').bind('input propertychange', function()
+		   {
+			   var input_text = $(this).val();
+               $("tbody tr").each( function(i){
+			      
+			        var text = $(this).find("td").eq(0).text();
+					var aa = text.match(new RegExp(input_text, 'i'));
+					if( aa )
+					  {					     
+						 $(this).show();
+					  }else{
+					     $(this).hide();
+					  }
+			   })			   
+		   }); 
+	 })
+ </script>
+
+</html>

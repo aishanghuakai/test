@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GAME BRAIN</title>
+    {include file="./static/html/header_common.html" /}
+  <link href="/static/css/checkbox.css" rel="stylesheet" type="text/css">	
+	 <link rel="stylesheet" type="text/css" media="all" href="/static/plugin/jquery-time/daterangepicker-bs3.css" />
+<link href="/static/css/show.css?t=<?php echo time(); ?>" rel="stylesheet">
+	 <style>
+	    th,td{text-align:center;vertical-align:middle}
+	  
+.hw_reven table {
+    border-collapse: collapse;
+    font-size: 12px !important;
+    color: #222 !important;
+    text-align: left !important;
+    line-height: 40px;
+}
+
+
+.hw_reven .table > thead > tr > th{
+  border-bottom:1px solid #e8e8e8 !important;
+  border-top:1px solid #e8e8e8 !important;
+   color: #222 !important;
+}
+
+.cursor,#download,.country label,.fa-pencil-square-o,.fa-line-chart{
+cursor:pointer;
+}
+.keyword-item-box {
+    background-color: #f9f9f9;
+    border: 1px solid #e8e8e8;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    padding: 25px 25px 30px;
+    min-height: 180px;
+    margin: 20px 24px;
+}
+.issue-keyword {
+    margin-right: 120px;
+	margin-top:15px;
+    overflow: hidden;
+    height: 22px;
+}
+.issue-keyword a:first-child {
+    margin-left: 0;
+    border-left: 0;
+    padding-left: 0;
+}
+.issue-keyword a {
+    margin-left: 20px;
+    border-left: 1px solid #e8e8e8;
+    padding-left: 20px;
+    line-height: 14px;
+    display: inline-block;
+    margin-top: 5px;
+    color: #222;
+}
+.aactive{
+ color: #ff8282  !important;
+}
+.tui-radio-button-wrapper-checked {
+    color: #222;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    border: 0;
+    border-bottom: 4px solid #f85959 !important;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+}
+.tui-radio-button-wrapper {
+    background: transparent;
+    border: 0;
+    font-size: 18px;
+    height: 44px;
+    transition: background .5s ease-in-out;
+    color: #777;
+    padding: 0;
+    margin-right: 40px;
+}
+.tui-radio-button-wrapper {
+    margin: 0;
+        
+    height: 44px;
+    line-height: 40px;
+    color: #666;
+    display: inline-block;  
+    cursor: pointer;  
+    border-left: 0;
+    padding: 0 16px;
+}
+.item-header {
+    position: relative;
+    border-bottom: 2px solid #e8e8e8;
+    height: 44px;
+}
+.tui-radio-button-wrapper:hover {
+    background-color: #ccc;
+	color:#fff;
+}
+.main1{  
+			width: 20px;  
+			height: 30px;
+			color:#fff;	
+			margin-left:10px;				
+			background:linear-gradient(144deg,#f84141 0%,#f84141 60%,transparent 0),  
+					   linear-gradient(-144deg,#f84141 0%,#f84141 60%,transparent 0);
+		}
+.main2{  
+			width: 20px;  
+			height: 30px;
+			color:#fff;	
+			margin-left:10px;				
+			background:linear-gradient(144deg,#ff732c 0%,#ff732c 60%,transparent 0),  
+					   linear-gradient(-144deg,#ff732c 0%,#ff732c 60%,transparent 0);
+		}
+.main3{  
+			width: 20px;  
+			height: 30px;
+			color:#fff;	
+			margin-left:10px;				
+			background:linear-gradient(144deg,#ffb535 0%,#ffb535 60%,transparent 0),  
+					   linear-gradient(-144deg,#ffb535 0%,#ffb535 60%,transparent 0);
+		}
+.main4{  
+			width: 20px;  
+			height: 30px;
+			color:#fff;	
+			margin-left:10px;				
+			background:linear-gradient(144deg,#d3bf99 0%,#d3bf99 60%,transparent 0),  
+					   linear-gradient(-144deg,#d3bf99 0%,#d3bf99 60%,transparent 0);
+		}		
+</style>
+</head>
+<body>
+    <div id="wrapper">
+        {include file="./static/html/header.html" /}	
+		<div class="hw_page_content">
+		    
+		    <div class="hw_menu_left">
+         {include file="./static/html/side.html" /}  
+			</div>
+		    <div class="hw_content_right" style="padding-bottom:30px;width:80%;" >
+			  
+			   
+				  <div class="hw_reven" style="padding:10px 0px;">
+				            <ul class="search_tab clearfix" >
+							  
+                               <li style="margin-left:10px;" {if condition="$platform eq 'android'"} class="active" {/if} ><a   href="/admin_compet/index?platform=android&type={$type}">谷歌商店</a></li>
+							    <li style="margin-left:10px;" {if condition="$platform eq 'ios'"} class="active" {/if} ><a   href="/admin_compet/index?platform=ios&type={$type}">苹果商店</a></li>
+                               	<a style="float:right;margin-right:30px;" href="/admin_compet/search">更多应用</a>				   
+							 </ul>
+				            <div class="keyword-item-box">
+							
+							  <div class="item-header">
+							    <label style="padding-left:0px !important" onclick="window.location.href='/admin_compet/index?country={$country}&type=today&platform={$platform}'" class="tui-radio-button-wrapper {if condition="$type eq 'today'"}tui-radio-button-wrapper-checked{/if}">								   
+									  <span class="tui-radio-text">今日排行</span>
+								</label>
+								<label class="tui-radio-button-wrapper {if condition="$type eq 'up'"}tui-radio-button-wrapper-checked{/if}" onclick="window.location.href='/admin_compet/index?country={$country}&type=up&platform={$platform}'" >								   
+									<span class="tui-radio-text">上升最快</span>
+								</label>
+								<label class="tui-radio-button-wrapper {if condition="$type eq 'down'"}tui-radio-button-wrapper-checked{/if}" onclick="window.location.href='/admin_compet/index?country={$country}&type=down&platform={$platform}'">								   
+									<span class="tui-radio-text">下降最快</span>
+								</label>
+							  </div>
+							  <div class="issue-keyword">
+							     <a {if condition="$country eq 'US'"} class="aactive" {/if} href="/admin_compet/index?country=US&type={$type}&platform={$platform}">美国</a>
+								 <a {if condition="$country eq 'HK'"} class="aactive" {/if} href="/admin_compet/index?country=HK&type={$type}&platform={$platform}">香港</a>
+								 <a {if condition="$country eq 'TW'"} class="aactive" {/if} href="/admin_compet/index?country=TW&type={$type}&platform={$platform}">台湾</a>
+								 <a  {if condition="$country eq 'JP'"} class="aactive" {/if} href="/admin_compet/index?country=JP&type={$type}&platform={$platform}">日本</a>
+								 {if condition="$platform eq 'android'"}
+								 <a  {if condition="$country eq 'KR'"} class="aactive" {/if} href="/admin_compet/index?country=KR&type={$type}&platform={$platform}">韩国</a>
+								 {else /}
+								 <a  {if condition="$country eq 'CN'"} class="aactive" {/if} href="/admin_compet/index?country=CN&type={$type}&platform={$platform}">中国</a>
+								 <a  {if condition="$country eq 'TH'"} class="aactive" {/if} href="/admin_compet/index?country=TH&type={$type}&platform={$platform}">泰国</a>
+								 {/if}
+								 
+							  </div>
+							 <table class="table table-hover" style="background-color:#fff;margin-top:15px;">
+							 
+							  <thead >								
+								<tr style="background-color: #f9f9f9;">
+								  <th style="width:15%;">排名</th>
+								  <th style="text-align:left;width:80%;">产品信息</th>
+								  <th style="width:20%;">评分</th>
+								  <th>评论数</th>
+								  <th>安装</th>
+								  <th>更新</th>
+								  <th>开发者</th>
+                                  <th>邮箱</th>
+                                  <th></th>								  
+								</tr>
+							  </thead>
+							   <tbody >
+								    {volist name="data" id="vv"}
+									<tr >
+									  <td style="display:table-cell; vertical-align:middle;text-align:center;">
+									  <div style="float:left;" class="main{if condition="$vv['topnum'] gt 3"}4{else /}{$vv.topnum}{/if}">{$vv.topnum}</div>
+									  <span style="float:right;font-size:10px;line-height:6px;margin-top:4px;">
+									  {if condition="$vv['isplus'] eq 'up'"}
+									  <i style="color:green" class="fa fa-sort-up"></i>
+									  <br/><em>{$vv.num}+</em></span>
+									  {else /}
+									  <i style="color:red" class="fa fa-sort-down"></i>
+									  <br/><em>{$vv.num}</em></span>
+									  {/if}
+									  
+									  </td>
+									  <td style="text-align:left;width:50%;display:table-cell; vertical-align:middle">
+									    <div>
+										   <div style="float:left;margin-right:3px;">
+										    <img src="{$vv.app_icon}" style="width:42px;width:42px;" />
+										   </div>
+										   
+										   <div style="float:left;margin-top:4px;">
+										    <a target="__blank" href="/admin_compet/results?kw={$vv.app_package}" title="{$vv.title}"><?php echo substr_text($vv["title"],0,15)."..." ?></a>
+											<br/>
+											<span style=""><span style="color:#616161;">[{$vv.app_type}]</span>
+											 <a target="__blank" style="color:#222" title="{$vv.app_package}" href="/admin_compet/results?kw={$vv.app_package}"><?php echo substr_text($vv["app_package"],0,15)."..." ?></a></span>
+										   </div>
+										</div>
+										</td>
+									  <td style="width:10%;display:table-cell; vertical-align:middle">{$vv.comment_score}</td>
+									  <td style="display:table-cell; vertical-align:middle">{$vv.comment_users}</td>
+									  <td style="display:table-cell; vertical-align:middle">{$vv.installs}</td>
+									  <td style="font-size:10px;">{$vv.updated_time}</td>
+									  <td style="font-size:10px;">{$vv.developer}</td>
+									  <td style="display:table-cell; vertical-align:middle;font-size:10px;">{$vv.developer_email}</td>
+									  <td style="display:table-cell; vertical-align:middle;font-size:10px;color:green"><i app_package="{$vv.app_package}" class="fa fa-line-chart"></i></td>
+									</tr>
+									{/volist}
+								  </tbody>
+													
+						  </table>
+						   {if condition="$type neq 'today'"}
+						    <p style="color:#222;"><i class="fa fa-info-circle">&nbsp;数据来源为排名变化最大的前10名</i></p>
+							{/if}
+						   {if condition="$type eq 'today'"}
+                           <div style="text-align:center;">{$list->render()}</div>
+						   {/if}
+                        </div>						  
+					 </div>
+			   </div>			   
+			
+		</div>
+		     <div class="hw-dialog">
+				<div class="hw_modal"></div>
+				<div class="hw_game-dialog" style="padding:30px 30px;">
+					<div class="campagin_body">
+						  
+					</div>
+					
+					<div class="dialog-footer" style="clear:both"><button type="button" class="hw_game-btn hw_game-btn-default hw_close">关 闭</button>
+					</div>
+				</div>
+	       </div>
+	
+		 {include file="./static/html/footer.html" /}
+	</div>
+</body>
+ {include file="./static/html/footer_common.html" /}
+  <script type="text/javascript" src="/static/plugin/jquery-time/moment.js"></script>
+  <script type="text/javascript" src="/static/plugin/jquery-time/daterangepicker.js"></script>
+  <script src="/static/js/jquery.tablesorter.min.js"></script>
+  <script src="/static/js/jquery.freezeheader.js"></script>
+   <script src="/static/js/echarts.min.js"></script>
+  
+ <script>
+ 
+    
+    $(function(){
+	     
+	      $(document).on("click",".hw_close",function(){
+	       $(".hw-dialog").hide();
+		  });
+		  
+		  $(".fa-line-chart").click( function(){
+		      var country = "{$country}";
+			  var app_package = $(this).attr("app_package");
+		      layer.load();
+			  $.post("/admin_compet/index_chats",{country:country,app_package:app_package},function(e){
+					layer.closeAll();
+					$(".hw-dialog").show();
+					$(".campagin_body").html(e);		 
+			   });
+		    
+		})
+       })
+ </script>
+
+</html>

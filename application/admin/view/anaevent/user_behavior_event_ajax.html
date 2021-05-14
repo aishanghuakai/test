@@ -1,0 +1,64 @@
+                 		<div class="m-ovsecurity m-card">
+								<div class="ovsecurity_sub">															
+									<div class="ovsecurity_md">
+									   <div class="ovsecurity_ct">独立用户数
+									     <a class="f-du evet_num">{$singe_num}</a>
+									   </div>
+									</div>
+								</div>
+								
+                                <div class="ovsecurity_sub">																
+									<div class="ovsecurity_md">
+									   <div class="ovsecurity_ct">事件总数
+									     <a class="f-du evet_num">{$total_num}</a>
+		 							   </div>
+									</div>
+								</div>                        							
+                        </div>
+                    <ul class="search_tab clearfix">
+					   <li style="margin-left:0px;"><a href="javascript:;" onclick="AjaxPage(1,1);">详情展示</a></li>
+                       <li style="margin-left:10px;" class="active"><a href="javascript:;" onclick="AjaxPage(1,2);">事件比例</a></li>
+                       <li style="float:right;">
+					    <div  style="margin:10px 0px 10px 0px">
+                            <input type="text" style="text-align:left;width:120px;" id="keyword" placeholder="搜索" class="form-control">
+                        </div>
+					   </li>					   
+					</ul>
+					<table class="table tablesorter">
+                      <thead>
+                        <tr>
+                          
+                          <th>事件名称</th>
+                          <th>独立数</th> 
+                          <th>事件总数</th>						  
+                        </tr>
+                      </thead>
+                      <tbody>
+                      {volist name="result" id="vo"}					  
+                        <tr>                        
+                          <td>{$vo.name}</td>
+                          <td>{$vo.num}</td>
+						  <td>{$vo.totalnum}</td>
+                        </tr>
+                      {/volist}						
+                      </tbody>
+                    </table>
+					  <script src="/static/js/jquery.tablesorter.min.js"></script>
+					  <script>
+					    $(".table").tablesorter({headers:{}});
+						 $('#keyword').bind('input propertychange', function()
+						   {
+							   var input_text = $(this).val();
+							   $("tbody tr").each( function(i){
+								  
+									var text = $(this).find("td").eq(0).text();
+									var aa = text.match(new RegExp(input_text, 'i'));
+									if( aa )
+									  {					     
+										 $(this).show();
+									  }else{
+										 $(this).hide();
+									  }
+							   })			   
+						   });
+					  </script>

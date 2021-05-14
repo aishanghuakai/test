@@ -1,0 +1,263 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GAME BRAIN</title>
+    {include file="./static/html/header_common.html" /}  
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+   <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <!-- import JavaScript -->
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <script src="/static/js/axios.min.js"></script>	 
+	<style>
+	  .cell{font-size:12px;}
+	  .el-table td, .el-table th {
+    padding:9px 0;}
+	  .item {
+		  margin-top: 10px;
+		  margin-right: 40px;
+		}
+      .grid-content{
+	    background: #fff;
+		padding: 15px !important;
+		box-shadow: 0 1px 15px 1px rgba(69,65,78,.08);
+		border-radius:10px;
+		border: 0;
+		text-align:center;
+	  }	
+       .card-category{
+	   font-size: 13px;
+	   color:#444;
+	   margin-bottom: 0;}
+	   .card-title{
+	    color:#575962;
+		font-size: 18px;
+		font-weight: 400;
+	   }
+	   .page-title {
+		font-size:16px;
+		font-weight: 600;
+		color:#444;
+		
+		}
+		.count {
+    background:#4285f4;
+    display: inline-block;
+    padding:7px 1px;
+    margin-right: 5px;
+}
+	  .el-badge__content.is-fixed{position:relative !important;}	
+	</style>
+</head>
+<body style="background:#f9fbfd;">
+    <div id="wrapper" style="background-color:#f9fbfd;">
+        {include file="./static/html/header.html" /}	
+		<div class="hw_page_content" style="background-color:#f9fbfd;">
+		    <div class="hw_menu_left">
+             {include file="./static/html/side.html" /}  
+			</div>
+		    <div class="hw_content_right" style="padding:20px 5px;background: #f9fbfd;">
+			            <div class="main" style="margin-bottom:10px;">
+						    
+                            <h4 class="page-title">
+							<el-page-header @back="goBack" style="float:left;" content="Adjust LTV生命周期总览"></el-page-header></h4>							
+							<div class="clear" style="clear:both;"></div>
+							<a style="float:right;cursor:pointer;margin-right:20px;" href="/admin_ltv/data"><<返回新版</a>
+							<el-row :gutter="2" style="margin-top:30px;">
+								<el-form :inline="true" label-width="120px">
+									   <el-form-item label="维度选择">								   
+										<el-radio-group size="small" v-model="dimension">
+										  <el-radio-button label="day">按每天</el-radio-button>
+										  <el-radio-button label="country">按地区</el-radio-button>
+										  <el-radio-button label="media_source">按渠道</el-radio-button>
+										  <el-radio-button label="device_category">按设备</el-radio-button>
+										</el-radio-group>
+									  </el-form-item>
+                                      <el-button style="float:right;margin-right:5%;" size="small" @click="download" type="danger">下载<i class="el-icon-download"></i></el-button>									  
+									</el-form>
+									
+							</el-row>
+							 <el-divider content-position="left">条件筛选项</el-divider>
+							<el-row :gutter="2" style="margin-top:10px;">
+							   <el-form :inline="true" label-width="120px">
+							     <el-form-item label="选择地区">
+									<el-select size="small" :disabled="dimension=='country'" filterable style="width:100px;" v-model="country"  placeholder="请选择国家">
+									{volist name="country" id="item"}
+									 <el-option key="{$key}" label="{$item}" value="{$key}"></el-option>
+									{/volist}
+								  </el-select>
+								 </el-form-item>	
+							    <el-form-item label="推广渠道">
+									<el-select size="small" :disabled="dimension=='media_source'" filterable style="width:120px;" v-model="media_source"  placeholder="请选择渠道">
+									{volist name="promate_media" id="item"}
+									 <el-option key="{$key}" label="{$item.name}" value="{$item.value}"></el-option>
+									{/volist}
+								  </el-select>
+							    </el-form-item>
+								<el-form-item label="广告渠道">
+									<el-select size="small" filterable style="width:120px;" v-model="ad_source"  placeholder="请选择渠道">
+									{volist name="network_media" id="item"}
+									 <el-option key="{$key}" label="{$item.name}" value="{$item.value}"></el-option>
+									{/volist}
+								  </el-select>
+							    </el-form-item>  
+								<el-form-item label="选择设备">
+									<el-select size="small" filterable style="width:120px;" v-model="device"  placeholder="请选择设备">
+									{volist name="deviceList" id="item"}
+									 <el-option key="{$key}" label="{$item.name}" value="{$item.value}"></el-option>
+									{/volist}
+								  </el-select>
+							    </el-form-item>
+								</el-form>
+                               <el-form :inline="true" label-width="120px">
+							       <el-form-item label="安装日期">								   
+								    <el-date-picker
+									  v-model="date"
+									  @change="handleInstallDate"
+                                      size="small"								  
+									  type="daterange"
+									  style="width:250px;"
+									  value-format="yyyy-MM-dd">
+									</el-date-picker>
+								  </el-form-item>
+								   <el-form-item label="LTV周期">
+									   <el-select size="small" @change="handleDate"  style="width:100px;" v-model="day"  placeholder="请选择">
+									   <el-option key="0" label="0天" value="0"></el-option>
+										<el-option key="1" label="1天" value="1"></el-option>
+										<el-option key="3" label="3天" value="3"></el-option>
+										<el-option key="7" label="7天" value="7"></el-option>
+										<el-option key="15" label="15天" value="15"></el-option>
+										<el-option key="30" label="30天" value="30"></el-option>
+										</el-select>
+									</el-form-item>								
+								</el-form>
+							</el-row>  
+							  </div>
+						<div class="clear">
+						  <h4  style="font-size:16px;font-weight:700;line-height:20px;margin-bottom:10px;"><i class="count"></i> 用户价值详情展示</h4>
+						</div>
+						<div class="m-list hw_reven" style="padding:15px;">
+							 <el-table
+								:data="tableData"
+								v-loading="loading"
+								height="400"
+								style="width: 100%;">								
+								<el-table-column prop="name" fixed  align="center" label="名称"></el-table-column>
+								<el-table-column prop="promote_info.spend" sortable  align="center" label="推广花费"></el-table-column>
+								<el-table-column prop="promote_info.installs"  sortable  align="center" label="推广新增"></el-table-column>
+								<el-table-column prop="cpi" sortable  align="center" label="推广成本"></el-table-column>
+								
+								<el-table-column prop="tablist.total_total_revenue" sortable align="center" label="总收益"></el-table-column>
+								<el-table-column  sortable prop="tablist.total_avg_revenue" align="center" label="总人均价值"></el-table-column>
+								<el-table-column prop="tablist.total_roi" sortable align="center"  label="总ROI(%)"></el-table-column>
+								<el-table-column prop="impression" sortable width="100px" align="center" label="人均激励">
+								 <template slot-scope="scope">
+								      <span>{{scope.row.avgReward}}</span>
+								   </template>
+								</el-table-column>
+								<el-table-column prop="impression" sortable width="100px" align="center" label="人均插屏">
+								 <template slot-scope="scope">								     
+									  <span>{{scope.row.avgInter}}</span>
+								   </template>
+								</el-table-column>
+							</el-table>
+						</div>
+			  </div>
+			</div>
+		</div>
+		 {include file="./static/html/footer.html" /}
+	</div>
+</body>
+ {include file="./static/html/footer_common.html" /}
+  <script>
+    
+    let t = new Vue({
+        el: '#wrapper',
+        data: {
+			loading: false,
+			date:['{$start}','{$end}'],
+			day:"0",
+			dimension:'day',
+			country: 'all',
+			rate:'0',
+			avgImpression:'0',
+			avgReward:'0',
+			avgInter:'0',
+			cpi:'0.00',
+			avg_revenue:'0',
+			campaign_id:'',
+			media_source:'all',
+			device:'all',
+			promote_info:{ spend:'0.00',installs:'0' },
+			user_value:{num:0,impression:0},
+			roi_info:{},
+			ad_source:'all',
+			tableData: []	
+        },
+		computed:{
+		    param(){
+			   return {
+			      app_id:'{$app_id}',				 
+				  country:this.country,
+				   table:'adjust',
+				  dimension:this.dimension,
+				  media_source:this.media_source,
+				  ad_source:this.ad_source,
+				  device:this.device,
+				  campaign_id:this.campaign_id
+			   }
+			}
+		},
+		watch: {
+		  param(val) {
+		    val.day = this.day
+			val.date =this.date
+			this.getlist(val)
+		  }
+		},
+		created(){
+		  this.param.day = this.day
+		  this.param.date =this.date
+		  this.getlist(this.param)
+		},
+        methods: {           
+		   goBack() {
+		     window.location.href='/admin_index/main';
+		   },
+		   toQueryString(obj) {
+			  var qstring = "&"
+			  for (var k in obj) {
+				qstring += k + "=" + obj[k] + "&"
+			  }
+			  return qstring
+		   },
+		   handleInstallDate(){
+		    this.param.day = this.day
+			 this.param.date =this.date
+			this.getlist(this.param)
+		   },
+		   download(){
+		    window.location.href='/admin_appsflyer/json_data_dimension?is_download=true'+this.toQueryString(this.param)
+		   },
+		   handleDate(){
+		     this.param.day = this.day
+			 this.getlist(this.param)
+		   },
+			getlist(value){
+			    this.loading = true
+			   let _that = this
+			   axios({
+					method: 'post',
+					url:'/admin_appsflyer/json_data_dimension',
+					data:value
+				}).then(res=>{			
+				 _that.loading = false
+				 this.tableData = res.data
+			 })
+			}
+        }
+    })
+  </script>
+</html>

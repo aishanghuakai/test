@@ -1,0 +1,11 @@
+                       {volist name="data" id="item"}
+							<tr>
+							  <td>---</td>
+							  <td style="text-align:left;">{$item.country|getadmincountryname}</td>
+							  <td>{$item.revenue}</td>
+							  <td>{$item.impressions}</td>
+							  <td>{$item.clicks}</td>
+							  <td><?php echo adcalculate($item['revenue'],$item['impressions'],"2"); ?></td>						
+							</tr>
+						{/volist}
+						  

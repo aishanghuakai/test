@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<title>🎈哈乐沃德五周年🎈</title>
+{include file="../application/index/view/common/header.html" /}
+<!--[if IE]>
+  <script>window.location.href = '/compatibility';</script>
+  <![endif]-->
+</head>
+<body class="mdui-loaded" style="background:#f6f6f6;">
+<div id="app">
+<div class="header">
+	    <div class="header-banner" id="slides">
+			  <div class="pike">
+				<div style="height:160px;"><img class="image" src="http://cnf.mideoshow.com/uploads/banner1.jpg" /></div>
+				<div style="height:160px;"><img class="image" src="http://cnf.mideoshow.com/uploads/banner2.jpg" /></div>
+				<div style="height:160px;"><img class="image" src="http://cnf.mideoshow.com/uploads/banner3.jpg" /></div>
+				<div style="height:160px;"><img class="image" src="http://cnf.mideoshow.com/uploads/banner4.jpg" /></div>
+				<div style="height:160px;"><img class="image" src="http://cnf.mideoshow.com/uploads/banner5.jpg" /></div>		  
+			  </div>
+		</div>
+	<div class="header-nav">
+		<div class="header-tab-menu mdui-tab mdui-tab-centered">
+			<a href="/backhistory.html" class="mdui-ripple-white">回望五年</a>
+			<a href="/say.html" class="active mdui-ripple-white">都来说说</a>
+		</div>
+	</div>
+</div>
+<div class="loading">
+	<div class="circle-one"></div>
+	<div class="circle-two"></div>
+</div>
+<div class="container">
+	<div class="container-list">
+		<div class="list">
+		    <div style="text-align:center;font-size:16px;font-weight:700;color:#3a1f5d;margin:20px 0px;">《 都来说说，5年后的哈乐沃德啥模样？》</div>
+		    {volist name="list" id="vo"}
+			<div class="Card">
+			
+		     <a class="HotList-item" href="javascript:;">			   
+				 <div class="HotList-itemBody">				   
+				   <div class="HotList-itemTitle">{$vo.content}</div>	
+                   <div class="HotList-itemMetrics">------来自{$vo.actor}</div>
+                   <div style="text-align:right;color:#333;font-size:10px;">《都来说说，5年后的哈乐沃德啥模样》</div>				   
+				</div>				
+			</a>
+		   </div>
+		   {/volist}
+		</div>
+	</div>
+	<a href="/addcomment" class="OpenInAppButton OpenInApp is-shown" style="background-color:#1089ff;width:80px;left:0;text-align:right;padding-right:20px;">+</a>
+</div>
+</div>
+</body>
+<!-- import Vue before Element -->
+  <script src="/static/js/jquery-2.1.4.min.js"></script>
+   <script src="/static/index/pike.min.js"></script>
+  <script>
+    $(function(){
+	  var myPi = new Pike("#slides", {
+	       	type: 1, // 轮播的类型(1渐隐)
+	       	automatic: true, //是否自动轮播 (默认false)
+	       	autoplay: 3000, //自动轮播毫秒 (默认3000)
+	       	hover: true, //鼠标悬停轮播 (默认false)
+	       	arrowColor: "yellow", //箭头颜色 (默认绿色)
+	       	arrowBackgroundType: 2, //箭头背景类型 (1: 方形, 2:圆形)
+	       	arrowBackground: 1, //箭头背景色 (1:白色,2:黑色, 默认:无颜色)
+	       	arrowTransparent: 0.2, //箭头背景透明度 (默认: 0.5)
+       		spotColor: "white",//圆点颜色 (默认: 白色)
+       		spotType: 1, //圆点的形状 (默认: 圆形, 1:圆形, 2.矩形)
+       		spotSelectColor: "red", //圆点选中颜色 (默认绿色)
+       		spotTransparent: 0.8, //圆点透明度 (默认0.8)
+       		mousewheel: true, //是否开启鼠标滚动轮播(默认false)
+       		drag: false, //是否开启鼠标拖动 (默认为: true, 如不需要拖动设置false即可)
+       		loop: true, //是否循环轮播 (默认为: false)
+       });
+	})
+  </script>
+</html>

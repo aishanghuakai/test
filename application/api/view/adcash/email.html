@@ -1,0 +1,114 @@
+<style>	
+	a{	color:#407700; }
+	#version_table td {
+    border-bottom: 1px solid #ebebeb;
+</style>
+
+<div style="text-align:center;">
+	<div  style="max-width:640px;margin:0 auto;color:#333;background-color:#fff;border:0px solid #aaa;border-radius:5px;-webkit-box-shadow:3px 3px 10px #999;-moz-box-shadow:3px 3px 10px #999;box-shadow:3px 3px 10px #999;font-family:Verdana, sans-serif; ">
+
+		<div  style="height:40px;font-weight:700;line-height:40px;background-color:#2ec376;color: #FFFFFF;">
+			数据平台
+		</div>
+		<div  style="text-align:left;padding:10px;font-size:14px;line-height:1.5; no-repeat top right;">
+		
+			<div>
+			     <p><strong>{$name}</strong></p>
+                 <p style="margin-bottom:15px;"><a>广告成效数据已发送到您的邮件，请注意查收!</a></p>				
+				<div>         
+		  <table style="margin:0 auto;padding:0;border-collapse:collapse;border-spacing:0;border:1px solid #e0e0e0;border-radius:2px;background:#fff;" >
+		  <tbody>
+		   
+		   <tr>
+		     <td style="" align="center">		    
+			   <span style="float:right;font-size:16px;color:#999;margin-right:30px">{$time}</span>			
+			</td>
+		   </tr>		   
+				 
+		  <tr>
+		    <td>
+		     <h3 style="font-size:14px;color:#282828;line-height:20px;text-align:center;margin-top:1px;margin-bottom:16px">Android</h3>
+		    </td>
+		  </tr>
+		  <tr>
+		   <td>
+			  <table style="width:100%;table-layout:fixed" cellspacing="0" cellpadding="0" border="0">
+			  <tbody id="version_table" align="right">
+				   <tr style="background:#FCFCFC;height:46px;line-height:46px">
+					   
+					   <td style="border-top:1px solid #EBEBEB;font-size:10px;color:#666;vertical-align:middle; text-align:center;">Platform</td>
+					   <td style="border-top:1px solid #EBEBEB;font-size:10px;color:#666;vertical-align:middle; text-align:center;">Revenue</td>
+					   <td style="border-top:1px solid #EBEBEB;font-size:10px;color:#666;vertical-align:middle; text-align:center;">Impressions</td>
+						<td style="border-top:1px solid #EBEBEB;font-size:10px;color:#666;vertical-align:middle; text-align:center;">Clicks</td>
+					   <td style="border-top:1px solid #EBEBEB;font-size:10px;color:#666;vertical-align:middle; text-align:center;">eCPM</td>
+				   </tr>
+				   {volist name="res_android" id="item"}
+					  <tr style=" height:58px;line-height:58px ">					 
+						  <td style="font-size:10px;color:red;vertical-align:middle; text-align:center;">{$item.platform|getplatform}</td>
+						  <td style="font-size:10px;color:#333;vertical-align:middle; text-align:center;">${$item.revenue}</td>
+						  <td style="font-size:10px;color:#333;vertical-align:middle; text-align:center;">{$item.impression}</td>
+						  <td style="font-size:10px;color:#333;vertical-align:middle; text-align:center;">{$item.click}</td>
+						  <td style="font-size:10px;color:#333;vertical-align:middle; text-align:center;">{$item.ecpm}</td>
+					  </tr>
+                    {/volist}				  
+			  </tbody>
+			  </table>
+		    </td>
+		  </tr>
+		  
+		   <tr>
+		    <td>
+		     <h3 style="font-size:14px;color:#282828;line-height:20px;text-align:center;margin-top:18px;margin-bottom:16px">IOS</h3>
+		    </td>
+		  </tr>
+		  <tr>
+		   <td>
+			  <table style="width:100%;table-layout:fixed" cellspacing="0" cellpadding="0" border="0">
+			  <tbody id="version_table" align="right">
+				   <tr style="background:#FCFCFC;height:46px;line-height:46px">
+					   
+					   <td style="border-top:1px solid #EBEBEB;font-size:10px;color:#666;vertical-align:middle; text-align:center;">Platform</td>
+					   <td style="border-top:1px solid #EBEBEB;font-size:10px;color:#666;vertical-align:middle; text-align:center;">Revenue</td>
+					   <td style="border-top:1px solid #EBEBEB;font-size:10px;color:#666;vertical-align:middle; text-align:center;">Impressions</td>
+						<td style="border-top:1px solid #EBEBEB;font-size:10px;color:#666;vertical-align:middle; text-align:center;">Clicks</td>
+					   <td style="border-top:1px solid #EBEBEB;font-size:10px;color:#666;vertical-align:middle; text-align:center;">eCPM</td>
+				   </tr>
+				   {volist name="res_ios" id="item"}
+					  <tr style=" height:58px;line-height:58px ">					 
+						  <td style="font-size:10px;color:red;vertical-align:middle; text-align:center;">{$item.platform|getplatform}</td>
+						  <td style="font-size:10px;color:#333;vertical-align:middle; text-align:center;">${$item.revenue}</td>
+						  <td style="font-size:10px;color:#333;vertical-align:middle; text-align:center;">{$item.impression}</td>
+						  <td style="font-size:10px;color:#333;vertical-align:middle; text-align:center;">{$item.click}</td>
+						  <td style="font-size:10px;color:#333;vertical-align:middle; text-align:center;">{$item.ecpm}</td>
+					  </tr>
+                    {/volist}				  
+			  </tbody>
+			  </table>
+		    </td>
+		  </tr>
+			  <tr>
+				  <td>
+				  <p style="padding-left:30px;font-size:13px;padding-bottom:100px;color:#999;line-height:1.5;text-align:left">此邮件数据为平台最新数据，如数据存在延时，查看更多数据，请前往平台查看</p>
+				  </td>
+			  </tr>
+		   </tbody>
+		  </table>
+		 
+</div>
+			
+			</div>	
+
+			<div  style="padding:40px 0 0;">
+				<img  src="http://cnf.mideoshow.com/static/img/icon/logo.png" style="float:left;width:55px;height:50px;">
+				<div  style="margin:0 0 0 54px;">
+					<p  style="margin:0 0 10px;">Li xiong fei</p>
+					<p  style="font-size:12px;margin:0;line-height:1.2;">
+						武汉哈乐沃德网络科技有限公司<br>
+						<a href="lixiongfei@hellowd.net" style="color:#407700;" target="_blank">lixiongfei@hellowd.net</a>
+					</p>
+				</div>
+			</div>			
+		</div>	
+		<div  style="height:1px;margin:16px;text-align:center;font-size:12px;color:#888;text-shadow:1px 0px 0px #eee;"></div>
+	</div>	
+</div>

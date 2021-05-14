@@ -1,0 +1,375 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GAME BRAIN</title>
+    {include file="./static/html/header_common.html" /}
+	  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+   <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <!-- import JavaScript -->
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <script src="/static/js/axios.min.js"></script>	 
+	<style>
+	.cell{font-size:12px;}
+	  .el-table td, .el-table th {
+    padding:8px 0;}
+	  .item {
+		  margin-top: 10px;
+		  margin-right: 40px;
+		}
+		.el-tag + .el-tag {
+    margin-left: 10px;
+  }
+  .button-new-tag {
+    margin-left: 10px;
+    height: 32px;
+    line-height: 30px;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  .input-new-tag {
+    width:250px;
+    margin-left: 10px;
+    vertical-align: bottom;
+  }
+	</style>
+</head>
+<body style="background: #fff !important;">
+    <div id="wrapper" >
+        {include file="./static/html/header.html" /}	
+		<div class="hw_page_content">
+		    <div class="hw_menu_left">
+         {include file="./static/html/side.html" /}  
+			</div>
+		    <div class="hw_content_right" style="padding:10px 10px;">
+			   <h3 style="color:#222;margin-bottom: 20px;"><i style="color:#409eff;" class="el-icon-data-line"></i> 投放小助手</h3>
+			   <div class="main" style="margin-top:10px 0px;">
+                    <el-form :inline="true"  class="demo-form-inline">						  
+						 <el-form-item label="广告主">					
+							<el-select filterable  size="small" v-model="advertiser_id" placeholder="请选择广告主ID">
+								{volist name="all" id="vv"}
+								 <el-option key="{$key}" label="" value="{$key}"></el-option>
+								{/volist}
+							  </el-select>
+						</el-form-item>
+						<el-form-item>					
+							<el-input  size="small" v-model="campaign_id" placeholder="广告组ID" clearable class="input-with-select"></el-input>							
+						</el-form-item>
+						<el-form-item>					
+							<el-input  size="small" v-model="keyword" placeholder="输入广告名称" clearable class="input-with-select"></el-input>							
+						</el-form-item>
+						<el-form-item>
+						  <el-button icon="el-icon-search" @click="search" type="primary" size="small" >搜索</el-button>
+						   <el-button icon="el-icon-plus" type="primary" @click="openModel()" size="small" plain>创建广告组</el-button>
+						   <el-button {if condition="$disabled"} disabled {/if} type="primary" size="small" @click="accountlocation" icon="el-icon-setting">分配账号</el-button>
+						</el-form-item>
+					</el-form>
+				</div>
+				<div class="clear"></div>
+			    <div class="hw_reven clearfix" style="margin-top:10px;">
+				 <el-tabs v-model="type" type="card" @tab-click="handleClick">
+					<el-tab-pane label="广告组系列" name="campaign">
+					  <el-table :data="tableData" v-loading="loading" height="550" style="width: 100%;">
+							<el-table-column prop="campaign_id" width="140px"  label="广告组ID"></el-table-column>
+							<el-table-column label="广告组名称">
+							 <template slot-scope="scope">
+							    <div style="color:#409eff;">{{scope.row.name}}</div>
+							  </template>
+							</el-table-column>
+							<el-table-column prop="budget" width="80px" label="广告组预算"></el-table-column>
+							<el-table-column prop="status" width="80px" label="广告组状态">
+							  <template slot-scope="scope">
+							    <el-tag size="mini" type="warning">{{formstatus(scope.row.status)}}</el-tag>
+							  </template>
+							</el-table-column>
+							<el-table-column prop="budget_mode" label="预算类型"></el-table-column>
+							<el-table-column prop="campaign_create_time" label="广告组创建时间"></el-table-column>
+							<el-table-column label="操作">
+							  <template slot-scope="scope">
+									<el-button  type="text" @click="lookcreate(scope.row.campaign_id)"  size="small">查看计划</el-button>
+									<el-button type="text" @click="location(scope.row.advertiser_id,scope.row.campaign_id)" size="small">创建</el-button>
+									<el-button type="text" style="color:red;" @click="deleteCampagin(scope.row.advertiser_id,scope.row.campaign_id)" size="small">删除</el-button>
+							  </template>
+							</el-table-column>
+					  </el-table>
+					</el-tab-pane>
+					<el-tab-pane label="计划" name="ad">
+					  <el-table :data="tableData" v-loading="loading" height="550" style="width: 100%;">
+							<el-table-column  prop="id" width="140px"  label="计划ID"></el-table-column>
+							<el-table-column  prop="campaign_id" width="140px"  label="广告组ID"></el-table-column>
+							<el-table-column  label="计划名称">
+							 <template slot-scope="scope">
+							    <div style="color:#409eff;">{{scope.row.name}}</div>
+							  </template>
+							</el-table-column>
+							<el-table-column prop="budget" width="80px" label="广告预算"></el-table-column>
+							<el-table-column prop="status" width="80px" label="投放状态">
+							  <template slot-scope="scope">
+							    <el-tag size="mini" style="font-size:10px;" type="warning">{{scope.row.status}}</el-tag>
+							  </template>
+							</el-table-column>
+							<el-table-column prop="ad_create_time" label="计划创建时间"></el-table-column>
+							<el-table-column prop="pricing" label="出价类型"></el-table-column>
+							<el-table-column prop="schedule_type"  label="投放时间类型">
+							  <template slot-scope="scope">
+							    <div style="color:#333;">{{formschedule_type(scope.row.schedule_type)}}</div>
+							  </template>
+							</el-table-column>
+							<el-table-column prop="opt_status" label="操作状态">
+							 <template slot-scope="scope">
+							    <el-tag type="success" size="mini">{{formopt_status(scope.row.opt_status)}}</el-tag>
+								<el-button type="text" @click="edit_location(scope.row.advertiser_id,scope.row.campaign_id,scope.row.ad_id)" size="small">编辑</el-button>
+							  </template>
+							</el-table-column>
+					  </el-table>
+					</el-tab-pane>
+					<el-tab-pane label="创意" name="creative">
+					  <el-table :data="tableData" v-loading="loading" height="550" style="width: 100%;">
+							<el-table-column prop="creative_id" width="140px"  label="创意ID"></el-table-column>
+							<el-table-column prop="ad_id" width="140px"  label="广告计划ID"></el-table-column>
+							<el-table-column label="创意素材标题">
+							 <template slot-scope="scope">
+							    <div style="color:#409eff;">{{scope.row.title}}</div>
+							  </template>
+							</el-table-column>
+							<el-table-column prop="image_id"  label="视频素材封面"></el-table-column>
+							<el-table-column prop="status"  label="创意状态">
+							  <template slot-scope="scope">
+							    <div style="font-size:10px;">{{scope.row.status}}</div>
+							  </template>
+							</el-table-column>
+							<el-table-column prop="creative_create_time" label="创建时间"></el-table-column>
+							<el-table-column width="140px" align="center" label="操作状态">
+							  <template slot-scope="scope">
+									<el-tag size="mini" type="warning">{{formCopt_status(scope.row.opt_status)}}</el-tag>
+							  </template>
+							</el-table-column>
+					  </el-table>
+					</el-tab-pane>
+				  </el-tabs>
+				  <div style="text-align:center;margin:10px;">
+				    <el-pagination
+					  background
+					  :current-page.sync="page"
+					  layout="total,prev, pager, next, jumper"
+					  @current-change="handleCurrentChange"
+					  :page-size="page_size"
+					  :total="total_number">
+					</el-pagination> 
+                 </div>					
+			    </div>
+			</div>
+			<el-dialog title="广告组创建"  :visible.sync="dialogFormVisible">
+				  <el-form :model="form" v-loading="editLoading">
+				    <el-form-item label="广告组名称" label-width="120px">
+					  <el-input v-model="form.campaign_name" placeholder="长度为1-100个字符，其中1个中文字符算2位" autocomplete="off"></el-input>
+					</el-form-item>						
+                    <el-form-item label="推广目的" label-width="120px">
+					  <el-radio-group size="small" v-model="form.landing_type">						  
+						  <el-radio-button label="APP">应用推广</el-radio-button>						  				  
+					  </el-radio-group>
+					</el-form-item>
+                    <el-form-item label="预算类型" label-width="120px">
+					  <el-radio-group size="small" v-model="form.budget_mode">
+						  <el-radio-button label="BUDGET_MODE_INFINITE">不限</el-radio-button>
+						  <el-radio-button label="BUDGET_MODE_DAY">日预算</el-radio-button>
+						  <el-radio-button label="BUDGET_MODE_TOTAL">总预算</el-radio-button>				  
+					  </el-radio-group>
+					</el-form-item>					
+					<el-form-item label="广告组预算" label-width="120px">
+					  <el-input v-model="form.budget" placeholder="日预算不少于1000元" autocomplete="off"></el-input>
+					</el-form-item>
+					<el-form-item label="操作状态" label-width="120px">
+                      <el-switch v-model="form.operation" active-value="enable" inactive-value="disable"></el-switch>
+                    </el-form-item>					  
+				  </el-form>
+				  <div slot="footer" class="dialog-footer">
+					<el-button @click="dialogFormVisible = false">取 消</el-button>
+					<el-button type="primary" @click="CreateCampagin">创 建</el-button>
+				  </div>
+			</el-dialog>
+		</div>
+	</div>	
+</body>
+ {include file="./static/html/footer_common.html" /}
+  <script>
+     new Vue({
+        el: '#wrapper',
+        data: {
+            loading: false,
+			type:'campaign',
+			page:1,
+			advertiser_id:'{$advertiser_id}',
+			total_number:0,
+			dialogFormVisible:false,
+			editLoading:false,
+			keyword:'',
+			page_size:10,
+			form:{
+			  landing_type:'APP',
+			  operation:'enable',
+			},
+			campaign_id:'{$campaign_id}',
+			tableData: []
+        },
+        mounted(){
+		  if( this.advertiser_id!="" )
+		  {
+		    this.type = 'ad'
+			this.getlist()
+		  }		  
+		},		
+        methods: {
+            lookcreate(campaign_id){
+			  this.campaign_id = campaign_id
+			  this.type = "ad"
+			  this.page =1
+			  this.getlist()
+			},
+			openModel(){
+			 this.dialogFormVisible = true
+			 //this.form={ landing_type:'APP',operation:'enable'}
+			},
+			CreateCampagin(){
+			  this.editLoading = true
+			  this.form.advertiser_id = this.advertiser_id
+			  axios({
+						method: 'post',
+						url:'/delivery/CreateCampagin',
+						data:this.form
+					}).then(res=>{			
+					 this.editLoading = false
+					 if( res.data.code==0 )
+					  {
+					    this.$message.success('创建成功!')
+						this.dialogFormVisible = false
+						this.page =1
+						this.getlist()						
+					  }else{
+					     this.$message.error(res.data.message)
+					  }					
+				 })
+			},
+			deleteCampagin(advertiser_id,campaign_id){
+			  let _that = this
+			  this.$confirm('此操作将永久删除该广告组, 是否继续?', '提示', {
+				  confirmButtonText: '确定',
+				  cancelButtonText: '取消',
+				  type: 'warning'
+				}).then(() => {				  
+				   let param ={
+					  advertiser_id:advertiser_id,
+                      campaign_id:campaign_id					  
+				   } 
+					axios({
+							method: 'post',
+							url:'/delivery/deleteCampagin',
+							data:param
+						}).then(res=>{
+						  this.$message({
+							type: 'success',
+							message: '删除成功!'
+						  });
+						  _that.getlist()
+					 })					 
+				}).catch(() => {})        
+			},
+			accountlocation(){
+			 window.location.href='/delivery/account';
+			},
+			location(advertiser_id,campaign_id){
+			 window.location.href='/delivery/ad_batch?advertiser_id='+advertiser_id+'&campaign_id='+campaign_id;
+			},
+			edit_location(advertiser_id,campaign_id,ad_id)
+			{
+			  window.location.href='/delivery/edit_ad?advertiser_id='+advertiser_id+'&campaign_id='+campaign_id+'&ad_id='+ad_id;
+			},
+			search(){
+			  this.page =1
+			  this.getlist()
+			},
+			handleClick(tab, event) {
+			  this.page =1
+			  this.getlist()
+			},
+			handleCurrentChange(val) {
+              this.getlist()
+			},
+			formopt_status(status){
+			 if( status=="AD_STATUS_ENABLE" )
+			  {
+			    return "启用";
+			  }else if( status=="AD_STATUS_DISABLE" )
+			  {
+			   return "暂停";
+			  }
+			},
+			formCopt_status(status){
+			 if( status=="CREATIVE_STATUS_ENABLE" )
+			  {
+			    return "启用";
+			  }else if( status=="CREATIVE_STATUS_DISABLE" )
+			  {
+			   return "暂停";
+			  }else if( status=="CREATIVE_STATUS_DELETE" )
+			  {
+			   return "删除";
+			  }
+			},
+			formschedule_type(type){
+			  if( type=="SCHEDULE_FROM_NOW" )
+			  {
+			    return "一直";
+			  }else if( type=="SCHEDULE_START_END" )
+			  {
+			   return "固定";
+			  }
+			},
+			formstatus(status){
+			  
+			  switch( status ){
+			     case "CAMPAIGN_STATUS_ENABLE":
+				    return '启用';
+				  break;
+				 case "CAMPAIGN_STATUS_DISABLE":
+				    return '暂停';
+				  break;
+                 case "CAMPAIGN_STATUS_DELETE":
+				    return '删除';
+				  break;
+                case "CAMPAIGN_STATUS_ALL":
+				    return '所有包含已删除';
+				  break;
+                case "CAMPAIGN_STATUS_NOT_DELETE":
+				    return '所有不包含已删除';
+				  break;				  
+			  }
+			},
+			
+			getlist(){
+			    this.loading = true
+			   let _that = this
+			   let param ={
+			      advertiser_id:this.advertiser_id,
+				  type:this.type,
+				  keyword:this.keyword,
+				  campaign_id:this.campaign_id,
+				  page:this.page
+			   }
+				   axios({
+						method: 'post',
+						url:'/delivery/json_data',
+						data:param
+					}).then(res=>{			
+					 _that.loading = false
+					 this.tableData = res.data.list
+					 this.total_number  =res.data.page_info.total_number
+					 this.page_size = res.data.page_info.page_size
+				 })
+			}
+        }
+    })
+  </script>	
+</html>

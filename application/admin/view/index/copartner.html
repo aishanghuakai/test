@@ -1,0 +1,479 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GAME BRAIN</title>
+    {include file="./static/html/header_common.html" /}
+    <link href="/static/css/checkbox.css" rel="stylesheet" type="text/css">	
+	 <link rel="stylesheet" type="text/css" media="all" href="/static/plugin/jquery-time/daterangepicker-bs3.css" />
+     <link href="/static/css/dialog.css" rel="stylesheet" type="text/css" />
+     <link href="/static/css/tooltips.css" rel="stylesheet">
+	<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+<script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <!-- import JavaScript -->
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <script src="/static/js/axios.min.js"></script>	 
+	 <style>
+      .pgc-dashboard-new .pgc-dashboard-column .pgc-dashboard-primary{margin:10px;font-size:14px;}
+.info_hd{background:#fff !important;}
+.pgc-dashboard-column-name{color:#444;}
+.cool_active,.tab .btn:hover{background-color:rgba(28,31,33,.04);border:1px solid #fff;}
+.asd-inline {				
+		
+		font-size: 14px;		
+		margin-left: 20px;
+        margin-right: 20px;
+		color: red;
+		margin-top:20px;
+	}
+	.asd-inline a,.asd-inline a:hover{
+	  color: red !important;
+	}
+	.fa-pencil,.el-icon-edit{cursor:pointer;}
+	.cell{font-size:12px;}
+	 .index_main{background-color:#fff;border-radius:10px;}
+	 .el-table td, .el-table th {padding:9px 0;}
+	 </style>
+</head>
+<body>
+    <div id="wrapper" style="background: #fff;">
+        {include file="./static/html/header.html" /}	
+		<div class="hw_page_content" style="background: #fff;">
+		    
+		    <div class="hw_menu_left">
+         {include file="./static/html/side.html" /}  
+			</div>
+		    <div class="hw_content_right" style="width:100%;" >
+			   <div class="asd-inline">
+                 <span><strong><i style="color:#222;" class="fa fa-info-circle total_remark"></i></strong> 当前均为估算数据，实际结算数据以账单报表为准.</span>											
+                 <div style="float:right;">				     
+					  <el-date-picker
+					  v-model="date"					 
+					  type="daterange"
+					  :disabled="disabled"
+					  @change="handleDate"
+					  value-format="yyyy-MM-dd"
+					  :picker-options="pickerOptions0"
+					  start-placeholder="开始"
+					  end-placeholder="结束">
+					</el-date-picker>
+					{if condition="getuserrole() neq 'copartner'"}
+                     <el-button type="primary" @click="handleSet" icon="el-icon-s-tools"></el-button>
+                    {/if}					
+				  </div>
+			   </div>
+			   
+			     <div style="padding:15px 0px 0px 20px;" >
+			        <h4><strong style="font-size: 16px">概览</strong> <!-- <i style="color:#ffa354;" class="fa fa-info-circle total_remark"></i> --></h4>
+				  </div>			       
+			   <div class="pgc-dashboard-new" style="padding: 5px 0 30px 0px;">
+			     
+				 <div class="pgc-dashboard-column">
+				   <div class="pgc-dashboard-secondary" style="font-size: 16px;">
+				         
+						 <div class="pgc-dashboard-column-name">
+						   <div>收益分成 </div>
+						 </div>
+					</div>
+				   <div class="pgc-dashboard-wrapper">
+				      <span class="pgc-dashboard-primary">{$revenue_rate}% {if condition="getuserrole() eq 'super'"}<i @click="dialogRateVisible1=true" class="fa fa-pencil" style="color:#ccc;font-size:14px;"></i>{/if}</span>			   
+					</div>
+                  					
+				 </div>
+				 				 
+				 <div class="pgc-dashboard-column">
+				   <div class="pgc-dashboard-secondary" style="font-size: 16px;">
+				         
+						 <div class="pgc-dashboard-column-name">
+						   <div>本月预计结算 <!-- <i class="fa fa-question-circle-o revenue_remark"></i> --></div>
+						 </div>
+					</div>
+				   <div class="pgc-dashboard-wrapper">
+				      <span class="pgc-dashboard-primary">${$month_revenue}</span>			   
+					</div>
+                   				
+				 </div>
+				 
+				  <div class="pgc-dashboard-column">
+				   <div class="pgc-dashboard-secondary" style="font-size: 16px;">				         
+						 <div class="pgc-dashboard-column-name">
+						   <div>累计结算总金额 <!-- <i class="fa fa-question-circle-o revenue_remark"></i> --></div>
+						 </div>
+					</div>
+				   <div class="pgc-dashboard-wrapper">
+				      <span class="pgc-dashboard-primary">${$total_money??0}</span>			   
+					</div>                  					
+				 </div>			   	 
+			    </div>	
+             
+			  
+			 <div style="padding:10px;">
+				  
+				  <div style="clear:both;"></div>
+			    <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
+				   <el-tab-pane label="每日数据" name="day">
+					 <el-table :data="dayData"  height="600px" v-loading="loading" style="width: 100%;">			
+						<el-table-column fixed sortable prop="date" width="100px"  label="日期"></el-table-column>
+						<el-table-column fixed sortable prop="active_users" width="80px" align="center" label="活跃"></el-table-column>
+						<el-table-column fixed sortable prop="new_users" width="80px" align="center" label="新增"></el-table-column>
+						<el-table-column sortable prop="int_show" align="center" width="100px" label="人均插屏"></el-table-column>
+						<el-table-column sortable prop="rew_show" align="center" width="100px" label="人均激励"></el-table-column>
+						{if condition="(in_array($appid,[47,143,153,147,154,43])) or ($userinfo['id'] eq '53')"}
+						<el-table-column sortable prop="ban_show" align="center" width="120px" label="人均banner"></el-table-column>
+						<el-table-column sortable prop="sp_show" align="center" width="120px" label="人均开屏"></el-table-column>
+						<el-table-column sortable prop="int_revenue" align="center" width="100px" label="插屏收益"></el-table-column>
+						<el-table-column sortable prop="rew_revenue" align="center" width="100px" label="激励收益"></el-table-column>
+						<el-table-column sortable prop="ban_revenue" align="center" width="120px" label="banner收益"></el-table-column>
+						<el-table-column sortable prop="sp_revenue" align="center" width="120px" label="开屏收益"></el-table-column>
+						{/if}
+						<el-table-column sortable prop="reten_1" align="center" label="次留"></el-table-column>
+						<el-table-column sortable prop="retention_7" align="center" label="7留"></el-table-column>
+						<el-table-column sortable prop="retention_28" align="center" label="28留"></el-table-column>
+						<el-table-column sortable prop="spend" align="center" width="100px" label="花费($)">
+						   <template slot-scope="scope">
+								<span>{{scope.row.spend}}</span>{if condition="($userinfo['ad_role'] eq 'super') and ($appid eq 77)"} <i v-show="scope.row.date!='总计'" @click="editSpend(scope.row)" class="el-icon-edit"></i>{/if}								
+							  </template>
+						</el-table-column>
+						<el-table-column sortable prop="revenue" width="100px" label="收益($)"></el-table-column>
+						<el-table-column sortable prop="roi" width="100px" label="ROI(%)"></el-table-column>
+					</el-table>
+				  </el-tab-pane>
+				  
+                  <el-tab-pane label="账单报表" name="report">
+						 <el-table :data="summaryData" height="400px" v-loading="loading" style="width: 100%;">
+							<el-table-column prop="name" label="账单月份">
+							  <template slot-scope="scope">
+								<i class="el-icon-time"></i>
+								<span style="margin-left: 10px">{{ scope.row.name }}</span>
+							  </template>
+							</el-table-column>
+							<el-table-column
+							  prop="revenue"
+							  label="收益">
+							  <template slot-scope="scope">							 
+							  ${{scope.row.revenue}}
+							 </template>
+							</el-table-column>
+							
+							<el-table-column prop="other_spend" label="费用">
+							   <template slot-scope="scope">
+								<el-popover v-if="scope.row.status!='-1'" trigger="hover" placement="top">
+								  <p>推广费用: ${{scope.row.ads_spend}}</p>
+								  <p>服务器费用: ${{scope.row.server_spend}}</p>
+								  <p>追踪费用: ${{scope.row.other_spend}}</p>
+								  <p>其他费用: ${{scope.row.other_spend1}}&nbsp;{{scope.row.spend_desc1}}</p>
+								  <div slot="reference" class="name-wrapper">
+									 ${{scope.row.spend}} <i class="el-icon-warning-outline"></i>
+								  </div>
+								</el-popover>
+								<template v-else>
+								  ${{scope.row.spend}}
+								</template>
+							  </template>
+							</el-table-column>
+							<el-table-column
+							  prop="revenue"
+							  label="ROI占比">
+							  <template slot-scope="scope">
+							  {{scope.row.roi}}%
+							 </template>
+							</el-table-column>
+							</el-table-column>
+							<el-table-column prop="other_spend" label="预计结算">
+							  <template slot-scope="scope">
+							   ${{scope.row.may_revenue}}
+							  </template>
+							</el-table-column>
+							<el-table-column prop="other_spend" label="结算状态">
+							  <template slot-scope="scope">
+								<el-tag v-if="scope.row.status==1" size="mini" type="danger">待结算</el-tag>
+								<el-tag v-else-if="scope.row.status==2" size="mini" type="success">已结算</el-tag>
+								<div v-else >---</div>
+							  </template>
+							</el-table-column>
+							<el-table-column prop="status" label="实际结算($)">
+							   
+							  <template slot-scope="scope">
+								<el-popover v-if="scope.row.desc!=''" trigger="hover" placement="top">
+								  <p>{{scope.row.desc}}</p>
+								  <div slot="reference" class="name-wrapper">
+									 {{scope.row.money}} <i class="el-icon-info"></i>
+								  </div>
+								</el-popover>
+								<div v-else>{{scope.row.money}}</div>
+							  </template>
+							</el-table-column>
+							{if condition="getuserrole() eq 'financer'"}
+							<el-table-column label="操作"  align="center" >
+							 
+							  <template slot-scope="scope">
+								
+								  <el-button
+								  size="mini"
+								  v-if="scope.row.status!='-1'"
+								  type="primary"
+								  @click="handleSet1(scope.$index, scope.row)">结算</el-button>
+							  </template>
+							</el-table-column>
+							{/if}
+					   </el-table>
+				  </el-tab-pane>				  
+			    </el-tabs>				
+			 </div>
+			 
+			</div>
+		</div>
+		
+		<el-dialog title="费用设置" v-loading="loading" :visible.sync="dialogFormVisible">
+		  <el-form :model="form">
+			<el-form-item label="选择月份" :label-width="formLabelWidth">
+			  <el-date-picker @change="handleSetDate" value-format="yyyy-MM-dd" v-model="form.date" style="width:200px;" type="month"></el-date-picker>
+			</el-form-item>			
+			<el-form-item label="服务器费用" :label-width="formLabelWidth">
+			  <el-input v-model="form.server_spend" style="width:200px;" autocomplete="off"></el-input>
+			</el-form-item>
+			<el-form-item label="追踪费用" :label-width="formLabelWidth">
+			  <el-input v-model="form.other_spend" style="width:200px;" autocomplete="off"></el-input>
+			</el-form-item>
+			<el-form-item label="其他费用" :label-width="formLabelWidth">
+			  <el-input v-model="form.other_spend1" style="width:200px;" autocomplete="off"></el-input>
+			   <el-input v-model="form.spend_desc1" style="width:200px;" placeholder="备注" autocomplete="off"></el-input>
+			</el-form-item>
+			<el-form-item label="汇率设置" :label-width="formLabelWidth">
+			  <el-input v-model="form.rate" style="width:200px;" autocomplete="off"></el-input><span style="font-size:12px;color:red"> *人民币转美元</span>
+			</el-form-item>
+		  </el-form>
+		  <div slot="footer" class="dialog-footer">
+			<el-button size="small" @click="dialogFormVisible = false">取 消</el-button>
+			<el-button size="small" type="primary" @click="addRate">确 定</el-button>
+		  </div>
+       </el-dialog>
+	   
+	   <el-dialog title="结算确认" :visible.sync="dialogFormVisible1">
+		  <el-form :model="confirmForm">
+			<el-form-item label="填写金额" :label-width="formLabelWidth">
+			  <el-input v-model="confirmForm.money" style="width:300px;" autocomplete="off"></el-input>
+			</el-form-item>
+			<el-form-item label="添加备注" :label-width="formLabelWidth">
+			  <el-input v-model="confirmForm.desc" style="width:300px;" autocomplete="off"></el-input>
+			</el-form-item>
+			
+		  </el-form>
+		  <div slot="footer" class="dialog-footer">
+			<el-button size="small" @click="dialogFormVisible1 = false">取 消</el-button>
+			<el-button size="small" type="primary" @click="addMoney">确 定</el-button>
+		  </div>
+       </el-dialog>
+	   
+	   <el-dialog title="编辑数据" :visible.sync="dialogSpend">
+		  <el-form>
+			<el-form-item label="日期" :label-width="formLabelWidth">
+			  {{tardate}}
+			</el-form-item>
+		  </el-form>
+		  <el-form>
+			<el-form-item label="金额" :label-width="formLabelWidth">
+			  <el-input v-model="tarspend" style="width:300px;" autocomplete="off"></el-input>
+			</el-form-item>
+		  </el-form>
+		  <div slot="footer" class="dialog-footer">
+			<el-button size="small" @click="dialogSpend = false">取 消</el-button>
+			<el-button size="small" type="primary" @click="addtarSpend">确 定</el-button>
+		  </div>
+       </el-dialog>
+		 
+		  <el-dialog title="调整分成比例" width="30%" :visible.sync="dialogRateVisible1">
+          <span><el-input-number v-model="revenue_rate" :min="0" :max="100"></el-input-number></span>
+		  <span slot="footer" class="dialog-footer">
+			<el-button @click="dialogRateVisible1= false">取 消</el-button>
+			<el-button type="primary" @click="add_revenue_rate">确 定</el-button>
+		  </span>
+        </el-dialog>
+		
+		 {include file="./static/html/footer.html" /}
+	</div>
+</body>
+ {include file="./static/html/footer_common.html" /}
+  <script>
+    new Vue({
+        el: '#wrapper',
+        data: {
+            visible: false,
+			loading:false,
+			activeName: 'day',
+			appid:'{$appid}',
+			revenue_rate:'{$revenue_rate}',
+			disabled:false,
+			dialogFormVisible:false,
+			dialogRateVisible1:false,
+			dialogSpend:false,
+			dialogFormVisible1:false,
+			formLabelWidth: '120px',
+			value2:'',
+			tarspend:'',
+			tardate:'',
+			date:['{$start}','{$end}'],
+			form:{
+			   date:"",
+			   server_spend:'0.00',
+			   other_spend:'0.00',
+			   other_spend1:'0.00',
+			   spend_desc1:'',
+			   rate:''
+			},
+			confirmForm:{
+			   id:0,
+			   money:"0.00",
+			   desc:""
+			},
+			pickerOptions0: {
+			  disabledDate(time) {
+			    var disabled_date= "2018-12-31 23:59:59"
+				{if condition="$userinfo['id'] eq '58'"}
+				  disabled_date = "2020-04-19 23:59:59"
+				{/if}
+				let curDate = (new Date(disabled_date)).getTime();
+				return time.getTime() < curDate;;
+			  }
+			},
+			dayData: [],
+			summaryData:[]	
+        },
+		created(){
+		   this.getDayList()
+		},
+        methods: {
+            handleClick(tab, event) {
+              if( this.activeName=="day" )
+			  {
+			    this.disabled = false
+			  }else{
+			     this.disabled = true
+			  }
+			  if( this.activeName=="report" )
+			  {
+			    this.getSummary()
+			  }
+            },
+			handleSet(){
+			  this.dialogFormVisible = true
+			},
+			handleSet1(index,row){			 
+			  this.confirmForm.id = row.id
+			  this.confirmForm.money = row.money
+			  this.confirmForm.desc = row.desc
+			  this.confirmForm.may_revenue = row.may_revenue
+			  this.dialogFormVisible1 = true
+			},
+			add_revenue_rate()
+			{
+			  axios({
+						method: 'post',
+						url:'/admin_control/add_revenue_rate',
+						data:{ appid:this.appid,revenue_rate:this.revenue_rate }
+					}).then(res=>{			
+					 this.dialogRateVisible1 = false
+					 this.$message('操作成功');
+					 window.location.href = window.location.href
+				 })
+			},
+			editSpend(row)
+			{
+			   this.dialogSpend = true
+			   this.tardate = row.date
+			   this.tarspend = row.spend
+			},
+			addtarSpend()
+			{
+			   let _that = this
+			  if( this.tardate!='' && this.tardate!="总计"  )
+			  {
+					 axios({
+						method: 'post',
+						url:'/admin_index/addtarSpend',
+						data:{ date:this.tardate,spend:this.tarspend }
+					}).then(res=>{			
+					 _that.dialogSpend = false
+					 this.$message('操作成功');
+					 window.location.href = window.location.href
+				 })
+			  }
+			},
+			addRate(){
+			  let _that = this
+			  if( this.form.date!='' )
+			  {
+					 axios({
+						method: 'post',
+						url:'/admin_index/addRate',
+						data:this.form
+					}).then(res=>{			
+					 _that.dialogFormVisible = false
+					 this.$message('操作成功');
+					 window.location.href = window.location.href
+				 })
+			  }
+			},
+			addMoney()
+			{
+			  let _that = this
+			  if( this.confirmForm.id>0 )
+			  {
+					 axios({
+						method: 'post',
+						url:'/admin_index/addMoney',
+						data:this.confirmForm
+					}).then(res=>{			
+					 _that.dialogFormVisible1 = false
+					 _that.getSummary()
+				 })
+			  }
+			},
+			handleSetDate(value){
+			    this.loading = true
+				let _that =this
+			    axios({
+						method: 'post',
+						url:'/admin_index/getSetInfo',
+						data:{ date:value }
+					}).then(res=>{			
+					 _that.loading = false
+					 _that.form = res.data
+				 })
+			},
+			getDayList()
+			{
+			   this.loading = true
+			   let _that = this
+			   axios({
+					method: 'post',
+					url:'/admin_index/copartner_json',
+					data:{ start:this.date[0],end:this.date[1]}
+				}).then(res=>{			
+				 _that.loading = false
+				 this.dayData = res.data
+			 })
+			},
+			getSummary()
+			{
+			   this.loading = true
+			   let _that = this
+			   axios({
+					method: 'post',
+					url:'/admin_index/copartner_report',
+					data:{}
+				}).then(res=>{			
+				 _that.loading = false
+				 this.summaryData = res.data
+			 })
+			},
+			handleDate(value)
+			{
+			  this.getDayList()
+			}
+        }
+    })
+  </script>
+</html>

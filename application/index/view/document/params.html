@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GAME BRAIN</title>
+    {include file="./static/html/header_common.html" /}
+	<link href="/static/css/userinfo.css" rel="stylesheet" type="text/css" />
+	<link href="/static/css/checkbox.css" rel="stylesheet" type="text/css" />
+    <style>
+	  .hw_navbar{background-color:#0a1e39;color:#fff;}
+	  .hw_logo{margin-left:10%;}
+	  .ivu-avatar{
+		display: inline-block;
+		text-align: center;
+		background: #ccc;
+		color: #fff;
+		white-space: nowrap;
+		position: relative;
+		overflow: hidden;
+		vertical-align: middle;
+		width:100px;
+		height:100px;
+		line-height:100px;
+		border-radius: 16px;
+	   }
+	   .auth-avatar {
+		display: inline-block;
+		float: left;
+		cursor: pointer;
+		height:100px;
+	   }
+	   .auth-desc{
+		  float:left;
+		  margin-left:20px;
+		  height:100px;
+		}
+	   .ivu-avatar img{width:100%;height:100%;}
+	   .control-label {
+	     color: #333 !important;
+		 text-align:center !important;
+		}
+		.col-md-4 {
+		  margin-bottom:25px;
+		  padding:10px 0px;		 
+		  border:1px dashed #ccc;
+		 height:90px;
+		}
+	</style>	
+</head>
+ 
+<body style="background:#e9ecef;">
+    <div id="wrapper" style="background-color:#e9ecef;">
+       <nav class="navbar hw_navbar top-navbar">
+			  <div class="hw_logo">
+				<a class="navbar-brand" href="javascript:;"><img src="/static/images/logo.png"></a>
+			  </div>
+          		  
+        </nav>	
+	
+		<div class="hw_page_content" style="width:80%;margin:0 auto;background-color:#e9ecef;text-align:center;min-height:300px;margin-top:8%;display:block;">
+		    <div  class="article-tisummaryme">
+			  <div  class="auth-avatar">
+			     <span  class="ivu-avatar ivu-avatar-circle ivu-avatar-default ivu-avatar-image">
+				    <img src="{$r.icon_url}">
+				  </span>
+			  </div> 
+			  <div class="auth-desc" style="text-align:left;">
+			    <div style="margin:15px 0px;font-size:16px;color:#342ead;font-weight:700;">{$r.app_name}</div> 
+				<div>{$r.package_name}</div>
+			  </div>
+		   </div>		   
+           <div style="clear:both;"></div>
+           <h2 style="text-align:left;padding-top:20px;margin-left:20px;font-size:16px;color:#222;"><i class="fa fa-gavel"></i> 以下是参数配置信息,<strong style="color:red;">注意复制时,仔细点，以免出错!</strong></h2>		   
+           <div style="padding:20px 30px;text-align:center;">
+			     <form class="form-horizontal" >
+					 <h3 style="color:#333;margin-bottom:15px;">基础参数</h3>
+					 <div class="row">
+					      <div class="col-md-4">
+							  <label for="exampleInputEmail1">Game Brain id</label>
+							  <div style="color:#4a69bb">{$res.app_id??""}</div> <i class="fa fa-copy" style="cursor:pointer;"></i>
+						  </div>
+						  <div class="col-md-4">
+							  <label for="exampleInputEmail1">Bundle ID/包名</label>
+							  <div style="color:#4a69bb">{$content.package??""}</div> <i class="fa fa-copy" style="cursor:pointer;"></i>
+						  </div>
+						  <div class="col-md-4">
+							  <label for="exampleInputEmail1">Apple ID（可选）</label>
+							  <div style="color:#4a69bb">{$content.appleID??""}</div> <i class="fa fa-copy" style="cursor:pointer;"></i>
+						  </div>
+					  </div>					  
+					  <div class="row">
+					      <div class="col-md-4">
+							  <label for="exampleInputEmail1">GA GameKey</label>
+							  <div style="color:#4a69bb">{$content.gameKey??""}</div> <i class="fa fa-copy" style="cursor:pointer;"></i>
+						  </div>
+						  <div class="col-md-4">
+							  <label for="exampleInputEmail1">GA SecretKey</label>
+							  <div style="color:#4a69bb">{$content.secretKey??""}</div> <i class="fa fa-copy" style="cursor:pointer;"></i>
+						  </div>
+						  <div class="col-md-4">
+							  <label for="exampleInputEmail1">Admob app ID</label>
+							  <div style="color:#4a69bb">{$content.admobID??""}</div> <i class="fa fa-copy" style="cursor:pointer;"></i>
+						  </div>
+						  <div class="col-md-4">
+							  <label for="exampleInputEmail1">Facebook app ID</label>
+							  <div style="color:#4a69bb">{$content.fb_app_id??""}</div> <i class="fa fa-copy" style="cursor:pointer;"></i>
+						  </div>
+					  </div>
+					{if condition="isset($content['da_app_id']) and $content['da_app_id']"}
+					  <h3 style="color:#333;margin-bottom:15px;">Dataplayer参数</h3>
+					 <div class="row">
+					      <div class="col-md-4">
+							  <label for="exampleInputEmail1">App ID</label>
+							  <div style="color:#4a69bb">{$content.da_app_id??""}</div> <i class="fa fa-copy" style="cursor:pointer;"></i>
+						  </div>
+						  <div class="col-md-4">
+							  <label for="exampleInputEmail1">App Name</label>
+							  <div style="color:#4a69bb">{$content.da_app_name??""}</div> <i class="fa fa-copy" style="cursor:pointer;"></i>
+						  </div>
+						  <div class="col-md-4">
+							  <label for="exampleInputEmail1">App Key</label>
+							  <div style="color:#4a69bb">{$content.da_app_key??""}</div> <i class="fa fa-copy" style="cursor:pointer;"></i>
+						  </div>
+					  </div>					  
+					  <div class="row">
+					      <div class="col-md-4">
+							  <label for="exampleInputEmail1">URL Scheme</label>
+							  <div style="color:#4a69bb">{$content.da_scheme??""}</div> <i class="fa fa-copy" style="cursor:pointer;"></i>
+						  </div>						  
+					  </div>
+					  {/if}
+					  <h3 style="color:#333;margin-bottom:15px;">hw参数 <span style="color:red;">(注意：token需要和sdk中的token名称一一对应)</span></h3>
+					 <div class="row">
+					      <div class="col-md-4">
+							  <label for="exampleInputEmail1">AppToken</label>
+							  <div style="color:#4a69bb">{$content.adjust_token??""}</div> <i class="fa fa-copy" style="cursor:pointer;"></i>
+						  </div>
+						  <div class="col-md-4">
+							  <label for="exampleInputEmail1">hwImportantToken</label>
+							  <div style="color:#4a69bb">{$content.hwImportantToken??""}</div> <i class="fa fa-copy" style="cursor:pointer;"></i>
+						  </div>
+						  <div class="col-md-4">
+							  <label for="exampleInputEmail1">hwMonetizationToken</label>
+							  <div style="color:#4a69bb">{$content.hwMonetizationToken??""}</div> <i class="fa fa-copy" style="cursor:pointer;"></i>
+						  </div>
+						  
+					  </div>					  
+					  <div class="row">
+					      <div class="col-md-4">
+							  <label for="exampleInputEmail1">hwGuideFinishToken</label>
+							  <div style="color:#4a69bb">{$content.hwGuideFinishToken??""}</div> <i class="fa fa-copy" style="cursor:pointer;"></i>
+						  </div>
+						  <div class="col-md-4">
+							  <label for="exampleInputEmail1">hwLevelToken</label>
+							  <div style="color:#4a69bb">{$content.hwLevelToken??""}</div> <i class="fa fa-copy" style="cursor:pointer;"></i>
+						  </div>
+						  
+						  <div class="col-md-4">
+							  <label for="exampleInputEmail1">hwPurchaseToken</label>
+							  <div style="color:#4a69bb">{$content.hwPurchaseToken??""}</div> <i class="fa fa-copy" style="cursor:pointer;"></i>
+						  </div>
+						  <div class="col-md-4">
+							  <label for="exampleInputEmail1">hwVideohighToken</label>
+							  <div style="color:#4a69bb">{$content.hwVideohighToken??""}</div> <i class="fa fa-copy" style="cursor:pointer;"></i>
+						  </div>
+						  <div class="col-md-4">
+							  <label for="exampleInputEmail1">hwVideolowToken</label>
+							  <div style="color:#4a69bb">{$content.hwVideolowToken??""}</div> <i class="fa fa-copy" style="cursor:pointer;"></i>
+						  </div>
+						  <div class="col-md-4">
+							  <label for="exampleInputEmail1">hwUACToken(老版本)</label>
+							  <div style="color:#4a69bb">{$content.hwUACToken??""}</div> <i class="fa fa-copy" style="cursor:pointer;"></i>
+						  </div>
+					  </div>
+					</form>
+			  </div>				
+			
+		</div>
+	</div>	
+</body>
+ <script src="/static/js/jquery-1.10.2.js"></script>
+	<script src="/static/js/layer/layer.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+ <script>
+    var clipboard = new ClipboardJS(".fa-copy",{
+        text : function(e){
+            //寻找被激活的那个div pre元素,同时获取它下面的内容
+            return $(e).parent().find("div").text()
+			//return $(this).parent().find("span").text();
+        }
+    });
+	clipboard.on('success', function(e) {
+    layer.msg("已复制到您的剪贴板");
+    e.clearSelection();
+});
+
+clipboard.on('error', function(e) {
+    console.error('Action:', e.action);
+    layer.msg("亲,出错了呦")
+});
+ </script>
+</html>

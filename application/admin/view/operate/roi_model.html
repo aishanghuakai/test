@@ -1,0 +1,327 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GAME BRAIN</title>
+		    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+   <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <!-- import JavaScript -->
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <script src="/static/js/axios.min.js"></script>	
+    {include file="./static/html/header_common.html" /}
+    	
+	<style>
+	th,td{text-align:center;vertical-align:middle}
+	  .hw_reven p {
+   height:20px;
+}
+.el-table th > .cell{color:#222;}
+
+	</style>
+</head>
+<body>
+    <div id="wrapper" style="background: #fff;">
+        {include file="./static/html/header.html" /}	
+		<div class="hw_page_content">
+		    <div class="hw_menu_left">
+         {include file="./static/html/side.html" /}  
+			</div>
+		    <div class="hw_content_right" style="padding:10px 10px">
+			    <ul class="search_tab clearfix" >
+			      <li class="active"><a  href="javascript:;">ROI拟合</a></li>
+                  			  
+		        </ul>	          
+			    <div class="hw_reven clearfix" style="padding:10px 30px;">
+				   <div style="">
+				     <div style="float:right;">
+					   <el-select size="mini" v-model="day" allow-create filterable @change="getdata" style="width:150px;" placeholder="请选择留存计算天数">
+					     <el-option label="30天留存" value="30"></el-option>
+						 <el-option label="60天留存" value="60"></el-option>
+						 <el-option label="留存降为1%" value="1"></el-option>
+					   </el-select>
+					   <!-- <el-button type="primary" @click="dialogTableVisible=true" size="small" icon="el-icon-plus" circle></el-button> -->
+					 </div>
+					 <el-table
+					  :data="tableData"
+					  style="width:60%;margin:0 auto;">
+					  <el-table-column
+					  align="center"
+						label="指标">
+						<template slot-scope="scope">
+							<p>留存和</p>
+							<p>人均激励数</p>
+							<p>激励eCPM(美元)</p>
+							<p>人均插屏数</p>
+							<p>插屏eCPM(美元)</p>
+							<p>人均原生数</p>
+							<p>原生eCPM(美元)</p>
+                            <p>人均Banner数</p>
+							<p>BannereCPM(美元)</p>							
+							<p>成本(美元)</p>
+							<p style="color:red;">终身LTV(广告)</p>
+							<p style="color:red;">终身ROI(广告)</p>
+							<p>内购占比</p>
+							<p style="color:red;">终身LTV(综合)</p>
+							<p style="color:red;">终身ROI(综合)</p>
+						  </template>
+					  </el-table-column>
+					  <el-table-column
+					    align="center"
+						label="数值">
+						<template slot-scope="scope">
+						  <p><el-input size="mini" style="width:90px;" v-model="reten_sum"></el-input> <span @click="dialogTableVisible=true" style="margin-left:10px;position:absolute;font-size:12px;cursor:pointer;color:#66b1ff"><i class="el-icon-edit-outline"></i>拟合</span></p>
+						  <p><el-input size="mini" style="width:90px;" v-model="rew_num"></el-input></p>
+						  <p><el-input size="mini" style="width:90px;" v-model="rew_ecpm"></el-input></p>
+						  <p><el-input size="mini" style="width:90px;" v-model="int_num"></el-input></p>
+						  <p><el-input size="mini" style="width:90px;" v-model="int_ecpm"></el-input></p>
+						  <p><el-input size="mini" style="width:90px;" v-model="nat_num"></el-input></p>
+						  <p><el-input size="mini" style="width:90px;" v-model="nat_ecpm"></el-input></p>
+                          <p><el-input size="mini" style="width:90px;" v-model="ban_num"></el-input></p>
+						  <p><el-input size="mini" style="width:90px;" v-model="ban_ecpm"></el-input></p>						  
+						  <p><el-input size="mini" style="width:90px;" v-model="cpi"></el-input></p>
+						  <p><el-input size="mini" style="width:90px;"  v-model="ad_ltv"></el-input></p>
+						  <p><el-input size="mini" style="width:90px;color:red;"  v-model="ad_roi"></el-input></p>
+						  <p><el-input size="mini" style="width:90px;" v-model="purchase_rate"></el-input></p>
+						  <p><el-input size="mini" style="width:90px;color:red;"  v-model="total_ltv"></el-input></p>
+						  <p><el-input size="mini" style="width:90px;color:red;"  v-model="total_roi"></el-input></p>
+					  </template>
+					  </el-table-column>
+					 </el-table>
+                   </div>					  
+				</div>
+				<div class="newsbar-title" style="margin-left:2%;margin-top:20px;">留存拟合趋势</div>	
+			    <div id="chats" style="height:300px;padding:0px 20px;"></div>
+			</div>
+			<el-dialog title="留存输入" :visible.sync="dialogTableVisible">
+		  <el-table :data="retenData" height="250">
+			<el-table-column property="day" label="天数"></el-table-column>
+			<el-table-column property="val" label="数值">
+			   <template slot-scope="scope">
+			      <el-input size="mini" style="width:80px;" v-model="scope.row.val"></el-input>
+			    </template>
+			</el-table-column>
+		  </el-table>
+		  <div slot="footer" class="dialog-footer">
+			<el-button @click="dialogTableVisible = false" size="small">取 消</el-button>
+			<el-button type="primary" @click="getdata" size="small">确 定</el-button>
+		  </div>
+		</el-dialog>
+		</div>
+		 {include file="./static/html/footer.html" /}
+	</div>	
+</body>
+ {include file="./static/html/footer_common.html" /}
+ <script src="/static/js/echarts.min.js"></script>
+ <script>
+    let t = new Vue({
+        el: '#wrapper',
+        data: {
+		  tableData:[[]],
+		  retenData:[],
+		  dialogTableVisible:false,
+		  day:"30",
+		  x_out:[],
+		  y_out:[],
+		  reten_sum:"",
+		  rew_ecpm:'',
+		  rew_num:'',
+		  int_num:'',
+		  int_ecpm:'',
+		  nat_num:'',
+		  nat_ecpm:'',
+		  ban_num:'',
+		  ban_ecpm:'',
+		  cpi:'',
+		  purchase_rate:'',
+		  total_ltv:'',
+		  ad_roi:'',
+          total_roi:'',
+          ad_ltv:''		  
+		},
+		computed:{
+		  params:function(){
+		    return {
+			   reten_sum:this.reten_sum,
+			   rew_ecpm:this.rew_ecpm,
+			   rew_num:this.rew_num,
+			   int_ecpm:this.int_ecpm,
+			   int_num:this.int_num,
+			   nat_ecpm:this.nat_ecpm,
+			   nat_num:this.nat_num,
+			   ban_ecpm:this.ban_ecpm,
+			   ban_num:this.ban_num,
+			   cpi:this.cpi,
+			   purchase_rate:this.purchase_rate
+			}
+		  }
+		},
+		watch: {
+		　　params: {
+		　　　　handler(newValue, oldValue) {
+		        let rew =0;
+				let intt =0;
+				let ban =0;
+				let nat =0;
+				if(newValue.rew_ecpm>0)
+				{
+				  rew = newValue.reten_sum*newValue.rew_ecpm*newValue.rew_num/1000
+				}
+				if(newValue.int_ecpm>0)
+				{
+				  intt = newValue.reten_sum*newValue.int_ecpm*newValue.int_num/1000
+				}
+				if(newValue.ban_ecpm>0)
+				{
+				  ban = newValue.reten_sum*newValue.ban_ecpm*newValue.ban_num/1000
+				}
+				if(newValue.nat_ecpm>0)
+				{
+				  nat = newValue.reten_sum*newValue.nat_ecpm*newValue.nat_num/1000
+				}　　　　　 
+				this.ad_ltv = rew+intt+ban+nat
+				this.ad_roi = newValue.cpi>0?(this.ad_ltv*100/newValue.cpi).toFixed(2):0
+				if(newValue.purchase_rate!='')
+				   {
+				     this.total_ltv = this.ad_ltv/(1-newValue.purchase_rate/100)
+					 this.total_roi = newValue.cpi>0?(this.total_ltv*100/newValue.cpi).toFixed(2):0
+				   }
+		　　　　},
+		　　　　deep: true
+		　　}
+		},
+		created(){
+		  let arr =[];
+		  for(let i=1;i<31;i++)
+		  {
+		    arr.push({day:i,val:''})
+		  }
+		  this.retenData = arr
+		},
+		mounted(){
+		  
+		},
+		methods:{		  
+		  
+		  getdata(){
+		       let param ={
+			     retenData:this.retenData,
+				 day:this.day
+			   }
+			   axios({
+						method: 'post',
+						url:'/admin_operate/postReten',
+						data:param
+					}).then(res=>{			
+                    this.reten_sum = res.data.reten_sum
+					this.x_out = res.data.x_out
+					this.y_out = res.data.y_out
+					charst()
+					this.dialogTableVisible = false
+				})
+		   }	   
+		}
+	})
+	
+	
+  </script>
+  <script>
+  charst()
+  function charst(){
+  
+    var myChart = echarts.init(document.getElementById("chats"));
+var option ={
+	color: ['#73A0FA', '#73DEB3', '#FFB761'],
+    tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+            type: 'cross',
+            crossStyle: {
+                color: '#999'
+            },
+            lineStyle: {
+                type: 'dashed'
+            }
+        }
+    },
+	toolbox: {
+    show: true,
+        right: '10%',
+        feature: {
+	        dataView: {
+	            readOnly: true    //原始数据的textarea框只读          
+	        },
+        magicType: {type: ['line', 'bar']}
+      }
+	},
+    grid: {
+        left: '25',
+        right: '25',
+        bottom: '24',
+        top: '35',
+        containLabel: true
+    },
+    legend: {
+        orient: 'horizontal',
+        icon: "rect",
+        show: true,
+        left: 20,
+        top: 25,
+        data: ['留存']
+    },
+    xAxis: {
+        type: 'category',
+        data:t.x_out,
+        boundaryGap: false,
+        splitLine: {
+            show: false
+        },
+        axisTick: {
+            show: false
+        },
+        axisLine: {
+            show: false
+        },
+    },
+    yAxis: {
+        type: 'value',
+       axisLabel: {
+            color: '#999',
+            textStyle: {
+                fontSize: 12
+            },
+        },
+        splitLine: {
+            show: true,
+            lineStyle: {
+                color: '#F3F4F4'
+            }
+        },
+        axisTick: {
+            show: false
+        },
+        axisLine: {
+            show: false
+        },
+    },
+    series: [{
+        name: '留存',
+        type: 'line',
+        smooth: true,
+        markPoint: {
+			data: [
+				{ type: 'max', name: '最大值' },
+				{ type: 'min', name: '最小值' }
+			],
+		  },
+        animationDuration: 2800,
+		animationEasing: 'cubicInOut',	  
+        data:t.y_out,
+    }]
+};
+myChart.setOption(option); 
+  }
+
+</script>
+</html>

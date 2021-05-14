@@ -1,0 +1,19 @@
+<form style="padding:10px 20px;">
+  <div class="form-group">
+    <label for="exampleInputEmail1">产品名称</label>
+		   <select class="form-control" id="reten_appid">
+		          {volist name="apps" id="vv"}
+				  <option {if condition="$vv['id'] eq $app_id" }selected{/if} value="{$vv.id}">{$vv.app_name}</option>
+				  {/volist}
+		  </select>
+  </div>
+  <div class="form-group">
+    <label for="datetime">日期</label>
+    <input type="date" class="form-control" id="reten_date" value="{$date}">
+  </div>
+  <div class="form-group">
+    <label for="Retention">日活</label>
+    <input type="text" class="form-control" for="Retention" id="reten_val" value="{$val}">
+  </div>
+  <button type="button" id="reten_sub" class="btn btn-default">Submit</button>
+</form>

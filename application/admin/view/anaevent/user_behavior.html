@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GAME BRAIN</title>
+    {include file="./static/html/header_common.html" /}
+  <link href="/static/css/checkbox.css" rel="stylesheet" type="text/css">	
+	 <link rel="stylesheet" type="text/css" media="all" href="/static/plugin/jquery-time/daterangepicker-bs3.css" />
+
+    <link href="/static/css/blue/style.css?t=<?php echo time(); ?>" rel="stylesheet">
+    <link href="/static/css/analysis.css?t=<?php echo time(); ?>" rel="stylesheet">
+	<link href="/static/css/behavior.css?t=<?php echo time(); ?>" rel="stylesheet">
+	 <style>
+	    #country,#country option{width:150px;border: 1px solid #f2f2f2;color:#555;font-size:14px;}
+		#country{max-height:200px;overflow-y:scroll}
+	 </style>
+</head>
+<body style="background-color:#f2f8f9;">
+    <div id="wrapper">
+        {include file="./static/html/header.html" /}	
+		<div class="hw_page_content">
+		    
+		    <div class="hw_menu_left">
+         {include file="./static/html/side.html" /}  
+			</div>			
+		    <div class="hw_content_right" style="padding:0 30px;width:80%" >
+			  	
+				 <div  style="margin:30px 0px 10px 0px;color:#404852;font-size:16px;">
+				    <span style="float:left;"><input type="text" style="text-align:left;width:190px;" id="start_date" value="{$start} 到 {$end}"  class="form-control"></span>				     					
+                    
+				    <div>
+						<span style="float:left;color: #848a9f;font-size: 12px;line-height:40px;margin:0px 20px;">选择用户天数</span>
+						<a><input type="text" id="open_day" style="text-align:left;float:left;width:190px;" data-name="选择用户天数" data-type="open_day" data-toggle="modal" data-val="all" value="全部" data-target="#myModal" class="form-control"></a>
+						<span style="float:left;color: #848a9f;font-size: 12px;line-height:40px;margin:0px 20px;">用户打开次数</span>
+						<a><input type="text" id="open_count" style="text-align:left;float:left;width:190px;" data-name="用户打开次数" data-type="open_count" data-toggle="modal" data-val="all" value="全部" data-target="#myModal" class="form-control"></a>
+                    </div>
+					<div class="el-switch el-switch-red" style="float:right;">										
+				     <input type="checkbox" name="check" id="send_switch" {if condition="$switch"} checked {/if} >
+				     <label class="el-switch-style" for="send_switch"></label>
+				    </div>
+					 <div style="clear:both;">
+						<span style="float:left;color: #848a9f;font-size: 12px;line-height:40px;margin-right:10px;">用户退出前操作</span>
+						<a><input type="number" id="exit_num" value="0" style="text-align:left;float:left;width:100px;" class="form-control"></a>
+						<span style="float:left;color: #848a9f;font-size: 12px;line-height:40px;margin:0px 20px;">用户进入前操作</span>
+						<a><input type="number" id="join_num" value="0" style="text-align:left;float:left;width:100px;" class="form-control"><span style="line-height:30px;font-size:12px;margin-left:10px;">0表示全部</span></a>
+						<span style="color: #848a9f;font-size: 12px;margin-right:10px;">选择国家</span>
+						<select id="country">
+						  {volist name="countrys" id="c"}
+						    <option {if condition="$country eq $key"} selected {/if} value="{$key}">{$c}</option>
+                          {/volist}						  
+						</select>
+                    </div>
+                   
+                    <div style="clear:both;width:600px;">
+						<span style="float:left;color: #848a9f;font-size: 12px;line-height:40px;margin-right:20px;">用户打开路径</span>
+						<div style="margin-left:16%;">
+							<ul class="selectcountry" id="user">
+							   
+							</ul>
+							<div class="caplatform c-dropdown dropdown" style="float:left;margin-top:8px;">
+								<div class="dropdown-toggle" id="dropdownMenuAvatar" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" role="button">
+								  <a style="color:#606266;font-size:14px;background-color:#f5f5f5;padding:2px 20px;" href="javascript:;">+</a>
+								</div>
+								<div class="c-dropdown__menu has-arrow dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuAvatar" x-placement="top-end" style="position: absolute; top: 30px; left: 0px; will-change: transform;height:300px;overflow-y: scroll;">
+									{volist name="res" id="c"}
+									  <a class="c-dropdown__item dropdown-item" data="{$key}" href="javascript:;">{$c}</a>
+									{/volist}
+								</div>
+							  </div>							  
+					    </div>
+                         						
+                    </div>
+					<div style="clear:both;">
+                      <div class="btn" onclick="AjaxPage(1,1);" style="margin-top:5px;background-color:#ff646d;border-color: #ff646d;color:#fff;width:190px;">搜索</div>
+				   </div>
+				   </div>
+				 
+				  <div class="hw_reven" style="width:100%;margin-top:20px;">
+				    <div class="m-ovsecurity m-card">
+								<div class="ovsecurity_sub">															
+									<div class="ovsecurity_md">
+									   <div class="ovsecurity_ct">独立用户数
+									     <a class="f-du evet_num">{$singe_num}</a>
+									   </div>
+									</div>
+								</div>
+								
+                                <div class="ovsecurity_sub">																
+									<div class="ovsecurity_md">
+									   <div class="ovsecurity_ct">事件总数
+									     <a class="f-du evet_num">{$list->total()}</a>
+		 							   </div>
+									</div>
+								</div>                        							
+                    </div>
+                    <ul class="search_tab clearfix">
+					  <li style="margin-left:0px;" class="active"><a href="javascript:;" onclick="AjaxPage(1,1);">详情展示</a></li>
+                      <li style="margin-left:10px;"><a href="javascript:;" onclick="AjaxPage(1,2);">事件比例</a></li>
+                      <li style="float:right;margin-right:0px;"><a  href="/ad_event/new_download?appid={$appid}&start={$start}&end={$end}&country={$country}"><i class="fa fa-upload"></i></a></li>				  
+					</ul>					
+				   <table class="table tablesorter">
+                      <thead>
+                        <tr>
+                          <th>时间</th>
+                          <th>事件名称</th>
+                          <th>路径</th>                          
+                        </tr>
+                      </thead>
+                      <tbody>
+                       {volist name="result" id="vo"}					  
+                        <tr>
+                          <td style="width:15%;"><a href="javascript:;">{$vo.add_time}</a></td>
+                          <td>FLOW_{$vo.device_id}_{$vo.day_count}</td>
+                          <td>
+						   <div class="list_container" style="overflow-y:scroll;height:80px;line-height:30px;text-align:left;">{$vo.parameters}</div>
+						  </td>
+                        </tr>
+                         {/volist}						
+                      </tbody>
+                    </table>
+				  
+						<div style="text-align:center;">{$list->render()}</div>
+				  </div>			         			   
+			</div>
+		</div>
+	
+		 {include file="./static/html/footer.html" /}
+	</div>
+	<div class="modal fade in" id="myModal" tabindex="-1"  style="display: none;">
+		  <div class="modal-backdrop fade in" style="z-index:0;"></div>
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">			  
+					  <h4 class="modal-title" id="myModalLabel"><span class="search_readson">筛选条件</span></h4>					 
+					</div>
+					 <div class="modal-body">
+
+						 <div class="chooses">
+							<div class="choosediv"><label class="checkbox"><input type="radio" name="rdSpeed[]" data-name="全部" checked value="all">全部</label> </div>
+							<div class="choosediv"><label class="checkbox"><input type="radio" name="rdSpeed[]" data-name="一" value="1">一</label> </div>
+							<div class="choosediv"><label class="checkbox"><input type="radio" name="rdSpeed[]" data-name="二" value="2">二</label> </div>
+							<div class="choosediv"><label class="checkbox"><input type="radio" name="rdSpeed[]" data-name="三" value="3">三</label> </div>
+							<div class="choosediv"><label class="checkbox"><input type="radio" name="rdSpeed[]" data-name="四" value="4">四</label> </div>
+							<div class="choosediv"><label class="checkbox"><input type="radio" name="rdSpeed[]" data-name="五" value="5">五</label> </div>
+							<div class="choosediv"><label class="checkbox"><input type="radio" name="rdSpeed[]" data-name="六" value="6">六</label> </div>
+							<div class="choosediv"><label class="checkbox"><input type="radio" name="rdSpeed[]" data-name="七" value="7">七</label> </div>
+							<div class="choosediv"><label class="checkbox"><input type="radio" name="rdSpeed[]" data-name="八"  value="8">八</label> </div>
+						</div>			
+						<div style="clear: both;"></div>
+						<div class="modal-footer">
+						   <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+						   <button id="choosebtn" type="button" data-type="open_day" class="btn btn-primary" data-dismiss="modal">确定</button>
+						</div>
+					 </div>
+				</div>
+	        </div>
+   </div>
+</body>
+ {include file="./static/html/footer_common.html" /}
+  <script type="text/javascript" src="/static/plugin/jquery-time/moment.js"></script>
+  <script type="text/javascript" src="/static/plugin/jquery-time/daterangepicker.js"></script>
+  <script type="text/javascript" src="/static/js/jquery.nicescroll.js"></script>
+  <script>
+    $(function(){
+	  $('#start_date').daterangepicker({ minDate:'2019-01-01',opens:'right'},function(start, end, label)
+		   {	 
+		      	 start = start.format('YYYY-MM-DD');end=end.format('YYYY-MM-DD');			 
+			     $('#start_date').val(start+" 到 "+end);
+				 window.location.href="/ad_event/user_behavior?start="+start+"&end="+end;
+		   });
+		$('#country').change( function(){		       
+			window.location.href="/ad_event/user_behavior?start={$start}&end={$end}&country="+$(this).val();		
+		} )  
+	    //全选/全不选
+        $("#allchecked").click(function(){
+            if(this.checked){   
+                $(".checkbox input").prop("checked", true);  
+            }else{   
+                $(".checkbox input").prop("checked", false);
+            } 
+        });
+		$("#send_switch").click( function(){
+	        var val="0";
+			if( $(this).is(':checked') )
+			  {
+				val="1";
+			  }
+		    var appid ="{$appid}";
+			$.post("/ad_event/setSwitch",{appid:appid,val:val},function(e){
+			     
+				if("ok"==e)
+				  {
+				    layer.msg(val=="1"?"已开启统计":"已关闭统计");
+				  }
+			})
+	    } )
+
+		$(document).on( 'click',".country_sel",function(){
+		   $(this).parent().remove();
+		});
+		$(".c-dropdown__item").click( function(){
+	       var name = $(this).text();
+		 
+		   var user_code = $(this).attr("data");
+		   var html ='<li><a class="c-badge u-mb-xsmall'+user_code+' country_sel" data="'+user_code+'" href="javascript:;">'+name+' <i class="fa fa-times"></i></a></li>';
+	       if( $(".u-mb-xsmall"+user_code).length<1 )
+		   {
+		     $("#user").append(html);
+		   }		   
+	   })
+		$('#myModal').on('show.bs.modal', function (event) {
+			  var button = $(event.relatedTarget) // Button that triggered the modal
+			  var type = button.data('type') // Extract info from data-* attributes
+			  var name = button.data('name');
+			  var checkval = $("#"+type).attr('data-val');
+			  $(".checkbox input").prop("checked", false);
+			  $(".checkbox input").each( function(){
+			  var ismatch = checkval.match(new RegExp($(this).val(), 'i'));
+				if( ismatch )
+				  {
+					 $(this).prop("checked", true);
+				  }
+			  })
+			  // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+			  // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+			  var modal = $(this)
+			  
+			  modal.find('.search_readson').text(name);
+			  modal.find('.modal-body #choosebtn').attr("data-type",type)
+			})
+		$("#choosebtn").click( function(){
+		   var type = $(this).attr("data-type");
+		   var arrAttr =[];
+		   var arrName =[];
+		   $(".checkbox input").each( function(i){
+		      if( $(this).is(":checked") )
+			  {
+			     var value = $(this).val();
+				 if( (type=="open_count") && (value!="all") )
+				 {
+				     value =parseInt(value)-1;
+				 }
+				arrAttr.push(value);
+		        arrName.push($(this).attr("data-name"));
+			  }
+		   })
+		   $("#"+type).val(arrName.join("+"));
+		   $("#"+type).attr("data-val",arrAttr.join(","));
+		})
+	})
+	var AjaxPage = function(page,type){
+	    var appid ="{$appid}";
+		var start = "{$start}";
+		var end="{$end}";
+		var open_day =$("#open_day").attr("data-val");
+		var open_count = $("#open_count").attr("data-val");
+		var exit_num = $("#exit_num").val();
+		var join_num = $("#join_num").val();
+		var user_path = [];
+		if( exit_num<0 )
+		{
+		  layer.msg("退出前操作不能为负数");return false;
+		}
+		if( $(".country_sel").length>0 )
+		{
+		   $(".country_sel").each( function(){
+		       user_path.push($(this).attr("data"));
+		   })
+		}
+		 var index1 = layer.load();
+            $.ajax({
+                url:'/ad_event/ajaxListAction',
+                type:'post',
+                dataType:'json',
+                data: {page:page,appid:appid,join_num:join_num,start:start,end:end,open_day:open_day,open_count:open_count,exit_num:exit_num,user_path:user_path,type:type},
+                success:function(data){
+				    layer.closeAll();
+                    $(".hw_reven").html(data);
+                }
+            });
+
+        }
+  </script>  
+</html>

@@ -1,0 +1,286 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title></title>	
+	{include file="./static/html/header_common.html" /}
+	<link href="/static/css/checkbox.css" rel="stylesheet">
+	<style>
+	.s12{
+	  background-color:#fff;
+	}
+	 .demo--label{display:inline-block;font-size: 1.2rem;margin-right:10px;cursor:pointer;}
+.demo--radio{display:none}
+.demo--radioInput{background-color:#fff;border:1px solid rgba(0,0,0,0.15);border-radius:100%;display:inline-block;height:16px;margin-right:10px;margin-top:-1px;vertical-align:middle;width:16px;line-height:1}
+.demo--radio:checked + .demo--radioInput:after{background-color:#57ad68;border-radius:100%;content:"";display:inline-block;height:14px;width:14px}
+.demo--checkbox.demo--radioInput,.demo--radio:checked + .demo--checkbox.demo--radioInput:after{border-radius:0}
+	.editing{
+	  display:none;
+	}
+	h4{color:#333;font-weight:700}
+	</style>
+</head>
+<body>
+    <div id="wrapper" style="background: #fff;">
+	   {include file="./static/html/header.html" /} 
+	
+		<div class="hw_page_content">
+		    <div class="hw_menu_left">
+         {include file="./static/html/side.html" /}
+			</div>
+		    <div class="hw_content_right">	
+			  	
+			   <ul class="search_tab clearfix">
+			       <li><a  href="/admin_user/userlist">用户列表</a></li>
+				  <li><a  href="/admin_user/feedback">用户反馈</a></li>
+                  <li class="active"><a  href="/admin_profile/rule">用户权限</a></li>	     
+		      </ul>
+			       
+			   <div style="padding:2% 10%;">
+			      
+						<div>
+						  <h4><i class="fa fa-user"></i> 选择管理员</h4>
+						  <select class="form-control" id="admin_id" name="admin_id">
+							  {volist name="res" id="vv"}
+							  <option {if condition="$userinfo['id'] eq $vv['id']"}selected{/if} value="{$vv.id}"><span style="color:red">【{$vv.ad_role|getrolename}】</span> {$vv.truename}</option>
+							  {/volist}
+						</select>
+						</div>
+					 <div style="padding-top:10px;clear:both">
+						<h4>所属角色</h4>
+                         	<div style="margin-left:20px;margin-top:15px;">					
+								
+								<div class="el-radio filled-in el-radio-red" style="float:left;margin-right:3px;">
+								  
+								   <input type="radio" {if condition="$userinfo['ad_role'] eq 'super'"}checked{/if} value="super" name="ad_role" id="role_1">
+								   <label class="el-radio-style" for="role_1"></label>
+								    <span class="margin-r">超级组</span>
+								 </div>
+								 <div class="el-radio filled-in el-radio-red" style="float:left;margin-right:3px;">
+								  
+								   <input type="radio" {if condition="$userinfo['ad_role'] eq 'publisher'"}checked{/if} value="publisher" name="ad_role" id="role_2">
+								   <label class="el-radio-style" for="role_2"></label>
+								    <span class="margin-r">变现组</span>
+								 </div>
+								
+								 <div class="el-radio filled-in el-radio-red" style="float:left;margin-right:3px;">
+								  
+								   <input type="radio" {if condition="$userinfo['ad_role'] eq 'advertiser'"}checked{/if}  value="advertiser" name="ad_role" id="role_3">
+								   <label class="el-radio-style" for="role_3"></label>
+								    <span class="margin-r">推广组</span>
+								 </div>
+								 
+								  <div class="el-radio filled-in el-radio-red" style="float:left;margin-right:3px;">
+								  
+								   <input type="radio" {if condition="$userinfo['ad_role'] eq 'producter'"}checked{/if}  value="producter" name="ad_role" id="role_4">
+								   <label class="el-radio-style" for="role_4"></label>
+								    <span class="margin-r">产品组</span>
+								 </div>
+                                 
+                                 <div class="el-radio filled-in el-radio-red" style="float:left;margin-right:3px;">								  
+								   <input type="radio"  {if condition="$userinfo['ad_role'] eq 'copartner'"}checked{/if} value="copartner" name="ad_role" id="role_5">
+								   <label class="el-radio-style" for="role_5"></label>
+								    <span class="margin-r">合作组</span>
+								 </div>
+								 
+								 <div class="el-radio filled-in el-radio-red" style="float:left;margin-right:3px;">								  
+								   <input type="radio"  {if condition="$userinfo['ad_role'] eq 'material'"}checked{/if} value="material" name="ad_role" id="role_6">
+								   <label class="el-radio-style" for="role_6"></label>
+								    <span class="margin-r">素材组</span>
+								 </div>
+								 <div class="el-radio filled-in el-radio-red" style="float:left;margin-right:3px;">								  
+								   <input type="radio"  {if condition="$userinfo['ad_role'] eq 'financer'"}checked{/if} value="financer" name="ad_role" id="role_financer">
+								   <label class="el-radio-style" for="role_financer"></label>
+								    <span class="margin-r">财务组</span>
+								 </div>
+							</div>						 						  
+                    </div>	
+					 <div style="padding-top:10px;clear:both">
+						<h4>应用管理</h4>
+                         	<div style="margin-top:15px;height:300px;overflow-y:scroll;border:1px solid #F3F3F3;padding:15px 15px;">					
+							    {volist name="data" id="item"}
+								    
+									 <div class="el-checkbox filled-in el-checkbox-red">
+									   
+									   <input type="checkbox" <?php if( in_array($item['id'],explode(",",$userinfo["allow_applist"] )) ){ echo "checked";} ?> value="{$item.id}" name="app_id" id="app_id_{$item.id}">
+									   <label class="el-checkbox-style" for="app_id_{$item.id}"></label>
+									   <span class="margin-r">{$item.app_name}</span>
+									 </div>
+									
+                                {/volist}	
+							</div>						 						  
+                    </div>
+					
+					<div style="padding-top:10px;clear:both">
+						<h4>功能模块权限</h4>
+                         	<div style="margin-left:20px;margin-top:15px;">
+                                   						
+								    <div class="el-checkbox filled-in el-checkbox-red" style="float:left;margin-right:3px;">
+									  
+									   <input type="checkbox" <?php if( preg_match("/\b4\b/",$userinfo["ad_rules"]) ){ echo "checked";} ?>  value="4" name="rule" id="4_1">
+									   <label class="el-checkbox-style" for="4_1"></label>
+									    <span class="margin-r">主页分析</span>
+									 </div>
+									 
+									 <div class="el-checkbox filled-in el-checkbox-red" style="float:left;margin-right:3px;">
+									  
+									   <input type="checkbox" <?php if( preg_match("/\b21\b/",$userinfo["ad_rules"]) ){ echo "checked";} ?>  value="21" name="rule" id="21_1">
+									   <label class="el-checkbox-style" for="21_1"></label>
+									    <span class="margin-r">产品汇总</span>
+									 </div>
+									 <div class="el-checkbox filled-in el-checkbox-red" style="float:left;margin-right:3px;">
+									  
+									   <input type="checkbox" <?php if( preg_match("/\b12\b/",$userinfo["ad_rules"]) ){ echo "checked";} ?>  value="12" name="rule" id="12_1">
+									   <label class="el-checkbox-style" for="12_1"></label>
+									    <span class="margin-r">产品管理</span>
+									 </div>
+                                     <div class="el-checkbox filled-in el-checkbox-red" style="float:left;margin-right:3px;">
+									  
+									   <input type="checkbox" <?php if( preg_match("/\b5\b/",$userinfo["ad_rules"]) ){ echo "checked";} ?>  value="5" name="rule" id="5_1">
+									   <label class="el-checkbox-style" for="5_1"></label>
+									    <span class="margin-r">变现管理</span>
+									 </div>
+									  
+                                     <div class="el-checkbox filled-in el-checkbox-red" style="float:left;margin-right:3px;">
+									   
+									   <input type="checkbox" <?php if( preg_match("/\b6\b/",$userinfo["ad_rules"]) ){ echo "checked";} ?> value="6" name="rule" id="6_1">
+									   <label class="el-checkbox-style" for="6_1"></label>
+									   <span class="margin-r">推广管理</span>
+									 </div>
+									  <div class="el-checkbox filled-in el-checkbox-red" style="float:left;margin-right:3px;">									  
+										<input type="checkbox" <?php if( preg_match("/\b3\b/",$userinfo["ad_rules"]) ){ echo "checked";} ?> value="3" name="rule" id="3_1">
+									    <label class="el-checkbox-style" for="3_1"></label>
+										<span class="margin-r">发行测试</span>
+									  </div>									  
+										 <div class="el-checkbox filled-in el-checkbox-red" style="float:left;margin-right:3px;">										  
+										   <input type="checkbox" <?php if( preg_match("/\b7\b/",$userinfo["ad_rules"]) ){ echo "checked";} ?>  value="7" name="rule" id="7_1">
+										   <label class="el-checkbox-style" for="7_1"></label>
+										   <span class="margin-r">ROI MODEL</span>
+										 </div>										 
+										 <div class="el-checkbox filled-in el-checkbox-red" style="float:left;margin-right:3px;">
+										  
+										   <input type="checkbox" <?php if( preg_match("/\b20\b/",$userinfo["ad_rules"]) ){ echo "checked";} ?>  value="20" name="rule" id="20_1">
+										   <label class="el-checkbox-style" for="20_1"></label>
+										    <span class="margin-r">Tenjin Data</span>
+										 </div>
+										 <div class="el-checkbox filled-in el-checkbox-red" style="float:left;margin-right:3px;">
+										  
+										   <input type="checkbox" <?php if( preg_match("/\b25\b/",$userinfo["ad_rules"]) ){ echo "checked";} ?>  value="25" name="rule" id="25_1">
+										   <label class="el-checkbox-style" for="25_1"></label>
+										    <span class="margin-r">财务管理</span>
+										 </div>
+										  <div class="el-checkbox filled-in el-checkbox-red" style="float:left;margin-right:3px;">									  
+											   <input type="checkbox" <?php if( preg_match("/\b1\b/",$userinfo["ad_rules"]) ){ echo "checked";} ?> value="1" name="rule" id="1_1">
+											   <label class="el-checkbox-style" for="1_1"></label>
+												<span class="margin-r">应用列表</span>
+									      </div>
+										  <div class="el-checkbox filled-in el-checkbox-red" style="float:left;margin-right:3px;">									  
+											   <input type="checkbox" <?php if( preg_match("/\b9\b/",$userinfo["ad_rules"]) ){ echo "checked";} ?> value="9" name="rule" id="9_1">
+											   <label class="el-checkbox-style" for="9_1"></label>
+												<span class="margin-r">用户列表</span>
+									      </div>
+										  <div class="el-checkbox filled-in el-checkbox-red" style="float:left;margin-right:3px;">									  
+											   <input type="checkbox" <?php if( preg_match("/\b50\b/",$userinfo["ad_rules"]) ){ echo "checked";} ?> value="50" name="rule" id="50_1">
+											   <label class="el-checkbox-style" for="50_1"></label>
+												<span class="margin-r">合作组ltv</span>
+									      </div>
+										  <div class="el-checkbox filled-in el-checkbox-red" style="float:left;margin-right:3px;">									  
+											   <input type="checkbox" <?php if( preg_match("/\b52\b/",$userinfo["ad_rules"]) ){ echo "checked";} ?> value="52" name="rule" id="52_1">
+											   <label class="el-checkbox-style" for="52_1"></label>
+												<span class="margin-r">CTR测试(合作组)</span>
+									      </div>
+									 
+							</div>                       						
+                    </div>
+					<div style="padding-top:10px;clear:both" class="ctr-div">
+						<h4>CTR测试产品查看权限</h4>
+                         	<div style="margin-left:20px;margin-top:15px;">
+								 <div style="margin-top:15px;height:200px;overflow-y:scroll;border:1px solid #F3F3F3;padding:15px 15px;">					
+							    {volist name="testList" id="item"}
+								    
+									 <div class="el-checkbox filled-in el-checkbox-red">
+									   
+									   <input type="checkbox" <?php if( in_array($item['id'],explode(",",$userinfo["allow_testlist"] )) ){ echo "checked";} ?> value="{$item.id}" name="test_id" id="test_id_{$item.id}">
+									   <label class="el-checkbox-style" for="test_id_{$item.id}"></label>
+									   <span class="margin-r">{$item.title}</span>
+									 </div>
+									
+                                {/volist}	
+							</div>									 
+							</div>                       						
+                    </div>
+                    <div style="padding-top:10px;clear:both">
+						<h4>附属功能权限</h4>
+                         	<div style="margin-left:20px;margin-top:15px;">
+								 <div class="el-checkbox filled-in el-checkbox-red" style="float:left;margin-right:3px;">									  
+									   <input type="checkbox" <?php if( preg_match("/\b30\b/",$userinfo["ad_rules"]) ){ echo "checked";} ?> value="30" name="rule" id="30_1">
+									   <label class="el-checkbox-style" for="30_1"></label>
+										<span class="margin-r">产品自然量,CPI,ARPDAU</span>
+								  </div>									 
+							</div>                       						
+                    </div>					
+					 <div style="clear:both;text-align:center;padding-top:40px;">
+						<button type="button" id="save" class="btn btn-danger" style="width:300px;">保存修改</button>
+					 </div>					
+			   </div>					   
+			</div>
+        </div>			
+     {include file="./static/html/footer.html" /}		
+    </div>
+	{include file="./static/html/footer_common.html" /}  
+</body>
+<script src="/static/js/jqAlert.min.js"></script>
+ <script>
+	$("#admin_id").change( function(){
+	   window.location.href="/admin_profile/rule?userid="+$(this).val();
+	})
+	if($("#52_1").is(':checked'))
+	{
+	  $(".ctr-div").show();
+	}else{
+	   $(".ctr-div").hide();
+	}
+	$("#52_1").click(function(){
+	   if( $(this).is(':checked') )
+	   {
+	     $(".ctr-div").show();
+	   }else{
+		   $(".ctr-div").hide();
+	   }
+	})
+	$("#save").click( function(){
+		   var str ="";
+		   var appids ="";
+		   var test_ids="";
+		   var ad_role = $("[name='ad_role']:checked").val();
+		   if( typeof(ad_role)=="undefined" )
+		   {
+		     layer.msg("请选择所属角色");return false;
+		   }
+		   var admin_id = $("#admin_id").val();
+		   $("[name='rule']:checked").each(function(){
+				     str+=$(this).val()+",";				
+				})
+		   $("[name='app_id']:checked").each(function(){
+				     appids+=$(this).val()+",";				
+				})
+           $("[name='test_id']:checked").each(function(){
+				     test_ids+=$(this).val()+",";				
+				})				
+              var index = layer.load(0, {shade: false});
+			  $(this).attr("disabled",true);				
+			  $.post("/admin_profile/edit_rule",{admin_id:admin_id,test_ids:test_ids,rule:str,appids:appids,ad_role:ad_role},function(e){
+			      $("#save").attr("disabled",false);
+				   layer.close(index);
+			      if("ok"==e)
+				     {																		
+						
+						jqAlert.Confirm('权限设置成功');
+						window.location.reload();
+					 }
+			   })
+		})	
+ </script>
+</html>

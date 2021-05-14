@@ -1,0 +1,236 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title></title>
+	<link rel="stylesheet" type="text/css" media="all" href="/static/css/public.css" />
+	<link href="/static/css/special.css" rel="stylesheet">
+	{include file="./static/html/header_common.html" /}	
+	<link rel="stylesheet" type="text/css" media="all" href="/static/plugin/daterangepicker/daterangepicker.css" />	
+    <style>
+     #time,select,.fa{
+	   cursor:pointer;
+	 }
+	  .nav_list a{float:left;margin-bottom:20px;padding:10px 30px;}
+	</style>
+</head>
+<body>
+    <div id="wrapper">
+         {include file="./static/html/header.html" /} 
+	   <div class="hw_page_content">
+		    <div class="hw_menu_left">
+         {include file="./static/html/side.html" /}  
+			</div>
+		    <div class="hw_content_right" style="padding:0 30px;">	
+			  <ul class="search_tab clearfix" >
+			      <li><a onclick="window.history.go(-1);" href="javascript:;">返回</a></li>
+			      <li class="active"><a href="javascript:;">Applovin</a></li>                  			  
+		       </ul>
+			   
+			   	  <div class="app-right-content">
+							  <div class="ant-card-head-title">
+								<ul class="message-tabs">
+								 <li><a class="active" href="/admin_adcash/apllist?spm=last">汇总统计</a></li>
+								 <li><a  href="/admin_adcash/apllist?spm=day">每天汇总</a></li>
+								 <li><a  href="/admin_adcash/apllist">详情列表</a></li>
+								</ul>
+								<div onclick="search()" id="search" style="float:right;margin-right:20px;color:#ccc;cursor:pointer;margin-left:40px;">搜索</div>		                              	
+								
+								<div class="select_zyd" style="float:right;width:100px;margin-left:20px;">
+								<p>
+								<select class="form-control" style="font-weight: normal;">
+								  <option value="all">国家</option>
+								  {volist name="country" id="vc"}
+								  <option value="{$vc.code}">{$vc.code}</option>
+								  {/volist}
+								</select>
+								</p>
+								</div>
+                               	
+                                <div class="select_zyd"  style="float:right;font-weight: normal;width:200px;">
+								<p>
+								<select class="form-control" id="app_name">
+								  <option value="all">应用名称</option>
+								  {volist name="app" id="va"}
+								  <option {if condition="$app_names eq $va['app_id']" }selected{/if} value="{$va.app_id}">{$va.app_name}</option>
+								   {/volist}
+								</select>
+								</p>
+								</div>							
+							  </div> 
+							 <div class="overview-container">
+								<ul class="overview-number">
+								   <li>
+                                   <div class="pgc-dashboard-column"><div class="pgc-dashboard-title">总收益&nbsp;&nbsp;<i id="remark" class="fa fa-question-circle-o"></i></div>
+									   <div class="pgc-dashboard-primary">{$sum_data.sum_revenue??0}</div>
+									   <div class="pgc-dashboard-secondary">
+										   <span class="pgc-income-dash-secondary"><span class="pgc-income-fans">eCPM：<?php if(isset( $sum_data["sum_impression"]) && $sum_data["sum_impression"]>0 ){ echo round( $sum_data["sum_revenue"]*1000/$sum_data["sum_impression"],2); }else{ echo "0.00";} ?></span></span>
+									   </div>
+								   </div>								  
+								  </li>
+								  <li>
+								   <div class="pgc-dashboard-column"><div class="pgc-dashboard-title">总点击&nbsp;&nbsp;</div>
+									   <div class="pgc-dashboard-primary">{$sum_data.sum_click??0}</div>
+									   <div class="pgc-dashboard-secondary">
+										   <span class="pgc-income-dash-secondary"><span class="pgc-income-fans">总展示：{$sum_data.sum_impression??0}</span></span>
+									   </div>
+								   </div>
+								  </li>	
+								</ul>  
+							</div>
+							
+						</div>
+					 <div style="margin-top:30px;" class="nav_list">
+                            <ul>
+							   <li><a style="{if condition="$t eq 'new'"} color:#222;{else /}color:#999;{/if}font-weight: normal;" href="/admin_adcash/apllist?spm=last&t=new">最新统计</a></li>
+							   <li><a style="{if condition="$t eq 'week'"} color:#222;{else /}color:#999;{/if}font-weight: normal;" href="/admin_adcash/apllist?spm=last&t=week">最近一周</a></li>
+							   <li><a style="{if condition="$t eq 'month'"}color:#222;{else /} color:#999;{/if}font-weight: normal;" href="/admin_adcash/apllist?spm=last&t=month">最近15天</a></li>
+                              <li><a href="javascript:;"><input id="time" class="form-control" style="width:200px;color:#ccc;font-size:12px;color: #009a61;"   type="text" /></a></li>							   
+							</ul>						                           																	  
+					   </div>	
+						
+			               <div class="card-content" style="padding: 5px 10px 10px 10px;clear:both;">
+                          
+							<div style="text-align:center;">
+							   <h3 style="font-size:16px;font-weight:bold;">当前汇总统计</h3>
+							  
+							   <div id="main" style="width: 100%px;height:400px;"></div>
+                            </div> 
+                             
+                               <div class="table-responsive table-bordered" style="margin:0 10px;">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>                                             
+                                             <th style="vertical-align:middle; text-align:center;">应用名称</th>                                           
+											 <th style="vertical-align:middle; text-align:center;">展示</th>
+											 <th style="vertical-align:middle; text-align:center;">点击</th>
+											 <th style="vertical-align:middle; text-align:center;">收益($)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+									    {volist name="list" id="item"}
+                                        <tr>                                                                        
+                                             <td class="dd" style="vertical-align:middle; text-align:center;">{$item.app_name}</td>                                            
+                                             <td style="vertical-align:middle; text-align:center;">{$item.total_impression}</td>
+											 <td style="vertical-align:middle; text-align:center;">{$item.total_click}</td>
+											 <td style="vertical-align:middle; text-align:center;">{$item.total_revenue}</td>                                          
+                                        </tr>
+                                        {/volist}
+                                    </tbody>
+									<thead>
+                                        <tr style="color:red;">                                             
+                                             <th style="vertical-align:middle; text-align:center;">总计</th>                                           
+											 <th style="vertical-align:middle; text-align:center;">{$sum_data.sum_impression??0}</th>
+											 <th style="vertical-align:middle; text-align:center;">{$sum_data.sum_click??0}</th>
+											 <th style="vertical-align:middle; text-align:center;">{$sum_data.sum_revenue??0}</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                                							
+                            </div>							 
+                        </div>
+			</div>
+			<input id="start" value="{$out_time.s_time}" type="hidden" />
+			<input id="end" value="{$out_time.e_time}" type="hidden" />
+		</div>	
+ {include file="./static/html/footer.html" /}
+ </div>
+ {include file="./static/html/footer_common.html" /}
+	<script src="/static/js/echarts.min.js"></script>   
+    <script type="text/javascript" src="/static/plugin/daterangepicker/moment.js"></script>
+    <script type="text/javascript" src="/static/plugin/daterangepicker/daterangepicker.js"></script>
+</body>
+<script>
+    hover_content("当前显示日期总收益, 系统默认为平台最新获取数据时间","#remark");
+	var search = function()
+	{
+	   // var country = $("#country").val();
+		var t='{$t}';
+		var app_name = $("#app_name").val();
+		var start = $("#start").val();
+		var end = $("#end").val();
+		window.location.href="/admin_adcash/apllist?spm=last&t="+t+"&app_name="+app_name;
+	}
+</script>
+<script>
+  	
+	var myChart = echarts.init(document.getElementById('main'));
+	var colors = ['#5793f3', '#d14a61', '#675bba'];
+
+var options = {
+    tooltip: {
+        trigger:'axis',
+  
+        formatter: "收益: {c}$",
+            
+        axisPointer: {
+            type: 'cross',
+            
+            crossStyle: {
+                color: '#999'
+            }
+        }
+    },
+
+    xAxis: [
+        {
+            type: 'category',
+			show:true,
+            data: [{$app_name}],
+            axisPointer: {
+                type: 'shadow'
+            },
+			axisTick: {
+        show: false
+    },
+        }
+    ],
+	
+    yAxis: [
+        {
+            type: 'value',
+            name: '收益',
+            axisLabel: {
+                formatter: '{value}'
+            },
+			axisTick: {
+        show: false
+    }
+        },
+     
+    ],
+    series: [
+        {
+            name:'收益',
+            type:'bar',
+            barWidth: '30%',
+			itemStyle:{color:'#00CCFF'},
+            data:[{$app_value}]
+        },
+       
+        {            
+            type:'line',
+             name:'',
+            data:[{$app_income}]
+        }
+    ]
+};
+
+myChart.setOption(options);
+</script>
+ <script>
+    $('#time').daterangepicker({
+    "startDate": "{$out_time.s_time}",
+    "endDate": "{$out_time.e_time}",
+	 "dateLimit": {
+        "days": 15
+    }
+}, function(start, end, label) {
+  var start = start.format('YYYY-MM-DD');
+  var end = end.format('YYYY-MM-DD');
+  window.location.href="/admin_adcash/apllist?spm=last&t=other&start="+start+"&end="+end;
+});
+ </script>
+</html>

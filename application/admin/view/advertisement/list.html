@@ -1,0 +1,139 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GAME BRAI</title> 
+	{include file="./static/html/header_common.html" /}
+	<link href="/static/css/userinfo.css?t=456" rel="stylesheet" type="text/css" />
+    <style>
+	.delete,.api{cursor:pointer}
+	  pagination > .active > a, .pagination > .active > a:focus, .pagination > .active > a:hover, .pagination > .active > span, .pagination > .active > span:focus, .pagination > .active > span:hover {
+   
+    background-color: #f66e62;
+    border-color: #f66e62;
+}
+  .pagination > li > a, .pagination > li > span {
+  
+    padding: 16px 22px !important; 
+}
+	</style>	
+</head>
+<body style="background-color:#fff;">
+    <div id="wrapper" style="background-color:#fff;">
+        {include file="./static/html/header.html" /} 
+	
+		<div class="hw_page_content">
+		    <div class="hw_menu_left">
+         {include file="./static/html/side.html" /}  
+			</div>
+		    <div class="hw_content_right">	
+			  <ul class="search_tab clearfix" >
+			      <li <?php if($type==1 && $status==1){ echo "class='active'"; } ?> ><a  href="/admin_advertisement/lists">应用列表</a></li>
+                  <li <?php if($type==1 && $status==0){ echo "class='active'"; } ?> ><a  href="/admin_advertisement/lists?status=0">应用回收站</a></li>	
+				  {if condition="in_array(getuserrole(),['producter','super'])"}
+				  <div style="float:right;margin-right:20px;"> <a class="btn" href="/admin_advertisement/addindex" style="background-color:#ed4040;height:35px;color:#fff;line-height:22px;">添加应用</a></div>			  
+				  <li style="float:right;margin-right:20px;">				 
+				    <div class="btn" onclick="screenCheck()" id="add" style="background: linear-gradient(to right, #84d9d2, #07cdae);width:100px;height:35px;color:#fff;line-height:20px;"><i class="fa fa-cloud-upload"></i> 截屏检测</div>	
+				  </li>
+				 {/if} 
+			  </ul>
+			   <div style="padding:0 30px;clear:both;">
+			    <ul>
+				   {volist name="list" id="item"}
+				  <li style="padding-top:10px;">
+					 <a  target="__blank" href="/admin_advertisement/adlist?type=1&id={$item.id}" class="article-img">
+					  <img src="{$item.icon_url}">
+					 </a>
+					 <div class="article-body">
+					    <a class="article-title" target="__blank" href="{if condition="in_array(getuserrole(),['producter','super'])"}/admin_advertisement/adlist?type=1&id={$item.id}{else /}javascript:;{/if}"> {$item.app_name}
+						 {if condition="$item['platform'] eq 'android'" }
+							 <i title="android" style="color:#f0ad4e;" class="fa fa-android"></i>
+							 {elseif condition="$item['platform'] eq 'ios'" /}
+							 <i  class="fa fa-apple"></i>
+						{/if}
+						</a>
+						<span style="float:right">#{$item.id}</span>
+					  <p>
+					    <span class="article_dd"><i class="fa fa-user-circle" style="color:#ccc;"></i> {$item.updateuser}</span>
+					    <span class="article_dd" style="margin:0px 10px;"><i class="fa fa-calendar"></i> {$item.updatetime|getadvertime}</span>
+						<span class="article_dd"><i style="color:#ccc;"></i> {$item.package_name}</span>
+					  </p>
+					  <p>
+					    {if condition="in_array(getuserrole(),['producter','super'])"}
+					     <span ><a style="margin-right:10px;color:#222;" href="/admin_advertisement/ads_edit.html?id={$item.id}">修改</a></span>
+						{/if}
+					    <span class="api" data-id="{$item.id|getapiurl}"><i class="fa fa-fire" style="color:#ccc;"></i> 接口</span>
+						<span class="event" data-id="{$item.id|getapiurl}"><a style="color:#ec6a9c;margin-left:10px;" href="/admin_advertisement/setting?appid={$item.id}">设置</a></span>
+						{if condition="in_array(getuserrole(),['producter','super'])"}
+						 <span class="delete" title="删除" data-id="{$item.id}" style="float:right;"><i class="fa fa-trash" ></i></span>
+                        {/if}						
+					  </p>					  
+					 </div>
+					 <div class="bottom_line"></div>
+				  </li>
+				   {/volist}
+				</ul>
+				   <div style="text-align:center;">{$list->render()}</div>
+			  </div>
+	        </div>
+        </div> 
+		 {include file="./static/html/footer.html" /}
+    </div>   
+   {include file="./static/html/footer_common.html" /}
+    <script>
+	   
+	 $(document).on( 'click','.delete',function(event){
+			var id = $(this).attr("data-id");
+			var _$ = $(this);
+			layer.confirm('确认删除后数据将不会保存?', {
+				  btn: ['确认','取消'] //按钮
+				}, function(){
+				  var index = layer.load(1, {
+							  shade: [0.1,'#fff'] //0.1透明度的白色背景
+							});
+				   $.post("/admin_advertisement/delete",{id:id},function(e){
+					   layer.closeAll();
+						 if("ok"==e)
+						 {
+							_$.parents("li").remove();
+							layer.alert('删除成功');								
+						 }else{
+						   layer.msg('网络异常,删除失败', {icon: 1});
+						 }
+				   })
+				 
+				}, function(){
+				  
+				});
+		 
+		   return false;
+	   });
+	   $(document).on( 'click','.api',function(){
+		      var url = $(this).attr("data-id");
+			 
+		      layer.alert('<a target="__blank" href="'+url+'" >'+url+'</a>', {
+				  skin: 'layui-layer-molv' //样式类名
+				  ,closeBtn: 0
+				});
+			   return false;
+		   });
+	  var screenCheck = function()
+		{
+		     var index= layer.load(2);
+			$.post("http://www.rimutuyuan.cn/api/execCmond",{},function(e){
+                       layer.close(index);
+						 if("2"==e.code)
+						 {							
+							layer.alert('截屏成功');
+                            window.location.href = e.url;							
+						 }else{
+						   layer.msg('网络异常,截屏失败，请稍后再试', {icon: 1});
+						 }
+				   },'json')
+		}	 
+	</script>
+</body>
+ 
+</html>

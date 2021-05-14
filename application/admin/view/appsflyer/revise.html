@@ -1,0 +1,340 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GAME BRAIN</title>
+    {include file="./static/html/header_common.html" /}
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+	<link href="/static/css/dialog.css?t=<?php echo time(); ?>" rel="stylesheet" type="text/css" />
+   <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <!-- import JavaScript -->
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <script src="/static/js/axios.min.js"></script>
+	<style>
+	  .cell{font-size:12px;color:#222;}
+	  .el-table td, .el-table th {
+    padding:9px 0;}
+	  .item {
+		  margin-top: 10px;
+		  margin-right: 40px;
+		}
+      .grid-content{
+	    background: #fff;
+		padding: 15px !important;
+		border-radius:10px;
+		border: 0;
+		color:#222;
+		text-align:center;
+	  }
+       .card-category{
+	   font-size: 13px;
+	   color:#444;
+	   margin-bottom: 0;}
+	   .card-title{
+	    color:#575962;
+		font-size: 18px;
+		font-weight: 400;
+	   }
+.filter-container .filter{
+    font-size: 14px;
+    color: #333;
+    position: relative;
+    line-height:40px;
+}
+.filter-container .filter .filter-label{
+    font-weight: 600;
+    color: #333;
+    display: inline-block;
+    width: 76px;
+}
+.filter-container .filter .filter-options{
+    display: inline-block;
+    vertical-align: top;
+    width: calc(100% - 100px);
+    min-width: 700px;
+}
+.filter .filter-options .filter-option.active{
+    border-radius: 3px;
+    color: #4c84ff;
+	background: #ecf5ff;
+	border: 1px solid #d9ecff;
+	border-radius: 4px;
+    font-size: 12px;
+}
+.filter .filter-options .filter-option{
+    line-height: 22px;
+    display: inline-block;
+    padding: 2px 18px;
+    margin-right: 24px;
+    cursor: pointer;
+    font-size: 12px;
+}
+.count {
+    background:#4285f4;
+    display: inline-block;
+    padding:7px 1px;
+    margin-right: 5px;
+}
+.search .el-select .el-input {
+    width:100px;
+  }
+.el-table .warning-row {
+    background: oldlace;
+  }
+.el-table .danger-row {
+    background:#f56c6c;
+  }
+.el-table .success-row {
+    background: #f0f9eb;
+  }
+  .el-table--scrollable-x .el-table__body-wrapper {
+    z-index : 1;
+}
+.m-list p{color:#333;}
+.hw_game-dialog{background:#fff !important;width:60% !important;}
+
+	</style>
+</head>
+<body style="background:#f5f6fa;">
+    <div id="wrapper" style="background-color:#f5f6fa;">
+        {include file="./static/html/header.html" /}
+		<div class="hw_page_content" style="background-color:#f5f6fa;">
+		    <div class="hw_menu_left">
+             {include file="./static/html/side.html" /}
+			</div>
+		    <div class="hw_content_right" style="padding:10px 5px;background: #f5f6fa;">
+			           
+						<el-tabs v-model="activeName" @tab-click="handleClick">
+							<el-tab-pane label="历史ROI分布" name="history"></el-tab-pane>
+							<el-tab-pane label="ROI校正" name="revise"></el-tab-pane>							
+						  </el-tabs>
+						<div class="clear" style="clear:both;"></div>						
+						<div class="main filter-container" style="margin:20px 30px;">
+						                       
+                            <div  class="filter"><span  class="filter-label">条件筛选</span>
+								<div class="filter-options">									
+									<span>
+									  <el-select v-model="date" size="mini" style="width:120px" placeholder="选择时间">
+										<el-option label="过去7天" value="7"></el-option>
+										<el-option label="过去15天" value="15"></el-option>
+										<el-option label="过去30天" value="30"></el-option>
+										<el-option label="过去45天" value="45"></el-option>
+										<el-option label="过去60天" value="60"></el-option>
+										<el-option label="过去90天" value="90"></el-option>
+										<el-option label="过去120天" value="120"></el-option>
+										<el-option label="过去150天" value="150"></el-option>
+										<el-option label="过去180天" value="180"></el-option>
+										<el-option label="过去210天" value="210"></el-option>
+									  </el-select>
+									</span>
+									<span>
+									  <el-select v-model="country" filterable style="width:100px" size="mini" placeholder="选择国家">
+										{volist name="country" id="item"}
+										  <el-option key="{$key}" label="{$item}" value="{$key}"></el-option>
+									    {/volist}
+									  </el-select>
+									</span>
+									<span>
+									  <el-select v-model="day" size="mini" style="width:100px" placeholder="选择ROI天数">
+										<el-option label="ROI3" value="3"></el-option>
+										<el-option label="ROI7" value="7"></el-option>
+										<el-option label="ROI15" value="15"></el-option>
+										<el-option label="ROI30" value="30"></el-option>
+										<el-option label="ROI45" value="45"></el-option>
+										<el-option label="ROI60" value="60"></el-option>
+										<el-option label="ROI75" value="75"></el-option>
+										<el-option label="ROI90" value="90"></el-option>
+										<el-option label="ROI120" value="120"></el-option>
+										<el-option label="ROI150" value="150"></el-option>
+										<el-option label="ROI180" value="180"></el-option>
+										<!-- <el-option label="终生价值" value="lefttime"></el-option> -->
+									  </el-select>
+									</span>
+									<span>
+									  <el-select v-model="sroi" size="mini" allow-create filterable style="width:100px" placeholder="ROI"> 
+									    <el-option label=">=70%" value="70"></el-option>
+										<el-option label=">=80%" value="80"></el-option>
+										<el-option label=">=90%" value="90"></el-option>
+										<el-option label=">=100%" value="100"></el-option>
+										<el-option label=">=110%" value="110"></el-option>
+										<el-option label=">=115%" value="115"></el-option>										
+										<el-option label=">=120%" value="120"></el-option>
+										<el-option label=">=125%" value="125"></el-option>
+										<el-option label=">=130%" value="130"></el-option>
+									  </el-select>
+									</span>
+									
+									<span><el-button type="primary" @click="updateList" size="mini">应用</el-button></span>
+								</div>
+							</div>
+                                                     
+						</div>
+						
+						<div class="clear">
+						  <h4  style="font-size:15px;font-weight:700;color: #333;line-height:20px;margin-bottom:10px;margin-left:30px;"><i class="count"></i>  
+						   指标展示({{start}}至{{end}})
+						  </h4>
+						  <div class="m-list hw_reven" style="padding:10px 40px;">
+							<p style="color:red;"><i class="el-icon-success" style="color:#54e346;"></i> ROI0校准值:{{checkroi}}%</p>
+							<p><i class="el-icon-success" style="color:#54e346;"></i> ROI0目标值:{{object_val}}% 
+							 
+							      <i slot="reference" @click="visible=true" style="font-size:12px;cursor:pointer;" class="fa fa-pencil"></i>
+								  <div v-if="visible" style=" margin:0">
+								   <el-input v-model="object_val" style="width:150px" size="mini" placeholder="设置ROIO目标值"></el-input>								 
+									<el-button size="mini" type="text" @click="visible = false">取消</el-button>
+									<el-button type="primary" @click="setROI" size="mini">保存</el-button>
+								  </div>
+							</p>
+							<p style="clear:both;"><i class="el-icon-success" style="color:#54e346;"></i> 样本数:{{num}}</p>
+							<p><i class="el-icon-success" style="color:#54e346;"></i> 现状:{{proi}}</p>
+							<p><i class="el-icon-success" style="color:#54e346;"></i> IAP:IAA = {{prate}}</p>
+							<p><i class="el-icon-success" style="color:#54e346;"></i> IAP天数分布:{{iap}}</p>
+							<p><i class="el-icon-success" style="color:#54e346;"></i> IAA天数分布:{{iaa}}</p>
+						  </div>
+						  
+						  <h4  style="font-size:15px;font-weight:700;color: #333;line-height:20px;margin-bottom:10px;margin-left:30px;"><i class="count"></i>  
+						   Campaign列表展示({{start}}至{{end}})
+						  </h4>
+						  <div style="padding: 20px;">
+						  <el-table
+								:data="campaignData"
+								max-height="500"
+								style="width:90%;">
+								 <el-table-column prop="campaign_name"  label="系列名称"></el-table-column>
+								 <el-table-column prop="media_source"  label="渠道"></el-table-column>
+								 <el-table-column prop="roi"  :label="'ROI'+day"></el-table-column>
+						  </el-table>
+						  </div>
+						</div>
+			  </div>
+			</div>
+		</div>
+		 {include file="./static/html/footer.html" /}
+	</div>
+</body>
+ {include file="./static/html/footer_common.html" /}
+  <script src="/static/js/echarts.min.js"></script>
+  <script>
+    var isRemark = false;
+	let t = new Vue({
+        el: '#wrapper',
+        data: {
+			loading: false,
+			visible:false,
+			campaignData:[],
+			object_val:'',
+			date:'30',
+			day:"30",
+			start:'',
+			end:'',
+			activeName:'revise',
+			roi:"",
+			sroi:"100",
+			xdata:[],
+			ydata:[],
+			country:'all',
+			type:'AEO',
+			num:"--",
+			proi:"--",
+			iap:"--",
+			iaa:"--",
+			prate:"--",
+			checkroi:"--",
+			dayData:[],
+			tableData: []
+        },
+		computed:{
+		    
+		},
+		watch: {
+		 
+		},
+		
+		mounted(){
+		 	this.$nextTick(() => {
+			 // this.myEcharts()
+			});
+			this.updateList()
+		},
+        methods: {
+		   goBack() {
+		     window.location.href='/admin_index/main';
+		   },
+		   handleClick(){
+		     window.location.href='/admin_ltv/data?by='+this.activeName;
+		   },
+		   setROI(){
+		     let param ={
+			   country:this.country,
+			   roi0:this.object_val
+			 }
+			 axios({
+					method: 'post',
+					url:'/admin_appsflyer/setROI',
+					data:param
+				}).then(res=>{
+				this.$message.success("设置成功!");
+				this.visible = false
+			 })
+		   },
+           updateList(){
+			 this.getlist()
+			 this.history_json_campaign()
+		   },
+           history_json_campaign(){
+		      let param ={
+			     date:this.date,
+				 day:this.day,
+				 country:this.country,
+				 sroi:this.sroi,
+			  }
+			   axios({
+					method: 'post',
+					url:'/admin_appsflyer/history_json_campaign',
+					data:param
+				}).then(res=>{
+				 this.campaignData = res.data
+			 })
+		   },		   
+			getlist(){
+			    this.tableData =[]
+				const loading = this.$loading({
+				  lock: true,
+				  text: '数据加载中,请稍后',
+				  spinner: 'el-icon-loading',
+				  background: 'rgba(0, 0, 0, 0.7)'
+				});
+			   let _that = this
+			   let param ={
+			     date:this.date,
+				 day:this.day,
+				 country:this.country,
+				 sroi:this.sroi,
+				 type:this.type
+			   }
+			   axios({
+					method: 'post',
+					url:'/admin_appsflyer/history_json_revise',
+					data:param
+				}).then(res=>{
+				 loading.close();
+				 this.xdata = res.data.xdata
+				 this.ydata = res.data.ydata
+				 this.num = res.data.num
+				 this.proi= res.data.proi
+				 this.iap= res.data.iap
+				 this.iaa= res.data.iaa
+				 this.prate=res.data.prate
+				 this.checkroi = res.data.checkroi
+				 this.object_val = res.data.object_roi
+				 this.start = res.data.start
+				 this.end = res.data.end
+			 })
+			}
+        }
+    })
+  </script>
+
+</html>

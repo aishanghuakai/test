@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>GAME BRAIN</title>
+	{include file="./static/html/header_common.html" /}
+	<link href="/static/css/adspend.css?t=122444455" rel="stylesheet" type="text/css">
+	<link href="/static/css/checkbox.css" rel="stylesheet" type="text/css">
+	<link rel="stylesheet" type="text/css" media="all" href="/static/plugin/jquery-time/daterangepicker-bs3.css" />
+	<style>
+		.allow_click{cursor:pointer}
+		th,td{text-align:center;vertical-align:middle}
+		.hw_reven thead tr {
+			background-color: #f9f9f9;
+		}
+		.hw_reven table {
+			border-collapse: collapse;
+			font-size: 12px !important;
+			color: #222 !important;
+			text-align: left !important;
+			line-height: 40px;
+		}
+		.hw_reven .table > thead > tr > th{
+			border-bottom:1px solid #e8e8e8 !important;
+			border-top:1px solid #e8e8e8 !important;
+			color: #222 !important;
+		}
+	</style>
+</head>
+<body>
+<div id="wrapper" style="background-color: #fff;" >
+
+	{include file="./static/html/header.html" /}
+
+	<div class="hw_page_content">
+
+		<div class="hw_menu_left">
+			{include file="./static/html/side.html" /}
+		</div>
+		<div class="hw_content_right">
+			<ul class="search_tab clearfix" >
+				<li class="active">
+					<a  href="javascript:;">内购明细</a>
+				</li>
+			</ul>
+			<div class="hw_dashboard" style="display: flex">
+				<div class="hw_dashboard-column" style="position: relative">
+					<div class="hw_dashboard-primary" >
+						<em style="font-size:14px;font-style:normal">总入库 </em>
+						<span style="color: #1871ed;">${$all_info.purchase}</span>
+						<i style="color:#ccc;font-size: 12px;" class="fa fa-info-circle revenue_remark" data-mtpis="平台最新数据"></i>
+					</div>
+					<div class="hw_dashboard-secondary" style="margin-bottom: 10px;">
+						<em style="font-size:14px;font-style:normal;">预计入库 </em>
+						<span style="color: #f85959;">${$all_info.estimate_purchase}</span>
+						<i style="color:#ccc;font-size: 12px;" class="fa fa-info-circle revenue_remark" data-mtpis="adjust PDT时区"></i>
+					</div>
+				</div>
+				<div class="hw_dashboard-column">
+					<div class="hw_dashboard-primary">
+						<em style="font-size:14px;font-style:normal">累计购买 </em>
+						<span style="color: rgb(0, 153, 68);">{$all_info.person}</span>
+						<em style="font-size:14px;font-style:normal;"> 人</em>
+						<span style="color: #1871ed;">{$all_info.times}</span>
+						<em style="font-size:14px;font-style:normal;"> 次</em>
+					</div>
+					<div class="hw_dashboard-secondary" style="margin-bottom: 10px;">
+						<em style="font-size:14px;font-style:normal">今日购买 </em>
+						<span style="color: rgb(0, 153, 68);">{$today_info.person}</span>
+						<em style="font-size:14px;font-style:normal;"> 人</em>
+						<span style="color: #1871ed;">{$today_info.times}</span>
+						<em style="font-size:14px;font-style:normal;"> 次</em>
+					</div>
+				</div>
+				<div class="hw_dashboard-column">
+					<div class="hw_dashboard-primary">
+						<em style="font-size:14px;font-style:normal">今日 </em>
+						<span style="color: rgb(0, 153, 68);">${$today_info.purchase}</span>
+						<em style="font-size:14px;font-style:normal">新用户 </em>
+						<span style="color: #1871ed;">${$today_info.new_user_purchase}</span>
+					</div>
+					<div class="hw_dashboard-secondary" style="margin-bottom: 10px;">
+						<em style="font-size:14px;font-style:normal">新用户购买 </em>
+						<span style="color: rgb(0, 153, 68);">{$today_info.new_user_person}</span>
+						<em style="font-size:14px;font-style:normal;"> 人</em>
+						<span style="color: #1871ed;">{$today_info.new_user_times}</span>
+						<em style="font-size:14px;font-style:normal;"> 次</em>
+					</div>
+				</div>
+			</div>
+			<div style="float:left;margin-top:35px;font-size:18px;margin-left:10px;">概览趋势</div>
+			<div class="hw_ad_title">
+				<span>
+					<select id="countryChose" class="hw-input" placeholder="请选择国家">
+						{volist name="countryList" id="item"}
+						<option key="{$key}" label="{$item}" value="{$key}" {if condition="$key eq $country"} selected {/if}></option>
+						{/volist}
+					</select>
+					<span class="hw-date-wrapper">
+						<input readonly="" id="start_date" placeholder="开始日期  -  结束日期" class="hw-input" value="{$start_date}  -  {$end_date}" type="text">
+					</span>
+					<a {if condition="$index eq 7"} class="active" {/if} date="7">7天</a>
+					<a {if condition="$index eq 15"} class="active" {/if} date="15">15天</a>
+					<a {if condition="$index eq 30"} class="active" {/if} date="30">30天</a>
+					<a {if condition="$index eq 60"} class="active" {/if} date="60">60天</a>
+				</span>
+			</div>
+			<div class="hw_dashboard" style="display: flex;margin-top: 70px">
+				<div class="hw_dashboard-column">
+					<div class="hw_dashboard-primary" >
+						<em style="font-size:14px;font-style:normal">区间入库 </em>
+						<span style="color: #1871ed;">${$time_info.purchase}</span>
+						<i style="color:#ccc;font-size: 12px;" class="fa fa-info-circle revenue_remark" data-mtpis="ADJUST UTC 时区数据"></i>
+					</div>
+					<div class="hw_dashboard-secondary">
+						<em style="font-size:14px;font-style:normal">新用户入库 </em>
+						<span style="color: #1871ed;">${$time_info.new_purchase}</span>
+						<i style="color:#ccc;font-size: 12px;" class="fa fa-info-circle revenue_remark" data-mtpis="ADJUST UTC 时区数据"></i>
+					</div>
+				</div>
+				<div class="hw_dashboard-column">
+					<div class="hw_dashboard-primary">
+						<em style="font-size:14px;font-style:normal">区间购买 </em>
+						<span style="color: rgb(0, 153, 68);">{$time_info.person}</span>
+						<em style="font-size:14px;font-style:normal;"> 人</em>
+						<span style="color: #1871ed;">{$time_info.times}</span>
+						<em style="font-size:14px;font-style:normal;"> 次</em>
+					</div>
+					<div class="hw_dashboard-secondary">
+						<em style="font-size:14px;font-style:normal">新用户 </em>
+						<span style="color: rgb(0, 153, 68);">{$time_info.new_person}</span>
+						<em style="font-size:14px;font-style:normal;"> 人</em>
+						<span style="color: #1871ed;">{$time_info.new_times}</span>
+						<em style="font-size:14px;font-style:normal;"> 次</em>
+					</div>
+				</div>
+				<div class="hw_dashboard-column">
+					<div class="hw_dashboard-primary">
+						<em style="font-size:14px;font-style:normal">区间付费率 </em>
+						<span style="color: rgb(0, 153, 68);">{$time_info.all_active?round($time_info.all_person*100/$time_info.all_active,4):0}%</span>
+					</div>
+					<div class="hw_dashboard-secondary">
+						<em style="font-size:14px;font-style:normal">新用户付费率 </em>
+						<span style="color: #1871ed;">{$time_info.all_new?round($time_info.new_person*100/$time_info.all_new,4):0}%</span>
+					</div>
+				</div>
+			</div>
+			<div class="hw_chat" id="chats" style="height:300px;margin-top: 0px;"></div>
+			<div style="float:left;margin-top:20px;font-size:18px;margin-left:10px;">
+				详情展示
+				<em style="font-size: 12px;color: #f85959;">数据来源为 adjust UTC 时区数据</em>
+			</div>
+			<div class="hw_reven clearfix" style="margin-top:30px;padding:30px 0px;">
+				<table class="table">
+					<thead style="font-size:13px;">
+					<tr>
+						<th>日期</th>
+						<th>内购人次 <i style="color:#ccc" class="fa fa-info-circle revenue_remark" data-mtpis="所有用户内购数据"></i></th>
+						<th>新用户人次 <i style="color:#ccc" class="fa fa-info-circle revenue_remark" data-mtpis="新用户内购数据"></i></th>
+						<th>新用户人数占比 <i style="color:#ccc" class="fa fa-info-circle revenue_remark" data-mtpis="新用户内购人数/所有内购人数"></i></th>
+						<th>内购率 <i style="color:#ccc" class="fa fa-info-circle revenue_remark" data-mtpis="内购人数/活跃人数"></i></th>
+						<th>新用户内购率 <i style="color:#ccc" class="fa fa-info-circle revenue_remark" data-mtpis="新用户内购人数/新增人数"></i></th>
+						<th>收益占比 <i style="color:#ccc" class="fa fa-info-circle revenue_remark" data-mtpis="内购收益/总收益<br>(内购收益：adjust数据，广告收益：平台数据)"></i></th>
+						<th>内购</th>
+						<th>新用户内购</th>
+					</tr>
+					</thead>
+					<tbody>
+					{volist name="data" id="item"}
+					<tr>
+						<td>{$item.date}</td>
+						<td>{$item.person} 人 {$item.times} 笔</td>
+						<td>{$item.new_person} 人 {$item.new_times} 笔</td>
+						<td>{$item.new_person_proportion} %</td>
+						<td>{$item.purchase_rate} %</td>
+						<td>{$item.new_person_purchase_rate} %</td>
+						<td>{$item.purchase_proportion}%</td>
+						<td>${$item.purchase}</td>
+						<td>${$item.new_purchase}</td>
+					</tr>
+					{/volist}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	{include file="./static/html/footer.html" /}
+</div>
+{include file="./static/html/footer_common.html" /}
+<script type="text/javascript" src="/static/plugin/jquery-time/moment.js"></script>
+<script type="text/javascript" src="/static/plugin/jquery-time/daterangepicker.js"></script>
+<script src="/static/js/mTips.js?t=122"></script>
+<script src="/static/js/echarts.min.js"></script>
+
+</body>
+<script>
+	var start_date="{$start_date}";
+	var end_date = "{$end_date}";
+	$(function () {
+		lineechats();
+		$('#start_date').daterangepicker({opens:'left',minDate:'2018-07-08'},function(start, end, label) {
+			start_date = start.format('YYYY-MM-DD');
+			end_date = end.format('YYYY-MM-DD');
+			var app_id='{$appid}';
+			var country='{$country}';
+			var url = "/admin_operate/purchase?appid="+app_id+"&index=&start_date="+start_date+"&end_date="+end_date+"&country="+country;
+			window.location.href=url;
+		});
+		$("#countryChose").on("change",function(){
+			var country = $("option:selected",this).val();//需求主键
+			var app_id='{$appid}';
+			var url = "/admin_operate/purchase?appid="+app_id+"&index=&start_date="+start_date+"&end_date="+end_date+"&country="+country;
+			window.location.href=url;
+		});
+		$(".hw_ad_title a").click( function(){
+			var index = $(this).attr("date");
+			var app_id='{$appid}';
+			var country='{$country}';
+			var url = "/admin_operate/purchase?appid="+app_id+"&index="+index+"&country="+country;
+			window.location.href=url;
+			return false;
+		})
+	})
+	function lineechats() {
+		var myChart = echarts.init(document.getElementById("chats"));
+		var option = {
+			title: {
+				text: ''
+			},
+			tooltip: {
+				trigger: 'axis'
+			},
+			legend: {
+				data:['收益','次数','人数'],
+				top:'20'
+			},
+			grid: {
+				left: '3%',
+				right: '4%',
+				bottom: '3%',
+				containLabel: true
+			},
+			xAxis: {
+				type: 'category',
+				boundaryGap: false,
+				data: [{$chats.date}]
+			},
+			yAxis: {
+				type: 'value'
+			},
+			series: [
+				{
+					name:'收益',
+					smooth:true,
+					type:'line',
+					stack: '总量',
+					data:[{$chats.purchase}]
+				},
+				{
+					name:'次数',
+					smooth:true,
+					type:'line',
+					stack: '总量',
+					data:[{$chats.purchase_times}]
+				},
+				{
+					name:'人数',
+					smooth:true,
+					type:'line',
+					stack: '总量',
+					data:[{$chats.purchase_person}]
+				}
+			]
+		};
+		myChart.setOption(option);
+	}
+</script>
+</html>

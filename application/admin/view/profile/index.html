@@ -1,0 +1,107 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title></title>
+	<link rel="stylesheet" type="text/css" media="all" href="/static/css/profile.css" />
+	
+	{include file="./static/html/header_common.html" /}
+	<style>
+	.s12{
+	  background-color:#fff;
+	}
+	 .demo--label{display:inline-block;font-size: 1.2rem;margin-right:10px;cursor:pointer;}
+.demo--radio{display:none}
+.demo--radioInput{background-color:#fff;border:1px solid rgba(0,0,0,0.15);border-radius:100%;display:inline-block;height:16px;margin-right:10px;margin-top:-1px;vertical-align:middle;width:16px;line-height:1}
+.demo--radio:checked + .demo--radioInput:after{background-color:#57ad68;border-radius:100%;content:"";display:inline-block;height:14px;width:14px}
+.demo--checkbox.demo--radioInput,.demo--radio:checked + .demo--checkbox.demo--radioInput:after{border-radius:0}
+	.editing{
+	  display:none;
+	}
+	</style>
+</head>
+<body>
+    <div id="wrapper" style="background: #fff;">
+	   {include file="./static/html/header.html" /} 
+	
+		<div class="hw_page_content">
+		    <div class="hw_menu_left">
+         {include file="./static/html/side.html" /}  
+			</div>
+		    <div class="hw_content_right">	
+			  	
+			   <ul class="search_tab clearfix">
+			       <li class="active"><a  href="/admin_profile/index">账号信息</a></li>
+			      <li><a  href="/admin_profile/password">密码修改</a></li>
+				  {if condition="getuserrole() eq 'super'" }
+				  <li><a  href="/admin_profile/other_set">其他设置</a></li>
+				  <li><a  href="/admin_log/index">系统日志</a></li>
+                  {/if}				  
+		      </ul>
+			    <div class="pgc-account-info-wrap">
+					 <form  method="post" enctype="multipart/form-data"  action="/admin_profile/admin_update">
+					   <div class="account-info-item required "><div class="label1">真实姓名</div><div class="content"><div class="editable-wrap"><span class="tui-input-wrapper"><input name="truename" class="tui-input editing" value="{$admin_user.truename}" type="input"></span> <div class="edit-content">{$admin_user.truename}</div><i class="fa fa-edit" type="edit"></i></div></div></div>
+					   <div class="account-info-item required "><div class="label1">登录账户</div><div class="content"><div class="editable-wrap"><div class="edit-content">{$admin_user.username}</div></div></div></div>							 
+					   <div class="account-info-item image required"><div class="label1">头像显示</div><div class="content"><img class="image-url" src="{$admin_user.avatar??'/static/img/example.png'}"><div class="content-right"><div class=" upload-handler"><button type="button" class="tui-btn image-upload-btn">上 传</button><input name="upload_img" id="uploads" onchange="selectImage(this);" accept="image/*" type="file"></div><div class="image-hint sred"></div><div class="image-message"><em style="color:red;">* </em><span>要求清晰<br><em style="color:red;">* </em>最大不超过2M</span></div></div></div></div>
+					   <div class="account-info-item" style="margin-top:70px;"><div class="label1">所属角色</div><div class="content">{if condition="$admin_user['ad_role'] eq '1'" }超级管理员{else /}普通管理员{/if} <span style="color:red;">(普通管理员部分权限将不再拥有)</span></div></div>
+					   <div class="account-info-item"><div class="label1">绑定手机</div><div class="content"><input class="tui-input editing" value="{$admin_user.phone}" name="phone" type="input"><div class="edit-content">{$admin_user.phone}</div></div><i class="fa fa-edit" type="edit"></i></div>
+					   <div class="account-info-item "><div class="label1">联系邮箱</div><div class="content"><div class="editable-wrap"><input class="tui-input editing" name="email" value="{$admin_user.email}" type="input"> <div class="edit-content">{$admin_user.email}</div><i class="fa fa-edit" type="edit"></i></div></div></div>
+					   <button type="submit" class="tui-btn tui-btn-negative account-info-submit">提 交</button>
+					   </form>
+				</div>
+            </div>
+        </div>			
+     {include file="./static/html/footer.html" /}		
+    </div>
+	{include file="./static/html/footer_common.html" /}  
+</body>
+ <script>
+	    $(".fa-edit").click( function(){
+		    $(this).parent().find(".edit-content").hide();
+			$(this).parent().find(".editing").show();
+		})
+		$("#app_save").bind("click",function(){
+		 
+		     var app_name = $("#app_name").val();
+			 var app_id = $("#app_id").val();
+			 var platform = $("input[name='demo-radio']:checked").val();
+			 if( app_name=="" || app_id=="" )
+			 {
+			   layer.msg('请填写完整信息');return false;
+			 }
+			 layer.load(0, {shade: false});
+			 $(this).attr("disabled",true);
+			 $.post("/admin_profile/app_add",{app_name:app_name,app_id:app_id,platform:platform},function(e){
+			       $("#app_save").attr("disabled",false);
+				   layer.closeAll();
+			      if("ok"==e)
+				     {												
+						$("#ads input").val("");
+						layer.msg('添加成功');
+					 }else{
+					   layer.msg('添加失败');
+					 }
+			   })
+		})	  
+	   var selectImage = function(file)
+	   {
+	      var file = file.files[0];
+		  var url = getObjectURL(file);
+		  $(".image-url").attr("src", url)
+	   }
+	   
+	  function getObjectURL(file) {
+		var url = null;
+		if (window.createObjectURL != undefined) { // basic
+			url = window.createObjectURL(file);
+		} else if (window.URL != undefined) { // mozilla(firefox)
+			url = window.URL.createObjectURL(file);
+		} else if (window.webkitURL != undefined) { // webkit or chrome
+			url = window.webkitURL.createObjectURL(file);
+		}
+		return url;
+	}
+	</script>
+</html>

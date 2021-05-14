@@ -1,0 +1,46 @@
+﻿  <div class="ord">
+        
+        <a href="###" class="ub ub-ac">
+            <p class="ub-f1" style="font-size:1.7rem;font-weight:bold;color:red;">总计</p>
+            <span></span>
+            
+        </a>
+        <ul class="ub" >
+            <li class="ub-f1" >
+                <div class="ub ub-ac ub-pc" ><em>$</em><span style="font-size:1.6rem;"><?php echo $total_revenue = array_sum(array_column($data,'revenue')); ?></span></div>
+                <p style="font-size:1.2rem;" >收益</p>
+            </li>
+            <li class="ub-f1" >
+                <div class="ub ub-ac ub-pc"><span style="font-size:1.6rem;"><?php echo $total_impression = array_sum(array_column($data,'impression')); ?></span></div>
+                <p style="font-size:1.2rem;">展示</p>
+            </li>
+           
+        </ul>
+    </div>
+	{volist name="data" id="item"}
+    <div class="ord">
+        <a href="###" class="ub ub-ac">
+            <p class="ub-f1" style="font-size:1.3rem;font-weight:bold;">{$item.platform|getplatform}</p>
+            <span></span>
+            
+        </a>
+        <ul class="ub">
+            <li class="ub-f1">
+                <div class="ub ub-ac ub-pc"><em>$</em><span>{$item.revenue}</span></div>
+                <p>收益</p>
+            </li>
+            <li class="ub-f1">
+                <div class="ub ub-ac ub-pc"><span>{$item.impression}</span></div>
+                <p>展示</p>
+            </li>
+            <li class="ub-f1">
+                <div class="ub ub-ac ub-pc"><span>{$item.click}</span></div>
+                <p>点击</p>
+            </li>
+			<li class="ub-f1">
+                <div class="ub ub-ac ub-pc"><span><?php if(isset( $item["impression"]) && $item["impression"]>0 ){ echo round( $item["revenue"]*1000/$item["impression"],2); }else{ echo "0.00";} ?></span></div>
+                <p>eCPM</p>
+            </li>
+        </ul>
+    </div>
+	{/volist}

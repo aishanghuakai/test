@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GAME BRAIN</title>
+	{include file="./static/html/header_common.html" /}
+	<link href="/static/css/adgain.css?t=14444" rel="stylesheet" type="text/css">
+    <link href="/static/css/checkbox.css" rel="stylesheet" type="text/css">
+	 <link rel="stylesheet" type="text/css" media="all" href="/static/plugin/jquery-time/daterangepicker-bs3.css" />
+	
+	<style>
+	 .fa,.allow_click{cursor:pointer}
+	 th,td{text-align:center;vertical-align:middle}
+	 .hw_reven thead tr {
+    background-color: #f9f9f9;
+}
+.hw_reven table {
+    border-collapse: collapse;
+    font-size: 12px !important;
+    color: #222 !important;
+    text-align: left !important;
+    line-height: 40px;
+}
+.hw_reven .table > thead > tr > th{
+  border-bottom:1px solid #e8e8e8 !important;
+  border-top:1px solid #e8e8e8 !important;
+   color: #222 !important;
+}
+
+	</style>
+</head>
+<body style="background-color:#fff;">
+    <div id="wrapper" style="background-color:#fff;">
+        
+		{include file="./static/html/header.html" /} 
+	
+		<div class="hw_page_content">
+		     
+		    <div class="hw_menu_left">
+         {include file="./static/html/side.html" /}  
+			</div>
+		    <div class="hw_content_right" style="width: 100%;">	
+			  <ul class="search_tab clearfix" >
+			      <li class="active"><a  href="javascript:;">成效概览</a></li>
+                 <!--  <li><a  href="/admin_adgain/analysis">类型分析</a></li>
+                  <li><a  href="/admin_adgain/countryanalysis">国家细分</a></li> -->				  
+		          <li style="float:right;"><a style="font-size:12px;text-decoration:underline" href="/admin_adgain/relateapp"><i style="vertical-align:middle" class="fa fa-volume-off"></i>&nbsp;关联产品</a></li>
+			  </ul>	  
+			     <div class="hw_content">				 				   
+					   <div class="hw_ad_title">
+					     						  
+						     <span>					    								
+								<a {if condition="$index eq 'three'"} class="active" {/if} date="three">3天</a>
+								<a {if condition="$index eq 'oneweek'"} class="active" {/if} date="oneweek">7天</a>
+								<a {if condition="$index eq 'twoweek'"} class="active" {/if} date="twoweek">14天</a>
+								
+								<span class="hw-date-wrapper">
+						          <input readonly="" id="start_date" placeholder="开始日期  -  结束日期" class="hw-input" value="{$start_date}  -  {$end_date}" type="text">
+						        </span>
+								<!-- <span id="updatedata" class="btn" style="float:right;border:1px solid red;color:red;"><i class="fa fa-refresh"></i> 更新数据</span> -->
+							 </span>
+                            <!--  <a style="float:right;margin-right:20px;margin-top:3px;background-color:#3e93e8;border-color:#3e93e8;color:#fff !important" class="common_btn btn_primary" id="add_upltv" href="/admin_adgain/upltv">+upltv</a> -->							 
+					   </div>
+					   
+					  <div class="hw_dashboard">
+					     <div class="hw_dashboard-column">
+						   <div class="hw_dashboard-primary"><em style="font-size:16px;font-style:normal">$</em>{$sumdata.revenue}</div>
+						   <div class="hw_dashboard-secondary"> 收益</div>
+						 </div>
+						<div class="hw_dashboard-column">
+						     <div class="hw_dashboard-primary">{$sumdata.impressions}</div>
+						     <div class="hw_dashboard-secondary">展示</div>
+						</div>
+						<div class="hw_dashboard-column">
+						     <div class="hw_dashboard-primary">{$sumdata.clicks}</div>
+						    <div class="hw_dashboard-secondary">点击</div>
+						</div>
+						<div class="hw_dashboard-column">
+						    <div class="hw_dashboard-primary">${$sumdata.ecpm}</div>
+						    <div class="hw_dashboard-secondary">eCPM</div>
+						</div>
+					  </div>
+										  
+					 
+					 <div class="hw_reven clearfix" style="margin-top:120px;padding:30px 0px;">
+					    <div style="float:left;padding:20px 0px;font-size:18px;margin-left:10px;">数据展示</div>
+					     <div style="float:right;padding:20px 0px;">
+							 <div style="float:left;" class="el-checkbox el-checkbox-red">
+								
+								<input name="group_type" id="qudao" value="channel" {if condition="$type eq 'channel'"} checked {/if}  type="checkbox">
+							   <label class="el-checkbox-style" for="qudao"></label>
+							   <span class="margin-r">渠道</span>
+							 </div>
+							 <div style="float:left;margin-left:10px;" class="el-checkbox el-checkbox-red">
+								
+								<input name="group_type" id="adtype" value="adtype" {if condition="$type eq 'adtype'"} checked {/if} type="checkbox">
+							   <label class="el-checkbox-style" for="adtype"></label>
+							   <span class="margin-r">广告类型</span>
+							 </div>
+							 <div style="float:left;margin-left:10px;" class="el-checkbox el-checkbox-red">
+								
+								<input name="group_type" id="day" value="day" {if condition="$type eq 'day'"} checked {/if}  type="checkbox">
+							   <label class="el-checkbox-style" for="day"></label>
+							   <span class="margin-r">按天</span>
+							 </div>
+						 </div>
+					     <table class="table">
+						  <thead style="font-size:13px;">
+							<tr>
+							  <th>日期</th>
+							  <th style="text-align:left;">名称</th>
+							  <th>收益</th>
+							  <th>展示</th>
+							  <th>点击</th>
+							  <th>eCPM</th>
+							</tr>
+						  </thead>
+						  <tbody>
+						    {volist name="data" id="item"}
+							<tr>
+							  <td>{$item.date}</td>
+							  <td style="text-align:left;">{$item.name}</td>
+							  <td>${$item.revenue}</td>
+							  <td>{$item.impressions}</td>
+							  <td>{$item.clicks}</td>
+							  <td>${$item.ecpm}</td>							
+							</tr>
+							{/volist}
+						  </tbody>
+						</table>
+					 </div>
+					 
+					 <div class="hw_chat" id="date" style="height:400px;">
+					   
+					 </div>
+			    </div>
+           	</div>
+         </div>
+       {include file="./static/html/footer.html" /}		 
+	</div>
+   {include file="./static/html/footer_common.html" /}
+   
+   
+   
+    <script type="text/javascript" src="/static/plugin/jquery-time/moment.js"></script>
+   <script type="text/javascript" src="/static/plugin/jquery-time/daterangepicker.js"></script>
+    <script src="/static/js/echarts.min.js"></script>
+</body>
+  <script>
+     var start_date="{$start_date}";
+	 var end_date = "{$end_date}";
+    $(function(){
+	   
+	 lineechats();
+	  $('#start_date').daterangepicker({ minDate:'2018-07-08' },function(start, end, label) {
+	 
+		 start_date = start.format('YYYY-MM-DD');end_date=end.format('YYYY-MM-DD');
+		 var app_id='{$appid}';
+		 var type ='{$type}';
+		 var url = "/admin_adgain/index?appid="+app_id+"&type="+type+"&index=&start_date="+start_date+"&end_date="+end_date;
+		 window.location.href=url;
+	  });
+	  
+	  $(".hw_ad_title span a").click( function(){
+	     var index = $(this).attr("date");
+		 var app_id='{$appid}';
+		 var type ='{$type}';
+		 var url = "/admin_adgain/index?appid="+app_id+"&type="+type+"&index="+index;
+		 window.location.href=url;
+		 return false;
+	  })
+	  
+	  $("input[name='group_type']").click( function(){
+	     var type = $(this).val();
+		 var index = $(".hw_ad_title .active").attr("date");
+		 var app_id='{$appid}';
+			var url = "/admin_adgain/index?appid="+app_id+"&type="+type+"&index="+index+"&start_date="+start_date+"&end_date="+end_date;
+			window.location.href=url;
+	  })
+	  $("#updatedata").click( function(){
+	     
+		 $.Pop('当前更新最新数据，需要一点时间，请耐心等待！','confirm',function(){ 
+             
+			  var url = "/admin_adgain/updatedata";
+			   var index2 = layer.load();
+			   $.post(url,{start_date:start_date,end_date:end_date},function(e){
+					 layer.closeAll();
+                     if(e=="ok")
+						{
+						  layer.msg("更新成功，请刷新页面");
+						}else{
+						  layer.msg("更新失败，网络超时，请刷新再试");
+						}					 
+			   })
+		 })
+	  })
+	   
+	   $(".bar_allow_roe").click( function(){
+	       
+		   if( $(this).find("i").hasClass("fa-angle-double-right") )
+		      {
+			     $(this).find("i").removeClass("fa-angle-double-right");
+				 $(this).find("i").addClass("fa-angle-double-left");
+				 $(this).animate({'left':'21%'},1000);
+				 $(".hw_app_navlist").show(1000);
+			  }else{
+			     $(this).find("i").removeClass("fa-angle-double-left");
+				 $(this).find("i").addClass("fa-angle-double-right");
+				 $(this).animate({'left':'0%'},1000);
+				 $(".hw_app_navlist").hide(1000);
+			  }
+	   })
+	    	   
+	   $("input[name='app_id'],input[name='type']").click( function(){
+	        var app_id  =$(this).val();
+			var type = $("input[name='group_type']:checked").val();
+			var index = $(".hw_ad_title .active").attr("date");
+			var url = "/admin_adgain/index?appid="+app_id+"&type="+type+"&index="+index+"&start_date="+start_date+"&end_date="+end_date;
+			window.location.href=url;
+	   })	   
+	   
+	}); 
+	
+	  function lineechats()
+  {
+	  var myChart = echarts.init(document.getElementById("date"));
+	  var option = {
+    title: {
+        text: ''
+    },
+    tooltip: {
+        trigger: 'axis'
+    },
+    legend: {
+        data:['收益','展示','点击','eCPM'],
+		top:'20'
+    },
+    grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '3%',
+        containLabel: true
+    },
+    xAxis: {
+        type: 'category',
+        boundaryGap: false,
+        data: [{$chats.date}]
+    },
+    yAxis: {
+        type: 'value'
+    },
+    series: [
+        {
+            name:'收益',
+			smooth:true,
+            type:'line',
+            stack: '总量',
+            data:[{$chats.revenue}]
+        },
+        {
+            name:'展示',
+			smooth:true,
+            type:'line',
+            stack: '总量',
+            data:[{$chats.impressions}]
+        },
+        {
+            name:'点击',
+			smooth:true,
+            type:'line',
+            stack: '总量',
+            data:[{$chats.clicks}]
+        },
+        {
+            name:'eCPM',
+			smooth:true,
+            type:'line',
+            stack: '总量',
+            data:[{$chats.ecpm}]
+        }
+    ]
+};
+
+	 myChart.setOption(option); 
+  }
+  </script>
+</html>

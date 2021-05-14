@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>GAME BRAIN</title>
+	{include file="./static/html/header_common.html" /}
+	<link href="/static/css/adspend.css?t=122444455" rel="stylesheet" type="text/css">
+	<link href="/static/css/checkbox.css" rel="stylesheet" type="text/css">
+	<link rel="stylesheet" type="text/css" media="all" href="/static/plugin/jquery-time/daterangepicker-bs3.css" />
+	<style>
+		.allow_click{cursor:pointer}
+		th,td{text-align:center;vertical-align:middle}
+		.hw_reven thead tr {
+			background-color: #f9f9f9;
+		}
+		.hw_reven table {
+			border-collapse: collapse;
+			font-size: 12px !important;
+			color: #222 !important;
+			text-align: left !important;
+			line-height: 40px;
+		}
+		.hw_reven .table > thead > tr > th{
+			border-bottom:1px solid #e8e8e8 !important;
+			border-top:1px solid #e8e8e8 !important;
+			color: #222 !important;
+		}
+	</style>
+</head>
+<body>
+<div id="wrapper" style="background-color: #fff;" >
+
+	{include file="./static/html/header.html" /}
+
+	<div class="hw_page_content">
+
+		<div class="hw_menu_left">
+			{include file="./static/html/side.html" /}
+		</div>
+		<div class="hw_content_right">
+			<ul class="search_tab clearfix" >
+				<li class="active">
+					<a  href="javascript:;">广告明细</a>
+				</li>
+			</ul>
+			<div style="float:left;margin-top:20px;font-size:18px;margin-left:10px;">
+				详情展示
+				<em style="font-size: 12px;color: #f85959;">数据来源为 adjust UTC 时区数据</em>
+			</div>
+			<div class="hw_ad_title">
+				<span>
+					<select id="countryChose" class="hw-input" placeholder="请选择国家">
+						{volist name="countryList" id="item"}
+						<option key="{$key}" label="{$item}" value="{$key}" {if condition="$key eq $country"} selected {/if}></option>
+						{/volist}
+					</select>
+					<span class="hw-date-wrapper">
+						<input readonly="" id="start_date" placeholder="开始日期  -  结束日期" class="hw-input" value="{$start_date}  -  {$end_date}" type="text">
+					</span>
+					<a {if condition="$index eq 7"} class="active" {/if} date="7">7天</a>
+					<a {if condition="$index eq 15"} class="active" {/if} date="15">15天</a>
+					<a {if condition="$index eq 30"} class="active" {/if} date="30">30天</a>
+					<a {if condition="$index eq 60"} class="active" {/if} date="60">60天</a>
+				</span>
+			</div>
+			<div class="hw_reven clearfix" style="margin-top:70px;padding:30px 0px;">
+				<table class="table">
+					<thead style="font-size:13px;">
+					<tr>
+						<th>日期</th>
+						<th>观看数 <i style="color:#ccc" class="fa fa-info-circle revenue_remark" data-mtpis="(全部、激励、插屏)"></i></th>
+						<th>新用户观看占比 <i style="color:#ccc" class="fa fa-info-circle revenue_remark" data-mtpis="新用户观看数/总用户观看数"></i></th>
+						<th>广告用户 <i style="color:#ccc" class="fa fa-info-circle revenue_remark" data-mtpis="(全部、激励、插屏)"></i></th>
+						<th>新广告用户 <i style="color:#ccc" class="fa fa-info-circle revenue_remark" data-mtpis="(全部、激励、插屏)"></i></th>
+						<th>广告渗透 <i style="color:#ccc" class="fa fa-info-circle revenue_remark" data-mtpis="广告用户/活跃人数"></i></th>
+						<th>激励渗透 <i style="color:#ccc" class="fa fa-info-circle revenue_remark" data-mtpis="激励广告人数/活跃人数"></i></th>
+						<th>插屏渗透 <i style="color:#ccc" class="fa fa-info-circle revenue_remark" data-mtpis="插屏广告人数/活跃人数"></i></th>
+						<th>新用户渗透 <i style="color:#ccc" class="fa fa-info-circle revenue_remark" data-mtpis="新广告用户/新增人数"></i></th>
+					</tr>
+					</thead>
+					<tbody>
+					{volist name="data" id="item"}
+					<tr>
+						<td>{$item.date}</td>
+						<td>{$item.num} / {$item.rew_num} / {$item.int_num}</td>
+						<td>{$item.num?round($item.new_num*100/$item.num,2):0}%</td>
+						<td>{$item.person} / {$item.rew_person} / {$item.int_person}</td>
+						<td>{$item.new_person} / {$item.new_rew_person} / {$item.new_int_person}</td>
+						<td>{$item.active?round($item.person*100/$item.active,2):0}%</td>
+						<td>{$item.active?round($item.rew_person*100/$item.active,2):0}%</td>
+						<td>{$item.active?round($item.int_person*100/$item.active,2):0}%</td>
+						<td>{$item.new_add?round($item.new_person*100/$item.new_add,2):0}%</td>
+					</tr>
+					{/volist}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	{include file="./static/html/footer.html" /}
+</div>
+{include file="./static/html/footer_common.html" /}
+<script type="text/javascript" src="/static/plugin/jquery-time/moment.js"></script>
+<script type="text/javascript" src="/static/plugin/jquery-time/daterangepicker.js"></script>
+<script src="/static/js/mTips.js?t=122"></script>
+<script src="/static/js/echarts.min.js"></script>
+
+</body>
+<script>
+	var start_date="{$start_date}";
+	var end_date = "{$end_date}";
+	$(function () {
+		$('#start_date').daterangepicker({opens:'left',minDate:'2018-07-08'},function(start, end, label) {
+			start_date = start.format('YYYY-MM-DD');
+			end_date = end.format('YYYY-MM-DD');
+			var app_id='{$appid}';
+			var country='{$country}';
+			var url = "/admin_operate/advert?appid="+app_id+"&index=&start_date="+start_date+"&end_date="+end_date+"&country="+country;
+			window.location.href=url;
+		});
+		$("#countryChose").on("change",function(){
+			var country = $("option:selected",this).val();//需求主键
+			var app_id='{$appid}';
+			var url = "/admin_operate/advert?appid="+app_id+"&index=&start_date="+start_date+"&end_date="+end_date+"&country="+country;
+			window.location.href=url;
+		});
+		$(".hw_ad_title a").click( function(){
+			var index = $(this).attr("date");
+			var app_id='{$appid}';
+			var country='{$country}';
+			var url = "/admin_operate/advert?appid="+app_id+"&index="+index+"&country="+country;
+			window.location.href=url;
+			return false;
+		})
+	})
+</script>
+</html>

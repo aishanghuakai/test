@@ -1,0 +1,25 @@
+   	   <div class="css_tr body adspend_total">
+		   <div class="css_td first">总计</div>
+		   <div class="css_td">${$total_spend.revenue??"0.0"}</div>
+		    <div class="css_td">{$total_spend.request??0}</div>
+		   <div class="css_td">{$total_spend.impressions??0}</div>
+		   <div class="css_td">{$total_spend.clicks??0}</div>
+		   <div class="css_td"><?php echo adcalculate($total_spend['clicks'],$total_spend['impressions']); ?></div>
+		   <div class="css_td"><?php echo adcalculate($total_spend['revenue'],$total_spend['clicks'],"1"); ?></div>
+		   <div class="css_td"><?php echo adcalculate($total_spend['revenue'],$total_spend['impressions'],"2"); ?></div>							   
+	  </div>
+	  {volist name="data" id="s"}
+	  <div class="pp">
+		  <div class="css_tr body">
+			   <div class="css_td allow_click first" style="font-size:14px;">&nbsp;{$s.name}</div>
+			   <div class="css_td">${$s['revenue']??"0.0"}</div>
+			    <div class="css_td">{$s['request']??0}</div>
+			   <div class="css_td">{$s['impressions']??0}</div>
+			   <div class="css_td">{$s['clicks']??0}</div>
+			   <div class="css_td"><?php echo adcalculate($s['clicks'],$s['impressions']); ?></div>
+			    <div class="css_td"><?php echo adcalculate($s['revenue'],$s['clicks'],"1"); ?></div>
+               <div class="css_td"><?php echo adcalculate($s['revenue'],$s['impressions'],"2"); ?></div>			   
+		  </div>
+	  </div>
+	{/volist}					  
+                      

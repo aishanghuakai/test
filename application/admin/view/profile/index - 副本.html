@@ -1,0 +1,315 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title></title>
+	<link rel="stylesheet" type="text/css" media="all" href="/static/css/profile.css" />
+	<link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+	{include file="./static/html/header_common.html" /}
+	<style>
+	.s12{
+	  background-color:#fff;
+	}
+	 .demo--label{display:inline-block;font-size: 1.2rem;margin-right:10px;cursor:pointer;}
+.demo--radio{display:none}
+.demo--radioInput{background-color:#fff;border:1px solid rgba(0,0,0,0.15);border-radius:100%;display:inline-block;height:16px;margin-right:10px;margin-top:-1px;vertical-align:middle;width:16px;line-height:1}
+.demo--radio:checked + .demo--radioInput:after{background-color:#57ad68;border-radius:100%;content:"";display:inline-block;height:14px;width:14px}
+.demo--checkbox.demo--radioInput,.demo--radio:checked + .demo--checkbox.demo--radioInput:after{border-radius:0}
+	.editing{
+	  display:none;
+	}
+	</style>
+</head>
+<body>
+    <div id="wrapper">
+        {include file="./static/html/header.html" /} 
+		
+	   <!--/. NAV TOP  -->
+         {include file="./static/html/side.html" /} 
+        <!-- /. NAV SIDE  -->
+        <div id="page-wrapper" style="background: #fff;padding:0px 7%;">
+		  <div class="header"> 
+			<h1 class="page-header">
+				系统设置
+			</h1>
+												
+		</div>
+            <div id="page-inner"> 
+			     <div class="row">
+                <div class="col-md-12">
+                    
+					<div class="card1">
+                        <!-- <div class="card-action">
+                            设置
+                        </div> -->
+                        <div class="card-content">
+                           <div class="col pgc-title" >
+							  <ul class="tabs">
+								<li class="tab col s3"><a class="active" href="#info">个人信息</a></li>
+								<li class="tab col s3"><a  href="#ads">广告设置</a></li>
+								<li class="tab col s3"><a href="#test3">密码设置</a></li>
+								<li class="tab col s3"><a href="#test4">其他设置</a></li>
+							  <div class="indicator" style="right: 206.483px; left: 103.517px;"></div>
+							  </ul>
+							</div>
+							<div class="clearBoth"><br></div>
+							<div id="info" class="col s12" >
+							 <div class="pgc-account-info-wrap">
+							 <form  method="post" enctype="multipart/form-data"  action="/admin_profile/admin_update">
+							   <div class="account-info-item required "><div class="label1">真实姓名</div><div class="content"><div class="editable-wrap"><span class="tui-input-wrapper"><input name="truename" class="tui-input editing" value="{$admin_user.truename}" type="input"></span> <div class="edit-content">{$admin_user.truename}</div><i class="fa fa-edit" type="edit"></i></div></div></div>
+							   <div class="account-info-item required "><div class="label1">登录账户</div><div class="content"><div class="editable-wrap"><div class="edit-content">{$admin_user.username}</div></div></div></div>							 
+							   <div class="account-info-item image required"><div class="label1">头像显示</div><div class="content"><img class="image-url" src="{$admin_user.avatar??'/static/img/example.png'}"><div class="content-right"><div class=" upload-handler"><button type="button" class="tui-btn image-upload-btn">上 传</button><input name="upload_img" id="uploads" onchange="selectImage(this);" accept="image/*" type="file"></div><div class="image-hint sred"></div><div class="image-message"><em style="color:red;">* </em><span>要求清晰<br><em style="color:red;">* </em>最大不超过2M</span></div></div></div></div>
+							   <div class="account-info-item" style="margin-top:70px;"><div class="label1">所属角色</div><div class="content">超级管理员</div></div>
+							   <div class="account-info-item"><div class="label1">绑定手机</div><div class="content"><input class="tui-input editing" value="{$admin_user.phone}" name="phone" type="input"><div class="edit-content">{$admin_user.phone}</div></div><i class="fa fa-edit" type="edit"></i></div>
+							   <div class="account-info-item "><div class="label1">联系邮箱</div><div class="content"><div class="editable-wrap"><input class="tui-input editing" name="email" value="{$admin_user.email}" type="input"> <div class="edit-content">{$admin_user.email}</div><i class="fa fa-edit" type="edit"></i></div></div></div>
+							   <button type="submit" class="tui-btn tui-btn-negative account-info-submit">提 交</button>
+							   </form>
+							  </div>							
+							</div>							
+							<div id="ads" class="col s12" style="display: none;">
+							   <div class="pgc-account-info-wrap">
+							   <div class="account-info-item required "><div class="label1">产品名称</div><div class="content"><div class="editable-wrap"><span class="tui-input-wrapper"><input class="tui-input " id="app_name" placeholder="请输入产品名称" type="input"></span></div></div></div>							  
+							   <div class="account-info-item "><div class="label1">产品ID</div><div class="content"><div class="editable-wrap"><span class="tui-input-wrapper"><input class="tui-input" id="app_id" placeholder="产品唯一标识符" type="input"></span></div></div></div>
+							     <div class="account-info-item "><div class="label1">平台选择</div>
+									 <div class="content">
+									   <div class="editable-wrap">
+										<label class="demo--label">
+										<input class="demo--radio" checked type="radio" value="1" name="demo-radio">
+										<span class="demo--radioInput"></span>Mobvista
+										</label>
+										<label class="demo--label">
+										<input class="demo--radio" type="radio" value="2" name="demo-radio">
+										<span class="demo--radioInput"></span>Unity
+										</label>
+										<label class="demo--label">
+										<input class="demo--radio" type="radio" value="3" name="demo-radio">
+										<span class="demo--radioInput"></span>Applovin
+										</label>
+										<label class="demo--label">
+										<input class="demo--radio" type="radio" value="4" name="demo-radio">
+										<span class="demo--radioInput"></span>Vungle
+										</label>
+										<label class="demo--label">
+										<input class="demo--radio" type="radio" value="6" name="demo-radio">
+										<span class="demo--radioInput"></span>Facebook
+										</label>
+										<label class="demo--label">
+										<input class="demo--radio" type="radio" value="5" name="demo-radio">
+										<span class="demo--radioInput"></span>Admob
+										</label>
+									   </div>
+									 </div>
+								 </div>
+								<p style="float:right;"><a href="javascript:;" id="app_list">#查看产品列表</a></p> 
+							   <button type="button" id="app_save" class="tui-btn tui-btn-negative account-info-submit">保 存</button>
+							  </div>
+							</div>
+							<div id="test3" class="col s12" style="display: none;">
+							 
+							  <div class="pgc-account-info-wrap">
+							   <div class="account-info-item required "><div class="label1">旧密码</div><div class="content"><div class="editable-wrap"><span class="tui-input-wrapper"><input class="tui-input " id="old_passwd" placeholder="请输入旧密码" type="password"></span></div></div></div>							  
+							   <div class="account-info-item "><div class="label1">新密码</div><div class="content"><div class="editable-wrap"><span class="tui-input-wrapper"><input class="tui-input" id="new_passwd" placeholder="请输入新的密码" type="password"></span></div></div></div>
+							     
+							   <button type="button" id="passwd_save" class="tui-btn tui-btn-negative account-info-submit">保 存</button>
+							  </div>
+							  
+							</div>
+							<div id="test4" class="col s12" style="display: none;padding:0 15%;margin-left:7%;">
+							 
+							  <div class="account-info-item required "><div class="label1" style="width: 100%;">是否开启邮箱通知</div>
+							  <div class="content" style="margin-left:30%;" >
+									<div class="switch" id="send_switch">
+									   <label>
+									    Off
+									   <input type="checkbox" {if condition="$admin_user.sendemail eq '1'"}checked {/if} value="off">
+									   <span class="lever"></span>
+									    On
+									   </label>
+									 </div>
+							   </div>
+							  </div>
+							    <p class="apps" style="margin-top:5px;{if condition="$admin_user.sendemail eq '0'"} display:none; {/if}">
+								  {volist name="app" id="item"}
+								  <input class="filled-in" id="filled-in-box{$key}" value="{$key}" <?php if(  preg_match("/$key/",$admin_user["send_content"] ) ){  echo "checked"; } ?> name="select_app" type="checkbox">
+								  <label for="filled-in-box{$key}">{$item.name}</label>
+								   {/volist}
+								</p>
+							  <div class="account-info-item required "><div class="label1" style="width: 100%;">是否关注公众号接受消息</div>
+							  <div class="content" style="margin-left:30%;" >
+									<div class="switch" id="ggh">
+									<label>
+									  Off
+									  <input type="checkbox" value="off">
+									  <span class="lever"></span>
+									  On
+									</label>
+								    </div>
+							   </div>
+							  </div>
+                               <p class="mycode" style="margin-left:25%;margin-top:10px;display:none;"><img src="/static/images/mycode.png" width="150" height="150" /></p>							  
+							</div>
+                            <div class="clearBoth"><br></div>
+                            </div>
+                        </div>                  
+                </div>
+         
+            </div>		
+         <!-- /. PAGE WRAPPER  -->
+        </div>
+     <!-- /. WRAPPER  -->
+   {include file="./static/html/footer.html" /}
+   {include file="./static/html/footer_common.html" /}
+  <!-- Morris Chart Js -->
+    <script src="/static/assets/js/morris/raphael-2.1.0.min.js"></script>
+    <script src="/static/assets/js/morris/morris.js"></script>
+    <script>
+	    $(".fa-edit").click( function(){
+		    $(this).parent().find(".edit-content").hide();
+			$(this).parent().find(".editing").show();
+		})
+		$("#app_save").bind("click",function(){
+		 
+		     var app_name = $("#app_name").val();
+			 var app_id = $("#app_id").val();
+			 var platform = $("input[name='demo-radio']:checked").val();
+			 if( app_name=="" || app_id=="" )
+			 {
+			   layer.msg('请填写完整信息');return false;
+			 }
+			 layer.load(0, {shade: false});
+			 $(this).attr("disabled",true);
+			 $.post("/admin_profile/app_add",{app_name:app_name,app_id:app_id,platform:platform},function(e){
+			       $("#app_save").attr("disabled",false);
+				   layer.closeAll();
+			      if("ok"==e)
+				     {												
+						$("#ads input").val("");
+						layer.msg('添加成功');
+					 }else{
+					   layer.msg('添加失败');
+					 }
+			   })
+		})
+	    
+		$("#passwd_save").bind("click",function(){
+		 
+		     var old_passwd = $("#old_passwd").val();
+			 var new_passwd = $("#new_passwd").val();
+			
+			 if( old_passwd=="" || new_passwd=="" )
+			 {
+			     layer.msg('请输入密码信息');return false;
+			 }
+			 if( old_passwd==new_passwd)
+			 {
+			     layer.msg('新密码不能和旧密码一样');return false;
+			 }
+			 var index = layer.load(0, {shade: false});
+			 $(this).attr("disabled",true);
+			 $.post("/admin_profile/passwd_save",{old_passwd:old_passwd,new_passwd:new_passwd},function(e){
+			       $("#passwd_save").attr("disabled",false);
+				   layer.close(index);
+			      if("ok"==e)
+				     {						
+						
+						$("#test3 input").val("");
+						layer.msg('修改成功');
+					 }else{
+					   layer.msg(e);
+					 }
+			   })
+		})
+		
+		
+	   $("#app_list").bind("click",function(){
+	      		 
+		  layer.open({
+			  type: 2,
+			  title: false,
+			  closeBtn: 0, //不显示关闭按钮
+			  shade: [0],
+			  area: ['340px', '215px'],
+			  offset: 'rb', //右下角弹出
+			  time: 2000, //2秒后自动关闭
+			  anim: 2,
+			  content: ['/admin_profile/test', 'no'], //iframe的url，no代表不显示滚动条
+			  end: function(){ //此处用于演示
+				layer.open({
+				  type: 2,
+				  title: '产品名称列表',
+				  shadeClose: true,
+				  shade: false,
+				  maxmin: true, //开启最大化最小化按钮
+				  area: ['893px', '600px'],
+				  content: '/admin_profile/app_list'
+				});
+			  }
+			});
+	   })
+	   
+	   var selectImage = function(file)
+	   {
+	      var file = file.files[0];
+		  var url = getObjectURL(file);
+		  $(".image-url").attr("src", url)
+	   }
+	   
+	  function getObjectURL(file) {
+		var url = null;
+		if (window.createObjectURL != undefined) { // basic
+			url = window.createObjectURL(file);
+		} else if (window.URL != undefined) { // mozilla(firefox)
+			url = window.URL.createObjectURL(file);
+		} else if (window.webkitURL != undefined) { // webkit or chrome
+			url = window.webkitURL.createObjectURL(file);
+		}
+		return url;
+	}
+	$("#send_switch input").click( function(){
+	
+	    if( $("#send_switch .lever").css("background-color")=="rgb(129, 129, 129)" )
+		  {
+		    $(".apps").show();
+		  }else{
+		     save_select(0,"");
+		     $(".apps").hide();
+		  }
+	} )
+	
+	$("#ggh input").click( function(){
+	
+	    if( $("#ggh .lever").css("background-color")=="rgb(129, 129, 129)" )
+		  {
+		     $(".mycode").show();
+		  }else{
+		     
+		     $(".mycode").hide();
+		  }
+	} )
+	
+	$(".filled-in").click( function(){
+		   var str ="";
+		   $("[name='select_app']:checked").each(function(){
+				     str+=$(this).val()+"|";				
+				}) 
+			save_select(1,str);
+		})
+	
+	var save_select = function(sendemail,send_content)
+	{
+	   $.post("/admin_profile/save_app_select",{send_content:send_content,sendemail:sendemail},function(e){
+			      
+			      if("ok"==e)
+				     {																		
+						//layer.msg('修改成功');
+					 }else{
+					     layer.msg(e);
+					 }
+			   })
+	}
+	</script>
+</body>
+
+</html>

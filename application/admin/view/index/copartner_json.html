@@ -1,0 +1,75 @@
+	 <div class="table-body" style="overflow-y:scroll;width:100%;height:350px;">
+								 <table class="table" style="margin-bottom:0px;">
+								  <colgroup>
+								   <col></col>
+								   <col></col>
+								   <col></col>
+								   <col></col>
+								   <col></col>
+								   <col></col>
+								   <col></col>
+								   <col></col>
+								   <col></col>
+								   </colgroup>
+								  <tbody >
+								   {volist name="list" id="vv"}
+									<tr>
+									  <td>{$vv.date}</td>
+									  <td>{$vv["result"]["revenue"]["total"]["active_users"]}</td>
+									  <td>{$vv["result"]["new_users"]}</td>
+									  <td>{$vv["result"]["reten"]}%</td>
+									  <td>{$vv["retention_7"]}%</td>
+									  <td>{$vv["retention_28"]}%</td>
+									 
+									  <td>${$vv["result"]["spend"]["spend"]}</td>
+									 
+									  <td>${$vv["result"]["revenue"]["total"]["revenue"]}</td>							 
+									  <td>{$vv["result"]["roi"]}%</td>
+									 						  
+									</tr>
+									{/volist}
+								  </tbody>
+								</table>
+							  </div>
+							  
+							   <div class="table-head">
+								 <table class="table" style="margin-bottom:0px;">
+								   <colgroup>
+								   <col></col>
+								   <col></col>
+								   <col></col>
+								   <col></col>
+								   <col></col>
+								   <col></col>
+								   <col></col>
+								   <col></col>
+								   <col></col>
+								   </colgroup>
+								  <thead >								
+									<tr class="hw_tab-header" style="font-size:16px;font-weight:700;border-top:1px solid #bb7171;border-bottom:none;">
+									  <th bgcolor="#ed4040"><div style="color:#fff">汇总</div></th>
+									  <td>{$total_data["revenue"]["total"]["active_users"]}</td>
+									  <td>{$total_data["new_users"]}</td>
+									  <td>{$total_data["reten"]}%</td>									 
+									  <td>---</td>
+									  <td>---</td>
+									  <td>${$total_data["spend"]["spend"]}</td>									 
+									  <td>${$total_data["revenue"]["total"]["revenue"]}</td>
+									  <td>{$total_data["roi"]}%</td>
+									</tr>
+								  </thead>
+							  </table>
+							  </div>
+<script>
+  $(function(){
+    $('.table-body').niceScroll({
+					cursorcolor: "#ccc",//#CC0071 光标颜色
+					cursoropacitymax: 0.3, //改变不透明度非常光标处于活动状态（scrollabar“可见”状态），范围从1到0
+					touchbehavior: false, //使光标拖动滚动像在台式电脑触摸设备
+					cursorwidth: "5px", //像素光标的宽度
+					cursorborder: "0", // 游标边框css定义
+					cursorborderradius: "5px",//以像素为光标边界半径
+					autohidemode: false //是否隐藏滚动条
+	  });
+  });
+</script>							  

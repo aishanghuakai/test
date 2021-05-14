@@ -1,0 +1,53 @@
+<table class="table table-hover">
+							<thead>
+								<tr>
+									 <th style="vertical-align:middle; text-align:center;">ID</th>
+									 <th style="vertical-align:middle; text-align:center;">应用名称</th>
+									 <th style="vertical-align:middle; text-align:center;">包名</th>
+									 <th style="vertical-align:middle; text-align:center;">说明</th>
+									 <th style="vertical-align:middle; text-align:center;">接口URL</th>
+									 <th style="vertical-align:middle; text-align:center;">修改人</th>
+									 <th style="vertical-align:middle; text-align:center;">修改时间</th>
+									 <th style="vertical-align:middle; text-align:center;">操作</th>
+								</tr>
+							</thead>
+							<tbody>
+								{volist name="list" id="item"}
+								<tr class="dt" >
+									<td class="dd" onclick="he_location({$item.id});" style="vertical-align:middle; text-align:center;">#{$item.id}</td>
+								   
+									 <td class="dd" onclick="he_location({$item.id});" style="vertical-align:middle; text-align:center;">
+									 {$item.app_name}&nbsp;
+									 {if condition="$item['platform'] eq 'android'" }
+									 <i title="android" style="color:#f0ad4e;" class="fa fa-android"></i>
+									 {elseif condition="$item['platform'] eq 'ios'" /}
+									 <i  class="fa fa-apple"></i>
+									 {/if}
+									 </td>
+									 <td class="dd" onclick="he_location({$item.id});" style="vertical-align:middle; text-align:center;">{$item.package_name}</td>
+									 <td class="dd" onclick="he_location({$item.id});" style="vertical-align:middle; text-align:center;">{$item.remark}</td>
+									 <td style="vertical-align:middle; text-align:center;"><i  class="badge look" data="{$item.id|getapiurl}">查看</i></td>
+									 <td class="dd" onclick="he_location({$item.id});" style="vertical-align:middle; text-align:center;">{$item.updateuser}</td>
+									 <td class="dd" onclick="he_location({$item.id});" style="vertical-align:middle; text-align:center;font-style:italic;">{$item.updatetime|getadvertime}</td>
+									 <td style="vertical-align:middle; text-align:center;"  >
+									    {if condition="permission(1)" }
+										<div class="btn-group">
+										  <a  class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+											<i class="fa fa-ellipsis-v"></i>
+										  </a>
+										  <ul class="dropdown-menu">
+											<li><a class="edit" data-id="{$item.id}" data-appname="{$item.app_name}" data-packagename="{$item.package_name}" data-remark="{$item.remark}">修改</a></li>
+											
+											<li><a data-id="{$item.id}" class="delete" >删除</a></li>
+											<li><a data-id="{$item.id}" class="sync">同步</a></li>
+										  </ul>
+										</div>
+										{else /}
+										<i class="fa fa-ban" style="color:#ccc;" title="no permission"></i>
+										{/if}
+									</td>                                           
+								</tr>
+								{/volist}									
+							</tbody>							
+						</table>
+						<div style="text-align:center;">{$list->render()}</div>

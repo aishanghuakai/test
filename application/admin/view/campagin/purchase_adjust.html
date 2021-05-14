@@ -1,0 +1,198 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+	<meta charset="utf-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<title>GAME BRAIN</title>
+	{include file="./static/html/header_common.html" /}
+	<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+	<script src="https://unpkg.com/vue/dist/vue.js"></script>
+	<!-- import JavaScript -->
+	<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+	<script src="/static/js/axios.min.js"></script>
+	<style>
+		.cell {
+			font-size: 12px;
+		}
+
+		.el-table td, .el-table th {
+			padding: 9px 0;
+		}
+
+		.item {
+			margin-top: 10px;
+			margin-right: 40px;
+		}
+	</style>
+</head>
+<body>
+<div id="wrapper" style="background-color: #fff;">
+	{include file="./static/html/header.html" /}
+	<div class="hw_page_content">
+		<div class="hw_menu_left">
+			{include file="./static/html/side.html" /}
+		</div>
+		<div class="hw_content_right" style="padding:10px 10px;">
+			<div class="main" style="margin-bottom:0px;">
+				<div class="header">
+					<h3>内购明细数据</h3>
+					<span style="color: #00acf0">本数据当前为 ADJUST 回传数据 </span>
+					<br>
+					<span style="color: red">看美国数据注意夏令时(PST/PDT)的问题</span>
+					<br>
+					<span>当前数据为 ： </span>
+					<span v-if="time_zone===''" style="color: #0BB20C">北京时间</span>
+					<span v-if="time_zone==='utc'" style="color: #0f88eb">UTC时区</span>
+					<span v-if="time_zone==='pdt'" style="color: #00b8d4">PDT时区(太平洋夏令时)</span>
+					<span v-if="time_zone==='pst'" style="color: #1de9b6">PST时区(太平洋标准时)</span>
+					<span v-if="time_zone==='other'" style="color: red">
+						{{(time_zone_number<=0?'西 ':'东 ')+time_zone_number+' 区'}}
+					</span>
+					{{country!=="all"?country:'全部'}} 国家 在 {{date[0]+' 到 '+date[1]}}
+					{{now_install?"安装用户":"全部用户"}} 观看 {{material_level}} 产生
+				</div>
+				<el-form :inline="true" class="demo-form-inline" style="margin-top: 10px">
+					<el-form-item label="日期筛选">
+						<el-date-picker
+							v-model="date"
+							type="daterange"
+							value-format="yyyy-MM-dd"
+							style="width:300px;"
+							start-placeholder="开始"
+							end-placeholder="结束">
+						</el-date-picker>
+					</el-form-item>
+					<el-form-item>
+						<el-select v-model="country" placeholder="请选择国家">
+							{volist name="countryList" id="item"}
+							<el-option key="{$key}" label="{$item}" value="{$key}"></el-option>
+							{/volist}
+						</el-select>
+					</el-form-item>
+					<el-form-item>
+						<el-select v-model="time_zone" placeholder="请选择">
+							<el-option label="东八区" value="">东八区</el-option>
+							<el-option label="UTC" value="utc">UTC</el-option>
+							<el-option label="PDT(太平洋夏令时)" value="pdt">PDT(太平洋夏令时)</el-option>
+							<el-option label="PST(太平洋标准时)" value="pst">PST(太平洋标准时)</el-option>
+							<el-option label="其他时区" value="other">其他时区</el-option>
+						</el-select>
+						<el-input-number
+							v-if="time_zone==='other'"
+							v-model="time_zone_number"
+							:min="-12" :max="12" label="以UTC为标准+-"></el-input-number>
+					</el-form-item>
+					<el-form-item>
+						<el-select v-model="material_level" placeholder="请选择">
+							<el-option label="广告系列" value="campaign">广告系列</el-option>
+							<el-option label="广告集" value="adset">广告集</el-option>
+							<el-option label="广告" value="ad">广告</el-option>
+						</el-select>
+					</el-form-item>
+					<el-form-item>
+						<el-switch
+							v-model="now_install"
+							active-text="当天"
+							inactive-text="全部"
+							:active-value="true"
+							:inactive-value="false"
+						>
+						</el-switch>
+					</el-form-item>
+				</el-form>
+			</div>
+			<div class="clear"></div>
+			<div class="hw_reven clearfix" style="">
+				<el-table :data="tableData" v-loading="loading" height="550" style="width: 100%;">
+					<el-table-column width="300px;" label="名称">
+						<template slot-scope="scope" >
+							{{scope.row[material_level+'_name']}}
+						</template>
+					</el-table-column>
+					<el-table-column width="300px;" label="ID">
+						<template slot-scope="scope" >
+							{{scope.row[material_level+'_id']}}
+						</template>
+					</el-table-column>
+					<el-table-column sortable prop="money" align="center" :label="'内购交易'+total_money+'$'">
+<!--						<template slot-scope="scope" >-->
+<!--							{{scope.row['money']?Number(scope.row['money']).toFixed(2)+'$':0}}-->
+<!--						</template>-->
+					</el-table-column>
+					<el-table-column align="center" :label="'内购收入'+Number(total_money*0.7).toFixed(2)+'$'">
+						<template slot-scope="scope" >
+							{{scope.row['money']?Number(scope.row['money']*0.7).toFixed(2)+'$':0}}
+						</template>
+					</el-table-column>
+				</el-table>
+			</div>
+		</div>
+	</div>
+</div>
+{include file="./static/html/footer.html" /}
+</body>
+{include file="./static/html/footer_common.html" /}
+<script>
+	new Vue({
+		el: '#wrapper',
+		data: {
+			loading: false,
+			date: ['{$start_date}', '{$end_date}'],
+			formInline: {},
+			platform:'6',
+			time_zone:'',
+			country:"all",
+			material_level:"campaign",
+			time_zone_number:8,
+			now_install:true,
+			tableData: [],
+			total_money:0,
+		},
+		computed: {
+			param() {
+				return {
+					app_id: '{$appid}',
+					date: this.date,
+					time_zone: this.time_zone,
+					country: this.country,
+					material_level: this.material_level,
+					now_install: this.now_install,
+					time_zone_number: this.time_zone_number,
+				}
+			}
+		},
+		watch: {
+			param(val) {
+				this.getlist(val)
+			}
+		},
+		created() {
+			this.getlist(this.param)
+		},
+		methods: {
+			goTO(url){
+				window.location.href = url
+			},
+			getlist(value) {
+				this.loading = true
+				let _that = this
+				axios({
+					method: 'post',
+					url: '/admin_campagin/purchase_adjust_json',
+					data: value
+				}).then(res => {
+					_that.loading = false
+					_that.tableData = []
+					res.data.out_data.forEach(function (item) {
+						let item_x = item
+						item_x['money'] = Number(Number(item_x['money']).toFixed(2))
+						_that.tableData.push(item_x)
+					})
+					this.total_money = Number(res.data.total_money).toFixed(2)
+				})
+			}
+		}
+	})
+</script>
+</html>

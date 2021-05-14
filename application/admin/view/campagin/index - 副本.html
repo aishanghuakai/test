@@ -1,0 +1,232 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GAME BRAIN</title>
+    {include file="./static/html/header_common.html" /}
+	 <link rel="stylesheet" type="text/css" media="all" href="/static/plugin/jquery-time/daterangepicker-bs3.css" />
+    <link href="/static/css/campagin.css?t=<?php echo time(); ?>" rel="stylesheet">		
+	<style>
+	th,td{text-align:center;vertical-align:middle}
+	  .hw_reven thead tr {
+    background-color: #f9f9f9;
+}
+.hw_reven col{
+  width:8.3% !important;
+}
+.hw_reven table {
+    border-collapse: collapse;
+    font-size: 12px !important;
+    color: #222 !important;
+    text-align: left !important;
+    line-height: 40px;
+}
+.hw_reven .table > thead > tr > th{
+  border-bottom:1px solid #e8e8e8 !important;
+  border-top:1px solid #e8e8e8 !important;
+   color: #222 !important;
+}
+	</style>
+</head>
+<body>
+    <div id="wrapper" style="background-color: #fff;">
+        {include file="./static/html/header.html" /}	
+		<div class="hw_page_content">
+		    <div class="hw_menu_left">
+         {include file="./static/html/side.html" /}  
+			</div>
+		    <div class="hw_content_right" style="padding:10px 10px;">
+			    <ul class="search_tab clearfix" >
+			      <li class="active"><a  href="javascript:;">Campagin</a></li>				  
+		        </ul>
+	  
+			    <div class="hw_reven clearfix" style="background-color:#fff;box-shadow: rgba(0, 0, 0, 0.05) 0 1px 5px;">
+				         <div class="campagin_body" style="width:20%;float:left;">
+						   <div  class="body-list">
+						     <div class="campagin__item campagin__item-head">
+							    <div class="campagin__item-title">全部平台</div>
+							 </div>
+							 <div class="campagin__item campagin__item-current" platform="6"> 
+							    <div class="campagin__item-title"><img style="height:30px;width:50px;" src="<?php echo getplatformimg(6); ?>" /> &nbsp; Facebook</div>
+							 </div>
+							 
+							 <div class="campagin__item" platform="5"> 
+							    <div class="campagin__item-title"><img style="height:30px;width:50px;" src="<?php echo getplatformimg(5); ?>" /> &nbsp;Adwords</div>
+							</div>
+							 
+							 <div class="campagin__item " platform="2"> 
+							    <div class="campagin__item-title"><img style="height:30px;width:50px;" src="<?php echo getplatformimg(2); ?>" /> &nbsp;Unity</div>
+							 </div>
+							 <div class="campagin__item " platform="4"> 
+							    <div class="campagin__item-title"><img style="height:30px;width:50px;" src="<?php echo getplatformimg(4); ?>" /> &nbsp;Vungle</div>
+							 </div>
+							 <div class="campagin__item " platform="3"> 
+							    <div class="campagin__item-title"><img style="height:30px;width:50px;" src="<?php echo getplatformimg(3); ?>" /> &nbsp;Applovin</div>
+							 </div>
+							 <div class="campagin__item " platform="8"> 
+							    <div class="campagin__item-title"><img style="height:30px;width:50px;" src="<?php echo getplatformimg(8); ?>" /> &nbsp;Chartboost</div>
+							 </div>
+							 <div class="campagin__item " platform="31"> 
+							    <div class="campagin__item-title"><img style="height:30px;width:50px;" src="<?php echo getplatformimg(31); ?>" /> &nbsp;Adcolony</div>
+							 </div>
+							 <div class="campagin__item " platform="32"> 
+							    <div class="campagin__item-title"><img style="height:30px;width:50px;" src="<?php echo getplatformimg(32); ?>" /> &nbsp;TouTiao</div>
+							 </div>
+						   </div>
+						</div>
+				        <div style="width:78%;float:right;">
+						
+						   <div  style="float:left;position:relative;width:200px;line-height: 29px;margin-bottom:15px;margin-right:5px;">
+							  <input  class="search-input" id="keyword"   style="width:200px;" placeholder="search">					  
+						   </div>
+						   
+						   <div  style="float:right;line-height: 29px;margin-bottom:15px">
+							  <input  class="search-input" id="start_date" value="{$start_date} 到 {$end_date}">								
+						   </div>
+						    <div class="table-head" style="">
+							 <table class="table" style="margin-bottom:0px;">
+							   <colgroup>
+							   <col style="width:25% !important"></col>
+							   <col ></col>
+							   <col ></col>
+							   <col ></col>
+							   <col></col>
+							   <col></col>
+							   <col></col>
+							   <col></col>
+							  
+							   </colgroup>
+							  <thead style="font-size:13px;">
+								<tr>
+								  <th style="width:25%;text-align:left">Campaign name</th>
+								  <th>Spend($)</th>
+								  <th>impression</th>
+								  <th>click</th>
+								  <th>installs</th>
+								  <th>CPI</th>
+								  <th>CTR</th>
+								  <th>CVR</th>
+								</tr>
+							  </thead>
+						  </table>
+						  </div>
+						     <div class="table-body" style="overflow-y:scroll;width:100%;height:400px;">
+								<table class="table">
+								  <colgroup>
+								   <col style="width:25% !important"></col>
+								   <col ></col>
+								   <col ></col>
+								   <col ></col>
+								   <col></col>
+								   <col></col>
+								   <col></col>
+								   <col></col>							  
+							     </colgroup>
+								  <tbody id="body">
+								    <tr style="color:#222;font-weight:700;border-bottom:2px solid red;">
+										 <td style="width:25%;">总计</td>
+										 <td>{$total.spend}</td>
+										 <td>{$total.impression}</td>
+										 <td>{$total.clicks}</td>
+										 <td>{$total.installs}</td>
+										 <td>{$total.cpi}</td>
+										 <td>{$total.ctr}%</td>
+										 <td>{$total.cvr}%</td>
+									</tr>
+									{volist name="list" id="item"}							  
+									<tr>
+										 <td style="width:25%;text-align:left;color:#38f;">{$item.campaign_name}</td>
+										 <td>{$item.spend}</td>
+										 <td>{$item.impression}</td>
+										 <td>{$item.clicks}</td>
+										 <td>{$item.installs}</td>
+										 <td>{$item.cpi}</td>
+										 <td>{$item.ctr}%</td>
+										 <td>{$item.cvr}%</td>
+									</tr>
+									 {/volist}
+								  </tbody>
+								</table>
+							</div>
+						</div>
+			    </div>
+			</div>
+		</div>
+		 {include file="./static/html/footer.html" /}
+	</div>	
+</body>
+ {include file="./static/html/footer_common.html" /}
+  
+ <script type="text/javascript" src="/static/plugin/jquery-time/moment.js"></script>
+  <script type="text/javascript" src="/static/plugin/jquery-time/daterangepicker.js"></script>
+   <script src="/static/js/bootstrap-affix.js"></script>
+	
+	<script src="/static/js/application.js"></script>
+	
+	<script src="/static/js/jquery.pure.tooltips.js"></script>
+  <script type="text/javascript" src="/static/js/jquery.nicescroll.js"></script>
+  <script>
+ 
+     var start_date="{$start_date}";
+	 var end_date = "{$end_date}";
+     var platform ="6";
+    $(function(){
+	  	  
+		 $('#start_date').daterangepicker({ minDate:'2018-07-08',opens:'left' },function(start, end, label) {	 
+		      start_date = start.format('YYYY-MM-DD');end_date=end.format('YYYY-MM-DD');
+			$('#start_date').val(start_date+" 到 "+end_date);
+			 loadadata();
+		 });
+		 
+		 $('#keyword').bind('input propertychange', function()
+		   {
+			   var input_text = $(this).val();
+               $("tbody tr").each( function(i){
+			      
+			        var text = $(this).find("td").eq(0).text();
+					var aa = text.match(new RegExp(input_text, 'i'));
+					if( aa )
+					  {
+					     var bb= aa[0];
+						 text = text.replace(bb,"<span style='color:red'>"+bb+"</span>");
+						 $(this).find("td").eq(0).html(text);
+						 $(this).show();
+					  }else{
+					     $(this).hide();
+					  }
+			   })			   
+		   });
+		 
+		  $('.table-body').niceScroll({
+					cursorcolor: "#ccc",//#CC0071 光标颜色
+					cursoropacitymax: 0.3, //改变不透明度非常光标处于活动状态（scrollabar“可见”状态），范围从1到0
+					touchbehavior: false, //使光标拖动滚动像在台式电脑触摸设备
+					cursorwidth: "5px", //像素光标的宽度
+					cursorborder: "0", // 游标边框css定义
+					cursorborderradius: "5px",//以像素为光标边界半径
+					autohidemode: false //是否隐藏滚动条
+	  });
+		 
+         $(".campagin__item").click( function(){
+		    if( !$(this).hasClass("campagin__item-current") )
+			{
+			   $(".campagin__item").removeClass("campagin__item-current");
+			   $(this).addClass("campagin__item-current");
+			   platform = $(this).attr("platform");
+			   loadadata();
+			}
+		 })         
+		 
+	   });
+	var loadadata = function()
+	{
+		layer.load();
+		  $.post("/admin_campagin/campaign_json",{start_date:start_date,end_date:end_date,platform:platform},function(e){
+				layer.closeAll();
+				$("#body").html(e);		 
+		   });
+	}	
+  </script>	   
+</html>

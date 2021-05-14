@@ -1,0 +1,193 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title></title>
+	{include file="./static/html/header_common.html" /} 
+</head>
+<body>
+    <div id="wrapper">
+        {include file="./static/html/header.html" /} 
+		
+	   <!--/. NAV TOP  -->
+         {include file="./static/html/side.html" /} 
+        <!-- /. NAV SIDE  -->
+        <div id="page-wrapper">
+		  <div class="header"> 
+                        <h1 class="page-header">
+                            主页
+                        </h1>
+						<ol class="breadcrumb">
+					  <li><a href="#">Home</a></li>
+					  <li><a href="#">Empty</a></li>
+					  <li class="active">Data</li>
+					</ol> 
+									
+		</div>
+            <div id="page-inner"> 
+			
+			  <div class="row">
+                    <div class="col-xs-12 col-sm-6 col-md-3">
+					
+						<div class="card horizontal cardIcon waves-effect waves-dark">
+						<div class="card-image red">
+						<i class="fa fa-eye fa-5x"></i>
+						</div>
+						<div class="card-stacked">
+						<div class="card-content">
+						<h3>16,150</h3> 
+						</div>
+						<div class="card-action">
+						<strong> Daily Visits</strong>
+						</div>
+						</div>
+						</div>
+	 
+                    </div>
+                    <div class="col-xs-12 col-sm-6 col-md-3">
+					
+						<div class="card horizontal cardIcon waves-effect waves-dark">
+						<div class="card-image orange">
+						<i class="fa fa-shopping-cart fa-5x"></i>
+						</div>
+						<div class="card-stacked">
+						<div class="card-content">
+						<h3>25,550</h3> 
+						</div>
+						<div class="card-action">
+						<strong> Sales</strong>
+						</div>
+						</div>
+						</div> 
+                    </div>
+                    <div class="col-xs-12 col-sm-6 col-md-3">
+					
+							<div class="card horizontal cardIcon waves-effect waves-dark">
+						<div class="card-image blue">
+						<i class="fa fa-comments fa-5x"></i>
+						</div>
+						<div class="card-stacked">
+						<div class="card-content">
+						<h3>11,225</h3> 
+						</div>
+						<div class="card-action">
+						<strong> Comments</strong>
+						</div>
+						</div>
+						</div> 
+						 
+                    </div>
+                    <div class="col-xs-12 col-sm-6 col-md-3">
+					
+					<div class="card horizontal cardIcon waves-effect waves-dark">
+						<div class="card-image">
+						<i class="fa fa-users fa-5x"></i>
+						</div>
+						<div class="card-stacked">
+						<div class="card-content">
+						<h3>72,525</h3> 
+						</div>
+						<div class="card-action">
+						<strong> No. of Visits</strong>
+						</div>
+						</div>
+						</div> 
+						 
+                    </div>
+                </div>
+				<div class="row">
+			<div class="col-xs-12 col-sm-6 col-md-3"> 
+					<div class="card-panel text-center">
+						<h4>Profit</h4>
+						<div class="easypiechart" id="easypiechart-blue" data-percent="82" ><span class="percent">82%</span>
+						</div> 
+					</div>
+			</div>
+			<div class="col-xs-12 col-sm-6 col-md-3"> 
+					<div class="card-panel text-center">
+						<h4>No. of Visits</h4>
+						<div class="easypiechart" id="easypiechart-red" data-percent="46" ><span class="percent">46%</span>
+						</div>
+					</div>
+			</div>
+			<div class="col-xs-12 col-sm-6 col-md-3"> 
+					<div class="card-panel text-center">
+						<h4>Customers</h4>
+						<div class="easypiechart" id="easypiechart-teal" data-percent="84" ><span class="percent">84%</span>
+						</div> 
+					</div>
+			</div>
+			<div class="col-xs-12 col-sm-6 col-md-3"> 
+					<div class="card-panel text-center">
+						<h4>Sales</h4>
+						<div class="easypiechart" id="easypiechart-orange" data-percent="55" ><span class="percent">55%</span>
+						</div>
+					</div>
+			</div> 
+		</div><!--/.row-->
+		<div class="row">
+				<div class="col-md-5"> 
+						<div class="card">
+						<div class="card-image">
+						 <div id="morris-line-chart"></div>
+						</div> 
+						<div class="card-action">
+						  <b>Line Chart</b>
+						</div>
+						</div>
+		  
+					</div>		
+					
+						<div class="col-md-7"> 
+					<div class="card">
+					<div class="card-image">
+					  <div id="morris-bar-chart"></div>
+					</div> 
+					<div class="card-action">
+					  <b> Bar Chart Example</b>
+					</div>
+					</div>					
+					</div>
+					
+				</div>
+         <div class="row">
+                    <div class="col-md-9 col-sm-12 col-xs-12">
+						<div class="card">
+					<div class="card-image">
+					  <div id="morris-area-chart"></div>
+					</div> 
+					<div class="card-action">
+					  <b>Area Chart</b>
+					</div>
+					</div>	 
+                    </div>
+                    <div class="col-md-3 col-sm-12 col-xs-12">
+						<div class="card">
+					<div class="card-image">
+					  <div id="morris-donut-chart"></div>
+					</div> 
+					<div class="card-action">
+					  <b>Donut Chart Example</b>
+					</div>
+					</div>	 
+                    </div>
+
+                </div>
+            <div class="row">
+				<div class="col-md-12">
+				
+					</div>		
+				</div> 	
+                <!-- /. ROW  -->				
+         <!-- /. PAGE WRAPPER  -->
+        </div>
+     <!-- /. WRAPPER  -->
+   {include file="./static/html/footer_common.html" /}
+  <!-- Morris Chart Js -->
+    <script src="/static/assets/js/morris/raphael-2.1.0.min.js"></script>
+    <script src="/static/assets/js/morris/morris.js"></script>   
+</body>
+
+</html>

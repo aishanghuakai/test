@@ -1,0 +1,279 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ROI MODEL</title>
+	<!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+     <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	 <link rel="stylesheet" type="text/css" media="all" href="/static/css/roi.css?t=<?php echo time(); ?>" />
+	<link rel="stylesheet" type="text/css" media="all" href="/static/plugin/daterangepicker/daterangepicker.css" />
+    <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	  <script type="text/javascript" src="/static/plugin/daterangepicker/moment.js"></script>
+	 <script type="text/javascript" src="/static/plugin/daterangepicker/daterangepicker.js"></script>	
+	<style>
+	
+	</style>
+</head>
+<body>
+    <div id="wrapper">
+        		
+		 <div>
+		    <div class="nan_left">
+			   <div class="nav_title">
+			     <h3 class="tech-square-title">应用名称</h3>
+			     <ul>
+				    
+					{volist name="app_s" id="item"}
+					<li><a href="/admin_consu/index?app_id={$item.id}"class="router-box-item {if condition="$app_id eq $item['id'] "} roi_active {/if}">{$item.app_name}</a></li>
+					 {/volist}
+				 </ul>
+			   </div>
+			</div>
+			  <div class="content_rigth">
+			    <div class="tarbk">
+		  
+					 <form class="bs-example bs-example-form" role="form">
+						<div class="input-group">
+							<div class="input-group-btn">
+								<button type="button" class="btn btn-warning" tabindex="-1">ARPDAU
+								</button>
+								<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" tabindex="-1">
+									<span class="caret"></span>
+									<span class="sr-only">切换下拉菜单</span>
+								</button>
+								<ul class="dropdown-menu">
+									<li><a class="arpdau" href="javascript:;">0.05</a></li>
+									<li><a class="arpdau" href="javascript:;">0.06</a></li>
+									<li><a class="arpdau" href="javascript:;">0.07</a></li>
+									<li><a class="arpdau" href="javascript:;">0.08</a></li>
+									<li><a class="arpdau" href="javascript:;">0.09</a></li>
+									<li><a class="arpdau" href="javascript:;">0.10</a></li>						
+								</ul>
+							</div><!-- /btn-group -->
+							<input type="text" class="form-control" id="arpdau" value="0.09" style="width:100px;">
+						</div><!-- /input-group -->
+						
+						<div class="input-group" style="margin-top:10px;">
+						  <div class="input-group" >
+								<span class="input-group-addon" style="background-color:#31b0d5;">CPI</span>
+								<input type="text" class="form-control" id="cpi" value="0.28">
+								
+						  </div>
+						 
+						</div>
+						<a class="btn btn-primary" href="javascript:;" id="js" style="float:right;margin-top:-35px;width:100px;">应用</a>
+						<!--  <div style="float:left;width:150px;margin-left:300px;">
+						     <input id="demo"  class="form-control" style="margin-top:-35px;" type="text">
+						 </div> -->
+					</form>
+				</div>
+				<table class="table table-bordered table-hover">
+					
+				   <thead>
+					  <tr>
+						 <th>时间</th>
+						 <th>留存</th>
+						 <th>收入</th>
+						 <th>ROI</th>
+					  </tr>
+				   </thead>
+				   <tbody id="r_model">
+					 {$html}
+					 
+				   </tbody>
+				</table>
+				<div style="text-align:center;"><button type="button" data-toggle="modal" data-target="#myModal"  class="btn btn-success">保存数据</button></div>
+			  </div>
+			  <div class="save_date">
+			    <div class="data_name">
+				   <ul>
+				    {volist name="saves" id="item"}
+				     <li><a {if condition="$id eq $item['id']"} class="save_active" {/if} href="/admin_consu/index?app_id={$app_id}&id={$item.id}">{$item.save_name}</a></li>			
+					 {/volist}
+				   </ul>
+				</div>
+			  </div>
+			  
+			  <!-- Button trigger modal -->
+		 </div>
+    </div>
+     <!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">设置名称</h4>
+      </div>
+      <div class="modal-body">
+         <input type="text" class="form-control" id="save_name" value="{$app_name}">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="save">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+ <script src="/static/js/layer/layer.js"></script>
+<script>
+    $( function(){
+	   scrollToLocation();
+	   $('#demo').daterangepicker({
+          "singleDatePicker": true,
+          "startDate": "05/18/2018",
+          "endDate": "05/24/2018"
+        }, function(start, end, label) {
+         console.log("New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')");
+       });
+	   
+	   $(".arpdau").bind( "click",function(e){
+	      
+	        $("#arpdau").val( $(this).text() );
+			Roi.allwork();
+	   })
+	   
+	   $("#js").bind( "click",function(e){
+	      
+			Roi.allwork();
+	   })
+	   
+	   $("#save").bind("click",function(){
+	        Roi.save();
+	   });
+	})
+    //初始化 数据模型  by lxf
+    var Roi = window.Roi || {};
+	
+	  ( function(){
+	     
+		 var arpdau ="";
+		 var cpi ="";
+		 var a_index = false;
+		 
+		 var update = function()
+		 {
+		    arpdau = $("#arpdau").val();
+			cpi = $("#cpi").val();
+		 }
+		 
+	     this.check = function()
+		 {
+		     update();
+			 if(!/^[0-9]+(.[0-9]{2})?$/.test(cpi) || !/^[0-9]+(.[0-9]{2})?$/.test(arpdau) )
+			 {
+				layer.msg("ARPDAU,CPI必须为合法的数字");return false;
+			 }
+			 return true;
+		 }
+		//单个数据核心处理计算
+		Roi.init = function()
+		{
+	    		
+			var _that = this;
+			$('.lc').bind('input propertychange', function()
+		   {
+			   if(_that.check())
+			   {				  
+                  _that.allwork();				  
+			   }				  
+		   });
+		}
+		
+		//计算核心
+		Roi.work = function(t,sum_roi)
+		{
+			t.parents("tr").prevAll().each(function(i)
+				{
+					 var _m_sum = $(this).find(".lc").val();
+					 sum_roi+=parseFloat(_m_sum);
+				});
+			 this.show( t,sum_roi);
+		}
+		//重新整个计算
+		Roi.allwork = function()
+		{
+		  
+		   var _that = this;
+		   if(_that.check())
+			   {					
+					$("#r_model tr").each(function(i)
+					{
+						 var _$lc = $(this).find(".lc");
+						 var _m_sum = _$lc.val();
+						 var sum_roi =parseFloat(_m_sum);
+						 _that.work(_$lc,sum_roi);						
+					});
+		       }	
+		}
+	 	 // 数据渲染 
+		 Roi.show = function( t,sum_roi )
+		 {
+		    if( t.val()=="0" )sum_roi=0;
+			var show_revenu_num = parseFloat( (parseFloat(sum_roi/100)*arpdau)).toFixed(2);
+			var show_roi_num =Math.round ((show_revenu_num/cpi)*100);
+			t.parents("tr").find(".revenu").text(show_revenu_num);
+			t.parents("tr").find(".roi").text(show_roi_num);
+			if( show_roi_num<100 )
+			{
+			   t.parents("tr").css({"background-color":"#fff","font-weight":"normal"});
+			   a_index=false;
+			}
+			if( show_roi_num>=100 && !a_index )
+			{
+			    a_index=true;  //重置当前
+				t.parents("tr").css( {
+				   "background-color":"#ee6e73",
+				   "font-weight":"bold"
+				});
+			}
+			
+		 }
+		 
+		 //数据保存
+		 Roi.save = function()
+		 {
+		    update();
+			var data = [];
+			$("#r_model tr").each(function(i)
+			{
+				 var lc = $(this).find(".lc").val();
+				 var date = $(this).find("td").eq(0).text();
+				 var revenu = $(this).find(".revenu").text();
+                 var roi_rate = $(this).find(".roi").text();	
+                 data[i] = { lc:lc,date:date,revenu:revenu,roi_rate:roi_rate };				 
+			});
+			var save_name = $("#save_name").val();
+			if( save_name=="" )
+			{
+			  layer.msg("保存名称不能为空");return false;
+			}
+			$("#save").attr("disabled",true);
+			var index = layer.load(0, {shade: false});
+			$('#myModal').modal('hide');
+			$.post("/admin_consu/save",{ arpdau:arpdau,cpi:cpi,data:data,save_name:save_name,appid:'<?php echo $app_id; ?>' },function(e){
+			
+			        $("#save").attr("disabled",false);
+			        layer.close(index);					
+			        layer.alert('数据已保存');
+					window.location.href=window.location.href;
+			})
+		 }
+		 
+	  }.call(Roi) );
+	  
+	 Roi.init();
+	 
+	 function scrollToLocation() {
+	  var mainContainer = $('.nav_title'),
+	  scrollToContainer = mainContainer.find('.roi_active');
+	  mainContainer.animate({
+		scrollTop: scrollToContainer.offset().top - mainContainer.offset().top + mainContainer.scrollTop()
+	  }, 2000);//2秒滑动到指定位置
+	}
+</script>
+</html>

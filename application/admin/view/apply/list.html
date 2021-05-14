@@ -1,0 +1,155 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title></title>
+	{include file="./static/html/header_common.html" /}
+	 <style>
+	li{
+	   padding: 5px 0;
+list-style: none;
+ 
+font-size: 12px;
+	}
+	
+	td {
+    text-align: center;
+    color: #666666;
+}
+.card-action a {
+    font-size: 14px;
+    color: #999;
+}
+.card-action a:hover{
+  color:#222;
+}	
+	</style>	
+</head>
+<body>
+    <div id="wrapper">
+        
+		<!-- Dropdown Structure -->
+         {include file="./static/html/header.html" /} 
+         {include file="./static/html/side.html" /} 
+        <!-- /. NAV SIDE  -->
+        <div id="page-wrapper">
+		  <div class="header" style="float:left;">
+                  		  
+                    <h1 class="page-header">
+                            审核管理
+                        </h1>
+						<ol class="breadcrumb">
+					  <li><a href="#">主页</a></li>
+					  <li><a href="#">审核管理</a></li>
+					  <li class="active">列表</li>
+					</ol> 				   
+		    </div>
+						
+            <div id="page-inner" style="clear:both;padding-top:5px;"> 
+			
+			  <div class="row">
+                     <!--    Hover Rows  -->
+                    <div class="card">
+                         <div class="card-action">
+                            <div style="float:left;margin-right:20px;"><a style="color: #222;font-weight: normal;" href="/admin_income/list">申请审核</a></div>
+							<div style="float:left;"><a style="color: #999;font-weight: normal;" href="/admin_income/daylist">上传审核</a></div>
+							<div style="float:left;"><a style="color: #999;font-weight: normal;" href="/admin_income/daylist">上传审核</a></div>
+							<div style="float:left;"><a style="color: #999;font-weight: normal;" href="/admin_income/daylist">上传审核</a></div>
+							<div style="float:left;"><p><input id="uuid" style="height:2rem;margin-left:50px;margin:0;float:left;width:200px;color:#ccc;font-size: 12px;" placeholder="输入用户ID" value="{$uuid}" type="text" /> </p></div>			
+							<div style="float:right;margin-left:30px;">#{$list->total()}</div>
+							<div id="search" style="float:left;margin-left:30px;color:#ccc;cursor:pointer;">搜索</div>
+							
+                        </div> 
+						
+                        <div class="card-content">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th style="vertical-align:middle; text-align:center;">#</th>
+                                            <th style="vertical-align:middle; text-align:center;">用户信息</th>
+                                            <th style="vertical-align:middle; text-align:center;">申请图片</th>                                         
+											 <th style="vertical-align:middle; text-align:center;">申请状态</th>
+											 <th style="vertical-align:middle; text-align:center;">申请时间</th>
+											 <th style="vertical-align:middle; text-align:center;">操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+									 {volist name="list" id="item"}
+                                        <tr>
+                                            <td style="vertical-align:middle; text-align:center;"><?php $p=isset($_GET["page"])?$_GET["page"]:1; echo ($p-1)*10+$key+1; ?></td>
+                                            <td style="vertical-align:middle; text-align:center;">
+											<img src="{$item.avatar}" onerror="this.src='/static/images/noheader.png'" style="width:32px;height:32px;border-radius:50%;"/>
+											<em style="color: #31bc86;;">{$item.uuid}</em><em style="color: #717171;"> * {$item.country}</em>
+											</td>
+                                            <td style="vertical-align:middle; text-align:center;">
+											<img src="{$item.apply_img}" onclick="seeimg(this);" onerror="this.src='/static/images/noheader.png'" style="width:32px;height:32px;"/>
+											
+											</td>                                         
+											<td style="vertical-align:middle; text-align:center;"><span class="new pink" style="padding:2px 4px;color:#fff;">待审核</span></td>
+                                            <td style="vertical-align:middle; text-align:center;">{$item.apply_time|date='m-d H:i',###}</td>
+											 <td style="vertical-align:middle; text-align:center;"><a style="color:green;" onclick="return apply_confirm( {$item.id},1 );" href="javascript:;">同意</a>|<a onclick="return apply_confirm( {$item.id},2 );" style="color:red;" href="javascript:;">拒绝</a></td>
+                                        </tr>
+                                    {/volist}
+                                    </tbody>
+                                </table>
+								 <div>{$list->render()}</div>
+                            </div>
+                        </div>
+                    </div>
+         <!-- /. PAGE WRAPPER  -->
+        </div>
+     <!-- /. WRAPPER  -->
+    <!-- JS Scripts-->
+   {include file="./static/html/footer_common.html" /}
+</body>
+  <script type="text/javascript" src="/static/js/layer/layer.js"></script>
+<script>
+    var seeimg = function( o )
+	{
+	  
+	  layer.open({
+		  type: 2,
+		  title: false,
+		  area: ['600px', '600px'],
+		  shade: 0.8,
+		  closeBtn: 0,
+		  shadeClose: true,
+		  content: $(o).attr("src")
+		});
+	}
+	
+	var apply_confirm = function(id,status)
+	{
+	    //底部对话框
+		  layer.open({
+			content: '是否将该用户设置为女主播?'
+			,btn: ['确认', '取消']
+			,skin: 'footer'
+			,yes: function(index){
+			  layer.load(0, {shade: false});
+			  $.post('/admin_apply/apply_confirm',{id:id,status:status},function(e){				
+				  layer.closeAll();
+				  if(e=="ok")
+				  {
+				    layer.msg('设置成功');
+				  }else{
+				    layer.msg('设置失败');
+				  }
+			  })
+			  return false;			  
+			}
+		  });
+	}
+    
+    $("#search").click( function(){
+      var uuid = $("#uuid").val();
+	   if(uuid)
+	   {
+	     window.location.href='/admin_apply/list?uuid='+uuid;
+	   }
+   })
+</script>
+</html>

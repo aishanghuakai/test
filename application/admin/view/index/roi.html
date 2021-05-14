@@ -1,0 +1,54 @@
+
+			  
+<div id="container" style="min-width:400px;height:300px"></div>
+				  
+<script>
+     $( function(){
+	    var r_date ="{$roi_chats.date}"; 
+     var chart = Highcharts.chart('container', {
+		title: {
+				text: ''
+		},
+		chart: {
+          type: 'spline'
+       },
+		subtitle: {
+				text: ''
+		},
+		yAxis: {
+				title: {
+						text: ''
+				},
+				labels: {
+				formatter: function () {
+					return this.value+"%";
+				}
+			}
+		},
+		colors: ['#f45b5b'],
+		
+		xAxis: {
+           categories: r_date.split(",")
+       },
+		series: [{
+				name: 'ROI',
+				data: {$roi_chats.val}
+		}],
+		responsive: {
+				rules: [{
+						condition: {
+								maxWidth: 500
+						},
+						chartOptions: {
+								legend: {
+										layout: 'horizontal',
+										align: 'center',
+										verticalAlign: 'bottom'
+								}
+						}
+				}]
+		}
+     });
+} )
+</script>
+</html>

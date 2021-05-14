@@ -1,0 +1,112 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title></title>	
+	{include file="./static/html/header_common.html" /}
+	<link href="/static/css/checkbox.css" rel="stylesheet">
+	<style>
+	.s12{
+	  background-color:#fff;
+	}
+	 .demo--label{display:inline-block;font-size: 1.2rem;margin-right:10px;cursor:pointer;}
+.demo--radio{display:none}
+.demo--radioInput{background-color:#fff;border:1px solid rgba(0,0,0,0.15);border-radius:100%;display:inline-block;height:16px;margin-right:10px;margin-top:-1px;vertical-align:middle;width:16px;line-height:1}
+.demo--radio:checked + .demo--radioInput:after{background-color:#57ad68;border-radius:100%;content:"";display:inline-block;height:14px;width:14px}
+.demo--checkbox.demo--radioInput,.demo--radio:checked + .demo--checkbox.demo--radioInput:after{border-radius:0}
+	.editing{
+	  display:none;
+	}
+	</style>
+</head>
+<body>
+    <div id="wrapper" style="background: #fff;">
+	   {include file="./static/html/header.html" /} 
+	
+		<div class="hw_page_content">
+		    <div class="hw_menu_left">
+         {include file="./static/html/side.html" /}
+			</div>
+		    <div class="hw_content_right">	
+			  	
+			   <ul class="search_tab clearfix">
+			       <li ><a  href="/admin_profile/index">账号信息</a></li>
+			        <li ><a  href="/admin_profile/password">密码修改</a></li>
+				   <li class="active"><a  href="/admin_profile/other_set">其他设置</a></li>	
+                   <li><a  href="/admin_log/index">系统日志</a></li>				   
+		      </ul>
+			       
+				                   <div style="padding:0 10%;">
+								       <div style="margin-top:30px;">
+									     <h3 style="float:left;"><i class="fa fa-bell-o"></i> 是否开启邮箱推送</h3>
+									     <div class="el-switch el-switch-red" id="send_switch" style="float:right;margin-top:25px;">										
+										   <input type="checkbox" name="check" id="1_1" {if condition="$admin_user.sendemail eq '1'"}checked {/if} >
+										   <label class="el-switch-style" for="1_1"></label>
+									      </div>
+                                         <div style="clear:both;border-bottom:1px solid #ccc;padding:5px 0px;"></div>										  
+									  </div>
+									  
+										
+                                        
+										<div style="margin-top:30px;clear: both;">
+									     <h3 style="float:left;"><i class="fa fa-mail-forward"></i> 邀请注册</h3>
+									     <div  style="float:right;margin-top:25px;">										
+										    <a class="btn" style="background-color:#f85959;width:100px;height:35px;color:#fff;line-height:20px;" href="/admin_profile/sendinvite">立即前往</a>
+									      </div>								   
+									    </div>
+                                         <div style="clear:both;border-bottom:1px solid #ccc;padding:5px 0px;"></div>										
+                                  </div>
+					   
+					   </div>
+        </div>			
+     {include file="./static/html/footer.html" /}		
+    </div>
+	{include file="./static/html/footer_common.html" /}  
+</body>
+ <script>
+	 $("#send_switch input").click( function(){
+	
+	    if( $(this).is(':checked') )
+		  {
+		    $(".apps").show();
+		  }else{
+		     save_select(0,"");
+		     $(".apps").hide();
+		  }
+	} )
+	
+	$("#ggh input").click( function(){
+	
+	    if( $(this).is(':checked') )
+		  {
+		     $(".mycode").show();
+		  }else{
+		     
+		     $(".mycode").hide();
+		  }
+	} )
+	
+	$(".filled-in").click( function(){
+		   var str ="";
+		   $("[name='select_app']:checked").each(function(){
+				     str+=$(this).val()+"|";				
+				}) 
+			save_select(1,str);
+		})
+	
+	var save_select = function(sendemail,send_content)
+	{
+	   $.post("/admin_profile/save_app_select",{send_content:send_content,sendemail:sendemail},function(e){
+			      
+			      if("ok"==e)
+				     {																		
+						//layer.msg('修改成功');
+					 }else{
+					     layer.msg(e);
+					 }
+			   })
+	}
+ </script>
+</html>

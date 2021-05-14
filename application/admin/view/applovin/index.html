@@ -1,0 +1,369 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GAME BRAIN</title>
+    {include file="./static/html/header_common.html" /}  
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+   <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <!-- import JavaScript -->
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <script src="/static/js/axios.min.js"></script>	 
+	<style>
+	  .cell{font-size:12px;}
+	  .el-table td, .el-table th {
+    padding:9px 0;}
+	  .item {
+		  margin-top: 10px;
+		  margin-right: 40px;
+		}
+      .grid-content{
+	    background: #fff;
+		padding: 15px !important;
+		box-shadow: 0 1px 15px 1px rgba(69,65,78,.08);
+		border-radius:10px;
+		border: 0;
+		text-align:center;
+	  }	
+       .card-category{
+	   font-size: 13px;
+	   color:#444;
+	   margin-bottom: 0;}
+	   .card-title{
+	    color:#575962;
+		font-size: 18px;
+		font-weight: 400;
+	   }
+	   .page-title {
+		font-size:16px;
+		font-weight: 600;
+		color:#444;
+		
+		}
+		.count {
+    background:#4285f4;
+    display: inline-block;
+    padding:7px 1px;
+    margin-right: 5px;
+}
+	  .el-badge__content.is-fixed{position:relative !important;}	
+	</style>
+</head>
+<body style="background:#f9fbfd;">
+    <div id="wrapper" style="background-color:#f9fbfd;">
+        {include file="./static/html/header.html" /}	
+		<div class="hw_page_content" style="background-color:#f9fbfd;">
+		    <div class="hw_menu_left">
+             {include file="./static/html/side.html" /}  
+			</div>
+		    <div class="hw_content_right" style="padding:20px 5px;background: #f9fbfd;">
+			            <div class="main" style="margin-bottom:10px;">
+						    
+                            <h4 class="page-title">
+							<el-page-header @back="goBack" style="float:left;" content="Appsflyer LTV生命周期总览"></el-page-header>
+							<div class="bg-purple" style="float:right;font-size:14px;font-weight:400;margin-right:10px;"><span style="font-size:12px;color:red;">({$start_ads})</span>安装日期
+								    <el-date-picker
+									  v-model="date"
+									  @change="handleInstallDate"
+                                      size="small"								  
+									  type="date"
+									  style="width:150px;"
+									  value-format="yyyy-MM-dd">
+									</el-date-picker>
+								  </div>
+							</h4>
+							<div class="clear" style="clear:both;"></div>
+							<el-row :gutter="2" style="margin-top:20px;">
+							   <el-form :inline="true" label-width="120px">
+							     <el-form-item label="选择地区">
+									<el-select size="small" filterable style="width:100px;" v-model="country"  placeholder="请选择国家">
+									{volist name="country" id="item"}
+									 <el-option key="{$key}" label="{$item}" value="{$key}"></el-option>
+									{/volist}
+								  </el-select>
+								 </el-form-item>	
+							    <el-form-item label="推广渠道">
+									<el-select size="small" filterable style="width:120px;" v-model="media_source"  placeholder="请选择渠道">
+									{volist name="promate_media" id="item"}
+									 <el-option key="{$key}" label="{$item.name}" value="{$item.value}"></el-option>
+									{/volist}
+								  </el-select>
+							    </el-form-item>
+								<el-form-item label="广告渠道">
+									<el-select size="small" filterable style="width:120px;" v-model="ad_source"  placeholder="请选择渠道">
+									{volist name="network_media" id="item"}
+									 <el-option key="{$key}" label="{$item.name}" value="{$item.value}"></el-option>
+									{/volist}
+								  </el-select>
+							    </el-form-item>  
+								<el-form-item label="选择设备">
+									<el-select size="small" filterable style="width:120px;" v-model="device"  placeholder="请选择设备">
+									{volist name="deviceList" id="item"}
+									 <el-option key="{$key}" label="{$item.name}" value="{$item.value}"></el-option>
+									{/volist}
+								  </el-select>
+							    </el-form-item>
+								</el-form>
+                               <el-form :inline="true" label-width="120px">
+							       <el-form-item label="LTV周期">
+									   <el-date-picker
+										  v-model="day"
+										  type="daterange"
+										  value-format="yyyy-MM-dd"
+										  @change="handleDate"
+										  align="right"
+										  unlink-panels
+										  size="small"
+										  style="width:250px;"
+										  range-separator="-"
+										  start-placeholder="开始日期"
+										  end-placeholder="结束日期"
+										  :picker-options="pickerOptions">
+										</el-date-picker>
+									</el-form-item>
+                                    <el-form-item label="Campaign">
+										<el-select size="small" filterable  style="width:250px;" v-model="campaign_id"  placeholder="请选择渠道">
+										{volist name="campaignList" id="item"}
+										 <el-option key="{$key}" label="{$item.name}" value="{$item.value}"></el-option>
+										{/volist}
+								  </el-select>
+									</el-form-item>									
+								</el-form>
+							</el-row>  
+							  </div>						      
+							<el-row :gutter="20" style="background-color:#fafafa;width:100%;height:110px;padding:10px;">
+							  <el-col :span="5"><div class="grid-content bg-purple">
+							    <div class="numbers">
+									<p class="card-category">推广新增 & 推广花费</p>
+									<h4 class="card-title">{{promote_info.installs?promote_info.installs:0}} & {{promote_info.spend?promote_info.spend:0}}</h4>
+								</div>
+							  </div></el-col>							  
+							  
+							  <el-col :span="5"><div class="grid-content">
+							    <div class="numbers">
+									<p class="card-category" style="font-size:12px;">有效用户&广告渗透率</p>
+									<h4 class="card-title">{{user_value.num}} & {{rate}}</h4>
+								</div>
+							  </div></el-col>
+							  <el-col :span="5"><div class="grid-content">
+							    <div class="numbers">
+									<p class="card-category">人均插屏&人均激励<sub style="font-size:10px;color:red;">(推广)</sub></p>
+									<h4 class="card-title">{{avgInter}} & {{avgReward}}</h4>
+								</div>
+							  </div></el-col>
+							  <el-col :span="5"><div class="grid-content">
+							    <div class="numbers">
+									<p class="card-category" style="font-size:12px;">人均成本 & 人均价值</p>
+									<h4 class="card-title">{{cpi}} & {{avg_revenue}}</h4>
+								</div>
+							  </div></el-col>
+							  <el-col :span="4"><div class="grid-content">
+							    <div class="numbers">
+									<p class="card-category">ROI</p>
+									<h4 class="card-title">{{roi_info.total_roi}}<!-- & {{roi_info.total_revenue}} --></h4>
+								</div>
+							  </div></el-col>
+							  
+							</el-row>
+						<div class="clear">
+						  <h4  style="font-size:16px;font-weight:700;line-height:20px;margin-bottom:10px;"><i class="count"></i> 用户价值详情展示</h4>
+						</div>
+						<div class="m-list hw_reven" style="padding:15px;">
+							 <el-table
+								:data="tableData"
+								v-loading="loading"
+								height="500"
+								style="width: 100%;">								
+								<el-table-column prop="index"  fixed align="center" label="天数"></el-table-column>
+								<el-table-column prop="date" fixed width="100px;" align="center" label="日期"></el-table-column>
+								<el-table-column prop="num" fixed sortable width="120px;" align="center" label="有效用户">
+								  <template slot-scope="scope">
+								    <span>{{scope.row.num}}</span>
+								  </template>
+								</el-table-column>
+								<el-table-column prop="total_revenue" sortable align="center" label="总收益"></el-table-column>
+								<el-table-column  sortable prop="total_avg_revenue" width="120px;" align="center" label="总人均价值"></el-table-column>
+								<el-table-column prop="total_roi" sortable align="center" width="100px;"  label="总ROI(%)"></el-table-column>
+								<el-table-column  sortable prop="revenue" width="100px;" align="center" label="当天收益"></el-table-column>
+								<el-table-column  sortable prop="day_avg_revenue" width="120px;" align="center" label="日人均价值"></el-table-column>
+								<el-table-column prop="day_roi" sortable width="100px;" align="center" label="日ROI(%)"></el-table-column>								
+								<el-table-column  align="center" sortable width="140px;" label="广告渗透率">
+								 <template slot-scope="scope">
+								    <span> {{scope.row.rate}}</span>
+								  </template>
+								</el-table-column>
+								<el-table-column prop="impression" sortable width="100px" align="center" label="人均激励">
+								 <template slot-scope="scope">
+								      <span>{{scope.row.avgReward}}</span>
+								   </template>
+								</el-table-column>
+								<el-table-column prop="impression" sortable width="100px" align="center" label="人均插屏">
+								 <template slot-scope="scope">								     
+									  <span>{{scope.row.avgInter}}</span>
+								   </template>
+								</el-table-column>
+								<el-table-column prop="impression" sortable width="100px" align="center" label="人均展示">
+								 <template slot-scope="scope">
+									  <span>{{scope.row.avgImpression}}</span>
+								   </template>
+								</el-table-column>
+							</el-table>
+						</div>
+			  </div>
+			</div>
+		</div>
+		 {include file="./static/html/footer.html" /}
+	</div>
+</body>
+ {include file="./static/html/footer_common.html" /}
+  <script>
+    function getDateRange(dateNow,intervalDays,bolPastTime){
+				let oneDayTime = 24 * 60 * 60 * 1000;
+				let list = [];
+				let lastDay;
+		 
+				if(bolPastTime == true){
+					lastDay = new Date(dateNow.getTime() - intervalDays * oneDayTime);
+					list.push(formateDate(lastDay));
+					list.push(formateDate(dateNow));
+				}else{
+					lastDay = new Date(dateNow.getTime() + intervalDays * oneDayTime);
+					list.push(formateDate(dateNow));
+					list.push(formateDate(lastDay));
+				}
+				return list;
+		  }
+    function formateDate(time){
+			let year = time.getFullYear()
+			let month = time.getMonth() + 1
+			let day = time.getDate()
+	 
+			if (month < 10) {
+			  month = '0' + month
+			}
+	 
+			if (day < 10) {
+			  day = '0' + day
+			}
+			return year + '-' + month + '-' + day + ''
+	}
+    let t = new Vue({
+        el: '#wrapper',
+        data: {
+             pickerOptions: {
+			  shortcuts: [{
+				text: '最近7天',
+				onClick(picker) {
+				  const aa = new Date(t.date)
+				  const list = getDateRange(aa,7,false)
+				  picker.$emit('pick',list);
+				}
+			  }, {
+				text: '最近10天',
+				onClick(picker) {
+				  const aa = new Date(t.date)
+				  const list = getDateRange(aa,10,false)
+				  picker.$emit('pick',list);
+				}
+			  }, {
+				text: '最近15天',
+				onClick(picker) {
+				  const aa = new Date(t.date)
+				  const list = getDateRange(aa,15,false)
+				  picker.$emit('pick',list);
+				}
+			  },
+			  {
+				text: '最近30天',
+				onClick(picker) {
+				  const aa = new Date(t.date)
+				  const list = getDateRange(aa,30,false)
+				  picker.$emit('pick',list);
+				}
+			  }
+			  ]
+			},
+			loading: false,
+			date:'{$start}',
+			day:"",
+			country: 'all',
+			rate:'0',
+			avgImpression:'0',
+			avgReward:'0',
+			avgInter:'0',
+			cpi:'0.00',
+			avg_revenue:'0',
+			campaign_id:'',
+			media_source:'all',
+			device:'all',
+			promote_info:{ spend:'0.00',installs:'0' },
+			user_value:{num:0,impression:0},
+			roi_info:{},
+			ad_source:'all',
+			tableData: []	
+        },
+		computed:{
+		    param(){
+			   return {
+			      app_id:'{$app_id}',				 
+				  country:this.country,
+				  media_source:this.media_source,
+				  ad_source:this.ad_source,
+				  device:this.device,
+				  campaign_id:this.campaign_id
+			   }
+			}
+		},
+		watch: {
+		  param(val) {
+		    val.day = this.day
+			val.date =this.date
+			this.getlist(val)
+		  }
+		},
+		created(){
+		  this.param.day = this.day
+		  this.param.date =this.date
+		  this.getlist(this.param)
+		},
+        methods: {           
+		   goBack() {
+		     window.location.href='/admin_index/main';
+		   },
+		   handleInstallDate(){
+		    this.param.day =[];
+			 this.param.date =this.date
+			this.getlist(this.param)
+		   },
+		   handleDate(){
+		     this.param.day = this.day
+			 this.getlist(this.param)
+		   },
+			getlist(value){
+			    this.loading = true
+			   let _that = this
+			   axios({
+					method: 'post',
+					url:'/admin_appsflyer/json_data',
+					data:value
+				}).then(res=>{			
+				 _that.loading = false
+				 this.tableData = res.data.tablist
+				 this.roi_info = res.data.roi_info
+				 this.user_value = res.data.user_value
+				 this.promote_info =res.data.promote_info
+				 this.rate = res.data.rate
+				 this.day = res.data.day
+				 this.avgImpression = res.data.avgImpression
+				 this.avgInter = res.data.avgInter
+				 this.avgReward =res.data.avgReward
+				 this.cpi =res.data.cpi
+				 this.avg_revenue = res.data.avg_revenue
+			 })
+			}
+        }
+    })
+  </script>
+</html>

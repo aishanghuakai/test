@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>财务管理</title>
+  {include file="./static/html/fheader_common.html" /}
+  <style>
+    
+	.fullscreen{
+	  width:100% !important;
+	  margin-left:0px !important;
+	  height:100% !important;
+	  position:fixed !important;
+	  margin-top:0px !important;
+	  z-index:9999
+	}
+	.receipt1{color:blue;}
+	.receipt2{color:red;}
+	.ivu-menu{z-index:0;}
+	.ivu-input[disabled]{background:#fff;color:#515a6e}
+	.ivu-input{height:auto;border:none;}
+	.ivu-table-cell{font-size:12px;}
+	.checkaftercolor .ivu-input{color:#515a6e;}
+	.checkbeforecolor .ivu-input{color:#ffaf00;}
+  </style>
+</head>
+<body>
+   <div id="wrapper">
+        {include file="./static/html/fheader.html" /}	
+		<div class="hw_page_content">
+		  <div class="hw_menu_left">
+		     {include file="./static/html/fside.html" /}
+		  </div>	 
+		    <div class="hw_content_right" style="padding:10px 10px;">
+			  
+			   <div style="padding:5px 0px 30px 0px;">
+					 <i-menu mode="horizontal" theme="light" active-name="1" @on-select="updatetype">
+						<menu-item name="1">
+							<i class="fa fa-align-justify "></i>
+							收入汇总
+						</menu-item>
+						<menu-item name="2">
+							<i class="fa fa-credit-card "></i>
+							付款汇总
+						</menu-item>
+					   
+						<menu-item name="3">
+							<i class="fa fa-plug "></i>
+							其他汇总
+						</menu-item>
+					</i-menu>
+				</div>
+				
+			  <Tabs value="2021" type="card" style="clear:both" @on-click="loadData">
+						
+						<Tab-pane label="2021年" name="2021">					   
+							<i-table ref="table" max-height="450" @on-selection-change="handleSelect" border disabled-hover :loading="loading"  :columns="report_columns" :data="report_data"></i-table>					
+						</Tab-pane>
+						<Tab-pane label="2020年" name="2020">					   
+							<i-table ref="table" max-height="450" @on-selection-change="handleSelect" border disabled-hover :loading="loading"  :columns="report_columns" :data="report_data"></i-table>					
+						</Tab-pane>
+						<Tab-pane label="2019年" name="2019">						   
+							<i-table ref="table" max-height="450" @on-selection-change="handleSelect" border disabled-hover :loading="loading"  :columns="report_columns" :data="report_data"></i-table>					
+						</Tab-pane>
+						<Tab-pane label="2018年 " name="2018">
+						 <i-table ref="table" max-height="450" @on-selection-change="handleSelect" border disabled-hover :loading="loading"  :columns="report_columns" :data="report_data"></i-table>
+						</Tab-pane>
+						<Tab-pane label="2017年" name="2017">
+						 <i-table ref="table" max-height="450" @on-selection-change="handleSelect" border disabled-hover :loading="loading"  :columns="report_columns" :data="report_data"></i-table>
+						</Tab-pane>
+						<i-select v-model="channel_id"  slot="extra" filterable clearable transfer="true" style="width:200px;margin-right:8px;" @on-change="handleList">
+						   {volist name="channel" id="vv"}
+                            <i-option  value="{$vv.id}" key="{$vv.id}">{$vv.name}</i-option>
+						  {/volist}
+						</i-select>	
+						<i-button type="primary"  slot="extra" @click="openModal"><Icon type="md-checkmark" /></Icon>{{title}}</i-button>
+						<i-button type="success"  slot="extra" style="margin-left:5px;" @click="exportData()"><Icon type="ios-download-outline" /></Icon>下载</i-button>
+			  </Tabs>
+			  <div style="padding:20px 0px;">
+			      <h5 style="padding:10px 0px;"><Icon type="ios-alert-outline"></Icon>颜色说明</h5>
+				  
+                  <Badge status="default" text="待收(付)款"></Badge>
+				  <Badge status="processing" text="已收(付)款"></Badge>
+				  <Badge status="error" text="超时3月未收款"></Badge>
+				  
+				  <h5 style="padding:10px 0px;"><Icon type="ios-alert-outline"></Icon>汇率说明</h5>
+				  
+                  <Badge status="default" text="CNY 6.8"></Badge>
+                  </br>				  
+                  <Badge status="default" text="HKD 7.875"></Badge>
+                  </br>
+				  <Badge status="default" text="TWD 31"></Badge>
+                  </br>	
+				</div>
+			</div>
+		</div>
+		 <Modal v-model="modal1" title="选择月份" width="250">
+						                            
+							  <i-select v-model="month" filterable style="width:200px">
+                                
+								  <i-option  value="01" key="1">一月</i-option>	
+                                  <i-option  value="02" key="2">二月</i-option>
+                                  <i-option  value="03" key="3">三月</i-option>	
+								  <i-option  value="04" key="4">四月</i-option>	
+								  <i-option  value="05" key="5">五月</i-option>	
+								  <i-option  value="06" key="6">六月</i-option>	
+								  <i-option  value="07" key="7">七月</i-option>	
+								  <i-option  value="08" key="8">八月</i-option>	
+								  <i-option  value="09" key="9">九月</i-option>	
+								  <i-option  value="10" key="10">十月</i-option>	
+								  <i-option  value="11" key="11">十一月</i-option>	
+								  <i-option  value="12" key="12">十二月</i-option>									  
+                              </i-select>							
+							
+							<div slot="footer"> 
+							  <i-button type="text" size="large" @click="modal1=false">取消</i-button> 
+							  <i-button type="primary" size="large" @click="postReceipt" >确定</i-button> 
+							</div>
+						
+		</Modal>
+    </div>		
+</body>
+{include file="./static/html/footer_common.html" /}
+</html>
+ <script>
+     new Vue({
+        el: '#wrapper',
+        data: {
+			loading: false,
+			modal1:false,
+			title:"已收款",
+			channel_id:"",
+			type:1,
+			month:'01',
+			selectData:[],
+			year:"2021",			
+			report_columns: [
+			        {
+                        type: 'selection',
+                        width: 60,
+						fixed: 'left',
+                        align: 'center'
+                    },
+					{
+                        title: '渠道名称',
+                        key: 'name',
+						width: 200,
+						align:'center',
+						fixed: 'left'
+                    },                
+                    {
+                        title: '币种',
+						width: 120,
+						align:'center',
+                        key: 'currency',
+						fixed: 'left'
+                    },
+					{
+                        title: '1月',
+						width: 120,
+						align:'center',
+                        key: 'month_01',
+						render: (h, params) => {
+                            return  h('div',{  class:'receipt'+params.row.month_01.isreceipt },params.row.month_01.val);					
+                        }
+                    },
+					{
+                        title: '2月',
+						width: 120,
+						align:'center',
+                        key: 'month_02',
+						render: (h, params) => {
+                            return  h('div',{  class:'receipt'+params.row.month_02.isreceipt },params.row.month_02.val);					
+                        }
+                    },
+					{
+                        title: '3月',
+						width: 120,
+						align:'center',
+                        key: 'month_03',
+						render: (h, params) => {
+                            return  h('div',{  class:'receipt'+params.row.month_03.isreceipt },params.row.month_03.val);					
+                        }
+                    },
+					{
+                        title: '4月',
+						width: 120,
+						align:'center',
+                        key: 'month_04',
+						render: (h, params) => {
+                            return  h('div',{  class:'receipt'+params.row.month_04.isreceipt },params.row.month_04.val);					
+                        }
+                    },
+					{
+                        title: '5月',
+						width: 120,
+						align:'center',
+                        key: 'month_05',
+						render: (h, params) => {
+                            return  h('div',{  class:'receipt'+params.row.month_05.isreceipt },params.row.month_05.val);					
+                        }
+                    },
+					{
+                        title: '6月',
+						width: 120,
+						align:'center',
+                        key: 'month_06',
+						render: (h, params) => {
+                            return  h('div',{  class:'receipt'+params.row.month_06.isreceipt },params.row.month_06.val);					
+                        }
+                    },
+					{
+                        title: '7月',
+						width: 120,
+						align:'center',
+                        key: 'month_07',
+						render: (h, params) => {
+                            return  h('div',{  class:'receipt'+params.row.month_07.isreceipt },params.row.month_07.val);					
+                        }
+                    },
+					{
+                        title: '8月',
+						width: 120,
+						align:'center',
+                        key: 'month_08',
+						render: (h, params) => {
+                            return  h('div',{  class:'receipt'+params.row.month_08.isreceipt },params.row.month_08.val);					
+                        }
+                    },
+					{
+                        title: '9月',
+						width: 120,
+						align:'center',
+                        key: 'month_09',
+						render: (h, params) => {
+                            return  h('div',{  class:'receipt'+params.row.month_09.isreceipt },params.row.month_09.val);					
+                        }
+                    },
+					{
+                        title: '10月',
+						width: 120,
+						align:'center',
+                        key: 'month_10',
+						render: (h, params) => {
+                            return  h('div',{  class:'receipt'+params.row.month_10.isreceipt },params.row.month_10.val);					
+                        }
+                    },
+					{
+                        title: '11月',
+						width: 120,
+						align:'center',
+                        key: 'month_11',
+						render: (h, params) => {
+                            return  h('div',{  class:'receipt'+params.row.month_11.isreceipt },params.row.month_11.val);					
+                        }
+                    },
+					{
+                        title: '12月',
+						width: 120,
+						align:'center',
+                        key: 'month_12',
+						render: (h, params) => {
+                            return  h('div',{  class:'receipt'+params.row.month_12.isreceipt },params.row.month_12.val);					
+                        }
+                    }				
+                ],
+                report_data: []
+        },
+		watch: {
+			 
+        },
+		mounted(){		 
+		  	this.getdata() 
+		},
+        methods: {
+           
+			getdata()
+		   {
+		     let _that = this
+			 this.loading  =true
+			 axios.get('/finance/getsummary?type='+this.type+"&year="+this.year+"&channel_id="+this.channel_id)
+			  .then(function (response) {
+				 _that.report_data = response.data
+				 _that.loading  =false
+			  })
+			  .catch(function (error) {
+				console.log(error);
+			  });
+		   },
+		   handleList()
+		   {
+		     this.getdata()
+		   },
+		   openModal(){
+		    if( this.selectData.length<1 )
+				  {
+					 this.$Message.warning('请勾选需要操作的行');
+					 return;
+				  }
+			this.modal1 = true	  
+		   },
+		   updatetype(name){
+		     this.type =name
+			 if( name=="1" )
+			   this.title="已收款";
+			 else
+			   this.title="已付款";
+			this.getdata()
+		   },
+		   postReceipt(){
+		      this.$Spin.show();
+			  this.modal1 = false
+			  axios({
+						method: 'post',
+						url:'/finance/postReceipt',
+						data:{
+						   type:this.type,
+						   year:this.year,
+						   month:this.month,
+						   selectData:this.fiterMap(this.selectData)
+						}
+					}).then(res=>{
+					 this.$Spin.hide();
+					 this.getdata()
+				 })
+		   },
+		   handleSelect(rows){
+			  this.selectData = rows
+			},
+			fiterMap(data){
+		      return data.map(function (t) {
+					  if( t.name!="合计" )
+					  {
+					     return t.channel_id
+					  }				 
+				})
+		   },
+			exportData(){
+			 this.$refs.table.exportCsv({
+                        filename: 'The original data',
+                        columns: this.report_columns,
+                        data: this.report_data.map(data=>{
+						  return {
+						    name:data.name,
+							currency:data.currency,
+							month_01:data.month_01.val,
+							month_02:data.month_02.val,
+							month_03:data.month_03.val,
+							month_04:data.month_04.val,
+							month_05:data.month_05.val,
+							month_06:data.month_06.val,
+							month_07:data.month_07.val,
+							month_08:data.month_08.val,
+							month_09:data.month_09.val,
+							month_10:data.month_10.val,
+							month_11:data.month_11.val,
+							month_12:data.month_12.val
+						  }
+						})
+                    });
+			},
+			loadData(name)
+			{
+			   this.year = name
+               this.getdata()			   
+			}
+        }
+    })
+  </script>
+
+

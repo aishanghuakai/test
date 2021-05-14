@@ -1,0 +1,324 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GAME BRAIN</title>
+    {include file="./static/html/header_common.html" /}  
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+   <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <!-- import JavaScript -->
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <script src="/static/js/axios.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/json2csv"></script>
+	<style>
+.demo-form-inline{
+  margin-top:20px;
+  margin-left:2%;
+}
+.is-plain{
+  color: #333;
+background-color: #fafafa;
+border-color: #e0e0e0;
+}
+.el-table th > .cell{
+ color:#333;
+ font-size:12px;
+}
+.el-table .cell{
+   font-size:12px;
+}
+.el-table td{
+padding:8px 0px;
+}
+.selected-column-item{
+background: #F8F8F8;
+border-radius: 4px;
+margin-top: 8px;
+line-height: 30px;
+padding: 0 12px;
+}
+.el-icon-caret-top,.el-icon-caret-bottom{cursor:pointer;}
+	</style>
+</head>
+<body style="background:#fff;">
+    <div id="wrapper" style="background-color:#fff;">
+        {include file="./static/html/header.html" /}	
+		<div class="hw_page_content" style="background-color:#fff;">
+		    <div class="hw_menu_left">
+             {include file="./static/html/side.html" /}  
+			</div>
+		    <div class="hw_content_right" style="padding:20px 5px;background: #fff;">
+			<div class="main" style="margin-bottom:10px;">
+			  <div class="newsbar-title" style="margin-left:2%;margin-top:20px;">自定义报告数据</div>
+              <el-form :inline="true"  class="demo-form-inline">
+				  <el-form-item>
+					 <el-date-picker
+						  v-model="date"					 
+						  type="daterange"
+						  size="small"
+						  value-format="yyyy-MM-dd"
+						  style="width:250px;"								  
+						  start-placeholder="开始"
+						  end-placeholder="结束">
+					 </el-date-picker>
+				  </el-form-item>
+				  <el-form-item>
+					<el-select v-model="country" style="width:150px;" filterable placeholder="选择地区" size="small">
+					  {volist name="countryList" id="vo"}
+					    <el-option label="{$vo}" value="{$key}"></el-option>
+					  {/volist}
+					</el-select>
+				  </el-form-item>
+				  <el-form-item>
+				    <el-button type="primary" size="small" @click="getReport">查询</el-button>
+				  </el-form-item>
+				  <el-form-item style="float:right;">					 
+					  <el-button plain size="small" icon="el-icon-download" @click="download">导出数据</el-button>
+					  <el-button size="small" icon="el-icon-refresh-right" @click="reset" plain>恢复重置</el-button>
+					  <el-button  size="small" icon="el-icon-s-unfold" @click="dialogVisible=true" plain>自定义列</el-button>
+				  </el-form-item>
+				</el-form>
+                <el-table
+				  :data="tableData"
+				  height="400px"
+				  v-loading="loading"
+				  style="width:100%;margin:0 auto;">
+				  
+				  <el-table-column v-for="item in columns" sortable :prop="item.val" align="center" :label="item.label"></el-table-column>
+				</el-table>				
+			</div>			 
+			</div>
+			<el-dialog
+			  title="自定义数据列"
+			  :visible.sync="dialogVisible"
+			  width="60%">
+			  <div>
+			    <div class="el-transfer">
+				 <div class="el-transfer-panel" style="width:60%;">
+				   <p class="el-transfer-panel__header">
+				     <span class="el-checkbox__label">可添加的列</span>
+				   </p>
+				   <div class="el-transfer-panel__body">
+				     <el-checkbox-group v-model="selectList">
+					 <div class="el-transfer-panel__list" style="padding:10px 20px;">
+					   
+					      <el-checkbox v-model="revenuecheck" :indeterminate="isIndeterminate"><strong>收益指标</strong></el-checkbox>
+						  <div style="margin:5px 0;"></div>
+						  <div>						    
+						    <el-checkbox v-for="(item,index) in revenue" :key="index" :label="item">{{item.label}}</el-checkbox>
+						  </div>
+					      <div style="margin:10px 0;"></div>
+						  <el-checkbox v-model="spendcheck" :indeterminate="isIndeterminate"><strong>投放指标</strong></el-checkbox>
+						  <div style="margin:5px 0;"></div>
+						  <div>						    
+						    <el-checkbox v-for="(item,index) in spend" :key="index" :label="item">{{item.label}}</el-checkbox>
+						  </div>
+						  <div style="margin:10px 0;"></div>
+						  <el-checkbox v-model="productcheck" :indeterminate="isIndeterminate"><strong>产品指标</strong></el-checkbox>
+						  <div style="margin:5px 0;"></div>
+						  <div>						    
+						   <el-checkbox v-for="(item,index) in product" :key="index" :label="item">{{item.label}}</el-checkbox>
+						  </div>
+					 </div>
+					 </el-checkbox-group>
+				   </div>
+				 </div>
+				 
+				 <div class="el-transfer-panel" style="width:35%;margin-left:2%;">
+				   <p class="el-transfer-panel__header">
+				     <span class="el-checkbox__label">已选列({{selectList.length}})</span>
+				   </p>
+				   <div class="el-transfer-panel__body">
+				     <el-checkbox-group v-model="selectList">
+					 <div class="el-transfer-panel__list" style="padding:10px 20px;">						  
+						  <div class="selected-column-item" v-for="(item,index) in selectList" :key="index">						    
+						    <el-checkbox  :label="item">{{item.label}}</el-checkbox>
+							<div style="float:right;font-size:12px;margin-left: 12px;margin-top:4px"><i @click="sort(index,'up')" class="el-icon-caret-top"></i> <i @click="sort(index,'down')" class="el-icon-caret-bottom"></i></div>
+						  </div>					    
+					 </div>
+					 </el-checkbox-group>
+				   </div>
+				 </div>
+				</div>
+			  </div>
+			  <span slot="footer" class="dialog-footer">
+				<el-button @click="dialogVisible = false">取 消</el-button>
+				<el-button type="primary" @click="confirm">应 用</el-button>
+			  </span>
+			</el-dialog>
+		</div>
+		 {include file="./static/html/footer.html" /}
+	</div>
+</body>
+ {include file="./static/html/footer_common.html" /}
+  <script>
+    
+    let t = new Vue({
+        el: '#wrapper',
+        data: {
+			loading: false,
+			isIndeterminate: true,
+			revenuecheck:false,
+			spendcheck:false,
+			productcheck:false,
+			date:['{$start}','{$end}'],
+			columns:[
+			 {val:'date',label:'日期'},
+			 {val:'active_users',label:'活跃'},
+			 {val:'new_users',label:'新增'},
+			 {val:'total_revenue',label:'总收益'},
+			 {val:'spend',label:'花费'},
+			 {val:'roi',label:'ROI'},
+			 {val:'dauarpu',label:'ARPU'},
+			 {val:'cpi',label:'CPI'},
+			 {val:'roi0',label:'ROI0'},
+			],
+			columns1:[
+			 {val:'date',label:'日期'},
+			 {val:'active_users',label:'活跃'},
+			 {val:'new_users',label:'新增'},
+			 {val:'total_revenue',label:'总收益'},
+			 {val:'spend',label:'花费'},
+			 {val:'roi',label:'ROI'},
+			 {val:'dauarpu',label:'ARPU'},
+			 {val:'cpi',label:'CPI'},
+			 {val:'roi0',label:'ROI0'},
+			],
+			country:'all',
+			selectList:[],
+			dialogVisible:false,
+			tableData:[],
+			revenue:[
+			 {val:'ad_revenue',label:'广告收益'},
+			 {val:'purchase',label:'内购收益'},
+			 {val:'total_revenue',label:'总收益'},
+			 {val:'avg_rew',label:'人均激励'},
+			 {val:'avg_int',label:'人均插屏'},
+			 {val:'rew_ecpm',label:'激励eCPM'},
+			 {val:'int_ecpm',label:'插屏eCPM'},
+			 {val:'dauarpu',label:'ARPU'},
+			 {val:'ltv0',label:'LTV0'},
+			 {val:'roi',label:'ROI'},
+			 {val:'roi0',label:'ROI0'}],
+			spend:[
+			{val:'spend',label:'花费'},
+			{val:'installs',label:'安装'},
+			{val:'cpi',label:'CPI'}],
+			product:[
+			 {val:'active_users',label:'活跃'},
+			 {val:'new_users',label:'新增'},
+			 {val:'retention_1',label:'次留'},
+			 {val:'retention_2',label:'2留'},
+			 {val:'retention_3',label:'3留'},
+			 {val:'retention_7',label:'7留'},
+			 {val:'retention_14',label:'14留'},
+			 {val:'retention_28',label:'28留'},
+			 {val:'avg_session_num',label:'人均会话'},
+			 {val:'avg_session_length',label:'人均时长'}]
+        },
+		created(){
+		  let key ='report_columns'
+		  let save_obj = localStorage.getItem(key)
+		  if(save_obj)
+		  {
+		    this.columns = JSON.parse(save_obj)
+		  }
+		},
+        methods: {           
+		  confirm(){
+		    this.columns = this.selectList
+			this.dialogVisible = false
+			let key ='report_columns'
+			localStorage.setItem(key,JSON.stringify(this.columns));
+			this.getReport()
+		  },
+		  download(){
+		    ExportCsv(this.tableData,this.columns,"自定义报告数据"+new Date().getTime())
+		  },
+		  reset(){
+		    this.columns = this.columns1
+			this.getReport()
+		  },
+		  sort(index,type)
+		  {
+		    if(type=='up')
+			{
+			  if(index == 0) {
+			     return;
+			  }
+			  swapItems(this.selectList,index,index - 1);
+			}else{
+			  if( index == this.selectList.length -1) {
+			     return;
+			  }
+			  swapItems(this.selectList,index,index + 1);
+			}
+		  },
+		  getReport(){
+			   let params ={
+			      columns:this.columns,
+				  date:this.date,
+				  country:this.country
+			   }
+			   this.loading = true
+			   axios({
+					method: 'post',
+					url:'/admin_report/getData',
+					data:params
+				}).then(res=>{
+				this.tableData = res.data
+				this.loading = false
+			 })
+			}
+        },
+		mounted(){
+		  this.getReport()
+		  this.selectList = this.columns
+		}
+    })
+  </script>
+ <script>
+ var swapItems = function(arr, index1, index2) {
+    arr[index1] = arr.splice(index2, 1, arr[index1])[0];
+    return arr;
+  };
+ function getRow(row, columns) {
+  let obj = {} 
+  columns.forEach(col => {
+    let val = row[col.val]
+	obj[col.val] = val;
+  })
+  return obj
+}
+ function ExportCsv(data, columns, fileName) {
+　let dis_column = ['spend','installs','cpi','rew_ecpm','int_ecpm','dauarpu']
+  let new_columns=[]
+  columns.map(item => {
+		if(dis_column.indexOf(item.val)<0)
+		{		  
+		  new_columns.push(item)
+		}
+	});
+   //导出的数据行
+  const rows = data.map(t => getRow(t, new_columns))
+  //导出的数据列标题
+  const fields = new_columns.map(t => { return {value:t.val,label:t.label}})
+ 
+  try {
+ 
+    const result =json2csv.parse(rows, { fields: fields,excelStrings:true});
+    const csvContent = 'data:text/csv;charset=utf-8,\uFEFF' + result
+    const link = document.createElement('a')
+    link.href = encodeURI(csvContent)
+    link.download = `${fileName}.csv`
+    document.body.appendChild(link) // Required for FF
+    link.click()
+    document.body.removeChild(link) // Required for FF
+  } catch (err) {
+    alert(err)
+  }
+}
+ </script>
+</html>

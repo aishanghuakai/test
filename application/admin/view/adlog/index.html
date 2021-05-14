@@ -1,0 +1,212 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GAME BRAIN</title>
+		    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+   <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <!-- import JavaScript -->
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <script src="/static/js/axios.min.js"></script>	
+    {include file="./static/html/header_common.html" /}
+    	
+	<style>
+	th,td{text-align:center;vertical-align:middle}
+	  .hw_reven thead tr {
+    background-color: #f9f9f9;
+}
+.hw_reven table {
+    border-collapse: collapse;
+    font-size: 12px !important;
+    color: #222 !important;
+    text-align: left !important;
+    line-height: 40px;
+}
+.hw_reven .table > thead > tr > th{
+  border-bottom:1px solid #e8e8e8 !important;
+  border-top:1px solid #e8e8e8 !important;
+   color: #222 !important;
+}
+.pgc-dashboard-primary{font-size:20px !important;}
+	</style>
+</head>
+<body>
+    <div id="wrapper" style="background: #fff;">
+        {include file="./static/html/header.html" /}	
+		<div class="hw_page_content">
+		    <div class="hw_menu_left">
+         {include file="./static/html/side.html" /}  
+			</div>
+		    <div class="hw_content_right" style="padding:10px 10px">
+			    <ul class="search_tab clearfix" >
+			      <li class="active"><a  href="javascript:;">系统信息</a></li>
+                  			  
+		        </ul>
+	           <div class="pgc-dashboard-new">
+			     <div class="pgc-dashboard-column">
+				    <div>
+				      <span class="pgc-dashboard-primary">100%</span>
+					</div>
+					<div class="pgc-dashboard-secondary">
+						 <div class="pgc-dashboard-column-name">
+						   <div>今年系统可用率</div>
+						 </div>
+					</div>
+				 </div>
+				 <div class="pgc-dashboard-column">
+				    <div style="font-size:16px;text-align:center;margin-bottom:10px;color:#222;line-height: 30px;">
+					    <el-popover
+						  placement="right"
+						  width="400"
+						  trigger="hover">
+						  <h4 style="font-weight:700;">变现误差统计</h4>
+						  <el-table :data="revenue" height="300px" max-height="300px;">
+							<el-table-column property="month" label="月份"></el-table-column>
+							<el-table-column  property="val" label="误差率">
+							   <template slot-scope="scope">								
+								<span style="float:left" v-show="mshow!=scope.row.month">{{scope.row.val!=''?scope.row.val+'%':'---'}}</span>
+								<el-input size="mini" v-show="mshow==scope.row.month" style="width:100px;float:left" v-model="scope.row.val"></el-input>
+								<label v-show="mshow==scope.row.month" @click="updateData(scope.row.val,scope.row.month,'revenue')"  style="float:left;margin-left:10px;color:#409eff;cursor:pointer;">保存</label>
+								<label @click="mshow=scope.row.month" v-show="mshow!=scope.row.month" style="float:left;margin-left:10px;color:#666;cursor:pointer;font-size:10px;"><i class="el-icon-edit"></i></label>
+							  </template>
+							</el-table-column>
+						  </el-table>
+						  <span slot="reference" style="cursor:pointer;"><em style="font-size:12px;font-style:normal;">变现</em>:{$revenue??0}%</span>
+						</el-popover>
+						<el-popover
+						  placement="right"
+						  width="400"
+						  trigger="hover">
+						  <h4 style="font-weight:700;">投放误差统计</h4>
+						  <el-table :data="spend" height="300px" max-height="300px;">
+							<el-table-column  property="month" label="月份"></el-table-column>
+							<el-table-column  property="val" label="误差率">
+							  <template slot-scope="scope">								
+								<span style="float:left" v-show="mshow!=scope.row.month">{{scope.row.val!=''?scope.row.val+'%':'---'}}</span>
+								<el-input size="mini" v-show="mshow==scope.row.month" style="width:100px;float:left" v-model="scope.row.val"></el-input>
+								<label v-show="mshow==scope.row.month" @click="updateData(scope.row.val,scope.row.month,'spend')"  style="float:left;margin-left:10px;color:#409eff;cursor:pointer;">保存</label>
+								<label @click="mshow=scope.row.month" v-show="mshow!=scope.row.month" style="float:left;margin-left:10px;color:#666;cursor:pointer;font-size:10px;"><i class="el-icon-edit"></i></label>
+							  </template>
+							</el-table-column>
+						  </el-table>
+						  <span slot="reference" style="cursor:pointer;"><em style="font-size:12px;font-style:normal;">投放</em>:{$spend??0}%</span>
+						</el-popover>
+						
+					</div>
+					<div class="pgc-dashboard-secondary">
+						 <div class="pgc-dashboard-column-name">
+						   <div>今年数据准确性</div>
+						 </div>
+					</div>
+				 </div>
+			   	<div class="pgc-dashboard-column">
+				   
+				       <div style="font-size:16px;text-align:center;margin-bottom:10px;color:#222;line-height: 30px;">
+					    <span><em style="font-size:12px;font-style:normal;">系统盘</em>:{$servce.hd_usage_sys_avail??0}G</span>
+						<span><em style="font-size:12px;font-style:normal;">数据盘</em>:{$servce.hd_usage_data_avail??0}G</span>
+						</div>
+					   
+					<div class="pgc-dashboard-secondary">
+						 <div class="pgc-dashboard-column-name">
+						   <div>磁盘可用</div>
+						 </div>
+					</div>
+				 </div>				 
+				 <div class="pgc-dashboard-column">
+				   
+					<div style="font-size:16px;text-align:center;margin-bottom:10px;color:#222;line-height: 30px;">
+					    <span><em style="font-size:12px;font-style:normal;">系统盘</em>:{$servce.hd_usage??0}%</span>
+						<span><em style="font-size:12px;font-style:normal;">数据盘</em>:{$servce.hd_usage_data??0}%</span>
+						</div>
+					<div class="pgc-dashboard-secondary">
+						 <div class="pgc-dashboard-column-name">
+						   <div>挂载点</div>
+						 </div>
+					</div>
+				 </div>				 
+				 <div class="pgc-dashboard-column">
+				   
+					<div style="font-size:16px;text-align:center;margin-bottom:10px;color:#222;line-height: 30px;">
+					    <span><em style="font-size:12px;font-style:normal;">Apache</em>:{$servce.apache_work_num??0}</span>
+						<span><em style="font-size:12px;font-style:normal;">CPU</em>:{$servce.cpu_usage??0}%</span>
+						</div>
+					<div class="pgc-dashboard-secondary">
+						 <div class="pgc-dashboard-column-name">
+						   <div>系统指标</div>
+						 </div>
+					</div>
+				 </div>
+				 
+			   </div>
+			    <div class="hw_reven clearfix" style="padding:30px 30px;">
+				  <h4></h4>
+			     <table class="table table-striped">
+						  <thead style="font-size:13px;">
+							<tr>
+							  <th>序号</th>
+							  <th>操作人</th>
+							  <th style="width:500px">操作内容</th>
+							  <th>登录设备</th>
+							  <th>时间</th>
+							  
+							</tr>
+						  </thead>
+						  <tbody>
+						    {volist name="res" id="item"}
+							<tr>
+							     <td>{$item.id}</td>
+								 <td>{$item.operate_name}</td>
+								 <td>{$item.operate_content}</td>
+								 <td>{$item.remark}</td>
+								 <td>{$item.time}</td>
+							</tr>
+							{/volist}
+						  </tbody>
+						</table>
+						<div style="text-align:center;">{$list->render()}</div>
+					 </div>
+			</div>
+		</div>
+		 {include file="./static/html/footer.html" /}
+	</div>	
+</body>
+ {include file="./static/html/footer_common.html" /}
+ <script>
+    let t = new Vue({
+        el: '#wrapper',
+        data: {
+		  mshow:'',
+		  spend:[],
+		  revenue:[]
+		},
+		mounted(){
+		 this.getdata()
+		},
+		methods:{		  
+		  getdata(){
+		       axios({
+						method: 'post',
+						url:'/admin_log/get_system_assessment_data',
+						data:{}
+					}).then(res=>{			
+                    this.spend = res.data.spend
+					this.revenue = res.data.revenue
+				})
+		   },
+          updateData(val,month,type){
+		    axios({
+						method: 'post',
+						url:'/admin_log/update_system_assessment_data',
+						data:{val:val,month:month,type:type}
+					}).then(res=>{			
+                    this.mshow=''
+				})
+		  }		   
+		}
+	})
+	
+	
+  </script>
+</html>

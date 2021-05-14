@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title></title>
+	{include file="./static/html/header_common.html" /}
+	<link href="/static/css/adspend.css" rel="stylesheet" type="text/css">
+     <link href="/static/css/checkbox.css" rel="stylesheet" type="text/css">
+	<style>
+	 .allow_click{cursor:pointer}
+	</style>
+</head>
+<body>
+    <div id="wrapper" >
+        
+		{include file="./static/html/header.html" /} 
+	
+		<div class="hw_page_content">
+		   
+		    <div class="hw_menu_left">
+         {include file="./static/html/side.html" /}  
+			</div>
+		    <div class="hw_content_right">	
+			  <ul class="search_tab clearfix" >
+			      <li class="active"><a  href="javascript:;">产品关联</a></li>			 
+			   </ul>
+			     <div class="hw_content">
+				    <form  >
+					  <div class="form-group" style="float:left;width:50%;height:300px;">
+						<label for="exampleInputEmail1">名称</label>
+						<ul style="height:250px;overflow: scroll;margin-top:5px;">
+						{volist name="res" id="vv"}
+						 <li>
+							<a href="javascript:;" >
+								<div class="el-checkbox el-checkbox-sm el-checkbox-red">
+									<input type="checkbox" name="app_id" value="{$vv.app_id}" attr_platform="{$vv.platform}" id="app_id_{$vv.id}">
+									<label class="el-checkbox-style" for="app_id_{$vv.id}"></label>
+									<span class="margin-r" style="font-size:14px;margin-left:10px;">
+									  {$vv.app_name}-{$vv.app_platform}
+									</span>			
+								</div>					
+							</a>
+					      </li>
+						  {/volist}
+						</ul>
+					  </div>
+					  <div class="form-group" style="width:40%;float:left;margin-left:40px;">
+						<label for="exampleInputPassword1">系统APP</label>
+							<select class="form-control" id="app_id">
+							{volist name="apps" id="vvv"}  
+							  <option value="{$vvv.id}">{$vvv.app_name}</option>
+							{/volist}
+							</select>
+					  </div>
+					 <p style="clear:both;font-size:12px;margin-bottom:13px;text-indent:4px;"><i class="fa fa-info-circle"></i>&nbsp;多个名称对应同一个APP，可直接勾选多个进行保存</p>
+					  
+					  <button type="button" id="save" class="btn btn-danger btn-lg btn-block">确认</button>
+					</form>					
+			    </div>
+           	</div>
+         </div>
+       {include file="./static/html/footer.html" /}		 
+	</div>
+   {include file="./static/html/footer_common.html" /}
+    
+</body>
+  <script>
+    $( function(){
+	   
+		$("#save").click( function(){
+		      var object = [];
+			  var related_appid = $("#app_id").val();
+			  $("input[name='app_id']:checked").each( function(index){
+				  object[index]={platform:$(this).attr("attr_platform"),app_id:$(this).val(),related_appid:related_appid};
+			  });
+			  var index = layer.load();
+			  $.post("/admin_adgain/relate_save",{object:object},function(e){
+			      layer.closeAll();
+				  if( "ok"==e )
+				    {
+					  layer.msg("关联成功");
+					  window.location.href=window.location.href;
+					}else{
+					  layer.msg("关联失败");
+					}
+			  });
+		}) 
+	})
+  </script>
+</html>

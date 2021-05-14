@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>产品备注--广告聚合平台</title>
+    {include file="./static/html/header_common.html" /}
+	<link href="/static/css/userinfo.css" rel="stylesheet" type="text/css" />
+	<link href="/static/css/checkbox.css" rel="stylesheet" type="text/css" />
+	<link href="/static/css/dialog.css" rel="stylesheet" type="text/css" />
+    <style>
+	  
+	</style>	
+</head>
+ 
+<body>
+    <div id="wrapper" style="background: #fff;">
+        {include file="./static/html/header.html" /}	
+		<div class="hw_page_content">
+		    <div class="hw_menu_left">
+         {include file="./static/html/side.html" /}  
+			</div>
+		    <div class="hw_content_right">
+			    <ul class="search_tab clearfix" >
+			      <li ><a  href="/admin_remark/index">备注列表</a></li>
+                  <li class="active"><a  href="javascript:;">添加备注</a></li>			  
+		        </ul>
+			  	
+                	<div style="padding:30px 30px;clear:">
+			            <form class="form-horizontal" style="">
+					  <div class="form-group">
+						<label for="title" class="col-sm-1 control-label">标题</label>
+						<div class="col-sm-10">
+						  <input type="text" class="hw_game-input" style="height:40px;" id="title" placeholder="简短概述字数50字内">
+						</div>
+					  </div>
+					  
+					 <div class="form-group">
+						<label for="content" class="col-sm-1 control-label">详细</label>
+						<div class="col-sm-10">
+						  <textarea  class="hw_game-input" style="height:120px;" placeholder="详细描述应用修改的内容" id="content"  rows="4"></textarea>
+						</div>
+					  </div>
+					  
+						<div class="col-sm-offset-4 col-sm-6" style="margin-top:10px;">
+						  <button type="button" onclick="window.location.href='/admin_remark/index'" style="width:20%;float:left;margin-right:10px;padding-right:10px;" class="btn btn-default">取消</button>
+						  <button type="button" style="width:50%;" id="save" class="btn btn-danger">立即添加</button>
+						</div>
+					 
+					</form>
+			        </div>				
+			</div>
+		</div>
+		 {include file="./static/html/footer.html" /}
+	</div>	
+</body>
+ {include file="./static/html/footer_common.html" /}
+ <script>
+    $(function(){
+          $("#save").click( function(){
+		     //alert( $('div.froala-element').html());
+			 
+			   var title = $("#title").val();
+			
+			   var content = $('#content').val();
+			   
+			   var appid ="{$appid}";
+			   
+			   if( title=="" || title.length>50 )
+				{
+					$.Pop('标题不符合规范!',{Title:'提示',Animation:'slideFromTop'});return false;
+				}
+				if(   content==""  )
+				{
+					$.Pop('内容详细至少在一个字符以上!',{Title:'提示',Animation:'slideFromTop'});return false;
+				}
+								
+				$(this).attr("disabled",true);
+				var obj = $(this);
+				var index = layer.load(0, {shade: false}); //0代表加载的风格，支持0-2
+				$.post("/admin_remark/add_data",{title:title,content:content,appid:appid},function(e){
+					layer.close(index);					
+					$(obj).attr("disabled",false);
+					if( "ok"==e )
+					  {
+						$.Pop('提交成功','confirm',function(){ window.location.href='/admin_remark/index' })
+					  }else{
+						$.Pop('由于异常，提交失败',{Title:'提示',Animation:'slideFromTop'});return false;
+					  }			
+				})
+			 
+		  })
+
+	});
+ </script>
+</html>

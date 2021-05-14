@@ -1,0 +1,326 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GAME BRAIN</title>
+    {include file="./static/html/header_common.html" /}
+	 <link rel="stylesheet" type="text/css" media="all" href="/static/plugin/jquery-time/daterangepicker-bs3.css" />
+	  <link href="/static/css/checkbox.css" rel="stylesheet" type="text/css">
+	   <link href="/static/css/campagin.css?t=<?php echo time(); ?>" rel="stylesheet">
+    <link href="/static/css/show.css?t=<?php echo time(); ?>" rel="stylesheet">
+	 <link href="/static/css/blue/style.css?t=<?php echo time(); ?>" rel="stylesheet">
+	<style>
+	th,td{text-align:center;vertical-align:middle}
+	  .hw_reven thead tr {
+    background-color: #f9f9f9 !important;
+}
+table.tablesorter thead tr th, table.tablesorter tfoot tr th {
+   background-color: #f9f9f9 !important;
+  
+   border-bottom:0px solid #e8e8e8 !important;
+  border-top:1px solid #e8e8e8 !important;
+   color: #222 !important;
+   padding:8px !important;
+}
+table.tablesorter tbody td {
+  
+    padding: 8px !important;
+    background-color: #FFF;
+    vertical-align: middle;
+}
+
+.hw_reven table {
+    border-collapse: collapse;
+    font-size: 12px !important;
+    color: #222 !important;
+    text-align: left !important;
+    line-height: 40px;
+}
+.hw_reven .table > thead > tr > th{
+  border-bottom:0px solid #e8e8e8 !important;
+  border-top:1px solid #e8e8e8 !important;
+   color: #222 !important;
+}
+.dropdown-item {
+    display: block;
+    padding: 7px 16px;
+        padding-right: 16px;
+        padding-left: 16px;
+    color: #768093;
+    font-size: 12px;
+    font-weight: 400;
+    padding-left: 8px;
+    padding-right: 24px;
+    cursor: pointer;
+    transition: background .2s ease-in-out;
+}
+.dropdown-item:hover {
+    background: #eaeefb;
+    color: #606266 !important;
+}
+
+	</style>
+</head>
+<body style="background-color:#fff;">
+    <div id="wrapper" style="background-color:#fff;">
+        {include file="./static/html/header.html" /}	
+		<div class="hw_page_content">
+		    <div class="hw_menu_left">
+         {include file="./static/html/side.html" /}  
+			</div>
+		    <div class="hw_content_right" style="padding:10px 10px;">
+			    <ul class="search_tab clearfix" >
+				 <li><a  href="/admin_adstatis/average">统计</a></li>
+			      <li class="active"><a  href="javascript:;">ID统计</a></li>				  
+		        </ul>
+	  
+			    <div class="hw_reven clearfix" style="padding:30px 30px;">
+				        
+				        <div style="">
+						   
+						   <div  style="float:left;position:relative;width:200px;line-height: 29px;margin-bottom:15px;margin-right:5px;">
+							  <input  class="search-input" id="adtype" value="激励" style="width:200px;color:#ccc;" placeholder="广告">					  
+						   </div>
+						    <div  style="float:left;width:200px;line-height: 29px;margin-bottom:15px;position:relative">
+							  <input  class="search-input" id="country" data="all" style="width:200px;" placeholder="全部" >
+                              <ul   class="dropdown-menu country" style="display:none;width:200px;height:200px;overflow-y:scroll;z-index: 10 !important;">
+									{volist name="country" id="vvv"}				  
+										 <a class="dropdown-item" data="{$key}" href="javascript:;">{$vvv}</a>
+									{/volist}	
+							  </ul>							  
+						   </div>
+						   <div  style="float:right;line-height: 29px;margin-bottom:15px">
+							  <input  class="search-input" id="start_date" value="{$start_date} 到 {$end_date}">								
+						   </div>
+						    <div class="table-head" style="">
+							 <table class="table tablesorter" style="margin-bottom:0px;">
+							 
+							  <thead style="font-size:12px;">
+								<tr >
+								  <th style="width:30%;text-align:left;">名称</th>
+								   <th style="border-right:1px solid #ccc;">底价</th>
+								  <th style="border-left:1px solid #ccc;">排序</th>
+								  <th style="border-right:1px solid #ccc;">ECPM</th>
+								  
+								  <th>展示</th>								  
+								  <th style="border-right:1px solid #ccc;">展示占比</th>
+								  
+								  <th>收益($)</th>
+								  <th style="border-right:1px solid #ccc;">收益占比</th>
+								  
+								  <th>点击率</th>
+								  <th>填充率</th>
+								  <th>人均展示</th>
+								 
+								</tr>
+							  </thead>
+							   <tbody id="body">
+									{volist name="list" id="vv"}						  
+									<tr>
+										 <td style="width:30%;text-align:left;color:#38f;text-overflow:ellipsis;">{if condition="$vv['remark'] neq ''" }
+										   {$vv.remark}
+										   {else /}
+										   {$vv.unit_id}
+										   {/if}</td>
+										 {if condition="$vv['isneed'] eq 1"}  
+										 <td style="color:red;">{$vv.decpm}</td>
+                                         {elseif condition="$vv['isneed'] eq 2" /}
+										 <td style="color:green;">{$vv.decpm}</td>
+										 {else /}
+										  <td>{$vv.decpm}</td>
+                                         {/if}										 
+										 <td style="border-left:1px solid #ccc;color:red;">{$vv.ordernum}</td>
+										 <td style="border-right:1px solid #ccc;">{$vv.ecpm}</td>
+										 
+										 <td>{$vv.impressions}</td>
+										 <td style="border-right:1px solid #ccc;">{$vv.impressions_rate}%</td>
+										 
+										 <td>{$vv.revenue}</td>
+										 <td style="border-right:1px solid #ccc;">{$vv.revenue_rate}%</td>
+										 
+										 <td>{$vv.ctr}%</td>
+										 <td>{$vv.filled_rate}%</td>
+										 <td>{$vv.avg_impressions}</td>
+																				 
+									</tr>
+									{/volist}
+								  </tbody>
+						  </table>
+						  </div>
+						    
+						</div>
+			    </div>
+			</div>
+		</div>
+		 {include file="./static/html/footer.html" /}
+	</div>
+
+    <div class="hw-dialog ">
+	    <div class="hw_modal"></div>
+		<div class="hw_game-dialog" style="padding:30px 30px;">
+			<div class="campagin_body" style="width:20%;float:left;">
+				   <div class="body-list">
+					 <div class="campagin__item-head">
+						<div class="campagin__item-title">选择类型</div>
+					 </div>					 
+					 <div class="campagin__item campagin__item-current"" adtype="rew"> 
+						<div class="campagin__item-title">激励</div>
+					</div>					 
+					 <div class="campagin__item " adtype="int"> 
+						<div class="campagin__item-title">插屏</div>
+					 </div>
+					  <div class="campagin__item" adtype="nat"> 
+						<div class="campagin__item-title">原生</div>
+					 </div>
+					 <div class="campagin__item " adtype="ban"> 
+						<div class="campagin__item-title">Banner</div>
+					 </div>
+				   </div>
+			</div>
+			<div style="width:78%;float:right;height:300px;overflow-y:scroll;">
+			    <div class="hw_adtype__item hw_adtype__item-head">
+				  <div class="hw_adtype__item-container">
+				   <div class="hw_adtype__item-hd" style="width: 10%;">
+				    <div class="el-checkbox el-checkbox-red">											
+								<input name="allselect" id="adtype_id" type="checkbox">
+								<label class="el-checkbox-style" for="adtype_id"></label>								
+					</div>
+				   </div>
+				   <div class="hw_adtype__item-hd" style="width: 60%;">名称</div>
+				   <div class="hw_adtype__item-hd" style="width: 20%;">渠道</div>
+				   <div class="hw_adtype__item-hd" style="width: 10%;">排序</div>
+				    
+				  </div>
+				</div>
+                <div class="hw_adtype__item hw_adtype__item-body">
+				  <div class="hw_adtype__item-container">
+					   
+				  </div>
+				</div>				
+			</div>
+			<div class="dialog-footer" style="clear:both"><button type="button" id="confirm" style="background-color: #f85959;color: #fff;border-color: #f85959;" class="hw_game-btn hw_game-btn-negative" onclick="add_remark(this)">确 认</button><button type="button" class="hw_game-btn hw_game-btn-default hw_close">关 闭</button>
+			</div>
+		</div>
+	</div>
+	
+</body>
+ {include file="./static/html/footer_common.html" /}
+  
+ <script type="text/javascript" src="/static/plugin/jquery-time/moment.js"></script>
+  <script type="text/javascript" src="/static/plugin/jquery-time/daterangepicker.js"></script>
+    <script src="/static/js/jquery.tablesorter.min.js"></script>
+  <script>
+ 
+     var start_date="{$start_date}";
+	 var end_date = "{$end_date}";
+     var adtype ="rew";
+	 var appid ="{$appid}";
+	 var adtypeid="{$ads_id}";
+	 var country ="all";
+	
+    $(function(){
+	  	 getadtypedata();
+	   
+		 $.tablesorter.addParser({  
+		 id: "num", //指定一个唯一的ID  
+		 is: function(s){  
+			 return false;  
+			 },  
+		 format: function(s){  
+			 return s.substring(0,s.length-2);//去除后面的汉字
+			 },  
+		 type: "numeric"  
+		 });  
+	 $(".table").tablesorter({headers:{0:{sorter:false},5:{sorter:"num"},8:{sorter:"num"},9:{sorter:"num"}}});
+	 
+		 $('#start_date').daterangepicker({ minDate:'2018-07-08',opens:'left' },function(start, end, label) {	 
+		      start_date = start.format('YYYY-MM-DD');end_date=end.format('YYYY-MM-DD');
+			$('#start_date').val(start_date+" 到 "+end_date);
+			 loadadata();
+		 });
+		 $("#adtype_id").click( function(){
+		 
+		     $("input[name='adtype_id']").prop("checked",this.checked);  
+		 });
+		 
+		
+		 
+		 $("#country").click( function(){
+		    $(".country").show();
+			return false;
+		 });
+		 
+		 $(".dropdown-item").click( function(){
+		  
+			var c_name ="";
+			
+			country=$(this).attr("data");
+			c_name=$(this).text();		
+			$("#country").val(c_name);
+           	loadadata();	
+		 });
+		 
+		 $("#wrapper").click( function(e){
+		 
+		   var target = $(e.target);
+          
+			if(target.context.nodeName=="LABEL" || target.context.nodeName=="INPUT" )
+			{
+			  return;
+			}
+           	
+		   $(".country").hide();
+		   
+		 })
+		
+		 
+		 $(document).on("click",".hw_close",function(){
+	       $(".hw-dialog").hide();
+		  });
+		$("#adtype").click( function(){
+		    $(".hw-dialog").show();
+		})
+        		
+		$("#confirm").click( function(){
+		    var c_ad ="";
+		    $("input[name='adtype_id']:checked").each( function(index){
+				  c_ad+="'"+$(this).val()+"'"+",";
+			  });
+			adtypeid = c_ad;
+           $(".hw-dialog").hide();
+           loadadata();		   
+		}) 
+         $(".campagin__item").click( function(){
+		    if( !$(this).hasClass("campagin__item-current") )
+			{
+			   $(".campagin__item").removeClass("campagin__item-current");
+			   $(this).addClass("campagin__item-current");
+			   adtype = $(this).attr("adtype");
+			   $("#adtype").val( $(this).find(".campagin__item-title").text() );
+			   $("#adtype_id").prop("checked",false);
+			   getadtypedata();
+			}
+		 })         
+		 
+	   });
+	var loadadata = function()
+	{
+		layer.load();
+		  $.post("/admin_adstatis/adtype_json",{start_date:start_date,end_date:end_date,appid:appid,adtypeid:adtypeid,country:country},function(e){
+				layer.closeAll();
+				$("tbody").trigger("update");
+				$("#body").html(e);		 
+		   });
+	}
+    var getadtypedata = function()
+	{
+        layer.load();
+		  $.post("/admin_adstatis/getadtype_json",{appid:appid,adtype:adtype},function(e){
+				layer.closeAll();
+				$(".hw_adtype__item-body").html(e);		 
+		   });
+	}	
+  </script>	   
+</html>

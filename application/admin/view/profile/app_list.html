@@ -1,0 +1,101 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title></title>
+	<link rel="stylesheet" type="text/css" media="all" href="/static/css/public.css" />
+	<link href="/static/css/special.css" rel="stylesheet">
+	{include file="./static/html/header_common.html" /}
+	<link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" media="all" href="/static/plugin/daterangepicker/daterangepicker.css" />
+	<link rel="stylesheet" type="text/css" media="all" href="/static/css/select.css" />
+	<style>
+      #time,select,.fa,#datetime{
+	   cursor:pointer;
+	 }
+	</style>
+</head>
+<body style="background: #fff;">
+  
+		  
+            <div id="page-inner" style="min-height:0px;"> 
+			     <div class="row">
+                <div class="col-md-12">
+				  
+                     <!--    Hover Rows  -->
+                    <div class="card1">
+					  
+                        <div class="card-content" style="padding: 25px 20px 50px 20px;clear:both;">
+                            <div class="table-responsive table-bordered">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                             <th style="vertical-align:middle; text-align:center;">序号</th>
+                                             <th style="vertical-align:middle; text-align:center;">应用名称</th>
+                                             <th style="vertical-align:middle; text-align:center;">应用ID</th>
+											 <th style="vertical-align:middle; text-align:center;">平台类型</th>
+											 <th style="vertical-align:middle; text-align:center;">操作</th>                              											
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+									   {volist name="list" id="item"}
+                                        <tr>
+                                            <td class="dd" style="vertical-align:middle; text-align:center;"><?php $p=isset($_GET["page"])?$_GET["page"]:1; echo ($p-1)*15+$key+1; ?></td>                                          
+                                             <td class="dd" style="vertical-align:middle; text-align:center;">{$item.app_name}</td>
+                                             <td class="dd" style="vertical-align:middle; text-align:center;">{$item.app_id}</td>
+											 <td class="dd" style="vertical-align:middle; text-align:center;">{$item.platform|getplatform}</td>
+											 <td class="dd" style="vertical-align:middle; text-align:center;"><!-- <a href="###">修改</a> --> <a class="delete" data-id="{$item.id}" style="color:red;">删除</a></td>											                                                                                
+                                        </tr>
+                                        {/volist}
+                                    </tbody>
+                                </table>                                								
+                             </div>
+							<div style="text-align:center;">{$list->render()}</div>							
+                        </div>
+                    </div>
+                    <!-- End  Hover Rows  -->
+                </div>
+               
+            </div>		
+         <!-- /. PAGE WRAPPER  -->
+        </div>
+     <!-- /. WRAPPER  -->
+  
+ {include file="./static/html/footer_common.html" /}
+  <!-- Morris Chart Js -->
+    <script src="/static/assets/js/morris/raphael-2.1.0.min.js"></script>
+    <script src="/static/assets/js/morris/morris.js"></script>
+    <script type="text/javascript" src="/static/plugin/daterangepicker/moment.js"></script>
+    <script type="text/javascript" src="/static/plugin/daterangepicker/daterangepicker.js"></script>	
+</body>
+<script>
+  
+  $(".delete").click( function(event){
+		        var id = $(this).attr("data-id");
+				var _$ = $(this);
+		        layer.confirm('确认删除后数据将不会保存?', {
+					  btn: ['确认','取消'] //按钮
+					}, function(){
+					  var index = layer.load(1, {
+								  shade: [0.1,'#fff'] //0.1透明度的白色背景
+								});
+					   $.post("/admin_profile/app_delete",{id:id},function(e){
+					       layer.closeAll();
+					         if("ok"==e)
+							 {
+							    _$.parents("tr").remove();
+								layer.msg('删除成功');								
+							 }else{
+							   layer.msg('网络异常,删除失败', {icon: 1});
+							 }
+					   })
+					 
+					}, function(){
+					  
+					});
+			   return false;
+		   });
+</script>
+</html>

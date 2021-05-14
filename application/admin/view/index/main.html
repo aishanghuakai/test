@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GAME BRAIN</title>
+    {include file="./static/html/header_common.html" /}
+	 <link rel="stylesheet" type="text/css" href="/static/plugin/jquery-time/daterangepicker.css?t=<?php echo time(); ?>" />
+	 
+     <link href="/static/css/dialog.css?t=<?php echo time(); ?>" rel="stylesheet" type="text/css" />
+    <link href="/static/css/blue/style.css?t=<?php echo time(); ?>" rel="stylesheet">
+	 <link href="/static/css/admin_index.css?t=<?php echo time(); ?>" rel="stylesheet">
+	<style>
+	 .edit_remark{cursor:pointer;}
+	 .mTips img{width:100%;height:100%;cursor:pointer;}
+	 .btn-primary {
+    color: #fff;
+    background-color: #007bff;
+    border-color: #007bff;
+}
+	</style>
+</head>
+<body style="background-color:#f1f3f8;">
+  
+    <div id="wrapper">
+        {include file="./static/html/header.html" /}	
+		<div class="hw_page_content">
+		    
+		    <div class="hw_menu_left">
+         {include file="./static/html/side.html" /}  
+			</div>
+			
+		    <div class="hw_content_right" style="margin-bottom:10px;background-color:#f1f3f8; width:100%;margin-left:17% !important" >
+			  <div class="summary">
+			     <div class="text-center">
+                    <div class="text-muted">昨天收益 <span style="font-size:12px;"><?php echo date("Y-m-d",strtotime("-2 day")); ?></span></div>
+                    <div class="text-val">${$result["yesterday"]["revenue"]} 
+					 <span style="font-size:12px;color:rgba(0, 0, 0, 0.3);">环比之前 {$result["yesterday"]["rate"]["rate"]}% <i class="fa fa-long-arrow-{$result['yesterday']['rate']['action']}"></i></span>
+					</div>
+                 </div>
+				 <div class="text-center">
+                    <div class="text-muted small">上周收益 <span style="font-size:11px;">{$result['thisweek']['week']['start']}至{$result['thisweek']['week']['end']}</span></div>
+                    <div class="text-val">${$result["thisweek"]["revenue"]} 
+					  <span style="font-size:12px;color:rgba(0, 0, 0, 0.3);">环比之前 {$result["thisweek"]["rate"]["rate"]}% <i class="fa fa-long-arrow-{$result['thisweek']['rate']['action']}"></i></span>
+					</div>
+                 </div>
+				 <div class="text-center">
+                    <div class="text-muted small">本月收益</div>
+                    <div class="text-val">${$result["thismonth"]["revenue"]} 
+					 <span style="font-size:12px;color:rgba(0, 0, 0, 0.3);">环比之前 {$result["thismonth"]["rate"]["rate"]}% <i class="fa fa-long-arrow-{$result['thismonth']['rate']['action']}"></i></span>
+					</div>
+                 </div>
+				 <div class="text-center">
+                    <div class="text-muted small"><i style="font-size:12px;color: rgba(0, 0, 0, 0.45);" class="fa fa-universal-access"></i> 上周排行</div>
+                    <div style="margin-left:10px;"><span style="background-color:rgb(24, 119, 242);padding:1px 5px;font-size:10px;color:#fff;">{$result["rank"]["num"]}</span> <span style="font-size:12px;color:rgba(0, 0, 0, 0.3);">环比之前 {$result["rank"]["rate"]} <i class="fa fa-long-arrow-{$result['rank']['action']}"></i></span></div>
+                 </div>
+			  </div>
+			  <div style="margin:30px 30px 10px 30px;" id="app">
+			   <ul class="child_nav">
+			     <a class="btn badge-gradient-info btn-sm" href="/admin_ltv/data">LTV模型</a>
+				 <a class="btn btn-inverse-danger btn-sm" href="/admin_index/countrygroup">地区</a>	
+                 {if condition="getuserrole() eq 'super' or getuserrole() eq 'financer'" }				 
+				  <a class="btn btn-inverse-default btn-sm" target="__blank" href="/admin_index/copartner">合作组</a>
+				 {/if}
+                  <!-- <a class="notice" style="float:right;color:red;text-decoration:none;font-size:13px;"><marquee scrollamount="3" scrolldelay="100" width="300" >&nbsp;【公告】<span style="color:#222;">广点通收益因接口更改变动，总收益中缺少该渠道收益,目前权限正在申请中，预计下周一申请通过后恢复,敬请悉知！</span></marquee></a> -->
+			   </ul>				
+			  </div>			  
+			    <div class="hex_chats" style="padding-top:10px;">
+				  <div style="height:300px;float:left;width:50%;" id="revenuechats">				    
+				  </div>
+				  <div style="height:300px;float:left;width:50%;" id="spendchats"></div>
+				</div>
+                {if condition="$testnum gt 0"}
+				<div class="asd-inline">
+				    <a href="/testplan/index?appid={$appid}" target="_blank">
+						<span>与之该产品相关联的</span>
+                        <span><strong>{$testnum}</strong> 个最近测试计划已经<em style="color:red;font-style:normal;"> 结束</em> 更多了解本次测试情况 </span>					
+						<span class="asd-inline-link">立即查看 <i class="fa fa-angle-right"></i></span>						
+					</a>
+				</div>
+			   {/if}
+			   {if condition="$product_num gt 0"}
+			   <div class="asd-inline" style="border: 1px solid transparent;background-color: #fef0f0;margin-top:10px;">
+				   
+						<span style="color: #f56c6c;"><strong>【*重要提示*】</strong> 系统检测到该产品下,内购数据异常 存在内购商品对应价格没有关联,请负责该项目的人进行设置</span>					
+					 <a href="/admin_purchase/edit" target="_blank"><span class="asd-inline-link" style="color:#fff;border: 1px solid #fff;border-radius:8px;font-size:11px;background:#338aff;">立即前往设置 <i class="fa fa-angle-right"></i></span>						
+					</a>
+				</div>
+				{/if}
+			   <div style="clear:both;"></div>
+			   <div class="index_main" style="margin-top:15px;background-color:#fff;padding:10px;border-radius:10px;">
+			      <div style="padding: 0 20px;">
+				    <div class="hw_dropdown_menu" id="data_start_date" style="float:left;margin-bottom: 10px;">
+					    {$start} 到 {$end}
+					</div>
+					<div class="hw_dropdown_menu country"  data="all" style="position:relative;margin-left:30px;margin-bottom: 10px;float:left">
+					  <a  class="dropdown_switch dropdown-toggle"  id="dropdownMenuAvatar1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" role="button">
+					    <label  style="font-weight:400;">全部国家</label><i class="fa fa-caret-down" style="margin-left:5px;"></i>
+					  </a>
+					  <div class="has-arrow dropdown-menu1 dropdown-menu-right"  style="position: absolute; top:38px; left: 0px; will-change: transform;height:200px;overflow-y: scroll;">
+						  <div class="country_search">
+							<input class="c_sear" placeholder="搜索"/>
+						  </div>
+						  <div class="">
+							 {volist name="country" id="c"}
+							  <a class="c-dropdown__item dropdown-item" data="{$key}">{$c}</a>
+							 {/volist}						
+						 </div>
+					   </div>
+					</div>
+					<div style="float:left;max-width:600px;padding:0 5px;margin-left:5px;overflow: hidden;text-overflow: ellipsis;">
+					   {volist name="tag" id="t"}
+					    <a class="like_tag" data-country="{$t.country_code}" style="background-color:{$key|getrandcolor}">{$t.tag_value}<i data-id="{$t.id}" class="fa fa-remove"></i></a>
+					   {/volist}
+					  
+					</div>
+					
+					<a style="float:right;color:rgb(20, 101, 214);;margin-top:6px;" id="download">下载表格</a>
+					<a class="fa-tags_a" style="float:right;font-size:12px;margin-right:5px;margin-top:6px;"><i class="fa fa-tags"></i></a>
+					
+				  </div>
+				  <div class="hw_reven table-container" style="width:100%;">
+				      
+				     
+							 <table class="table tablesorter" id="tablehw" style="margin-bottom:0px;">
+							  
+							  <thead >								
+								<tr class="hw_tab-header">
+								  <th>日期</th>
+								  <th><a style="color:#222" class="cursor" onclick="loca_href('active_users')" >活跃</a></th>
+								  <th><a style="color:#222" class="cursor" onclick="loca_href('new_users')" >新增</a></th>
+								  <th><a style="color:#222" class="cursor" onclick="loca_href('retention_1')" >次留</a></th>								  
+								  {if condition="permission(30)" }
+								  <th>自然占比</th>	
+								  {/if}								  
+								  <th><a style="color:#222" class="cursor" onclick="loca_href('purchase')" >内购</a></th>
+								  <th>ROI</th>
+								  <th><a style="color:#222" class="cursor" {if condition="($userid neq '36') and (permission(30))"} onclick="loca_href('spend')" {/if} >花费</a><i style="color:#ccc" class="fa fa-info-circle revenue_remark" data-mtpis="汇总花费(含测试花费)"></i></th>								 
+								  {if condition="permission(30)" }
+								   <th>CPI(平均+买量)</th>
+								  {/if}								  
+								  <th><a style="color:#222" class="cursor" {if condition="($userid neq '36') and (permission(30))"} onclick="loca_href('revenue')" {/if}>收益</a><i style="color:#ccc" class="fa fa-info-circle revenue_remark" data-mtpis="该收益包含内购"></i></th>	 {if condition="permission(30)" }
+                                    <th>ARPU(总)</th>								  
+								    <th>Ltv0(广告+内购)</th>
+									<th><div id="obj_roi">Roi0</div></th>
+								  {/if}						  
+								</tr>
+							  </thead>
+							   
+							    <tbody>
+								    
+								   {volist name="list" id="vv"}
+									<tr >
+									  <td date="{$vv.date}" title="备注标记" class="edit_remark"><?php $de = date("Y-m-d",strtotime("-1 day"));if( $isnew && $vv["date"]==$de ){ ?><div class="label1"></div><?php } ?><i style="color:#bcbcbc">({$vv.date|getweekday})</i>{$vv.date}
+									  {if condition="$vv['producter_showtips'] neq '0'"}<sup  data-mtpis="{$vv['producter_showtips']}" ><i style="color:red;font-size:10px;" class="fa fa-commenting-o"></i></sup>{/if}</td>
+									  <td>{$vv["result"]["revenue"]["total"]["active_users"]}</td>
+									  <td>{$vv["result"]["new_users"]}</td>
+									  <td>{$vv["result"]["reten"]}%</td>
+									  {if condition="permission(30)" }
+									  <td>{$vv["result"]["nature_rat"]}%</td>
+									  {/if}
+									  <td>
+									  <?php
+									    $str = purchaseShow($vv['date'],$appid);
+										if($str!="")
+										{
+										  echo $str;
+										}else{
+										 echo "$".$vv["result"]["purchase"];
+										}
+									  ?>
+									  {if condition="$role eq 'producter'"}
+									  &nbsp;<i date="{$vv.date}" v="{$vv['result']['purchase']}" class="fa fa-edit purchase_edit"></i>
+									  {/if}
+									  </td>
+									  <td style="{if condition="$vv['result']['roi'] >= 100"}color:#fe496d;{/if}" >{$vv["result"]["roi"]}%</td>
+									  <td><div>${$vv["result"]["spend"]["spend"]}{if condition="$vv['result']['ctr_spend']>0"}/<span style="color:#f48b29;" title="测试消耗">{$vv['result']['ctr_spend']}</span>{/if} {if condition="$vv['advertiser_showtips'] neq '0'"}<sup data-mtpis="{$vv['advertiser_showtips']}"  <i style="color:red;font-size:10px;" class="fa fa-commenting-o"></i></sup>{/if} {if condition="$appid eq 112"}&nbsp;<i date="{$vv.date}" type="spend" v="{$vv["result"]["spend"]["spend"]}" style="font-size:10px;color:#ccc;" class="fa fa-pencil"></i>{/if}</div></td>
+									  {if condition="permission(30)" }
+									  <td>{$vv["result"]["spend"]["cpi"]}+{$vv["result"]["spend"]["ad_cpi"]}
+									   <?php $lowest =$total_data["spend"]["cpi"]*0.7;if( $lowest>$vv["result"]["spend"]["cpi"] ){  ?>
+									    &nbsp;<i class="fa fa-long-arrow-down" data-mtpis="该项指标波动变化较大,请注意" style="color:#ec7357"></i>
+									   <?php } ?>
+									   <?php $highest =$total_data["spend"]["cpi"]*1.3;if( $highest<$vv["result"]["spend"]["cpi"] ){  ?>
+									    &nbsp;<i class="fa fa-long-arrow-up" data-mtpis="该项指标波动变化较大,请注意" style="color:#589bff"></i>
+									   <?php } ?>
+									  </td>
+									  {/if}
+									  <td style="cursor:pointer;" class="revenue_ltv" date="{$vv.date}"><div >${$vv["result"]["revenue"]["total"]["revenue"]} {if condition="$vv['publisher_showtips'] neq '0'"} <sup data-mtpis="{$vv['publisher_showtips']}">  <i style="color:red;font-size:10px;" class="fa fa-commenting-o"></i></sup>{/if} {if condition="$appid eq 112"}&nbsp;<i date="{$vv.date}" type="revenue" v="{$vv["result"]["revenue"]["total"]["revenue"]}" style="font-size:10px;color:#ccc;" class="fa fa-pencil"></i>{/if}</div></td>							 
+									     {if condition="permission(30)" }
+										<td>{$vv["result"]["revenue"]["total"]["dauarpu"]}
+									   <?php $lowest =$total_data["revenue"]["total"]["dauarpu"]*0.7;if( $lowest>$vv["result"]["revenue"]["total"]["dauarpu"] ){  ?>
+									    &nbsp;<i class="fa fa-long-arrow-down" data-mtpis="该项指标波动变化较大,请注意" style="color:#ec7357"></i>
+									   <?php } ?>
+									   <?php $highest =$total_data["revenue"]["total"]["dauarpu"]*1.3;if( $highest<$vv["result"]["revenue"]["total"]["dauarpu"] ){  ?>
+									    &nbsp;<i class="fa fa-long-arrow-up" data-mtpis="该项指标波动变化较大,请注意" style="color:#589bff"></i>
+									   <?php } ?>
+									  
+									  </td>
+									  <td>{$vv["result"]["ltv0"]}=({$vv["result"]["ltv_ad0"]}+{$vv["result"]["ltv_pr0"]})</td>
+                                      <td style="cursor:pointer;" class="roi_ltv" date="{$vv.date}">{$vv["result"]["roi0"]}%</td>
+									  {/if}									  								  
+									</tr>
+									{/volist}
+								  </tbody>
+								<tfoot>
+								  <tr style="border-top:1px solid #222 !important;background-color:#fff;font-size:14px;font-weight:700">
+									  <td style="font-weight:700">总计</td>
+									  <td>{$total_data["revenue"]["total"]["active_users"]}</td>
+									  <td>{$total_data["new_users"]}</td>
+									  <td>{$total_data["reten"]}%</td>
+									  {if condition="permission(30)" }
+									  <td>{$total_data["nature_rat"]}%</td>
+									  {/if}
+									  <td>${$total_data["purchase"]}</td>
+									  <td>{$total_data["roi"]}%</td>
+									  <td>${$total_data["spend"]["spend"]}</td>
+									  {if condition="permission(30)" }
+									  <td>{$total_data["spend"]["cpi"]}+{$total_data["spend"]["ad_cpi"]}</td>
+									  {/if}
+									  <td>${$total_data["revenue"]["total"]["revenue"]}</td>
+									  {if condition="permission(30)" }									  
+									    <td>{$total_data["revenue"]["total"]["dauarpu"]}</td>
+										<td>{$total_data["ltv0"]}=({$total_data["ltv_ad0"]}+{$total_data["ltv_pr0"]})</td>
+										<td style="cursor:pointer;" class="roi_total_ltv">{$total_data["roi0"]}</td>
+                                      {/if}  
+									</tr>
+								</tfoot>
+                               								
+						  </table>
+						
+					 </div>
+			   </div>
+			</div>
+		</div>
+		  <div id="show_content">
+		  
+		  
+		  </div>
+		  <div id="revenue_content1">
+		      <div class="hw-dialog">
+			    <div class="hw_modal"></div>
+				<div class="hw_game-dialog">
+				   <div class="dialog-header">
+				     <div class="title" style="color:#1a202c;font-weight:600;text-align:left;">收益来源细分(ltv打点计算) <span class="revenue_date">2020-11-03</span></div>
+					 <div class="tag_dis" style="color:#1a202c;font-weight:600;text-align:right;">
+					    <span class="link-tag link-tag-active" data="day">按留存天数</span>
+						<span class="link-tag" data="channel">按渠道来源</span>
+						<span class="link-tag" data="device">按设备类型</span>
+						<span class="link-tag" data="roi">按回收周期</span>
+					 </div>
+				   </div>
+				   <div style="clear:both;"></div>
+				   <div class="dialog-body">
+				     <table class="table" style="margin-bottom:0px;">
+							  
+							 
+					 </table>
+				   </div>
+				   <div class="dialog-footer">
+					  <p>说明:内购收益由于打点存在遗漏，会存在部分误差!</p>
+					  <button type="button" class="hw_game-btn hw_game-btn-default hw_close">关 闭</button>
+				   </div>
+				</div>
+			   </div>
+		  </div>
+		  <div class="bg_box" style="position:fixed;top:0;width:100%;bottom:0;left:0;right:0;height:100%;background:rgba(0,0,0,0.5);display:none;">
+		    <div style="width:100%;height:100%;display:table;table-layout:fixed;">
+			 <a class="table-cell" style="display:table-cell;vertical-align:middle;text-align:center;">
+			   <img src="##" class="max-img" style="max-height:300px;max-width:70%;" />
+			 </a>
+			</div>
+		  </div>
+		  <div class="hw_remark_inner">
+				<div class="hw_remark_content">
+						<span class="hw_i_input_box">
+						   <input class="hw_i_input" id="tag_value" placeholder="自定义标签" type="text">
+						</span>
+                        <!-- <p style="font-size:10px;"><i class="fa fa-exclamation-circle"></i> 多个，请用英文逗号隔开</p>	 -->					
+				</div>		
+			  <div class="hw_remark_bar">
+				  <a href="javascript:;" class="btn btn_primary" onclick="add_tag();">确定</a>&nbsp;
+				  <a href="javascript:;" class="btn btn_default remark_close">取消</a></div>
+		 </div>
+		 
+		 {include file="./static/html/footer.html" /}
+	</div>
+</body>
+ {include file="./static/html/footer_common.html" /}
+  <script type="text/javascript" src="/static/plugin/jquery-time/moment.min.js"></script>
+  <script type="text/javascript" src="/static/plugin/jquery-time/daterangepicker_v1.js"></script>
+  <script src="/static/js/mTips.js?t=122"></script>
+  <script src="/static/js/jquery.tablesorter.min.js"></script>
+   <script src="/static/js/jquery.freezeheader.js"></script>
+  <script src="/static/js/echarts.min.js"></script>
+ <script>
+ 
+     var start_date="{$start}";
+	 var end_date = "{$end}";
+	 var chat_start_date = "{$start}";
+	 var chat_end_date ="{$end}";
+	 var filkey ='hw_filter_json';
+	 var min_date = '2020-01-01';
+	 {if condition="$role eq 'super'"}
+	    min_date = '2018-01-01';
+	 {/if}
+    $(function(){
+	    		  
+		  var save_obj = localStorage.getItem(filkey)
+		  if(save_obj)
+		  {
+		      let params = JSON.parse(save_obj)
+			  if( params && params.hasOwnProperty("start_date") )
+			  {
+			    start_date = params.start_date
+				end_date = params.end_date
+				$('#data_start_date').text(start_date+" 到 "+end_date);
+				loaddata();
+				 $('body,html').animate({
+				   scrollTop: $(".index_main").offset().top-70
+                },1000);
+			  }
+		  }
+          get_obj_roi()
+		$.tablesorter.addParser({  
+		 id: "num", //指定一个唯一的ID  
+		 is: function(s){  
+			 return false;  
+			 },  
+		 format: function(s){  
+			 return s.substring(0,s.length-2);//去除后面的汉字
+			 },  
+		 type: "numeric"
+		 });  
+	 $(".table").tablesorter({headers:{11:{sorter:false},8:{sorter:false},10:{sorter:false},4:{sorter:false},3:{sorter:"num"},5:{sorter:"num"},7:{sorter:"num"}}});
+	 
+	 $("#tablehw").freezeHeader({'offset' : '60px'});
+	 
+	  $('#data_start_date').daterangepicker({ opens:'right',ranges: {'今天': [moment(),moment()],
+'昨天': [moment().subtract(1, 'days'),moment().subtract(1, 'days')],
+'近3天': [moment().subtract(3, 'days'), moment().subtract(1, 'days')],
+'近7天': [moment().subtract(7, 'days'), moment().subtract(1, 'days')],
+'近15天': [moment().subtract(15, 'days'), moment().subtract(1, 'days')],
+'这个月': [moment().startOf('month'), moment().endOf('month')],
+'上个月': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]} },function(start, end, label) {	 
+		    start_date = start.format('YYYY-MM-DD');end_date=end.format('YYYY-MM-DD');
+			$('#data_start_date').text(start_date+" 到 "+end_date);
+			 
+			 let params ={}
+			     params.start_date = start_date
+				 params.end_date = end_date
+				 localStorage.setItem(filkey,JSON.stringify(params));
+				 loaddata();
+		 });
+		 $(".like_tag").click( function(){
+		     $(".country").attr("data",$(this).attr("data-country") );
+			 $(".country label").text( $(this).text() );
+			 get_obj_roi();
+			 loaddata();
+			 return false;
+		 })
+		  $(".fa-tags").click( function(){
+		    $(".hw_remark_inner").show();
+		  });
+		  $(".remark_close").click( function(){
+		    $(".hw_remark_inner").hide();
+			$("#tag_value").val("");
+		  })
+		  
+		  
+		  $(".fa-remove").click( function(){
+		    var id = $(this).attr("data-id");
+			var _this = $(this);
+            	$.post("/admin_control/delete_tag",{id:id},function(e){
+										
+				if( "ok"==e )
+				  {
+					_this.parent().remove();                 
+				  }else{
+					layer.msg('由于异常，操作失败');return false;
+				  }			
+			})
+            return false;			
+		  })
+		 
+		 $('#start_date').daterangepicker({ minDate:'2018-07-08',opens:'right' },function(start, end, label) {	 
+		      chat_start_date = start.format('YYYY-MM-DD');chat_end_date=end.format('YYYY-MM-DD');
+			$('#start_date').text(chat_start_date+" 到 "+chat_end_date);
+			 roi_loaddata();
+		 });
+		 
+		 $(document).on("click",".mTips img",function(){
+		    $(".bg_box").show();
+			$(".max-img").attr('src',$(this).attr('src'));
+		 })
+		 $(".bg_box").click(function(){
+		    $("#show_content .bg_box").hide();
+		 })
+		$(document).on("click",".hw_close",function(){
+	       $("#show_content .hw-dialog").hide();
+		   $("#revenue_content1").hide()
+		  })
+		    $(document).on("click",".edit_remark",function(){
+		   
+		       var day_date = $(this).attr("date");
+			   var html ='<div class="hw-dialog "><div class="hw_modal"></div><div class="hw_game-dialog"><div class="dialog-header">';
+				html+='<div class="title">请填写备注信息 '+day_date+'</div></div><div class="dialog-body">';
+                html+='<input class="hw_game-input" id="title" style="text-indent: 0px;" placeholder="简短描述字数50字以内" type="text" value="">';
+				html+='<input  id="date" type="hidden" value="'+day_date+'">';
+				html+='<textarea  class="hw_game-input" style="height:120px;margin-top:10px;" placeholder="详细备注,字数至少100字以上" id="content"  rows="4"></textarea>';
+				html+='</div><div class="dialog-footer">';
+                html+='<button type="button" id="confirm" style="background-color: #f85959;color: #fff;border-color: #f85959;" class="hw_game-btn hw_game-btn-negative" onclick="add_remark(this)">确 认</button>';				
+				html+='<button type="button"  class="hw_game-btn hw_game-btn-default hw_close">关 闭</button></div></div></div>';
+	        $("#show_content").html(html);   
+			    			  
+		  })
+		  		  
+		  $(document).on("click",".revenue_ltv",function(){
+				$("#revenue_content1").show()
+				$(".tag_dis").show()
+				$(".link-tag").removeClass("link-tag-active");
+				$(".link-tag").eq(0).addClass("link-tag-active");
+				var day_date = $(this).attr("date");
+				$(".revenue_date").text(day_date)
+				loadLtvdata(day_date,'day')
+		  })
+          $(document).on("click",".roi_ltv",function(){
+				$("#revenue_content1").show()
+				$(".tag_dis").show()
+				$(".link-tag").removeClass("link-tag-active");
+				$(".link-tag").eq(3).addClass("link-tag-active");
+				var day_date = $(this).attr("date");
+				$(".revenue_date").text(day_date)
+				loadLtvdata(day_date,'roi')
+		  })
+		  
+		  $(document).on("click",".roi_total_ltv",function(){
+				$("#revenue_content1").show()
+				$(".tag_dis").hide()
+				$(".revenue_date").text(start_date+"到"+end_date)
+				loadLtvdata1([start_date,end_date],'roi')
+		  })
+			$(document).on("click",".link-tag",function(){
+				$(".tag_dis").show()
+				$(".link-tag").removeClass("link-tag-active");
+				$(this).addClass("link-tag-active");
+				var day_date = $(".revenue_date").text();
+				var group = $(".link-tag-active").attr("data");
+				loadLtvdata(day_date,group)
+			})
+		  
+		  $(document).on("click",".purchase_edit",function(event){
+			   var _$ = $(this);
+			   var appid ="{$appid}";
+			   var date = _$.attr("date");
+               var country = $(".country").attr("data");			   
+			   var v = $(this).attr("v");
+			   var html='<form  style="text-align:center;">';
+				html+=' <div class="row" style="margin-top:20px;"><div class="input-field col s6"><input  id="v"  value="'+v+'" type="text" class="form-control validate"></div><p style="font-size:10px;color:red">填写时请注意先换算成美元,分成比例为安卓*0.0875 苹果*0.68</p></div>';			
+				html+='<input class="waves-effect waves-light btn save" type="submit" style="background-color: #2ec376;color:#fff;margin-top:20px;width:140px;" value="确认"></input> </form>';
+		   
+				//自定页
+				layer.open({
+				  type: 1,
+				  skin: 'layui-layer-rim', //加上边框
+				  area: ['350px', '200px'], //宽高
+				  content: html
+				});
+				$(".save").click( function(){
+				   v = $("#v").val();
+				   layer.load();
+				   	$.post("/admin_control/add_purchase",{date:date,appid:appid,v:v,country:country},function(e){
+					 layer.closeAll();
+					 if( "ok"==e )
+					 {
+					    return loaddata();
+					 }else{
+					   layer.msg("提交失败，请重新提交");
+					 }					 
+			      })  
+				   return false;
+				})
+	        event.stopPropagation();
+	    });
+		
+		$(document).on("click",".fa-pencil",function(event){
+			   var _$ = $(this);
+			   var appid ="{$appid}";
+			   var date = _$.attr("date");		   
+			   var v = $(this).attr("v");
+			   var type = $(this).attr("type");
+			   var html='<form  style="text-align:center;">';
+				html+=' <div class="row" style="margin-top:20px;"><div class="input-field col s6"><input  id="v"  value="'+v+'" type="text" class="form-control validate"></div></div>';			
+				html+='<input class="waves-effect waves-light btn save" type="submit" style="background-color: #2ec376;color:#fff;margin-top:20px;width:140px;" value="确认"></input> </form>';
+		   
+				//自定页
+				layer.open({
+				  type: 1,
+				  title:date,
+				  skin: 'layui-layer-rim', //加上边框
+				  area: ['350px', '200px'], //宽高
+				  content: html
+				});
+				$(".save").click( function(){
+				   v = $("#v").val();
+				   layer.load();
+				   	$.post("/admin_index/addProductData",{date:date,appid:appid,v:v,type:type},function(e){
+					 layer.closeAll();
+					 if( "ok"==e )
+					 {
+					    return loaddata();
+					 }else{
+					   layer.msg("提交失败，请重新提交");
+					 }					 
+			      })  
+				   return false;
+				})
+	        event.stopPropagation();
+	    });
+		 
+	   });
+	   
+	   
+	   $("#download").click( function(){
+	      var country = $(".country").attr("data");
+	      window.location.href="/admin_index/export?start="+start_date+"&end="+end_date+"&country="+country;
+	   })
+	   
+	   $("#dropdownMenuAvatar1").click(function(){
+	     $(".dropdown-menu-right").show()
+		 return false;
+	   })
+	   $("body").not(".dropdown-menu-right").click( function(e){
+		  
+		  if(e.target.className!="c_sear")
+		  {
+		    $(".dropdown-menu-right").hide()
+		  }
+		})
+		
+		$('.c_sear').bind('input propertychange', function()
+		   {
+			   var input_text = $(this).val();
+               $(".dropdown-menu1 .c-dropdown__item").not("#aa").each(  function(i){
+			        var text = $(this).text();
+					var ismatch = text.match(new RegExp(input_text, 'i'));
+					if( ismatch )
+					  {
+					     $(this).show();
+					  }else{
+					     $(this).hide();
+					  }
+			   })			   
+		   });
+	   $(".c-dropdown__item").click( function(event){
+	      
+		    var _p = $(this).parent().parent().parent();
+			    _p.attr("data",$(this).attr("data") );
+				_p.find("label").text($(this).text() );
+		    loaddata();
+			get_obj_roi()
+			$(".dropdown-menu-right").hide()
+		})
+	
+	var add_tag = function()
+	{
+	   var tag_value = $("#tag_value").val();
+	   var appid = "{$appid}";
+	   if( tag_value=="" )
+	   {
+	      layer.msg('请输入标签');return false;
+	   }
+	   $.post("/admin_control/add_tag",{tag_value:tag_value,appid:appid},function(e){
+										
+				if( "ok"==e )
+				  {
+					layer.msg('设置成功');
+					$(".hw_remark_inner").hide();
+                    window.location.reload();
+				  }else{
+					layer.msg('由于异常，提交失败');return false;
+				  }			
+			})
+	   
+	}
+	
+	var get_obj_roi =function(){
+	  var country = $(".country").attr("data");
+	  $.post("/admin_ltv/get_obj_roi",{country:country},function(e){
+	      $("#obj_roi").attr('title',e);			 
+	   })
+	}
+	
+	var roi_loaddata = function()
+	{
+	   var index1 = layer.load();
+			  $.post("/admin_index/roi_json",{start:chat_start_date,end:chat_end_date},function(e){
+			        layer.closeAll();
+					$("#roi_chats").html(e);		 
+			   });
+	}    	   
+	   var loaddata = function()
+	{
+	   var country = $(".country").attr("data");
+	   var index = layer.load();
+			   $.post("/admin_index/summary_json",{start:start_date,end:end_date,country:country},function(e){
+					 layer.closeAll();
+					 $(".table").trigger("update"); 
+                    $("#tablehw tbody,#tablehw tfoot").remove();					 
+                    $("#tablehw").append(e); 				 
+			   })
+	}
+	var loadLtvdata = function(date,group)
+	{
+	   var country = $(".country").attr("data");
+	   var index = layer.load();
+			   $.post("/admin_ltv/revenue_ltv_json",{date:date,group:group,country:country},function(e){
+					 layer.closeAll();
+					$("#revenue_content1 .table").html(e)			 
+			   })
+	}
+	var loadLtvdata1 = function(date,group)
+	{
+	   var country = $(".country").attr("data");
+	   var index = layer.load();
+			   $.post("/admin_ltv/revenue_total_ltv_json",{date:date,group:group,country:country},function(e){
+					 layer.closeAll();
+					$("#revenue_content1 .table").html(e)			 
+			   })
+	}
+    var loca_href = function(tag)
+     {
+	   
+		var url="";
+		switch( tag )
+		{
+		   case "revenue":
+		     url="/admin_index/revenue?start="+start_date+"&end="+end_date;
+			 break;
+			case "spend":
+			 url= "/admin_index/spend?start="+start_date+"&end="+end_date;
+			break;
+			case "new_users":
+			  url= "/admin_index/chats?spm=new_users&start="+start_date+"&end="+end_date;
+			break;
+			case "retention_1":
+			  url= "/admin_index/chats?spm=retention_1&start="+start_date+"&end="+end_date;
+			break;
+		   case "active_users":
+			  url= "/admin_index/chats?spm=active_users&start="+start_date+"&end="+end_date;
+			break;
+           case "purchase":
+			  url= "/admin_purchase/index";
+			break;			
+		}
+		window.open(url);
+	 }
+    var add_remark = function(obj)
+     {
+	       var $parent  =$(obj).parents(".hw-dialog");
+		   var title =$parent.find("#title").val();
+		   var date = $parent.find("#date").val();
+		   var content = $parent.find('#content').val();
+		   
+		   var appid ="{$appid}";
+		   
+		   if( title=="" || title.length>50 )
+			{
+				layer.msg('简短描述不符合规范!');return false;
+			}
+			if(   content=="" || content.length<100 )
+			{
+				layer.msg('内容详细至少在100个字符以上!');
+			}
+							
+			$(this).attr("disabled",true);
+			var obj = $(this);
+			var index = layer.load(0, {shade: false}); //0代表加载的风格，支持0-2
+			$.post("/admin_remark/add_data",{title:title,content:content,appid:appid,date:date},function(e){
+				layer.close(index);					
+				$(obj).attr("disabled",false);
+				if( "ok"==e )
+				  {
+					layer.msg('提交成功');
+					$parent.hide();
+					loaddata();
+				  }else{
+					layer.msg('由于异常，提交失败');return false;
+				  }			
+			})
+			
+	 }	
+ </script>
+<script>
+var myChart = echarts.init(document.getElementById("revenuechats"));
+var option ={
+    title: {
+        text: '近一周收益&花费($)',
+        left: '50%',
+        textAlign: 'center',
+		textAlign: 'center',
+		textStyle: {
+            color: '#4c5d73',
+			fontSize: 15
+        }
+    },
+	color: ['#73A0FA','#43d8c9','#FFB761'],
+    tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+            type: 'cross',
+            crossStyle: {
+                color: '#999'
+            },
+            lineStyle: {
+                type: 'dashed'
+            }
+        }
+    },
+	grid: {
+        left: '25',
+        right: '25',
+        bottom: '24',
+        top: '75',
+        containLabel: true
+    },
+	legend: {
+        right: 20,
+        orient: 'vertical',
+        data: ['收益','花费']
+    },
+    xAxis: {
+        type: 'category',
+        data: [{$chats_data.date}],
+        splitLine: {
+            show: false
+        },
+        axisTick: {
+            show: false
+        },
+        axisLine: {
+            show: false
+        },
+    },
+    yAxis: {
+        type: 'value',
+        axisLabel: {
+            color: '#999',
+            textStyle: {
+                fontSize: 12
+            },
+        },
+        splitLine: {
+            show: true,
+            lineStyle: {
+                color: '#F3F4F4'
+            }
+        },
+        axisTick: {
+            show: false
+        },
+        axisLine: {
+            show: false
+        },
+    },
+    series: [{
+        name: '收益',
+        type: 'line',
+        smooth: true,
+        data: [{$chats_data.revenueval}],
+		
+    },{
+        name: '花费',
+        type: 'line',
+        smooth: true,       
+        data: [{$chats_data.spendval}],
+    }]
+};
+myChart.setOption(option); 
+</script>
+<script>
+var myChart = echarts.init(document.getElementById("spendchats"));
+var option ={
+    title: {
+        text: '近一周ROI变化(%)',
+        left: '50%',
+        textAlign: 'center',
+		textStyle: {
+            color: '#4c5d73',
+			fontSize: 15
+        }
+    },
+    color: ['#73A0FA','#43d8c9','#FFB761'],
+    tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+            type: 'cross',
+            crossStyle: {
+                color: '#999'
+            },
+            lineStyle: {
+                type: 'dashed'
+            }
+        }
+    },
+	grid: {
+        left: '25',
+        right: '25',
+        bottom: '24',
+        top: '75',
+        containLabel: true
+    },
+    xAxis: {
+        type: 'category',
+        data: [{$chats_data.date}],
+        splitLine: {
+            show: false
+        },
+        axisTick: {
+            show: false
+        },
+        axisLine: {
+            show: false
+        },
+    },
+    yAxis: {
+        type: 'value',
+        axisLabel: {
+            color: '#999',
+            textStyle: {
+                fontSize: 12
+            },
+        },
+        splitLine: {
+            show: true,
+            lineStyle: {
+                color: '#F3F4F4'
+            }
+        },
+        axisTick: {
+            show: false
+        },
+        axisLine: {
+            show: false
+        },
+    },
+    series: [{
+        name: 'ROI',
+        type: 'line',
+        smooth: true,        
+        data: [{$chats_data.rolval}],
+    }]
+};
+myChart.setOption(option); 
+</script>
+<script>
+			jQuery(document).ready(function($) {
+				var sweetTitles = {
+					x: 10,
+					y: 20,
+					tipElements: "a,span,img,div ",
+					noTitle: false,
+					init: function() {
+						var noTitle = this.noTitle;
+						$(this.tipElements).each(function() {
+							$(this).mouseover(function(e) {
+								if (noTitle) {
+									isTitle = true;
+								} else {
+									isTitle = $.trim(this.title) != '';
+								}
+								if (isTitle) {
+									this.myTitle = this.title;
+									this.title = "";
+									var tooltip =
+										"<div class='tooltip'><div class='tipsy-arrow tipsy-arrow-n'></div><div class='tipsy-inner'>" + this.myTitle +
+										"</div></div>";
+									$('body').append(tooltip);
+									$('.tooltip').css({
+										"top": (e.pageY + 20) + "px",
+										"left": (e.pageX - 20) + "px"
+									}).show('fast');
+								}
+							}).mouseout(function() {
+								if (this.myTitle != null) {
+									this.title = this.myTitle;
+									$('.tooltip').remove();
+								}
+							}).mousemove(function(e) {
+								$('.tooltip').css({
+									"top": (e.pageY + 20) + "px",
+									"left": (e.pageX - 20) + "px"
+								});
+							});
+						});
+					}
+				};
+				$(function() {
+					sweetTitles.init();
+				});
+			});
+		</script>
+</html>

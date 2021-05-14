@@ -1,0 +1,420 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GAME BRAIN</title>
+    {include file="./static/html/header_common.html" /}
+	  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+   <script src="https://unpkg.com/vue/dist/vue.min.js"></script>
+  <!-- import JavaScript -->
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <script src="/static/js/axios.min.js"></script>	 
+	<style>
+
+.h3{
+ font-weight: 700;
+ font-size: 18px;
+ color: rgb(45, 55, 72);
+ position: relative;
+}
+.h3::before {
+    content: "";
+    position: absolute;
+    left: -10px;
+    width: 5px;
+    margin-right: 10px;
+    height: 100%;
+    background-color: #007fff;
+}
+.el-upload__input {
+    display: none !important;
+}
+.el-upload--picture-card{width:100%;line-height:100%;}
+.el-upload-dragger{width:100%;}
+
+  .avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+.case-list{
+    display: block;
+	width: 18.65278vw;
+	height: 18.65278vw;
+	margin-right: 6.59722vw;
+	background-size: 8.20833vw,18.65278vw 9.82639vw;
+	background-position: 50%,top;
+	background-repeat: no-repeat;
+	margin-bottom: 80px;
+    cursor: pointer;
+	background-color:#fff;
+	box-shadow: 0 12px 30px 5px hsla(203,7%,79%,.5);
+} 
+.case-list .item-text{
+    padding: 0 20px;
+    padding-top: 10.91821vw;
+    height:20.65278vw;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -ms-flex-align: center;
+    align-items: center;
+    text-align: center;
+    font-size: 1.18056vw;
+    color: #333a46;
+    line-height: 1.667;
+}
+.pricing-grid {
+    width:40%;
+    float:left;
+    text-align: center;
+    margin-left: 7%;
+    transition: 0.5s all;
+    -webkit-transition: 0.5s all;
+    -moz-transition: 0.5s all;
+    -o-transition: 0.5s all;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -o-border-radius: 4px;
+    border-radius: 4px;
+
+}
+.pricing-grid h3 a {
+   
+    padding: 0.3em 1em;
+    display: block;
+    color: #FFF;
+    font-family: 'Open Sans', sans-serif;
+    transition: 0.5s all;
+    -webkit-transition: 0.5s all;
+    -moz-transition: 0.5s all;
+    -o-transition: 0.5s all;
+    border-top-right-radius: 3px;
+    border-top-left-radius: 3px;
+    -o-border-top-right-radius: 3px;
+    -moz-border-top-right-radius: 3px;
+    -webkit-top-left-radius: 3px;
+    -moz-border-top-left-radius: 3px;
+    -o-border-top-left-radius: 3px;
+    -webkit-border-top-left-radius: 3px;
+}
+.price-value {
+    padding: 0.6em 0 0.5em 0;
+}
+.pricing-grid ul, .price-value {
+    background: #fff;
+	margin-bottom:0px;
+	
+}
+.price-value a {
+   
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 600;
+}
+.pricing-grid ul li{padding-left:40%;}
+.pricing-grid ul li a {
+    color: #485460;
+    font-size: 1.2em;
+    text-align: left;
+    display: block;
+    padding: 0.3em 0em;
+    transition: 0.5s all;
+    -webkit-transition: 0.5s all;
+    -moz-transition: 0.5s all;
+    -o-transition: 0.5s all;
+}
+pre {outline:none; padding: 5px; margin: 5px;background-color:#fff; }
+    .string { color: green; }
+    .number { color: darkorange; }
+    .boolean { color: blue; }
+    .null { color: magenta; }
+    .key { color: #222; }
+.el-icon-check{color:#409eff;font-size:24px;font-weight:700;}
+	</style>
+</head>
+<body style="background: #f7f7f7 !important;">
+    <div id="wrapper" style="background:#f7f7f7;">
+        {include file="./static/html/header.html" /}	
+		<div class="hw_page_content">
+		    <div class="hw_menu_left">
+         {include file="./static/html/side.html" /}  
+			</div>
+		    <div class="hw_content_right" style="padding:10px 10px;background:#f7f7f7">
+			   <h3 style="color:#222;margin-bottom: 20px;float:left;">
+			     <el-page-header @back="goBack" content="在线APK分析"  style="cursor:pointer;" ></el-page-header>				
+			   </h3>
+			    <div style="clear:both;"></div>
+			   <div class="main" style="margin-top:20px;margin-left:4%;">                  
+					      
+						    <h2 class="h3" style="font-weight: 700; font-size: 18px; color: rgb(45, 55, 72); position: relative;">上传APK</h2>   <el-row style="margin-left:0px;margin-bottom:20px;">					  										
+										  <el-upload
+											  drag
+											  action="/admin_apkinfo/uploads"
+											  name="upload_apk"
+											  v-loading="uploadloading"
+											  list-type="picture-card"
+											  :show-file-list="false"
+											  :before-upload="beforeAvatarUpload"
+											  :on-success="handleVideoSuccess">											 
+											  <i class="el-icon-upload"></i>
+											  <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+											  <div class="el-upload__tip" slot="tip">只能上传APK文件，且不超过500M</div>
+										  </el-upload>
+							  </el-row>
+                              <div style="clear:both;"></div>							  
+							  <h2 class="h3" style="margin-top:20px;font-weight: 700; font-size: 18px; color: rgb(45, 55, 72); position: relative;">结果分析 </h2>
+							  <div style="margin:0 auto;width:30%;" >
+							     <div class="case-list" v-if="res.length>0" :style="{'background-image':'url('+res[0].iconpath+'),url(https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=4145012205,1321983261&fm=26&gp=0.jpg)'}">
+								   <a class="list-item ">
+								   <p class="item-text">{{res[0].appname}} ({{res[0].engine}}开发)</br><span style="font-size:12px;color:#9f5f80">{{res[0].package}}</span></p></a>
+								 </div>
+                              </div>
+                              <h2 class="h3" v-if="res.length>0" style="margin-top:0px;font-weight: 700; font-size: 18px; color: rgb(45, 55, 72); position: relative;">变现渠道 </h2>
+							  <div style="margin:0 auto;width:90%;">
+							     <div class="pricing-grids" v-if="res.length>0">
+								      <div class="pricing-grid" :style="{'background-color':colors[index]}" v-for="(item,index) in res">
+											<h3><a>版本：v{{item.versionname}}</a></h3>
+											<!-- <div class="price-value">
+												<a >变现渠道</a>
+											</div> -->
+											<ul>
+												<li v-for="aa in item.activity" :style="{'background-color':campare[index].indexOf(aa)>-1?'#e4bad4':'#fff'}">
+												  <a><i class="el-icon-check"></i> {{aa}} </a>
+												  
+												  </li>
+											</ul>
+									   </div>
+									   
+								 </div>
+                              </div>
+							  <div style="clear:both;"></div>
+                             <h2 class="h3" v-if="res.length>0" style="margin-top:30px;font-weight: 700; font-size: 18px; color: rgb(45, 55, 72); position: relative;">manifest对比 </h2>
+							 <el-row :gutter="10">
+							  <el-col :span="12" v-for="(item,index) in res">
+							  <div class="pricing-grids" style="max-height:400px;overflow:auto;background-color:#fff;">
+							     <h3 style="text-align:center;color:#222;">版本：v{{item.versionname}}</h3>											
+								 <pre id="json" v-html="syntaxHighlight(result[index])"></pre>
+							   </div>
+							  </el-col>							  
+							</el-row>
+                             							 
+							 		  
+				</div>
+				<div class="clear"></div>
+
+			</div>
+		</div>
+	</div>	
+</body>
+ {include file="./static/html/footer_common.html" /}
+ <script>
+function StringBuffer() {
+    this.__strings__ = [];
+};
+StringBuffer.prototype.append = function (str) {
+    this.__strings__.push(str);
+    return this;
+};
+
+StringBuffer.prototype.appendFormat = function (str) {
+    for (var i = 1; i < arguments.length; i++) {
+        var parent = "\\{" + (i - 1) + "\\}";
+        var reg = new RegExp(parent, "g")
+        str = str.replace(reg, arguments[i]);
+    }
+    this.__strings__.push(str);
+    return this;
+}
+StringBuffer.prototype.toString = function () {
+    return this.__strings__.join('');
+};
+StringBuffer.prototype.clear = function () {
+    this.__strings__ = [];
+}
+StringBuffer.prototype.size = function () {
+    return this.__strings__.length;
+}
+var flag = 1;
+
+function getHighLightDifferent(a, b) {
+   
+    var temp = getDiffArray(a, b);
+    var a1 = getHighLight(a, temp[0]);  
+    var a2 = getHighLight(b, temp[1]);    
+    return new Array(a1,a2);
+}
+
+function getHighLight(source, temp) {
+    var result = new StringBuffer();
+    var sourceChars = source.split("");
+    var tempChars = temp.split("");
+    var flag = false;
+    for (var i = 0; i < sourceChars.length; i++) {
+        if (tempChars[i] != ' ') {
+            if (i == 0) {
+                result.append("<span style='background-color:red;color:#fff'>");
+                result.append(sourceChars[i]);
+            }
+            else if (flag) {
+                result.append(sourceChars[i]);
+            }
+            else {
+                result.append("<span style='background-color:red;color:#fff'>");
+                result.append(sourceChars[i]);
+            }
+            flag = true;
+            if (i == sourceChars.length - 1) {
+                result.append("</span>");
+            }
+        }
+        else if (flag == true) {
+            result.append("</span>");
+            result.append(sourceChars[i]);
+            flag = false;
+        } else {
+            result.append(sourceChars[i]);
+        }
+    }
+    return result.toString();
+}
+
+function getDiffArray(a, b) {
+    var result = new Array();
+    //选取长度较小的字符串用来穷举子串
+    if (a.length < b.length) {
+        var start = 0;
+        var end = a.length;
+        result = getDiff(a, b, start, end);
+    } else {
+        var start = 0;
+        var end = b.length;
+        result = getDiff(b, a, 0, b.length);
+        result = new Array(result[1], result[0]);
+    }
+    return result;
+
+}
+
+//将a的指定部分与b进行比较生成比对结果
+function getDiff(a, b, start, end) {
+    var result = new Array(a, b);
+    var len = result[0].length;
+    while (len > 0) {
+        for (var i = start; i < end - len + 1; i++) {
+            var sub = result[0].substring(i, i + len);
+            var idx = -1;
+            if ((idx = result[1].indexOf(sub)) != -1) {
+                result[0] = setEmpty(result[0], i, i + len);
+                result[1] = setEmpty(result[1], idx, idx + len);
+                if (i > 0) {
+                    //递归获取空白区域左边差异
+                    result = getDiff(result[0], result[1], start, i);
+                }
+                if (i + len < end) {
+                    //递归获取空白区域右边差异
+                    result = getDiff(result[0], result[1], i + len, end);
+                }
+                len = 0;//退出while循环
+                break;
+            }
+        }
+        len = parseInt(len / 2);
+    }
+    return result;
+}
+
+//将字符串s指定的区域设置成空格
+function setEmpty(s, start, end) {
+    var array = s.split("");
+    for (var i = start; i < end; i++) {
+        array[i] = ' ';
+    }
+    return array.join("");
+}
+
+  function syntaxHighlight(json) {
+    if (typeof json != 'string') {
+        json = JSON.stringify(json, undefined, 2);
+    }
+    json = json.replace(/&/g, '&').replace(/</g, '<').replace(/>/g, '>');
+    return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function(match) {
+        var cls = 'number';
+        if (/^"/.test(match)) {
+            if (/:$/.test(match)) {
+                cls = 'key';
+            } else {
+                cls = 'string';
+            }
+        } else if (/true|false/.test(match)) {
+            cls = 'boolean';
+        } else if (/null/.test(match)) {
+            cls = 'null';
+        }
+        return '<span class="' + cls + '">' + match + '</span>';
+    });
+}
+ </script>
+  <script>
+     
+	 new Vue({
+        el: '#wrapper',
+        data: {
+            loading: false,
+			res:[],
+			campare:[],
+			result:[],
+			host:'/admin_apkinfo/uploads',			
+			options:[],
+			colors:['#485460','#16c79a','#1a508b','#9f5f80'],
+			uploadloading:false,
+			dialogVisible:false,
+			
+        },
+        mounted(){
+		  this.getlist('com.whitedot.bfg')
+		},		
+        methods: {			
+			
+			getlist(packages){			    
+			   axios({
+					method: 'post',
+					url:'/admin_apkinfo/version_compare',
+					data:{packages:packages}
+				}).then(res=>{
+				 this.res = res.data.res
+				 this.result = [this.res[0].manifest]
+				 if(this.res.length>1)
+				 {
+				   this.result = getHighLightDifferent(this.res[0].manifest, this.res[1].manifest)
+				 }				 
+				 this.campare = res.data.campare
+			 })
+			},
+			handleVideoSuccess(res, file) {
+              this.uploadloading = false
+			  if( res.code==200 )
+			  {
+				
+				this.$message({
+				  message: '上传成功',
+				  type: 'success'
+                });
+				this.getlist(res.data)
+			  }else{
+			    this.$message.error('上传失败');
+			  }
+            },			
+			beforeAvatarUpload(file){
+			  this.uploadloading = true
+			  return true
+		    },
+			goBack() {
+			  window.location.href='/testmaterial/index';
+			}
+        }
+    })
+  </script>	
+</html>

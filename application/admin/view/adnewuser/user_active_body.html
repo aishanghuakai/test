@@ -1,0 +1,11 @@
+   	   				
+	{volist name="data" id="s"}
+	   <tr>
+		  <td>{$s.name}</td>
+		  <td>${$s.revenue}</td>
+		  <td>{$s.active_num}</td>
+		  <td>${$s.avg_rev}</td>
+		  <td>{$s.date}</td>
+		  <td><a class="btn btn-success details" data_id ="{$s.id}" style="height:25px;line-height:10px;">详情</a></td>
+	   </tr>
+	{/volist}

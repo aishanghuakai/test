@@ -1,0 +1,329 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GAME BRAIN</title>
+    {include file="./static/html/header_common.html" /}
+	<link rel="stylesheet" type="text/css" href="http://unpkg.com/iview/dist/styles/iview.css">
+		<link rel="stylesheet" type="text/css" href="/static/css/goalset.css">
+    <script type="text/javascript" src="http://vuejs.org/js/vue.min.js"></script>
+    <script type="text/javascript" src="http://unpkg.com/iview/dist/iview.min.js"></script>
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+	<style>
+	 body,.hw_content_right{font-size:14px;}
+	</style>
+</head>
+<body>
+    <div id="wrapper" style="background: #fff;">
+        {include file="./static/html/header.html" /}	
+		<div class="hw_page_content">
+		    <div class="hw_menu_left">
+         {include file="./static/html/side.html" /}  
+			</div>
+		    <div class="hw_content_right">
+			   <div style="padding:20px 0px;"><i-button type="primary" icon="ios-add" @click="openModal">新建目标制定</i-button></div>
+			      {volist name="r" id="vo"}
+				  <div class="box">
+						<div class="box-header with-border">
+						  <h4 class="box-title">{$vo.month}目标情况</h4>
+						</div>
+						<div class="box-body">
+							<div class="table-responsive">
+							  <table class="table">
+								<tbody>
+								     <tr>
+									     <th colspan="3"></th>
+										 <th colspan="6" style="border-right:1px solid #ebedf2;border-left:1px solid #ebedf2;text-align:center;">月初实际数据</th>
+										 <th colspan="6" style="border-right:1px solid #ebedf2;border-left:1px solid #ebedf2;text-align:center;">月末实际数据</th>
+										 <th></th>
+									 </tr>
+									<tr class="tr_header">									 
+									  <th style="text-align:left;">产品名称</th>
+									  <th>负责人</th>
+									  <th>完成情况</th>								
+									  <th>次留</th>
+									  <th>七留</th>
+									  <th>时长</th>
+									  <th>视频</th>
+									  <th>插屏</th>
+									  <th>营收</th>
+									  <th>次留</th>
+									  <th>七留</th>
+									  <th>时长</th>
+									  <th>视频</th>
+									  <th>插屏</th>
+									  <th>营收</th>
+									  <th>分析总结</th>
+									</tr>
+									{volist name="vo.list" id="vv"}
+									<tr>
+									 
+									  <td style="text-align:left;">{$vv.app_name}</td>
+									  <td>{$vv.username}</td>
+									  <td>
+										{if condition="$vv['status'] eq 1"}
+										 <span class="badge bg-success">进行中</span>
+										{elseif condition="$vv['status'] eq 3" /}
+										  <span class="badge bg-danger">未完成</span>
+                                        {elseif condition="$vv['status'] eq 2" /}
+                                         <span class="badge bg-info">已完成</span>
+										 {else /}
+                                        {/if}										 
+									  </td>
+								
+									  <td>{$vv.start_retention_1}</td>
+									   <td>{$vv.start_retention_7}</td>
+									   <td>{$vv.start_usertime}</td>
+									   <td>{$vv.start_rew_num}</td>
+									   <td>{$vv.start_int_num}</td>
+									   <td>{$vv.start_revenue}</td>
+									   <td>{$vv.end_retention_1}</td>
+									   <td>{$vv.end_retention_7}</td>
+									   <td>{$vv.end_usertime}</td>
+									   <td>{$vv.end_rew_num}</td>
+									   <td>{$vv.end_int_num}</td>
+									   <td>{$vv.end_revenue}</td>
+									   <td><a href="javascript:;" @click="editData({$vv.id})">详情</a></td>
+									</tr>
+									{/volist}
+								  </tbody>
+								</table>
+							</div>
+						</div>
+				  </div>
+				  {/volist}
+				  <template>
+					
+					<Modal v-model="modal1" :title="title" width="700">
+						<i-form :model="formData">
+						   <Row :gutter="32">
+						    <h5 style="padding:5px 15px 15px 15px;font-weight:700">项目设置</h5>
+							<i-col span="8">							   
+							       <label>选择项目</label>
+                                   <i-select v-model="formData.app_id" style="width:200px">
+                                        <i-option v-for="item in apps" :value="item.value" :key="item.value">{{ item.label }}</i-option>
+                                   </i-select>
+							</i-col>
+							<i-col span="8">							   
+							       <label>项目负责人</label>
+                                   
+								    <i-select v-model="formData.manager" style="width:200px">
+                                        <i-option v-for="item in users" :value="item.value" :key="item.value">{{ item.label }}</i-option>
+                                   </i-select>
+							</i-col>
+							<i-col span="8">							   
+							       <label>目标月份</label>
+                                   <Date-picker @on-change="handleChange" :value="formData.month"  type="month" placeholder="选择月份"></Date-picker>
+							</i-col>
+							
+                         </Row>
+                          <Row :gutter="32">
+						    <h5 style="padding:15px;font-weight:700">月初目标实际数据</h5>
+							<i-col span="4">							   
+							       <label>次留</label>
+                                   <i-input v-model="formData.start_retention_1"></i-input>
+							</i-col>
+							<i-col span="4">							   
+							       <label>七留</label>
+                                   <i-input v-model="formData.start_retention_7"></i-input>
+							</i-col>
+							<i-col span="4">							   
+							       <label>时长</label>
+                                   <i-input v-model="formData.start_usertime"></i-input>
+							</i-col>
+							<i-col span="4">							   
+							       <label>视频</label>
+                                   <i-input v-model="formData.start_rew_num"></i-input>
+							</i-col>
+							<i-col span="4">							   
+							       <label>插屏</label>
+                                   <i-input v-model="formData.start_int_num"></i-input>
+							</i-col>
+							<i-col span="4">							   
+							       <label>营收</label>
+                                   <i-input v-model="formData.start_revenue"></i-input>
+							</i-col>
+                        </Row>
+						<Row :gutter="32">
+						    <h5 style="padding:15px;font-weight:700">月目标数据</h5>
+							<i-col span="4">							   
+							       <label>次留</label>
+                                   <i-input v-model="formData.end_retention_1"></i-input>
+							</i-col>
+							<i-col span="4">							   
+							       <label>七留</label>
+                                   <i-input v-model="formData.end_retention_7"></i-input>
+							</i-col>
+							<i-col span="4">							   
+							       <label>时长</label>
+                                   <i-input v-model="formData.end_usertime"></i-input>
+							</i-col>
+							<i-col span="4">							   
+							       <label>视频</label>
+                                   <i-input v-model="formData.end_rew_num"></i-input>
+							</i-col>
+							<i-col span="4">							   
+							       <label>插屏</label>
+                                   <i-input v-model="formData.end_int_num"></i-input>
+							</i-col>
+							<i-col span="4">							   
+							       <label>营收</label>
+                                   <i-input v-model="formData.end_revenue"></i-input>
+							</i-col>
+                        </Row>
+						<FormItem label="Text">
+						  <h5 style="padding:5px 15px 15px 5px;font-weight:700">完成目标措施</h5>
+                          <i-input v-model="formData.measure" type="textarea" :autosize="{minRows: 4,maxRows: 8}" placeholder="完成目标采取的措施"></i-input>
+                         </FormItem>
+						<FormItem label="Radio" v-show="editShow">
+						    <h5 style="padding:5px 15px 15px 5px;font-weight:700">完成情况</h5>
+							<Radio-group v-model="formData.status">
+								<Radio label="1">
+									
+									<span>进行中</span>
+								</Radio>
+								<Radio label="2">
+									
+									<span>已完成</span>
+								</Radio>
+								<Radio label="3">
+									
+									<span>未完成</span>
+								</Radio>
+							</Radio-group >							
+                        </FormItem>
+						<FormItem label="Text" v-show="editShow">
+						  <h5 style="padding:5px 15px 15px 5px;font-weight:700">原因分析总结</h5>
+                          <i-input v-model="formData.summary" type="textarea" :autosize="{minRows: 4,maxRows: 8}" placeholder="Enter something..."></i-input>
+                         </FormItem>
+						</i-form>
+						<div slot="footer"> 
+						  <i-button type="text" size="large" @click="modal1=false">取消</i-button> 
+						  <i-button type="primary" size="large" @click="addPost">确定</i-button> 
+						</div>
+					</Modal>
+				</template>
+			</div>			
+		</div>
+		 {include file="./static/html/footer.html" /}
+	</div>	
+</body>
+ {include file="./static/html/footer_common.html" /}
+  <script>
+     new Vue({
+        el: '#wrapper',
+        data: {
+            modal1: false,
+			editShow:false,
+			 formData:{
+			    id:0,
+				app_id:"",
+				manager:"",
+				status:1,
+				start_retention_1:"",
+				start_retention_7:"",
+				start_usertime:"",
+				start_rew_num:"",
+				start_int_num:"",
+				start_revenue:"",
+				end_retention_1:"",
+				end_retention_7:"",
+				end_usertime:"",
+				end_rew_num:"",
+				end_int_num:"",
+				end_revenue:"",
+				measure:"",
+				summary:"",
+				month:""
+			 },
+			  apps: [],
+			  users: [],
+			  title:"目标制定",
+              model1: ''
+        },
+		mounted(){		 
+		  this. getdata()		  
+		},
+        methods: {
+            handleChange (date) {
+                this.formData.month = date;
+           },
+		   openModal(){
+		     this.modal1 = true
+			 this.title="目标制定";
+			 this.editShow = false
+			 this.counstr()
+		   },
+		   counstr(){
+		     this.formData = {
+					        id:0,
+							app_id:"",
+							manager:"",
+							status:1,
+							start_retention_1:"",
+							start_retention_7:"",
+							start_usertime:"",
+							start_rew_num:"",
+							start_int_num:"",
+							start_revenue:"",
+							end_retention_1:"",
+							end_retention_7:"",
+							end_usertime:"",
+							end_rew_num:"",
+							end_int_num:"",
+							end_revenue:"",
+							measure:"",
+							summary:"",
+							month:""
+					  }
+		   },
+		   getdata()
+		   {
+		     let _that = this
+			 axios.get('/goalset/getData')
+			  .then(function (response) {
+				 _that.apps = response.data.apps
+				 _that.users = response.data.users
+			  })
+			  .catch(function (error) {
+				console.log(error);
+			  });
+		   },
+			addPost(){
+			   if( this.formData.app_id=="" || this.formData.manager=="" )
+			   {
+			     this.$Message.warning('项目名称和负责人不能为空');
+				 return false;
+			   }
+			   axios({
+						method: 'post',
+						url:'/goalset/postForm',
+						data:this.formData
+					}).then(res=>{
+					  this.counstr()
+					  this.modal1 = false
+					  this.$Message.success('操作成功');
+					  window.location.href = window.location.href
+				 })
+			},
+			editData(id){			
+			    let _that = this
+				this.title="目标修改";
+				axios.get('/goalset/edit?id='+id)
+			  .then(function (response) {
+				  _that.formData = response.data.app
+				  _that.modal1 = true
+			      _that.editShow = true
+			  })
+			  .catch(function (error) {
+				console.log(error);
+			  });
+			   
+			  
+			}
+        }
+    })
+  </script>
+</html>

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GAME BRAIN</title>
+    {include file="./static/html/header_common.html" /}
+	<link href="/static/css/userinfo.css" rel="stylesheet" type="text/css" />
+	<link href="/static/css/checkbox.css" rel="stylesheet" type="text/css" />
+	<link href="/static/css/dialog.css" rel="stylesheet" type="text/css" />
+    <style>
+	  
+	</style>	
+</head>
+ 
+<body>
+    <div id="wrapper">
+        {include file="./static/html/header.html" /}	
+		<div class="hw_page_content">
+		    <div class="hw_menu_left">
+         {include file="./static/html/side.html" /}  
+			</div>
+		    <div class="hw_content_right">
+			    <ul class="search_tab clearfix" >
+			      <li ><a  href="/admin_adsid/index">广告列表</a></li>
+                  <li class="active"><a  href="javascript:;">添加广告</a></li>			  
+		        </ul>
+			  	
+                	<div style="padding:30px 30px;clear:">
+			            <form class="form-horizontal" style="">
+						
+						 <div class="form-group">
+						   <label for="title" class="col-sm-1 control-label" style="padding-top:0px;">渠道</label>
+						   <div class="col-sm-10">
+							   <div class="el-radio el-radio-green" style="float:left;margin-right:5px;">								
+									<input name="platform" id="platform_1" value="1"  type="radio">
+									<label class="el-radio-style" for="platform_1"></label>
+									<span class="margin-r">Mobvista</span>
+								</div>
+								 <div class="el-radio el-radio-green" style="float:left;margin-right:5px;">
+									
+									<input name="platform" id="platform_2" value="2"  type="radio">
+									<label class="el-radio-style" for="platform_2"></label>
+									<span class="margin-r">Unity</span>
+								</div>
+								<div class="el-radio el-radio-green" style="float:left;margin-right:5px;">
+									
+									<input name="platform" id="platform_3" value="3"  type="radio">
+									<label class="el-radio-style" for="platform_3"></label>
+									<span class="margin-r">Applovin</span>
+								</div>
+								<div class="el-radio el-radio-green" style="float:left">								
+									<input name="platform" id="platform_4" value="4"  type="radio">
+									<label class="el-radio-style" for="platform_4"></label>
+									<span class="margin-r">Vungle</span>
+								</div>
+								<div class="el-radio el-radio-green" style="float:left">								
+									<input name="platform" id="platform_5" value="5"  type="radio">
+									<label class="el-radio-style" for="platform_5"></label>
+									<span class="margin-r">Admob</span>
+								</div>
+								<div class="el-radio el-radio-green" style="float:left">								
+									<input name="platform" id="platform_6" value="6"  type="radio">
+									<label class="el-radio-style" for="platform_6"></label>
+									<span class="margin-r">Facebook</span>
+								</div>
+								<div class="el-radio el-radio-green" style="float:left">								
+									<input name="platform" id="platform_7" value="7"  type="radio">
+									<label class="el-radio-style" for="platform_7"></label>
+									<span class="margin-r">IronSource</span>
+								</div>
+								<div class="el-radio el-radio-green" style="float:left">								
+									<input name="platform" id="platform_9" value="9" type="radio">
+									<label class="el-radio-style" for="platform_9"></label>
+									<span class="margin-r">Tapjoy</span>
+								</div>
+							</div>
+						</div>
+						
+					  <div class="form-group">
+						<label for="title" class="col-sm-1 control-label">ID</label>
+						<div class="col-sm-10">
+						  <input type="text" class="hw_game-input" style="height:40px;" id="id">
+						</div>
+					  </div>
+					  
+					  <div class="form-group">
+						   <label for="title" class="col-sm-1 control-label" style="padding-top:0px;">类型</label>
+						   <div class="col-sm-10">
+							   <div class="el-radio el-radio-green" style="float:left;margin-right:5px;">								
+									<input name="adtype" id="adtype_nat" value="nat"  type="radio">
+									<label class="el-radio-style" for="adtype_nat"></label>
+									<span class="margin-r">原生</span>
+								</div>
+								 <div class="el-radio el-radio-green" style="float:left;margin-right:5px;">
+									
+									<input name="adtype" id="adtype_int" value="int"  type="radio">
+									<label class="el-radio-style" for="adtype_int"></label>
+									<span class="margin-r">插屏</span>
+								</div>
+								<div class="el-radio el-radio-green" style="float:left;margin-right:5px;">
+									
+									<input name="adtype" id="adtype_rew" value="rew"  type="radio">
+									<label class="el-radio-style" for="adtype_rew"></label>
+									<span class="margin-r">激励</span>
+								</div>
+								<div class="el-radio el-radio-green" style="float:left">								
+									<input name="adtype" id="adtype_ban" value="ban"  type="radio">
+									<label class="el-radio-style" for="adtype_ban"></label>
+									<span class="margin-r">Banner</span>
+								</div>
+							</div>
+						</div>
+						
+						<div class="form-group">
+						<label for="title" class="col-sm-1 control-label">底价</label>
+						<div class="col-sm-10">
+						  <input type="text" class="hw_game-input" value="0" style="height:40px;" id="ecpm">
+						</div>
+					  </div>
+						
+					   <div class="form-group">
+						<label for="title" class="col-sm-1 control-label">排序</label>
+						<div class="col-sm-10">
+						  <input type="text" class="hw_game-input" value="0" style="height:40px;" id="ordernum">
+						</div>
+					  </div>
+					  
+					 <div class="form-group">
+						<label for="content" class="col-sm-1 control-label">名称</label>
+						<div class="col-sm-10">
+						  <textarea  class="hw_game-input" style="height:120px;"  id="remark"  rows="4"></textarea>
+						</div>
+					  </div>
+					  
+						<div class="col-sm-offset-4 col-sm-6" style="margin-top:10px;">
+						  <button type="button" onclick="window.location.href='/admin_adsid/index'" style="width:20%;float:left;margin-right:10px;padding-right:10px;" class="btn btn-default">取消</button>
+						  <button type="button" style="width:50%;" id="save" class="btn btn-danger">立即添加</button>
+						</div>
+					 
+					</form>
+			        </div>				
+			</div>
+		</div>
+		 {include file="./static/html/footer.html" /}
+	</div>	
+</body>
+ {include file="./static/html/footer_common.html" /}
+ <script>
+    $(function(){
+          $("#save").click( function(){
+		     //alert( $('div.froala-element').html());
+			 
+			   var unit_id = $("#id").val();
+			
+			   var remark = $('#remark').val();
+			   
+			   var appid ="{$appid}";
+			   var ordernum = $("#ordernum").val();
+			   var ecpm = $("#ecpm").val();
+			   var platform=$("input[name='platform']:checked").val();
+			   
+			   var adtype=$("input[name='adtype']:checked").val();
+			   				
+				if( typeof(platform)=="undefined" )
+				{
+					$.Pop('请选择渠道!',{Title:'提示',Animation:'slideFromTop'});return false;
+				}
+                if( unit_id=="" )
+				{
+					$.Pop('广告ID不能为空!',{Title:'提示',Animation:'slideFromTop'});return false;
+				}
+              if( typeof(adtype)=="undefined" )
+				{
+					$.Pop('请选择广告类型!',{Title:'提示',Animation:'slideFromTop'});return false;
+				}				
+				$(this).attr("disabled",true);
+				var obj = $(this);
+				var index = layer.load(0, {shade: false}); //0代表加载的风格，支持0-2
+				$.post("/admin_adsid/add_data",{unit_id:unit_id,platform:platform,adtype:adtype,remark:remark,appid:appid,ordernum:ordernum,ecpm:ecpm},function(e){
+					layer.close(index);					
+					$(obj).attr("disabled",false);
+					if( "ok"==e )
+					  {
+						layer.msg("提交成功");
+						window.location.href=window.location.href;
+					  }else if("exist"==e){
+					    $.Pop('该广告ID已存在',{Title:'提示',Animation:'slideFromTop'});return false;
+					  }else{
+						$.Pop('由于异常，提交失败',{Title:'提示',Animation:'slideFromTop'});return false;
+					  }			
+				})
+			 
+		  })
+
+	});
+ </script>
+</html>

@@ -1,0 +1,114 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GAME BRAIN</title>
+    {include file="./static/html/header_common.html" /}   
+	<style>
+	.pgc-notice-item {
+    height: 40px;
+    line-height: 40px;
+    width: 100%;
+    overflow: hidden;
+    font-size: 14px;
+	 
+	 margin-top:10px;
+	 padding-left:20px;
+}
+.pgc-notice-item:hover{
+  background: #f9f9f9;
+}
+.pgc-notice-item a {
+    color: #333;
+}
+.pgc-notice-item .create-time {
+    float: right;
+    color: #999;
+    font-size: 12px;
+	padding-right:30px;
+}
+.tui2-tabs-bar {
+    border: none;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e8e8e8;
+    padding-left: 0;
+	font-size: 16px;
+    position: relative;
+    outline: none;
+    padding-left: 20px;
+    padding-top: 20px;
+}
+.tui2-tabs-tab {
+    height: 30px;
+    line-height: 10px;
+    margin-right: 10px;
+    padding: 5px 20px;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+}
+.tui2-tabs-tab {
+    display: inline-block;
+    padding: 10px 20px;
+    border-bottom: 2px solid transparent;
+    -webkit-transform: translateY(2px);
+    -moz-transform: translateY(2px);
+    -ms-transform: translateY(2px);
+    transform: translateY(2px);
+    cursor: pointer;
+    color: #222;
+}
+.tui2-tabs-tab.tui2-tabs-tab-active:not(:only-child) {
+    color: #fff;
+    background-color: #f85959;
+}
+.pgc-notice-item a span {
+    color: #f85959;
+    font-style: italic;
+    margin-left: 5px;
+}
+	</style>
+</head>
+<body>
+    <div id="wrapper">
+        {include file="./static/html/header.html" /}	
+		<div class="hw_page_content">
+		    <div class="hw_menu_left">
+         {include file="./static/html/side.html" /}  
+			</div>
+		    <div class="hw_content_right" style="padding:20px 3%">
+			   <div class="tui2-tabs-bar">
+			        <div>
+					   <div onclick="window.location.href='/message/index?type=1'" class="{if condition="$type eq 1"}tui2-tabs-tab-active{/if} tui2-tabs-tab">已接收消息</div>
+					   <div onclick="window.location.href='/message/index?type=2'" class="{if condition="$type eq 2"}tui2-tabs-tab-active{/if} tui2-tabs-tab">已发送消息</div>
+					   
+					 </div>
+				</div>
+			    <ul class="gold2">
+                  {volist name="list" id="vo"}				
+				  <li>
+					  <div class="pgc-notice-item">
+					  {if condition="$type eq 1"}
+					  <a class="pgc_title"  href="/message/detail?id={$vo.id}">【From:{$vo.from_userid|getusername}】{$vo.send_title}
+					  {else /}
+					   <a class="pgc_title"  href="/message/detail?id={$vo.id}">【To:{$vo.to_userid|getusername}】{$vo.send_title}
+					  {/if}
+					   {if condition="isread($vo['id']) eq '1'"}
+					   <span>new</span>
+					   {/if}
+					  </a>
+					  <span class="create-time">{$vo.send_addtime|ChangeTime}</span></div>
+				  </li>
+				  {/volist}
+				</ul>
+				<div style="text-align:center;">{$list->render()}</div>
+			</div>
+		</div>
+		 {include file="./static/html/footer.html" /}
+	</div>	
+</body>
+ {include file="./static/html/footer_common.html" /}
+  
+</html>

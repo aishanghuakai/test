@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GAME BRAIN</title>
+    {include file="./static/html/header_common.html" /}
+	<link href="/static/css/login.css?t=<?php echo time(); ?>" rel="stylesheet" type="text/css" />
+	<link rel="stylesheet" type="text/css" href="/static/plugin/verify/css/verify.css">
+	<script src="https://ssl.captcha.qq.com/TCaptcha.js"></script>
+    <style>
+	   .login .inputtxt:hover {
+        border-color: #0f88eb;
+      }
+	  .hw_logo img{margin-top:0px;height:60px;}
+	</style>	
+</head>
+ 
+<body style="background:#f6f6f6 url(/static/images/bg.png);">
+    <div id="wrapper">
+       <nav class="navbar  top-navbar" style="">
+			  <div class="hw_logo">
+				<a class="navbar-brand" href="javascript:;"><img src="/static/images/logo.png"></a>
+			  </div>        	  
+        </nav>
+        <div class="main_desc">
+		   <h1>数据驱动决策</h1>
+		   <p>领先的智能分级引擎，让好人免验证轻松通过，坏人破解更困难。</p>
+		</div>		
+		<div  style="width:100%;margin-top:60px;text-align:center">
+		    <div class="login">
+                <div>
+                        <form  action="/admin_cate/accountlogin" method="post" >						
+							<div class="title">欢迎登录</div>
+							<div class="line"><input class="inputtxt" value="" name="username"  placeholder="账号" type="text"></div>
+							<div class="line"><input class="inputtxt" name="passwd"  placeholder="密码" type="password"></div>
+							<!-- <div  id="verify" style="margin:15px 0px;">
+                            </div> -->
+							<div id="TencentCaptcha" data-appid="2094094724" data-cbfn="callback">
+							  <div class="TCaptcha-button ready" id="j-TCaptcha">
+							    <div class="TCaptcha-icon"><i></i></div>
+							    <span>点击按钮进行验证</span>
+							 </div>
+							</div>
+							<div class="login_btn"><input id="login-button" value="登录" type="button"></div>                      
+                        </form>
+                </div>              
+            </div>
+           			
+		</div>
+	</div>	
+</body>
+<script src="/static/js/jquery-2.1.4.min.js"></script>
+<script src="/static/js/plug-in.min.js"></script>
+<script src="/static/js/layer/layer.js"></script>
+ <script type="text/javascript" src="/static/plugin/verify/js/verify.js?t=<?php echo time(); ?>" ></script>
+<script>
+  
+  window.callback = function(res){
+    console.log(res)
+	alert(res);return;
+    // res（用户主动关闭验证码）= {ret: 2, ticket: null}
+    // res（验证成功） = {ret: 0, ticket: "String", randstr: "String"}
+    if(res.ret === 0){
+        alert(res.ticket)   // 票据
+    }
+}
+  
+  var isnewhost ="{$isnewhost}";
+  var checkVerify = true;
+  $( function(){
+     
+	 if( !isnewhost )
+	 {
+		$.Pop('请注意，您使用的域名已更换,点击 “我知道了” 将会跳转到最新的域名!','alert',function(){ window.location.href='http://console.gamebrain.io/admin_cate/login' });return;
+	 }
+	 
+     $("#login-button").click( function(){
+	 var url = $("form").attr("action");
+	 var username = $("input[name='username']").val();
+     var passwd = $("input[name='passwd']").val();
+	    if( !checkVerify )
+		{
+		   layer.msg("验证失败，请重新验证");return false;
+		}
+	    $(this).attr("disabled",true);
+		var index = layer.load();
+        $.post(url,{passwd:passwd,username:username},function(result){
+		   $("#login-button").attr("disabled",false);
+		   layer.close(index);
+			if(result =="ok"){	
+                 layer.msg("登录成功，正在跳转...");			
+			     window.location.href="/admin_index/main"; 		 
+		       }
+			else{
+			     layer.msg("账号密码不匹配,请重新输入");
+			 }
+		  });	 
+		 return false;
+	 })
+	 
+	  $('#verify').pointsVerify({
+		    	defaultNum : 4,	
+		    	checkNum : 2,	
+		    	vSpace : 5,
+		    	imgName : ['3.jpg','5.jpg','6.jpg','7.jpg','8.jpg','9.jpg','10.jpg'],
+				imgUrl:"/static/plugin/verify/images/",
+		    	imgSize : {
+		        	width: '338px',
+		        	height: '100px',
+		        },
+		        barSize : {
+		        	width : '338px',
+		        	height : '40px',
+		        },
+		        ready : function() {
+		    	},
+		        success : function() {
+		        	checkVerify = true;
+		        },
+		        error : function() {
+		        	checkVerify = false;
+		        }
+		        
+		    });
+  })
+</script>
+</html>

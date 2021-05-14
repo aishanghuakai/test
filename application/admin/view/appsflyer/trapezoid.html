@@ -1,0 +1,789 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GAME BRAIN</title>
+    {include file="./static/html/header_common.html" /}
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+   <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <!-- import JavaScript -->
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <script src="/static/js/axios.min.js"></script>
+	<style>
+	  .cell{font-size:12px;color:#222;}
+	  .el-table td, .el-table th {
+    padding:9px 0;}
+	  .item {
+		  margin-top: 10px;
+		  margin-right: 40px;
+		}
+      .grid-content{
+	    background: #fff;
+		padding: 15px !important;
+		border-radius:10px;
+		border: 0;
+		color:#222;
+		text-align:center;
+	  }
+       .card-category{
+	   font-size: 13px;
+	   color:#444;
+	   margin-bottom: 0;}
+	   .card-title{
+	    color:#575962;
+		font-size: 18px;
+		font-weight: 400;
+	   }
+.filter-container .filter{
+    font-size: 14px;
+    color: #333;
+    position: relative;
+    line-height:40px;
+}
+.filter-container .filter .filter-label{
+    font-weight: 600;
+    color: #333;
+    display: inline-block;
+    width: 76px;
+}
+.filter-container .filter .filter-options{
+    display: inline-block;
+    vertical-align: top;
+    width: calc(100% - 100px);
+    min-width: 700px;
+}
+.filter .filter-options .filter-option.active{
+    border-radius: 3px;
+    color: #4c84ff;
+	background: #ecf5ff;
+	border: 1px solid #d9ecff;
+	border-radius: 4px;
+    font-size: 12px;
+}
+.filter .filter-options .filter-option{
+    line-height: 22px;
+    display: inline-block;
+    padding: 2px 18px;
+    margin-right: 24px;
+    cursor: pointer;
+    font-size: 12px;
+}
+.count {
+    background:#4285f4;
+    display: inline-block;
+    padding:7px 1px;
+    margin-right: 5px;
+}
+.search .el-select .el-input {
+    width:100px;
+  }
+.el-table .warning-row {
+    background: oldlace;
+  }
+.el-table .danger-row {
+    background:#f56c6c;
+  }
+.el-table .success-row {
+    background: #f0f9eb;
+  }
+  .el-table--scrollable-x .el-table__body-wrapper {
+    z-index : 1;
+}
+.r0 {
+    background-color: rgba(0, 160, 234, 0.85);
+}
+.r1 {
+    background-color: rgba(0, 160, 234, 0.75);
+}
+.r2 {
+    background-color: rgba(0, 160, 234, 0.65);
+}
+.r3 {
+    background-color: rgba(0, 160, 234, 0.55);
+}
+.r7 {
+    background-color: rgba(0, 160, 234, 0.45);
+}
+.r14 {
+    background-color: rgba(0, 160, 234, 0.35);
+}
+.r30 {
+    background-color: rgba(0, 160, 234, 0.25);
+}
+.r45 {
+    background-color: rgba(0, 160, 234, 0.15);
+}
+.r60 {
+    background-color: rgba(0, 160, 234, 0.05);
+}
+.r90 {
+    background-color: rgba(0, 160, 234, 0.05);
+}
+.el-table__body tr {
+    pointer-events:none;
+ }
+	</style>
+</head>
+<body style="background:#f5f6fa;">
+    <div id="wrapper" style="background-color:#f5f6fa;">
+        {include file="./static/html/header.html" /}
+		<div class="hw_page_content" style="background-color:#f5f6fa;">
+		    <div class="hw_menu_left">
+             {include file="./static/html/side.html" /}
+			</div>
+		    <div class="hw_content_right" style="padding:20px 5px;background: #f5f6fa;">
+			            <h4 class="page-title" style="margin-bottom:20px;font-size:18px;color:#333;">LTV & ROI概览</h4>
+							<div class="clear" style="clear:both;"></div>
+						
+						
+						<div class="main filter-container" style="margin:20px 30px;">
+						    <div class="filter"><span  class="filter-label">地区</span>
+								<div class="filter-options">
+									<span @click="addAttr('country','all')" :class="filter.country.length<1?'filter-option active':'filter-option'">全部</span>
+									<span @click="addAttr('country','US')" :class="isExistArray('country','US')?'filter-option active':'filter-option'">美国</span>
+									<span @click="addAttr('country','TW')" :class="isExistArray('country','TW')?'filter-option active':'filter-option'">台湾</span>
+									<span @click="addAttr('country','CN')" :class="isExistArray('country','CN')?'filter-option active':'filter-option'">中国</span>
+									<span>
+									 <el-select ref="country" v-model="filter.country" {if condition="$userid eq 19"}  @change="handleCountry" {/if} multiple filterable size="mini" placeholder="更多选择">
+										{volist name="country" id="item"}
+										  {if condition="$key!='all'"}
+									       <el-option key="{$key}" label="{$item}" value="{$key}"></el-option>
+										  {/if}
+									    {/volist}
+									  </el-select>
+									</span>
+									<span class="filter-option" style="color:#409eff" @click="openShow">{{ishow?'收起':'展开'}}<i :class="ishow?'el-icon-arrow-up el-icon--right':'el-icon-arrow-down el-icon--right'"></i></span>
+
+								    <a href="/admin_ltv/data" style="float:right;cursor:pointer;" ><el-tag effect="dark">返回LTV展示</el-tag></a>
+								</div>
+							</div>
+							<div v-show="ishow" class="filter"><span  class="filter-label">渠道</span>
+								<div class="filter-options">
+									<span @click="addAttr('media_source','all')" :class="filter.media_source.length<1?'filter-option active':'filter-option'">全部</span>
+									<span @click="addAttr('media_source','Facebook Ads')" :class="isExistArray('media_source','Facebook Ads')?'filter-option active':'filter-option'">Facebook</span>
+									<span @click="addAttr('media_source','googleadwords_int')" :class="isExistArray('media_source','googleadwords_int')?'filter-option active':'filter-option'">Adwords</span>
+									<span>
+									 <el-select v-model="filter.media_source" multiple filterable size="mini" placeholder="更多选择">
+										{volist name="promate_media" id="item"}
+										  {if condition="$key!='all'"}
+									       <el-option key="{$key}" label="{$item.name}" value="{$item.value}"></el-option>
+										  {/if}
+									   {/volist}
+									  </el-select>
+									</span>
+								</div>
+							</div>                           
+                            <div v-show="ishow" class="filter"><span  class="filter-label">安装时间</span>
+								<div class="filter-options">
+									<span @click="FilterMaterial('day_num','1')" :class="filter.day_num==1?'filter-option active':'filter-option'">昨天</span>
+									<span @click="FilterMaterial('day_num','3')" :class="filter.day_num==3?'filter-option active':'filter-option'">过去三天</span>
+									<span @click="FilterMaterial('day_num','7')" :class="filter.day_num==7?'filter-option active':'filter-option'">过去七天</span>
+									<span @click="FilterMaterial('day_num','15')" :class="filter.day_num==15?'filter-option active':'filter-option'">过去15天</span>
+									<span @click="FilterMaterial('day_num','30')" :class="filter.day_num==30?'filter-option active':'filter-option'">过去30天</span>
+									<span>
+									 <el-date-picker
+									  v-model="date"
+                                      size="mini"
+									  style="width:240px"
+									  @change="updateDate"
+									  type="daterange"
+									  value-format="yyyy-MM-dd">
+									</el-date-picker>
+									</span>
+								</div>
+							</div>
+                                                     
+						</div>
+						<div class="clear">
+						  <h4  style="font-size:15px;font-weight:700;color: #333;line-height:20px;margin-bottom:10px;margin-left:30px;"><i class="count"></i> ROI梯形展示 
+						  
+						  </h4>
+						</div>
+						<div class="m-list hw_reven" style="padding:20px;">
+							 <el-table
+								:data="tableData"
+								border
+								:cell-class-name="tableCellClassName"
+								show-summary
+								:summary-method="getSummaries"
+								row-key="id"
+								lazy
+								:load="load"
+								:tree-props="{children: 'children', hasChildren: 'hasChildren'}"
+								v-loading="loading"
+								max-height="500"
+								style="width:100%;">
+								 <el-table-column width="150" fixed prop="name" align="left" label="日期"></el-table-column>
+								 <el-table-column prop="tablist.installs" fixed sortable width="100px" align="center" label="推广新增"></el-table-column>
+								 <el-table-column width="100" prop="tablist.roi0"  sortable  align="center" label="ROI0"></el-table-column>
+								 <el-table-column width="100" prop="tablist.roi1"  sortable  align="center" label="ROI1"></el-table-column>
+								 <el-table-column width="100" prop="tablist.roi2"  sortable  align="center" label="ROI2"></el-table-column>
+								 <el-table-column width="100" prop="tablist.roi3"  sortable align="center" label="ROI3"></el-table-column>
+								 <el-table-column width="100" prop="tablist.roi7"  sortable  align="center" label="ROI7"></el-table-column>
+								 <el-table-column width="100" prop="tablist.roi14"  sortable  align="center" label="ROI14"></el-table-column>
+								 <el-table-column width="100" prop="tablist.roi30"  sortable  align="center" label="ROI30"></el-table-column>
+								 <el-table-column width="100" prop="tablist.roi45"  sortable  align="center" label="ROI45"></el-table-column>
+								 <el-table-column width="100" prop="tablist.roi60"  sortable  align="center" label="ROI60"></el-table-column>
+								 <el-table-column width="100" prop="tablist.roi90"  sortable  align="center" label="ROI90"></el-table-column>
+								 <el-table-column width="100" prop="tablist.roi120"  sortable  align="center" label="ROI120"></el-table-column>
+								 <el-table-column width="100" prop="tablist.roi180"  sortable  align="center" label="ROI180"></el-table-column>
+								 </el-table>
+						</div>
+						
+						<div class="clear">
+						  <h4  style="font-size:15px;font-weight:700;color: #333;line-height:20px;margin-bottom:10px;margin-left:30px;"><i class="count"></i> LTV梯形展示 
+						  
+						  </h4>
+						</div>
+						<div class="m-list hw_reven" style="padding:20px;">
+							 <el-table
+								:data="tableData"
+								border
+								:cell-class-name="tableCellClassName1"								
+								v-loading="loading"
+								show-summary
+								:summary-method="getSummaries1"
+								max-height="500"
+								style="width:100%;">
+								 <el-table-column width="150" fixed prop="name" align="left" label="日期"></el-table-column>
+								 <el-table-column prop="tablist.installs" fixed sortable width="100px" align="center" label="推广新增"></el-table-column>
+								 <el-table-column width="100"  prop="tablist.ltv0"  sortable  align="center" label="ltv0"></el-table-column>
+								 <el-table-column width="100" prop="tablist.ltv1"  sortable  align="center" label="ltv1"></el-table-column>
+								 <el-table-column width="100" prop="tablist.ltv2"  sortable  align="center" label="ltv2"></el-table-column>
+								 <el-table-column width="100" prop="tablist.ltv3"  sortable align="center" label="ltv3"></el-table-column>
+								 <el-table-column width="100" prop="tablist.ltv7"  sortable  align="center" label="ltv7"></el-table-column>
+								 <el-table-column width="100" prop="tablist.ltv14"  sortable  align="center" label="ltv14"></el-table-column>
+								 <el-table-column width="100" prop="tablist.ltv30"  sortable  align="center" label="ltv30"></el-table-column>
+								 <el-table-column width="100" prop="tablist.ltv45"  sortable  align="center" label="ltv45"></el-table-column>
+								 <el-table-column width="100" prop="tablist.ltv60"  sortable  align="center" label="ltv60"></el-table-column>
+								 <el-table-column  width="100" prop="tablist.ltv90"  sortable  align="center" label="ltv90"></el-table-column>
+								 <el-table-column  width="100" prop="tablist.ltv120"  sortable  align="center" label="ltv120"></el-table-column>
+								 <el-table-column  width="100" prop="tablist.ltv180"  sortable  align="center" label="ltv180"></el-table-column>
+								 </el-table>
+						</div>
+					
+			  </div>
+			</div>
+		</div>
+		 {include file="./static/html/footer.html" /}
+	</div>
+</body>
+ {include file="./static/html/footer_common.html" /}
+  <script>
+    var isRemark = false;
+	let t = new Vue({
+        el: '#wrapper',
+        data: {
+			loading: false,
+			retenloading:false,
+            ishow:false,
+			dialogFormVisible:false,
+			dialogLtvVisible:false,
+            end_day:'',
+			cpi_roi:'115',
+			cpi:0,
+            reten:"",
+            spend:{},
+			date:[],
+			filter:{
+			  day:"0",
+			  country:[],
+			  day_num:"7",
+			  media_source:[],
+			  device:[],
+			  dimension_one:'date',
+			  dimension_two:'country',
+			  dimension_three:'channel'
+			},
+			formInline:{
+			  date:['{$start}','{$end}'],
+			  media_source:'all',
+			  country:'all',
+			},
+			condition:'>=',
+			roi:'',
+			totalData:[],
+			retenData:[],
+			dimensionList:[
+			  {label:'日期',value:'date'},
+			  {label:'国家',value:'country'},
+			  {label:'渠道',value:'channel'}
+			],
+			tableData: []
+        },
+		computed:{
+		    param(){
+			   let params = this.filter
+			   params.app_id = '{$app_id}'
+			   return params
+			}
+		},
+		watch: {
+		  param:{
+		    handler:function(val,oldval){
+			  if( val.day_num!='custom' || val.date.length>0 )
+			  {
+			    this.getlist()
+			    this.get_total_list()
+			  }
+			  
+			},
+			deep:true//对象内部的属性监听，也叫深度监听
+		  }
+		},
+		created(){
+		  
+		  this.getlist()
+		  //this.get_total_list()
+		},
+		mounted(){
+		 	this.$nextTick(() => {
+			 // this.myEcharts()
+			});
+		},
+        methods: {
+		   goBack() {
+		     window.location.href='/admin_index/main';
+		   },
+		   updateDate(){
+		     this.filter.day_num = 'custom'
+			 this.getlist()
+			 //this.get_total_list()
+		   },
+		   handleChange(val){
+		    let index = this.dimensionList.findIndex((n) => n.value==val)
+			if( index>-1 )
+			{
+			  //this.dimensionList.splice(index,1);
+			}
+		   },
+		   handleCountry(val){
+			let ele = val
+			if( val.length>1 )
+			{
+			   ele = [val.pop()]
+			}
+			this.filter.country = ele
+			this.$refs.country.blur()
+		   },
+		   openShow(){
+		    this.ishow = !this.ishow
+		   },		   
+		   resetCpi(){
+		    this.cpi = (100*this.totalData[0].avg_revenue/this.cpi_roi).toFixed(3);
+			this.dialogFormVisible = false
+		   },
+		   tableCellClassName({row,column,rowIndex}) {
+			  if(row.roi0!="--" && column.id=='el-table_1_column_3')
+                {
+				  return 'r0';
+				}
+               if(row.roi1!="--" && column.id=='el-table_1_column_4')
+                {
+				  return 'r1';
+				}
+				if(row.roi2!="--" && column.id=='el-table_1_column_5')
+                {
+				  return 'r2';
+				}
+                if(row.roi3!="--" && column.id=='el-table_1_column_6')
+                {
+				  return 'r3';
+				}
+				if(row.roi7!="--" && column.id=='el-table_1_column_7')
+                {
+				  return 'r7';
+				}
+                if(row.roi14!="--" && column.id=='el-table_1_column_8')
+                {
+				  return 'r14';
+				}
+                if(row.roi30!="--" && column.id=='el-table_1_column_9')
+                {
+				  return 'r30';
+				}
+                if(row.roi45!="--" && column.id=='el-table_1_column_10')
+                {
+				  return 'r45';
+				}
+                if(row.roi45!="--" && column.id=='el-table_1_column_11')
+                {
+				  return 'r60';
+				}
+                if(row.roi90!="--" && column.id=='el-table_1_column_12')
+                {
+				  return 'r90';
+				}
+                if(row.roi120!="--" && column.id=='el-table_1_column_13')
+                {
+				  return 'r120';
+				}
+                if(row.roi180!="--" && column.id=='el-table_1_column_14')
+                {
+				  return 'r180';
+				}				
+			},
+			tableCellClassName1({row,column,rowIndex}) {
+			  if(row.ltv0!="--" && column.id=='el-table_2_column_15')
+                {
+				  return 'r0';
+				}
+               if(row.ltv1!="--" && column.id=='el-table_2_column_16')
+                {
+				  return 'r1';
+				}
+				if(row.ltv2!="--" && column.id=='el-table_2_column_17')
+                {
+				  return 'r2';
+				}
+                if(row.ltv3!="--" && column.id=='el-table_2_column_18')
+                {
+				  return 'r3';
+				}
+				if(row.ltv7!="--" && column.id=='el-table_2_column_19')
+                {
+				  return 'r7';
+				}
+                if(row.ltv14!="--" && column.id=='el-table_2_column_20')
+                {
+				  return 'r14';
+				}
+                if(row.ltv30!="--" && column.id=='el-table_2_column_21')
+                {
+				  return 'r30';
+				}
+                if(row.ltv45!="--" && column.id=='el-table_2_column_22')
+                {
+				  return 'r45';
+				}
+                if(row.ltv60!="--" && column.id=='el-table_2_column_23')
+                {
+				  return 'r60';
+				}
+                if(row.ltv90!="--" && column.id=='el-table_2_column_24')
+                {
+				  return 'r90';
+				}
+                if(row.ltv120!="--" && column.id=='el-table_2_column_25')
+                {
+				  return 'r120';
+				}
+                if(row.ltv180!="--" && column.id=='el-table_2_column_26')
+                {
+				  return 'r180';
+				}				
+			},
+			get_total_list(){
+			   this.param.date =this.date
+			   axios({
+					method: 'post',
+					url:'/admin_appsflyer/get_trapezoid_total_data',
+					data:this.param
+				}).then(res=>{
+				 this.totalData = res.data
+				 this.end_day = this.totalData[0].end_day
+				 this.cpi = (100*this.totalData[0].avg_revenue/this.cpi_roi).toFixed(3);
+				 this.reten = this.totalData[0].reten
+			 })
+			},
+		   getSummaries(param) {
+				const sums = []
+				sums[0]='加权值'
+				sums[1]=0
+				sums[2]=0
+				sums[3]=0
+				sums[4]=0
+				sums[5]=0
+				sums[6]=0
+				sums[7]=0
+				sums[8]=0
+				sums[9]=0
+				sums[10]=0
+				sums[11]=0
+				sums[12]=0
+				sums[13]=0
+				n1=0,n2=0,n3=0,n4=0,n5=0,n6=0,n7=0,n8=0,n9=0,n10=0,n11=0,n12=0,n13=0
+				if( this.totalData )
+				{
+				  
+				  this.tableData.forEach(function (item) {
+						let num = Number(item.tablist.installs)
+						sums[1] += num
+						n1+=num
+						if(item.tablist.roi0!='--' && item.tablist.roi0>0)
+						{
+						  sums[2] += Number(item.tablist.roi0)*num
+						  n2+=num
+						}
+						if(item.tablist.roi1!='--')
+						{
+						  sums[3] += Number(item.tablist.roi1)*num
+						  n3+=num
+						}
+						if(item.tablist.roi2!='--')
+						{
+						  sums[4] += Number(item.tablist.roi2)*num
+						  n4+=num
+						}
+						if(item.tablist.roi3!='--')
+						{
+						  sums[5] += Number(item.tablist.roi3)*num
+						  n5+=num
+						}
+						if(item.tablist.roi7!='--')
+						{
+						  sums[6] += Number(item.tablist.roi7)*num
+						  n6+=num
+						}
+						if(item.tablist.roi14!='--')
+						{
+						  sums[7] += Number(item.tablist.roi14)*num
+						  n7+=num
+						}
+						if(item.tablist.roi30!='--')
+						{
+						  sums[8] += Number(item.tablist.roi30)*num
+						  n8+=num
+						}
+						if(item.tablist.roi45!='--')
+						{
+						  sums[9] += Number(item.tablist.roi45)*num
+						  n9+=num
+						}
+						if(item.tablist.roi60!='--')
+						{
+						  sums[10] += Number(item.tablist.roi60)*num
+						  n10+=num
+						}
+						if(item.tablist.roi90!='--')
+						{
+						  sums[11] += Number(item.tablist.roi90)*num
+						  n11+=num
+						}
+						if(item.tablist.roi120!='--')
+						{
+						  sums[12] += Number(item.tablist.roi120)*num
+						  n12+=num
+						}
+						if(item.tablist.roi180!='--')
+						{
+						  sums[13] += Number(item.tablist.roi180)*num
+						  n13+=num
+						}
+				  })
+				//sums[1]= n1>0?sums[1]/n1:0
+				sums[2]=n2>0?sums[2]/n2:0
+				sums[3]=n3>0?sums[3]/n3:0
+				sums[4]=n4>0?sums[4]/n4:0
+				sums[5]=n5>0?sums[5]/n5:0
+				sums[6]=n6>0?sums[6]/n6:0
+				sums[7]=n7>0?sums[7]/n7:0
+				sums[8]=n8>0?sums[8]/n8:0
+				sums[9]=n9>0?sums[9]/n9:0
+				sums[10]=n10>0?sums[10]/n10:0
+				sums[11]=n11>0?sums[11]/n11:0
+				sums[12]=n12>0?sums[12]/n12:0
+				sums[13]=n13>0?sums[13]/n13:0
+				
+				sums[1] = sums[1]
+				sums[2] = sums[2].toFixed(2)
+				sums[3] = sums[3].toFixed(2)
+				sums[4] = sums[4].toFixed(2)
+				sums[5] = sums[5].toFixed(2)
+				sums[6] = sums[6].toFixed(2)
+				sums[7] = sums[7].toFixed(2)
+				sums[8] = sums[8].toFixed(2)
+				sums[9] = sums[9].toFixed(2)
+				sums[10] = sums[10].toFixed(2)
+				sums[11] = sums[11].toFixed(2)
+				sums[12] = sums[12].toFixed(2)
+				sums[13] = sums[13].toFixed(2)
+				}
+				return sums;
+			},
+			getSummaries1(param) {
+				const sums = []
+				sums[0]='加权值'
+				sums[1]=0
+				sums[2]=0
+				sums[3]=0
+				sums[4]=0
+				sums[5]=0
+				sums[6]=0
+				sums[7]=0
+				sums[8]=0
+				sums[9]=0
+				sums[10]=0
+				sums[11]=0
+				sums[12]=0
+				sums[13]=0
+				n1=0,n2=0,n3=0,n4=0,n5=0,n6=0,n7=0,n8=0,n9=0,n10=0,n11=0,n12=0,n13=0
+				if( this.totalData )
+				{
+				  
+				  this.tableData.forEach(function (item) {
+						let num = Number(item.tablist.installs)
+						sums[1] += num
+						n1+=num
+						if(item.tablist.ltv0!='--' && item.tablist.ltv0>0)
+						{
+						  sums[2] += Number(item.tablist.ltv0)*num
+						  n2+=num
+						}
+						if(item.tablist.ltv1!='--')
+						{
+						  sums[3] += Number(item.tablist.ltv1)*num
+						  n3+=num
+						}
+						if(item.tablist.ltv2!='--')
+						{
+						  sums[4] += Number(item.tablist.ltv2)*num
+						  n4+=num
+						}
+						if(item.tablist.ltv3!='--')
+						{
+						  sums[5] += Number(item.tablist.ltv3)*num
+						  n5+=num
+						}
+						if(item.tablist.ltv7!='--')
+						{
+						  sums[6] += Number(item.tablist.ltv7)*num
+						  n6+=num
+						}
+						if(item.tablist.ltv14!='--')
+						{
+						  sums[7] += Number(item.tablist.ltv14)*num
+						  n7+=num
+						}
+						if(item.tablist.ltv30!='--')
+						{
+						  sums[8] += Number(item.tablist.ltv30)*num
+						  n8+=num
+						}
+						if(item.tablist.ltv45!='--')
+						{
+						  sums[9] += Number(item.tablist.ltv45)*num
+						  n9+=num
+						}
+						if(item.tablist.ltv60!='--')
+						{
+						  sums[10] += Number(item.tablist.ltv60)*num
+						  n10+=num
+						}
+						if(item.tablist.ltv90!='--')
+						{
+						  sums[11] += Number(item.tablist.ltv90)*num
+						  n11+=num
+						}
+						if(item.tablist.ltv120!='--')
+						{
+						  sums[12] += Number(item.tablist.ltv120)*num
+						  n12+=num
+						}
+						if(item.tablist.ltv90!='--')
+						{
+						  sums[13] += Number(item.tablist.ltv180)*num
+						  n13+=num
+						}
+				  })
+				//sums[1]= n1>0?sums[1]/n1:0
+				sums[2]=n2>0?sums[2]/n2:0
+				sums[3]=n3>0?sums[3]/n3:0
+				sums[4]=n4>0?sums[4]/n4:0
+				sums[5]=n5>0?sums[5]/n5:0
+				sums[6]=n6>0?sums[6]/n6:0
+				sums[7]=n7>0?sums[7]/n7:0
+				sums[8]=n8>0?sums[8]/n8:0
+				sums[9]=n9>0?sums[9]/n9:0
+				sums[10]=n10>0?sums[10]/n10:0
+				sums[11]=n11>0?sums[11]/n11:0
+				sums[12]=n12>0?sums[12]/n12:0
+				sums[13]=n13>0?sums[13]/n13:0
+				
+				sums[1] = sums[1]
+				sums[2] = sums[2].toFixed(3)
+				sums[3] = sums[3].toFixed(3)
+				sums[4] = sums[4].toFixed(3)
+				sums[5] = sums[5].toFixed(3)
+				sums[6] = sums[6].toFixed(3)
+				sums[7] = sums[7].toFixed(3)
+				sums[8] = sums[8].toFixed(3)
+				sums[9] = sums[9].toFixed(3)
+				sums[10] = sums[10].toFixed(3)
+				sums[11] = sums[11].toFixed(3)
+				sums[12] = sums[12].toFixed(3)
+				sums[13] = sums[13].toFixed(3)
+				}
+				return sums;
+			},
+		   load(tree, treeNode, resolve) {
+			   this.param.attr = tree.attr
+			   this.param.key = tree.key
+			   this.param.level = tree.level
+			   this.param.parent_key = tree.parent_key
+			   this.param.child_key = tree.child_key
+			   this.param.date =this.date
+			   //this.param.child_attr = tree.child_attr
+			   axios({
+					method: 'post',
+					url:'/admin_appsflyer/children_ltv_json_data',
+					data:this.param
+				}).then(res=>{
+				 resolve(res.data)
+			 })
+			},
+		   isExistArray(field,val){
+		    return $.inArray(val, this.filter[field])>-1
+		   },
+		   addAttr(field,val){
+		    if(val=='all')
+			{
+			  this.filter[field] =[]
+			}else{
+			   {if condition="$userid eq 19"}
+			    this.filter[field] = [val]
+			   {else /}
+			     let index =  $.inArray(val, this.filter[field])
+					if( index>-1 )
+					{
+					  this.filter[field].splice(index,1);
+					}else{
+					  this.filter[field].push(val)
+					}
+			   {/if}
+			}
+		   },
+		  FilterMaterial(field,val){
+		    this.filter[field] = val
+		  },
+		  
+		   handleInstallDate(){
+
+		   },
+			getlist(){
+			    this.tableData =[]
+				const loading = this.$loading({
+				  lock: true,
+				  text: '数据加载中,请稍后',
+				  spinner: 'el-icon-loading',
+				  background: 'rgba(0, 0, 0, 0.7)'
+				});
+			   let _that = this
+			   this.param.date =this.date
+			   axios({
+					method: 'post',
+					url:'/admin_appsflyer/trapezoid',
+					data:this.param
+				}).then(res=>{
+				 loading.close();
+				 this.tableData = res.data.data
+				 this.date = res.data.date
+			 })
+			}
+        }
+    })
+  </script>
+
+</html>

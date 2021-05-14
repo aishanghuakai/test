@@ -1,0 +1,349 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GAME BRAIN</title>
+    {include file="./static/html/header_common.html" /}  
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+   <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <!-- import JavaScript -->
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <script src="/static/js/axios.min.js"></script>
+<script src="/static/js/vue-clipboard.min.js"></script>	  
+	<style>
+.ivu-avatar{
+		display: inline-block;
+		text-align: center;
+		background: #ccc;
+		color: #fff;
+		white-space: nowrap;
+		position: relative;
+		overflow: hidden;
+		vertical-align: middle;
+		width:100px;
+		height:100px;
+		line-height:100px;
+		border-radius: 16px;
+	   }
+	   .auth-avatar {
+		display: inline-block;
+		float: left;
+		cursor: pointer;
+		height:100px;
+	   }
+	   .auth-desc{
+		  float:left;
+		  margin-left:20px;
+		  height:100px;
+		}
+	   .ivu-avatar img{width:100%;height:100%;}
+	   .control-label {
+	     color: #333 !important;
+		 text-align:center !important;
+		}
+	</style>
+</head>
+<body style="background:#fff;">
+    <div id="wrapper" style="background-color:#fff;">
+        {include file="./static/html/header.html" /}	
+		<div class="hw_page_content" style="background-color:#fff;">
+		    <div class="hw_menu_left">
+             {include file="./static/html/side.html" /}  
+			</div>
+		    <div class="hw_content_right" style="padding:20px 5px;background: #fff;text-align:center;">
+			            <div class="main" style="margin-bottom:10px;margin:0 auto;width:100%;">
+						  <h4 class="page-title" style="text-align:left;font-size:16px;font-weight:700;color:#333"><el-page-header @back="goBack" content="对外参数配置" ></el-page-header></h4>
+							<el-row style="padding:20px;">
+							  <div  class="article-tisummaryme">
+								  <div  class="auth-avatar">
+									 <span  class="ivu-avatar ivu-avatar-circle ivu-avatar-default ivu-avatar-image">
+										<img src="{$r.icon_url}">
+									  </span>
+								  </div> 
+								  <div class="auth-desc" style="text-align:left;">
+									<div style="margin:15px 0px;font-size:16px;color:#342ead;font-weight:700;">{$r.app_name}</div> 
+									<div><strong style="color:#222">对外地址:</strong><a target="__blank" href="{$url}">{$url}</a> <i class="el-icon-document-copy" v-clipboard:copy="message"
+      v-clipboard:success="onCopy" style="cursor:pointer;"></i></div>
+								  </div>
+							   </div>
+							   <div style="clear:both;"></div>
+							  <el-form ref="form" :inline="true" :model="form" :rules="rules2"  style="margin-top:30px;" class="demo-form-inline">
+								  <el-row :gutter="10">
+									   <el-divider content-position="left"><strong>基础参数</strong></el-divider>
+									  <el-col :span="8">
+										  <el-form-item label="Package(包名)" prop="package" label-width="130px">
+											<el-input size="small" v-model="form.package"></el-input>											
+										  </el-form-item>
+										  
+									  </el-col>
+									  <el-col :span="8">
+										  <el-form-item label="Apple ID" prop="appleID" label-width="130px">
+											<el-input size="small" v-model="form.appleID"></el-input>
+										  </el-form-item>
+									  </el-col>
+									  <el-col :span="8">									  
+										  <el-form-item label="Admob ID" label-width="130px">
+											<el-input size="small" v-model="form.admobID"></el-input>
+										  </el-form-item>
+									  </el-col>
+									  
+								  </el-row>
+								  <el-row :gutter="10">
+									   <el-col :span="8">									  
+										  <el-form-item label="FB App_id" label-width="130px">
+											<el-input size="small" v-model="form.fb_app_id"></el-input>
+										  </el-form-item>
+									  </el-col>
+									 <el-col :span="8">
+										  <el-form-item label="粉丝页地址" label-width="130px">
+											<el-input size="small" v-model="form.page_link"></el-input>
+										  </el-form-item>
+									  </el-col>
+									  <el-col :span="8">
+										  <el-form-item label="隐私权地址" label-width="130px">
+											<el-input size="small" v-model="form.private_link"></el-input>
+										  </el-form-item>
+									  </el-col>
+								  </el-row>
+								  <el-row :gutter="10">
+									   									  
+									  <el-col :span="8">									  
+										  <el-form-item label="订阅条款地址" label-width="130px">
+											<el-input size="small" v-model="form.buy_link"></el-input>
+										  </el-form-item>
+									  </el-col>
+									  <el-col :span="8">									  
+										  <el-form-item label="服务条款地址" label-width="130px">
+											<el-input size="small" v-model="form.service_link"></el-input>
+										  </el-form-item>
+									  </el-col>
+									  <el-col :span="8">									  
+										  <el-form-item label="产品链接" label-width="130px">
+											<el-input size="small" v-model="form.product_link"></el-input>
+										  </el-form-item>
+									  </el-col>
+								  </el-row>
+								  <el-row :gutter="10">
+									   <el-divider content-position="left"><strong>GA参数</strong></el-divider>
+									  <el-col :span="8">
+										  <el-form-item label="GameID" prop="gameId" label-width="130px">
+											<el-input size="small" v-model="form.gameId"></el-input>
+										  </el-form-item>
+									  </el-col>
+									  <el-col :span="8">
+										  <el-form-item label="GameKey" label-width="130px">
+											<el-input size="small" v-model="form.gameKey"></el-input>
+										  </el-form-item>
+									  </el-col>
+									  <el-col :span="8">									  
+										  <el-form-item label="SecretKey" label-width="130px">
+											<el-input size="small" v-model="form.secretKey"></el-input>
+										  </el-form-item>
+									  </el-col>
+									  
+								  </el-row>
+                                 <el-row :gutter="20">
+									   <el-divider content-position="left"><strong>Dataplayer 参数</strong></el-divider>
+									   <el-col :span="12">
+										  <el-form-item label="App Id" label-width="180px">
+											<el-input size="small" v-model="form.da_app_id"></el-input>
+										  </el-form-item>
+									  </el-col>
+									  <el-col :span="12">
+										  <el-form-item label="App Name" label-width="180px">
+											<el-input size="small" v-model="form.da_app_name"></el-input>
+										  </el-form-item>
+									  </el-col>
+									  <el-col :span="12">									  
+										  <el-form-item label="App Key" label-width="180px">
+											<el-input size="small" v-model="form.da_app_key"></el-input>
+										  </el-form-item>
+									  </el-col>
+									  <el-col :span="12">									  
+										  <el-form-item label="URL Scheme" label-width="180px">
+											<el-input size="small" v-model="form.da_scheme"></el-input>
+										  </el-form-item>
+									  </el-col>
+								  </el-row>
+                                  <el-row :gutter="10">
+									   <el-divider content-position="left"><strong>Adjust 参数</strong></el-divider>
+									   <el-col :span="12">
+										  <el-form-item label="AppToken" prop="adjust_token" label-width="180px">
+											<el-input size="small" v-model="form.adjust_token"></el-input>
+										  </el-form-item>
+									  </el-col>
+									  <el-col :span="12">
+										  <el-form-item label="hwImportantToken" label-width="180px">
+											<el-input size="small" v-model="form.hwImportantToken"></el-input>
+										  </el-form-item>
+									  </el-col>
+									  <el-col :span="12">									  
+										  <el-form-item label="hwGuideFinishToken" label-width="180px">
+											<el-input size="small" v-model="form.hwGuideFinishToken"></el-input>
+										  </el-form-item>
+									  </el-col>
+									  <el-col :span="12">									  
+										  <el-form-item label="hwLevelToken" label-width="180px">
+											<el-input size="small" v-model="form.hwLevelToken"></el-input>
+										  </el-form-item>
+									  </el-col>
+								  </el-row>
+								  <el-row :gutter="10">									  
+									   <el-col :span="12">
+										  <el-form-item label="hwMonetizationToken" label-width="180px">
+											<el-input size="small" v-model="form.hwMonetizationToken"></el-input>
+										  </el-form-item>
+									  </el-col>
+									   <el-col :span="12">
+										  <el-form-item label="hwPurchaseToken" label-width="180px">
+											<el-input size="small" v-model="form.hwPurchaseToken"></el-input>
+										  </el-form-item>
+									  </el-col>
+								  </el-row>
+                                  <el-row :gutter="10">
+									   									 
+									  <el-col :span="12">									  
+										  <el-form-item label="hwVideohighToken" label-width="180px">
+											<el-input size="small" v-model="form.hwVideohighToken"></el-input>
+										  </el-form-item>
+									  </el-col>
+									  <el-col :span="12">									  
+										  <el-form-item label="hwVideolowToken" label-width="180px">
+											<el-input size="small" v-model="form.hwVideolowToken"></el-input>
+										  </el-form-item>
+									  </el-col>
+									  <el-col :span="12">									  
+										  <el-form-item label="hwUACToken(老版本)" label-width="180px">
+											<el-input size="small" v-model="form.hwUACToken"></el-input>
+										  </el-form-item>
+									  </el-col>
+									  <el-col :span="12">									  
+										  <el-form-item label="hwShowCloseToken" label-width="180px">
+											<el-input size="small" v-model="form.hwShowCloseToken"></el-input>
+										  </el-form-item>
+									  </el-col>
+									  <el-col :span="12">									  
+										  <el-form-item label="hwATTToken" label-width="180px">
+											<el-input size="small" v-model="form.hwATTToken"></el-input>
+										  </el-form-item>
+									  </el-col>
+									  <el-col :span="12">									  
+										  <el-form-item label="hwATTAgreeToken" label-width="180px">
+											<el-input size="small" v-model="form.hwATTAgreeToken"></el-input>
+										  </el-form-item>
+									  </el-col>
+									  <el-col :span="12">									  
+										  <el-form-item label="hwATTCancelToken" label-width="180px">
+											<el-input size="small" v-model="form.hwATTCancelToken"></el-input>
+										  </el-form-item>
+									  </el-col>
+									  <el-col :span="12">									  
+										  <el-form-item label="hwSecondRetentionToken" label-width="200px">
+											<el-input size="small" v-model="form.hwSecondRetentionToken"></el-input>
+										  </el-form-item>
+									  </el-col>
+									  
+									  <el-col :span="12">									  
+										  <el-form-item label="hwATTCustomAgreeToken" label-width="200px">
+											<el-input size="small" v-model="form.hwATTCustomAgreeToken"></el-input>
+										  </el-form-item>
+									  </el-col>
+									  <el-col :span="12">									  
+										  <el-form-item label="hwATTCustomCancelToken" label-width="200px">
+											<el-input size="small" v-model="form.hwATTCustomCancelToken"></el-input>
+										  </el-form-item>
+									  </el-col>
+								  </el-row>									  
+								  <el-form-item>
+									<el-button type="primary" @click="onSubmit">保 存</el-button>
+									<el-button @click="goBack">取消</el-button>
+								  </el-form-item>
+								</el-form>
+							</el-row>  
+					    </div>			 
+			</div>
+		</div>
+		 {include file="./static/html/footer.html" /}
+	</div>
+</body>
+ {include file="./static/html/footer_common.html" /}
+  <script>
+    
+    let t = new Vue({
+        el: '#wrapper',
+        data: {
+			loading: false,
+			form:{},
+			message:'{$url}',
+			rules2: {
+				  
+				  package: [
+					{ required: true, message: 'package不能为空', trigger: 'blur' },
+				  ],
+				  appleID: [
+					{ required: true, message: 'appleID不能为空', trigger: 'blur' },
+				  ],
+				  gameId: [
+					{ required: true, message: 'gameId不能为空', trigger: 'blur' },
+				  ],
+				  adjust_token: [
+					{ required: true, message: 'adjust_token不能为空', trigger: 'blur' },
+				  ],
+				  hwMonetizationToken: [
+					{ required: true, message: 'hwMonetizationToken不能为空', trigger: 'blur' },
+				  ]
+			},
+			disabled:false,
+        },
+		computed:{
+		},
+		created(){
+		 
+		},
+        methods: {           
+		   goBack() {
+		     window.location.href='/app/index';
+		   },
+		   onCopy: function (e) {
+		     this.$message.success('已复制到粘贴板!');
+			},
+		   findRow(){
+			   axios({
+					method: 'post',
+					url:'/app/get_access_params',
+					data:{app_id:'{$app_id}'}
+				}).then(res=>{			
+				 this.form = JSON.parse(res.data.content) || {}
+			 })
+			},
+		   onSubmit(){
+		      this.$refs.form.validate((valid) => {
+				  if (valid) {
+					  this.form.app_id = '{$app_id}'
+					  axios({
+							method: 'post',
+							url:'/app/add_params',
+							data:this.form
+						}).then(res=>{			
+						 if(res.data.code ==200)
+						 {
+						   this.$message.success('操作成功!');
+						   window.location.href= window.location.href
+						 }else{
+						   this.$message.error(res.data.message);
+						 }
+					 })
+				  } else {
+				    console.log(valid)
+				  }
+				});
+		   }
+        },
+		mounted(){
+		  this.findRow()
+		}
+    })
+  </script>
+</html>

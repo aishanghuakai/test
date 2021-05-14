@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>汇率设置</title>
+  {include file="./static/html/fheader_common.html" /}
+  <style>
+    
+  </style>
+</head>
+<body>
+   <div id="wrapper">
+        {include file="./static/html/fheader.html" /}	
+		<div class="hw_page_content">
+		  <div class="hw_menu_left">
+		     {include file="./static/html/fside.html" /}
+		  </div>	 
+		    <div class="hw_content_right" style="padding:10px 10px;">
+			  <Tabs type="card" @on-click="loadData">
+                <Tab-pane label="合作商" name="CNY">
+				 <i-table ref="table" max-height="450"  border disabled-hover :loading="loading"  :columns="report_columns" :data="report_data"></i-table>
+				</Tab-pane>				 
+				 <i-button  type="primary" @click="openModal" slot="extra">+增加</i-button>
+            </Tabs>
+					
+			</div>  			   
+		</div>
+		<Modal v-model="modal1" title="添加/编辑" >
+			<i-form :model="formData">
+			  
+			   <Row :gutter="32" style="padding:10px;">
+			    <label>输入合作商名称</label>
+				<i-input v-model="formData.name"></i-input>
+			   </Row>
+			</i-form>
+			<div slot="footer"> 
+			  <i-button type="text" size="large" @click="modal1=false">取消</i-button> 
+			  <i-button type="primary" @click="submitUpdate" size="large">确定</i-button> 
+			</div>
+						
+		</Modal>
+    </div>		
+</body>
+{include file="./static/html/footer_common.html" /}
+</html>
+ <script>
+   let t = new Vue({
+        el: '#wrapper',
+        data: {
+			modal1: false,
+			loading:false,
+			defaultRate:'',
+			editShow:false,
+			currency:'CNY',
+			formData:{},
+			report_columns:[
+			        {
+                        title: 'ID',
+						align:'center',
+                        key: 'id'
+                    },
+                    {
+                        title: '名称',
+						align:'center',
+                        key: 'name'
+                    },
+					{
+                        title: '操作',
+                        key: 'action',
+						align:'center',
+                        render: (h, params) => {
+                            return h('div', [
+                                h('Button', {
+                                    props: {
+                                        type: 'primary',
+                                        size: 'small'
+                                    },
+									style: {
+                                        marginRight: '5px'
+                                    },
+									on: {
+                                        click: () => {
+                                            t.show(params.row)
+                                        }
+                                    }
+                                }, '编辑')
+                            ]);
+                        }
+                    }
+			],
+            report_data: [],
+        },
+		watch: {
+			 
+        },
+		mounted(){		 
+		  this.getdata() 
+		},
+        methods: {
+           
+			loadData(name)
+			{
+			   this.currency = name		   
+               this.getdata()			   
+			},
+			saveDefault(){
+               	 axios({
+						method: 'post',
+						url:'/finance/saveDefault',
+						data:{val:this.defaultRate,currency:this.currency}
+					}).then(res=>{
+					 this.$Message.success('保存成功');
+				 })			
+			},
+			getdata()
+		   {
+		     let _that = this
+			 this.loading  =true
+			 axios.get('/finance/partner_json')
+			  .then(function (response) {
+				 _that.report_data = response.data.list
+				 _that.loading  =false
+			  })
+			  .catch(function (error) {
+				console.log(error);
+			  });
+		   },
+		   openModal(){
+		    this.formData ={}
+			this.editShow = false
+			this.modal1 = true	  
+		   },
+		   submitUpdate(){
+		    if( !this.formData.name )
+			 {
+			    this.$Message.warning('请填写合作商名称');
+				return false;
+			 }
+			  axios({
+						method: 'post',
+						url:'/finance/updatepartner',
+						data:this.formData
+					}).then(res=>{
+					 this.$Message.success('操作成功');
+					 this.modal1 = false
+					 this.getdata() 
+				 })				 
+		   },
+		   show(row){
+		    this.formData =row || {}
+			this.editShow = true
+			this.modal1 = true	
+		   }
+        }
+    })
+  </script>
+
+

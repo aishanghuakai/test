@@ -1,0 +1,620 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GAME BRAIN</title>
+    {include file="./static/html/fheader_common.html" /}
+	<style>
+	.demo-drawer-footer{
+        width: 100%;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        border-top: 1px solid #e8e8e8;
+        padding: 10px 16px;
+        text-align: right;
+        background: #fff;
+    }
+	.ivu-table th.demo-table-info-column{
+        background-color: #2db7f5;
+        color: #fff;
+    }
+	.ivu-icon-ios-create-outline{cursor:pointer;}
+	.s_type1{font-weight:bold;color:#248ea9}
+	.s_type2{font-weight:bold;color:#ff487e}
+	.s_type3{font-weight:bold;color:#a34a28}
+	.s_type4{font-weight:bold;color:#cb9b42}
+	.s_type5{font-weight:bold;color:#ff8a5c}
+	.s_type6{font-weight:bold;color:#8a00d4}
+	.desc_textarea textarea{background: #f8f8f9 !important;border:none !important;outline:none;}
+	</style>
+</head>
+<body>
+    <div id="wrapper">
+        {include file="./static/html/fheader.html" /}	
+		<div class="hw_page_content">
+		    <div class="hw_menu_left">
+         {include file="./static/html/fside.html" /}  
+			</div>
+		    <div class="hw_content_right">
+			   <div style="padding:5px 0px 10px 0px;">
+				  <Breadcrumb separator=">">
+					 
+					  <breadcrumb-item to="/testplan/index">Invoice 收款汇总</breadcrumb-item>
+					 
+					</Breadcrumb>
+				</div>
+			   
+				  <div class="box">
+					<Tabs value="{$year}" type="card" style="clear:both" @on-click="loadData">
+						
+						<Tab-pane label="2021年" name="2021"></Tab-pane>
+						<Tab-pane label="2020年" name="2020"></Tab-pane>
+						<Tab-pane label="2019年" name="2019"></Tab-pane>
+						
+						<i-select v-model="filter" transfer slot="extra" style="width:100px;">
+                          <i-option value="1" key="1">合作方</i-option>
+						  <i-option value="2" key="2">结算内容</i-option>
+						  <i-option value="3" key="3">金额</i-option>
+						  <i-option value="4" key="4">经办人</i-option>
+						</i-select>
+						<i-input v-model="keyword" slot="extra" placeholder="搜索"  style="width:100px;margin-right:8px;" ></i-input>
+						<i-button type="info" style="margin-right:8px;" slot="extra" @click="exportData"><Icon type="ios-download-outline" /></Icon> 导出</i-button>						
+						<i-button type="primary"  slot="extra" @click="openModal"><Icon type="ios-add" /></Icon> 添加</i-button>
+			        </Tabs>	
+			        <i-table ref="table" @on-selection-change="handleSelect" border  :loading="loading" max-height="550" :columns="report_columns" :data="report_data"></i-table>
+				  </div>
+				  <div v-show="iscalculator" style="padding:10px 0px;"><Icon type="md-calculator" /></Icon>勾选结果汇总计算:<span>{{showtext}}</span></div>
+                  
+				  <template>
+					
+					<Modal v-model="modal1"  :title="title" width="800">
+						<i-form :model="formData">
+						    <Row :gutter="32">
+							  <i-col span="8">							   
+							       <label>公司</label>
+                                   <i-select v-model="formData.s_type" @on-change="handleNum" >
+										<i-option value="1" key="1">武汉</i-option>
+										<i-option value="2" key="2">Adonads</i-option>
+										<i-option value="3" key="3">Hellogames</i-option>
+										<i-option value="4" key="4">Hotgames</i-option>
+										<i-option value="5" key="5">XLW</i-option>
+										<i-option value="6" key="6">暂不入账</i-option>
+									</i-select>
+							  </i-col>
+							  <i-col span="8">							   
+							       <label>Invoice编号</label>
+                                   <i-input v-model="formData.number"></i-input>
+							 </i-col>
+							  <i-col span="8">							   
+							       <label>合作方</label>
+								   <i-select v-model="formData.channel_id" filterable >
+									 {volist name="channel" id="c"}
+									  <i-option  value="{$c.id}" key="{$c.id}">{$c.name}</i-option>	
+									 {/volist}								 
+								  </i-select>
+							 </i-col>
+							</Row>
+							 <Row :gutter="32" style="margin-top:10px;">
+							  <i-col span="24">							   
+							       <label>结算内容<span style="font-size:12px;color:red;"> 格式要求：年+月+内容</span></label>
+                                   <i-input type="textarea" :autosize="{minRows: 2,maxRows: 5}" v-model="formData.bill_content"></i-input>
+							 </i-col>
+							  
+							</Row>
+							<Row :gutter="32" style="margin-top:10px;">
+							  <i-col span="6">							   
+							       <label>金额</label>
+                                   <i-input v-model="formData.money"></i-input>
+							 </i-col>							 
+							  <i-col span="6">							   
+							       <label>经办人</label>                                 
+								   <i-select v-model="formData.manager" filterable >
+									 
+									  <i-option  value="杨婧雯" key="1">杨婧雯</i-option>
+                                      <i-option  value="喻久港" key="2">喻久港</i-option>
+                                      <i-option  value="汤文娟" key="3">汤文娟</i-option>
+                                      <i-option  value="熊奥迪" key="4">熊奥迪</i-option>
+                                      <i-option  value="万美玲" key="5">万美玲</i-option>
+                                      <i-option  value="郑雪莎" key="6">郑雪莎</i-option>	
+                                      <i-option  value="陈阳" key="7">陈阳</i-option>
+                                      <i-option  value="李碧莲" key="8">李碧莲</i-option>
+                                      <i-option  value="郝娇娇" key="9">郝娇娇</i-option>
+									  <i-option  value="刘滋" key="10">刘滋</i-option>									  
+								  </i-select>
+							 </i-col>
+							 {if condition="(in_array(getuserrole(),['super','financer'])) and ($userid neq '6')" }
+								 <i-col span="6">							   
+									   <label>{{name}}金额</label>
+									   <i-input v-model="formData.final_money"></i-input>
+								 </i-col>
+								 
+								  <i-col span="6" v-show="a1==1">							   
+									   <label>手续费</label>
+									   <i-input v-model="formData.fee"></i-input>
+								 </i-col>
+								 <i-col span="6">							   
+									   <label>{{a2}}</label>
+									   <i-input v-model="formData.require"></i-input>
+								 </i-col>
+								</Row>
+								<Row :gutter="32" style="margin-top:10px;">
+															 
+								  <i-col span="6">							   
+									   <label>{{name}}方式</label>
+									   <i-input v-model="formData.pay_method"></i-input>
+								 </i-col>
+								 <i-col span="6">							   
+									   <label>{{name}}日期</label>
+									   <i-input v-model="formData.final_date"></i-input>
+								 </i-col>
+							  {/if}
+							</Row>
+							
+							<Row :gutter="32" style="margin-top:10px;">
+							   {if condition="(in_array(getuserrole(),['super','financer'])) and ($userid neq '6')" }
+								 <i-col span="24">			   
+								   <label>备注说明</label>
+								   <i-input type="textarea" :autosize="{minRows: 2,maxRows: 5}" v-model="formData.desc"></i-input>
+								 </i-col>
+								{else /}
+								<i-col span="24">			   
+								   <label>{{a2}}</label>
+								   <i-input type="textarea" :autosize="{minRows: 2,maxRows: 5}" v-model="formData.require"></i-input>
+								 </i-col>
+                              {/if}
+							</Row>
+                            						
+						</i-form>
+						<div slot="footer"> 
+						  <i-button type="text" size="large" @click="modal1=false">取消</i-button> 
+						  <i-button type="primary" :disabled="editdisabled" size="large" @click="addPost">确定</i-button> 
+						</div>
+						
+					</Modal>
+				</template>
+				<template>
+				<Modal v-model="invoiceShow" title="选择日期" @on-ok="postinvoice">
+					<Date-picker type="date" v-model="invoicedate" @on-change="invoicedate=$event" format="yyyy-MM-dd" placeholder="Select date" style="width: 200px"></Date-picker>
+				</Modal>
+				</template>
+			</div>			
+		</div>
+	</div>
+	
+</body>
+ {include file="./static/html/footer_common.html" /}
+  <script>
+    let t= new Vue({
+        el: '#wrapper',
+        data: {
+            modal1: false,
+			Show:false,
+			loading :false,
+			invoiceShow:false,
+			invoicedate:'',
+			iscalculator:false,
+			editdisabled:false,
+			showtext:"",
+			id:'',
+			a1:1,
+			name:"收款",
+			filter:'1',
+			keyword:'',
+			searchList:[],
+			title:"添加",
+			a2:"结算周期",
+			formData:{
+			  id:0,
+			  number:"",
+			  channel_id:"",
+			  bill_content:"",
+			  money:""
+			},
+			selectData:{},
+			type:"{$year}",
+			channel_id:"{$channel_id}",
+			report_columns:[
+			        {
+                        type: 'selection',
+                        width: 50,
+						fixed: 'left',
+                        align: 'center'
+                    },
+					{
+                        title: '公司',
+                        key: 's_type',
+                        width: 120,
+						align:'center',
+						fixed: 'left',
+						filters: [
+                            {
+                                label: '武汉',
+                                value: "1"
+                            },
+                            {
+                                label: 'Adonads',
+                                value: "2"
+                            },
+							{
+                                label: 'Hellogames',
+                                value: "3"
+                            },
+							{
+                                label: 'Hotgames',
+                                value: "4"
+                            },
+							{
+                                label: 'XLW',
+                                value: "5"
+                            },
+							{
+                                label: '暂不入账',
+                                value: "6"
+                            }
+                        ],
+                        filterMultiple: false,
+                        filterMethod (value, row) {
+                             return row.s_type == value
+						},	
+						render: (h, params) => {
+                            let name ="";
+							switch( params.row.s_type )
+							{
+							  case "1":
+							      name="武汉";
+								break;
+                              case "2":
+							      name="Adonads";
+								break;
+                              case "3":
+							      name="Hellogames";
+								break;
+                              case "4":
+							      name="Hotgames";
+								break;
+                              case "5":
+							      name="XLW";
+								break;
+                              case "6":
+							      name="暂不入账";
+								break;								
+							}
+							return h('div',{class:"s_type"+params.row.s_type},name);
+                        }
+                    },					
+                    {
+                        title: '合作方',
+                        key: 'channel',
+						fixed: 'left',
+                        width: 200
+                    },
+                    {
+                        title: '结算内容',
+                        key: 'bill_content',
+                        width: 300
+                    },
+					{
+                        title: 'Invoice 编号',
+                        key: 'number',
+                        width: 130
+                    },
+                    {
+                        title: '币种',
+                        key: 'currency',
+                        width: 80
+                    },
+					{
+                        title: '金额',
+                        key: 'money',
+                        width: 100
+                    },
+                    {
+                        title: '结算周期',
+                        key: 'require',
+                        width: 150
+                    },					
+					{
+                        title: '经办人',
+                        key: 'manager',
+                        width: 100
+                    },
+					{
+                        title: '到账金额',
+                        key: 'final_money',
+                        width: 100,
+						className:"demo-table-info-column"
+                    },	
+                    {
+                        title: '手续费',
+                        key: 'fee',
+                        width: 110,
+						className:"demo-table-info-column"
+                    },					
+					{
+                        title: '收款方式',
+                        key: 'pay_method',
+                        width: 130,
+						className:"demo-table-info-column"
+                    },
+					{
+                        title: '收款日期',
+                        key: 'final_date',
+                        width: 100,
+						className:"demo-table-info-column"
+                    },
+					{
+                        title: '备注',
+                        key: 'desc',
+                        width: 200
+                    },
+					{
+                        title: '操作',
+                        key: 'action',
+						align:"center",
+                        width: 250,
+                        render: (h, params) => {
+                            return h('div', [
+                                h('i-button', {
+                                    style:"margin-right:10px",
+									props: {
+                                        type: 'warning',
+                                        size: 'small',
+										
+										{if condition="!in_array(getuserrole(),['super','financer'])" }
+										 disabled:true
+										{/if} 
+                                    },
+									on: {
+                                        click: () => {
+                                            t.editProduct(params.row.id)
+                                        }
+                                    }
+                                }, '修改'),
+								 h('i-button', {
+                                    style:"margin-right:10px",
+									props: {
+                                        type: 'default',
+                                        size: 'small',
+                                    },
+									on: {
+                                        click: () => {
+                                            t.createInvoice(params.row.id)
+                                        }
+                                    }
+                                }, '生成invoice'),
+								h('i-button', {
+                                    props: {
+                                        type: 'error',
+                                        size: 'small',
+										{if condition="!in_array(getuserrole(),['financer'])" }
+										 disabled:true
+										{/if} 
+                                    },
+									on: {
+                                        click: () => {
+                                            t.deleteRow(params.row.id)
+                                        }
+                                    }
+                                }, '删除')
+                               
+                            ]);
+                        }
+                    }
+			],
+            report_data: []			
+        },
+		watch:{
+		  keyword:function(value)
+		  {
+		     this.getFilterList()
+		  },
+		  filter:function(value){
+		    this.getFilterList()
+		  }
+		},
+		mounted(){		 
+		    this.getdata()		  
+		},
+        methods: {
+            
+		   getFilterList()
+		   {
+		     this.report_data = this.searchList
+			 if( this.keyword!='' )
+			 {
+			    let b =""
+				switch( this.filter )
+				{
+				   case "1":
+				     b = "channel";
+					break;
+					case "2":
+				     b = "bill_content";
+					break;
+					case "3":
+				     b = "money";
+					break;
+					case "4":
+				     b = "manager";
+					break;
+				}
+				this.report_data = this.report_data.filter(item => item[b].toUpperCase().indexOf(this.keyword.toUpperCase())>=0) 
+			 }else{
+			   this.report_data = this.searchList
+			 }
+		   },
+		   handleNum(value)
+		   {
+             
+			 if( (typeof(this.formData.id)=="undefined") || (this.formData.id==0) )
+			 {
+			    
+			   this.getNumber(this.type,value)
+			 }			 			 
+		   },
+		   getNumber(type,s_type){
+		      let _that = this
+			  axios({
+						method: 'post',
+						url:'/finance/createNum',
+						data:{ type:1,s_type:s_type }
+					}).then(res=>{
+					 delete _that.formData.number;  //这里删除对象属性，是为了让VUE检测到数据更新了，并更新视图			
+					 this.$set(this.formData,'number',res.data)
+				 })
+		   },
+		   loadData(name)
+			{
+			   this.type = name			   
+			   this.name="收款"
+			   this.a1=1
+			   this.a2="结算周期"
+               this.getdata()	   
+			},
+			exportData (type) {
+                
+                 this.$refs.table.exportCsv({
+                        filename: 'The original data'
+                    });
+			},
+           handleSelect(rows){
+			   
+			   if( rows.length>0 )
+			   {
+				 this.iscalculator = true
+				 this.selectData.id=0
+				 this.selectData.channel_id = rows[0].channel_id
+				 this.selectData.bill_content = rows[0].bill_content
+				 this.selectData.money = rows[0].money
+				 this.calculator(rows)
+				 this.selectData.s_type = rows[0].s_type
+			   }else{
+			      this.selectData ={}
+				  this.iscalculator = false
+				  this.showtext = ''
+			   }
+			},
+            calculator(rows){
+			  let text ='';
+			  var sum =0;
+			  for(i in rows){
+				 text+=rows[i].money+"+"
+				 sum+=parseFloat(rows[i].money)
+			  }
+			  text = text.replace(/(\+*$)/g,"");
+			  text=text+"="+parseFloat(sum,2)
+			  this.showtext = text
+			},			
+		   openModal(){
+		     this.modal1 = true
+			 this.formData={
+			  id:0,
+			  number:"",
+			  channel_id:"",
+			  bill_content:"",
+			  money:""
+			}
+			 if( Object.keys(this.selectData).length>0 )
+			 {
+			    this.formData = this.selectData
+				let _that = this
+				Vue.nextTick()
+				  .then(function () {
+					_that.getNumber(_that.type,_that.formData.s_type)
+				  })
+				
+			 }
+		   },
+		   getdata()
+		   {
+		     let _that = this
+			 this.loading  =true
+			 axios.get("/finance/getInvoiceData?type=1&channel_id={$channel_id}&year="+this.type)
+			  .then(function (response) {
+				  _that.loading  =false
+				 _that.report_data = response.data
+				 _that.searchList = response.data
+				 _that.getFilterList()
+			  })
+			  .catch(function (error) {
+				console.log(error);
+			  });
+		   },
+		   editProduct(id){
+		     let _that = this
+				this.title="编辑修改";
+				axios.get('/finance/editInvoice?id='+id)
+			  .then(function (response) {
+				  _that.formData = response.data				  
+				  _that.modal1 = true
+			  })
+			  .catch(function (error) {
+				console.log(error);
+			  });
+		   },
+		   deleteRow(id){
+			 this.$Modal.confirm({
+                    title: '系统提示',
+                    content: '删除该记录，将不再保存，是否确认删除?',
+                    onOk: () => {                      
+						axios({
+								method: 'post',
+								url:'/finance/deleteinvoice',
+								data:{id:id}
+							}).then(res=>{
+							  this.$Message.success('已删除');
+							  this.getdata();
+						 })
+                    },
+                    onCancel: () => {
+                       
+                    }
+             });
+		   },
+		   createInvoice(id)
+		   {
+		      this.invoiceShow = true;
+			  this.id = id
+		   },
+		   postinvoice(){
+		     if( this.invoicedate=='' )
+			 {
+			    this.$Message.warning('请输入日期!');
+				return false;
+			 }
+			 this.invoiceShow = false
+			 axios.get('/finance/createWord?id='+this.id+"&date="+this.invoicedate)
+			  .then(function (response) {
+				  window.location.href = response.data;
+			  })
+			  .catch(function (error) {
+				console.log(error);
+			  });
+		   },
+			addPost(){
+			   if( this.formData.number==""|| this.formData.channel_id=="" || this.formData.bill_content=="" || this.formData.money=="")
+			   {
+			     this.$Message.warning('请填写完整信息!');
+				 return false;
+			   }
+			   this.formData.type = 1
+			   this.formData.year = this.type
+			   this.editdisabled = true
+			   axios({
+						method: 'post',
+						url:'/finance/addinvoice',
+						data:this.formData
+					}).then(res=>{
+					  this.modal1 = false
+					  this.editdisabled = false
+					  this.$Message.success('操作成功');
+					  this.getdata();
+				 })
+			}
+        }
+    })
+  </script>
+</html>

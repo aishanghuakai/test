@@ -1,0 +1,23 @@
+﻿                                 <tr style="color:#222;font-weight:700;border-bottom:2px solid red;">
+										 <td style="width:25%;">总计</td>
+										 <td>{$total.spend}</td>
+										 <td>{$total.impression}</td>
+										 <td>{$total.clicks}</td>
+										 <td>{$total.installs}</td>
+										 <td>{$total.cpi}</td>
+										 <td>{$total.ctr}%</td>
+										 <td>{$total.cvr}%</td>
+									</tr>
+                                {volist name="list" id="item"}							  
+								<tr>
+									 <td style="width:20%;text-align:left;color:#38f;">{$item.campaign_name}</td>
+									 <td>{$item.spend}</td>
+									 <td>{$item.impression}</td>
+									 <td>{$item.clicks}</td>
+									 <td>{$item.installs}</td>
+									 <td>{$item.cpi}</td>
+									 <td>{$item.ctr}%</td>
+									 <td>{$item.cvr}%</td>
+								</tr>
+								 {/volist}
+							 

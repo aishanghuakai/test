@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GAME BRAIN</title>
+    {include file="./static/html/header_common.html" /}
+  <link href="/static/css/checkbox.css" rel="stylesheet" type="text/css">	
+	 <link rel="stylesheet" type="text/css" media="all" href="/static/plugin/jquery-time/daterangepicker-bs3.css" />
+<link href="/static/css/show.css?t=<?php echo time(); ?>" rel="stylesheet">
+ <link href="/static/css/adid.css?t=1539348927" rel="stylesheet">	
+	 <style>
+	    th,td{text-align:center;vertical-align:middle;<?php if(empty($developer)){ echo "width:14.6%;";}else{ echo "";} ?>}
+
+
+.cursor,#download,.country label,.fa-pencil-square-o,.fa-line-chart{
+cursor:pointer;
+}
+
+.aactive{
+ color: #ff8282  !important;
+}
+.title_active {
+    font-weight:400;
+    font-size:30px !important;  
+	color: #ff8282 !important;
+	margin-right:20px;
+}
+.title {
+   
+    font-size:20px;  
+	color:#333;
+	margin-right:20px;
+}
+.splitter {
+   
+    border-bottom: 1px solid #e9eef4;
+    margin-top: 11px;
+}
+.table_container {
+    padding: 40px 50px;
+    background: #fff;
+    margin-top: 30px;
+}
+table {
+    border-spacing: 0;
+}
+table .common_th {
+    border: "solid 1px #e9eef4";
+    padding: "14px";
+    border-left: none;
+    background: #f0f1f2;
+    font-size: 14px;
+    text-align: center;
+    color: #555;
+    font-weight: 400;
+}
+table th {
+    padding: 16px 8px;
+    white-space: nowrap;
+}
+table .common_td {
+    border: 1px solid #e9eef4;
+        border-top-color: rgb(233, 238, 244);
+        border-top-style: solid;
+        border-top-width: 1px;
+        border-left-color: rgb(233, 238, 244);
+        border-left-style: solid;
+        border-left-width: 1px;
+    border-top: none;
+   
+    padding: 20px;
+    font-size: 14px;
+    text-align: center;
+    color: #555;
+    font-weight: 400;
+}
+.blog-expert-button-follow {
+    display: block;
+    border: 1px solid #ca0c16;
+    border-radius: 2px;
+    font-size: 12px;
+    line-height: 18px;
+    margin-right: 8px;
+    cursor: pointer;
+    padding:8px 10px;
+    display: inline-block;
+    text-align: center;
+}
+.btn-red-follow {
+    color: #ca0c16;
+}
+.btn-red-follow:hover{
+  background-color:#ca0c16;
+  color:#fff;
+}
+</style>
+</head>
+<body>
+    <div id="wrapper" style="background-color:#fff;">
+        {include file="./static/html/header.html" /}	
+		<div class="hw_page_content">
+		    
+		    <div class="hw_menu_left">
+         {include file="./static/html/side.html" /}  
+			</div>
+		    <div class="hw_content_right" style="padding-left:30px;padding-bottom:30px;width:80%;background-color:#f8f8f8;" >
+			
+				<div style="padding-top:30px;">				  
+				   <a class="title title_active" href="###">我的关注</a>
+				  
+                   <a class="title" href="/admin_compet/send">已发送</a>
+                   <a class="title" href="/admin_compet/receive">收件箱</a>
+                   <a class="title" href="/admin_compet/contact">合作联系</a>			   
+				</div>
+				
+				<div class="splitter"></div>
+				
+               <div class="table_container">
+			      <table class="">
+				    <thead class="rc-table-thead">
+					  <tr>
+						  <th class="common_th">开发者</th>
+						  <th class="common_th">发送邮箱</th>
+						  <th class="common_th">平台</th>
+						  <th class="common_th">应用数</th>						  
+						  <th class="common_th">新应用发布</th>
+						  <th style="width:35% !important;" class="common_th">今日应用上榜数</th>
+						  <th style="width:20% !important;" class="common_th">操作</th>
+					 </tr>
+				  </thead>
+				  <tbody class="rc-table-tbody">
+				       {if condition="empty($developer)"}
+					     <tr>
+						    <tr style="color:#ccc;text-align:center !important;"><td></td><td colspan="4">还没有数据? 请点击搜索</td></tr>
+						 </tr>
+					   {/if}
+				      {volist name="developer" id="vv"}
+						  <tr class="rc-table-row">
+							  <td class="common_td">{$vv.developer}</td>
+							  <td class="common_td">
+							  {if condition="$vv.from eq '2'"}
+							  <i style="color:#10952a" class="fa fa-check"></i>
+							   {/if}
+							  </td>
+							  <td class="common_td">
+							   {if condition="$vv.platform eq 'ios'"}
+							   <i class="fa fa-apple"></i>
+							   {else /}
+							    <i style="color:#f0ad4e" class="fa fa-android"></i>
+							   {/if}
+							  </td>
+							  <td class="common_td"><a href="/admin_compet/allapp?id={$vv.id}">{$vv.app_num}</a></td>							 
+							  <td class="common_td"></td>
+							  <td style="width:35% !important;" class="common_td">
+							  {volist name="vv.rank" id="vo"}
+							   <a title="{$vo.country} {$vo.topnum}" href="/admin_compet/results?kw={$vo.packages}"><img style="height:30px;height:30px;margin-bottom:2px;" src="{$vo.img}" /></a>
+							   {/volist}
+							  </td>
+							   <td style="width:20% !important;" class="common_td">
+							     <span class="blog-expert-button-follow btn-red-follow delete" data-id="{$vv.id}">取消关注</span>
+							   </td>
+						  </tr>
+					   {/volist}
+				  </tbody>
+				 </table>
+				</div>
+			  </div>
+			   
+					   
+			
+		</div>
+		     
+		 {include file="./static/html/footer.html" /}
+	</div>
+</body>
+ {include file="./static/html/footer_common.html" /}
+ 
+ <script>
+ 
+    
+    $(function(){
+	     		 
+		 $(document).on( 'click','.delete',function(event){
+			var id = $(this).attr("data-id");
+			var _$ = $(this);
+			layer.confirm('确认不再关注该开发者吗?', {
+				  btn: ['确认','取消'] //按钮
+				}, function(){
+				  var index = layer.load(1, {
+							  shade: [0.1,'#fff'] //0.1透明度的白色背景
+							});
+				   $.post("/admin_compet/delete",{id:id},function(e){
+					   layer.closeAll();
+						 if("ok"==e)
+						 {							
+							layer.alert('取消成功');
+                            window.location.reload();							
+						 }else{
+						   layer.msg('网络异常,取消失败', {icon: 1});
+						 }
+				   })
+				 
+				}, function(){
+				  
+				});
+		 
+		   return false;
+	   });
+		 
+       })
+ </script>
+
+</html>
